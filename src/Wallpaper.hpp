@@ -1,5 +1,5 @@
-#ifndef WALLPAPER_HPP
-#define WALLPAPER_HPP
+#pragma once
+
 #include <string>
 #include <vector>
 
@@ -16,7 +16,8 @@ public:
     string getDescription();
 
     vector<string> getTags();
+
+    void serialize();
+
+    static Wallpaper deserialize();
 };
-
-
-#endif //WALLPAPER_HPP

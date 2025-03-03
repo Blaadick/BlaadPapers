@@ -3,7 +3,7 @@ project(BlaadPapers)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_executable(BlaadPapers main.cpp
-    Wallpaper.cpp
-    Wallpaper.hpp
+add_executable(blaadpapers src/main.cpp
+    src/Wallpaper.cpp
+    src/Wallpaper.hpp
 )
