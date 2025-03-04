@@ -2,8 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <json/json.hpp>
 
 using namespace std;
+using namespace nlohmann;
 
 class Wallpaper {
     string name;
@@ -11,13 +13,15 @@ class Wallpaper {
     vector<string> tags;
 
 public:
+    Wallpaper(const string &name, const string &description, const vector<string> &tags);
+
+    Wallpaper(const string &name, const json &data);
+
     string getName();
 
     string getDescription();
 
     vector<string> getTags();
 
-    void serialize();
-
-    static Wallpaper deserialize();
+    json serialize();
 };
