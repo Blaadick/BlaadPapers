@@ -24,14 +24,20 @@ void readConfig() {
     } else {
         ofstream configFile(configPath);
         configData = {
-            {"working_dir", "/home/blaadick/Pictures/test/"}
+            {"working_dir", "~/Pictures/Wallpapers/"}
         };
 
         configFile << configData.dump(4);
         configFile.close();
     }
 
-    workingDir = configData["working_dir"].get<string>();
+    string rawWorkingDir = configData["working_dir"];
+
+    if(rawWorkingDir[0] == '~') {
+        workingDir = string(getenv("HOME")) + "/" + rawWorkingDir.substr(1);
+    } else {
+        workingDir = rawWorkingDir;
+    }
 }
 
 void loadWallpapers() {
@@ -39,11 +45,12 @@ void loadWallpapers() {
         if(!is_regular_file(entry)) continue;
 
         string imageFormat = entry.path().extension().string().substr(1);
-        string name = entry.path().stem().string();
-        json data;
-        bool dataFound = false;
 
         if(imageFormat != "png") continue;
+
+        string name = entry.path().stem().string();
+        bool dataFound = false;
+        json data;
 
         for(const auto &entry2: fs::directory_iterator(workingDir)) {
             if(entry2.path().filename().string() != name + ".json") continue;
@@ -91,7 +98,7 @@ int main(const int argc, const char *argv[]) {
     readConfig();
     loadWallpapers();
 
-    for(auto &wallpaper: wallpapers) {
+    for(auto wallpaper: wallpapers) {
         cout << "\"" << wallpaper.getName() << "\": " << wallpaper.serialize().dump(4) << endl;
     }
 }
