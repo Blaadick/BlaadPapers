@@ -13,8 +13,6 @@ class Wallpaper {
     vector<string> tags;
 
 public:
-    Wallpaper(const string &name, const string &description, const vector<string> &tags);
-
     Wallpaper(const string &name, const json &data);
 
     string getName();

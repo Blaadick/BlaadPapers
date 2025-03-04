@@ -3,12 +3,6 @@
 
 #include "Wallpaper.hpp"
 
-Wallpaper::Wallpaper(const string &name, const string &description, const vector<string> &tags) {
-    this->name = name;
-    this->description = description;
-    this->tags = tags;
-}
-
 Wallpaper::Wallpaper(const string &name, const json &data) {
     this->name = name;
     this->description = data["description"];
