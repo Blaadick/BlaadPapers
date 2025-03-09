@@ -11,7 +11,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 add_compile_definitions(VERSION="${VERSION}")
 
-add_executable(blaadpapers src/main.cpp src/Wallpaper.cpp
-    include/ImageFormat.hpp)
+add_executable(
+    blaadpapers
+    src/main.cpp
+    src/Wallpaper.cpp
+)
 
 target_include_directories(blaadpapers PRIVATE include lib)

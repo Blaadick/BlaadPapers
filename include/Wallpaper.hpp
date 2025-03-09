@@ -6,6 +6,7 @@
 
 using namespace std;
 using namespace nlohmann;
+using namespace filesystem;
 
 class Wallpaper {
     string name;
@@ -15,11 +16,13 @@ class Wallpaper {
 public:
     Wallpaper(const string &name, const json &data);
 
-    string getName();
+    [[nodiscard]] string getName() const;
 
-    string getDescription();
+    [[nodiscard]] string getDescription() const;
 
-    vector<string> getTags();
+    [[nodiscard]] vector<string> getTags() const;
 
-    json serialize();
+    [[nodiscard]] string getFilePath() const;
+
+    [[nodiscard]] json toJson() const;
 };

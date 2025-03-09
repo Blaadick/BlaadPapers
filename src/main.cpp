@@ -1,84 +1,66 @@
 #include <fstream>
 #include <iostream>
-#include <memory>
 #include <vector>
+#include <json/json.hpp>
 
-#include "Strings.hpp"
+#include "Defaults.hpp"
+#include "Global.hpp"
 #include "Wallpaper.hpp"
 
 using namespace std;
-namespace fs = filesystem;
-
-fs::path workingDir;
-vector<Wallpaper> wallpapers;
+using namespace nlohmann;
+using namespace filesystem;
 
 void readConfig() {
-    fs::path configPath = string(getenv("HOME")) + "/.config/blaadpapers.json";
+    path configFilePath = string(getenv("HOME")) + "/.config/blaadpapers.json";
     json configData;
 
-    if(exists(configPath)) {
-        ifstream configFile(configPath);
-
+    if(exists(configFilePath)) {
+        ifstream configFile(configFilePath);
         configFile >> configData;
         configFile.close();
     } else {
-        ofstream configFile(configPath);
-        configData = {
-            {"working_dir", "~/Pictures/Wallpapers/"}
-        };
-
-        configFile << configData.dump(4);
-        configFile.close();
+        configData = defaultConfig;
     }
 
     string rawWorkingDir = configData["working_dir"];
 
     if(rawWorkingDir[0] == '~') {
-        workingDir = string(getenv("HOME")) + "/" + rawWorkingDir.substr(1);
+        workingDir = string(getenv("HOME")) + rawWorkingDir.substr(1);
     } else {
         workingDir = rawWorkingDir;
     }
 }
 
 void loadWallpapers() {
-    for(const auto &entry: fs::directory_iterator(workingDir)) {
+    for(const auto &entry: directory_iterator(workingDir)) {
         if(!is_regular_file(entry)) continue;
+        if(entry.path().extension() != ".png") continue;
 
-        string imageFormat = entry.path().extension().string().substr(1);
-
-        if(imageFormat != "png") continue;
-
-        string name = entry.path().stem().string();
-        bool dataFound = false;
+        string imageName = entry.path().stem().string();
+        path dataFilePath = entry.path().parent_path() / (imageName + ".json");
         json data;
 
-        for(const auto &entry2: fs::directory_iterator(workingDir)) {
-            if(entry2.path().filename().string() != name + ".json") continue;
+        if(exists(dataFilePath)) {
+            ifstream dataFile(dataFilePath);
+            dataFile >> data;
+            dataFile.close();
+        } else {
+            ofstream dataFile(dataFilePath);
+            dataFile << defaultWallpaperData.dump(4);
+            dataFile.close();
 
-            ifstream file(entry2.path().string());
-
-            dataFound = true;
-            file >> data;
-
-            break;
+            data = defaultWallpaperData;
         }
 
-        if(!dataFound) {
-            data = {
-                {"description", ""},
-                {"tags", {"SFW"}}
-            };
-
-            ofstream file(entry.path().parent_path() / string(name + ".json"));
-            file << data.dump(4);
-            file.close();
-        }
-
-        wallpapers.emplace_back(name, data);
+        wallpapers.emplace_back(imageName, data);
     }
 }
 
 int main(const int argc, const char *argv[]) {
+    readConfig();
+    loadWallpapers();
+
     for(int i = 1; i < argc; i++) {
         string arg = argv[i];
 
@@ -92,13 +74,15 @@ int main(const int argc, const char *argv[]) {
             return 0;
         }
 
+        if(arg == "-l" || arg == "--list") {
+            cout << "All available: " << VERSION << endl;
+            return 0;
+        }
+
         cout << "Unknown option: " << arg << endl;
     }
 
-    readConfig();
-    loadWallpapers();
-
-    for(auto wallpaper: wallpapers) {
-        cout << "\"" << wallpaper.getName() << "\": " << wallpaper.serialize().dump(4) << endl;
+    for(const auto &wallpaper: wallpapers) {
+        cout << "\"" << wallpaper.getName() << "\": " << wallpaper.toJson().dump(4) << endl;
     }
 }
