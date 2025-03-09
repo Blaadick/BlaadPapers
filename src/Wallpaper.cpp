@@ -2,6 +2,7 @@
 #include <json/json.hpp>
 
 #include "Wallpaper.hpp"
+#include "Global.hpp"
 
 Wallpaper::Wallpaper(const string &name, const json &data) {
     this->name = name;
@@ -9,23 +10,25 @@ Wallpaper::Wallpaper(const string &name, const json &data) {
     this->tags = data["tags"];
 }
 
-string Wallpaper::getName() {
+string Wallpaper::getName() const {
     return name;
 }
 
-string Wallpaper::getDescription() {
+string Wallpaper::getDescription() const {
     return description;
 }
 
-vector<string> Wallpaper::getTags() {
+vector<string> Wallpaper::getTags() const {
     return tags;
 }
 
-json Wallpaper::serialize() {
-    json data = {
+string Wallpaper::getFilePath() const {
+    return workingDir / (name + ".png");
+}
+
+json Wallpaper::toJson() const {
+    return {
         {"description", description},
         {"tags", tags}
     };
-
-    return data;
 }
