@@ -33,12 +33,15 @@ void readConfig() {
 }
 
 void loadWallpapers() {
+    if(!exists(workingDir / ".index")) {
+        create_directory(workingDir / ".index");
+    }
+
     for(const auto &entry: directory_iterator(workingDir)) {
-        if(!is_regular_file(entry)) continue;
         if(entry.path().extension() != ".png") continue;
 
-        string imageName = entry.path().stem().string();
-        path dataFilePath = entry.path().parent_path() / (imageName + ".json");
+        string imageName = entry.path().stem();
+        path dataFilePath = workingDir / ".index" / (imageName + ".json");
         json data;
 
         if(exists(dataFilePath)) {
@@ -75,14 +78,15 @@ int main(const int argc, const char *argv[]) {
         }
 
         if(arg == "-l" || arg == "--list") {
-            cout << "All available: " << VERSION << endl;
+            cout << "All available wallpapers: " << endl;
+
+            for(const auto &wallpaper: wallpapers) {
+                cout << "\"" << wallpaper.getName() << "\": " << wallpaper.toJson().dump(4) << endl;
+            }
+
             return 0;
         }
 
         cout << "Unknown option: " << arg << endl;
-    }
-
-    for(const auto &wallpaper: wallpapers) {
-        cout << "\"" << wallpaper.getName() << "\": " << wallpaper.toJson().dump(4) << endl;
     }
 }
