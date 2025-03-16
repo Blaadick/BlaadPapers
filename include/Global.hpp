@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Wallpaper.hpp>
+#include <set>
 
 inline path workingDir;
-inline vector<Wallpaper> wallpapers;
+inline set<Wallpaper> wallpapers;

@@ -32,3 +32,7 @@ json Wallpaper::toJson() const {
         {"tags", tags}
     };
 }
+
+bool Wallpaper::operator<(const Wallpaper& other) const {
+    return strcasecmp(name.c_str(), other.name.c_str()) < 0;
+}

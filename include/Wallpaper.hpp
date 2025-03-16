@@ -25,4 +25,6 @@ public:
     [[nodiscard]] string getFilePath() const;
 
     [[nodiscard]] json toJson() const;
+
+    [[nodiscard]] bool operator<(const Wallpaper &other) const;
 };
