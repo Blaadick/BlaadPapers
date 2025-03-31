@@ -60,20 +60,19 @@ void loadWallpapers() {
     }
 }
 
-int main(const int argc, const char *argv[]) {
-    readConfig();
-    loadWallpapers();
+void parseArgs(const int argc, const char *argv[]) {
+    if(argc < 2) return;
 
     const string arg = argv[1];
 
     if(arg == "-h" || arg == "--help") {
         cout << helpMessage << endl;
-        return 0;
+        return;
     }
 
     if(arg == "-v" || arg == "--version") {
         cout << "Version: " << VERSION << endl;
-        return 0;
+        return;
     }
 
     if(arg == "-S" || arg == "--set") {
@@ -81,7 +80,7 @@ int main(const int argc, const char *argv[]) {
 
         if(imageName == nullptr) {
             cout << helpMessage << endl;
-            return 0;
+            return;
         }
 
         const Wallpaper temp(imageName, defaultWallpaperData);
@@ -98,7 +97,7 @@ int main(const int argc, const char *argv[]) {
             cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
         }
 
-        return 0;
+        return;
     }
 
     if(arg == "-R" || arg == "--random") {
@@ -111,7 +110,7 @@ int main(const int argc, const char *argv[]) {
 
         cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 
-        return 0;
+        return;
     }
 
     if(arg == "-l" || arg == "--list") {
@@ -121,7 +120,7 @@ int main(const int argc, const char *argv[]) {
             cout << wallpaper.getName() << endl;
         }
 
-        return 0;
+        return;
     }
 
     if(arg == "-L" || arg == "--list-json") {
@@ -131,8 +130,14 @@ int main(const int argc, const char *argv[]) {
             cout << "\"" << wallpaper.getName() << "\": " << wallpaper.toJson().dump(4) << endl;
         }
 
-        return 0;
+        return;
     }
 
     cout << "Unknown option: " << arg << endl;
+}
+
+int main(const int argc, const char *argv[]) {
+    readConfig();
+    loadWallpapers();
+    parseArgs(argc, argv);
 }

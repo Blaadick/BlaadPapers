@@ -1,20 +1,15 @@
 cmake_minimum_required(VERSION 3.30)
 
 file(READ "${CMAKE_SOURCE_DIR}/VERSION" VER_RAW)
-string(STRIP ${VER_RAW} VERSION)
+string(STRIP ${VER_RAW} PROJECT_VERSION)
 
-project(blaadpapers VERSION ${VERSION})
-
-set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
-
-add_compile_definitions(VERSION="${VERSION}")
-
-add_executable(
-    blaadpapers
-    src/main.cpp
-    src/Wallpaper.cpp
+project(
+    BlaadPapers
+    DESCRIPTION "Super wallpaper manager"
+    VERSION ${PROJECT_VERSION}
 )
 
-target_include_directories(blaadpapers PRIVATE include lib)
+set(CMAKE_CXX_STANDARD 26)
+
+add_subdirectory(blaadpapers)
+add_subdirectory(blaadpapers-daemon)
