@@ -11,6 +11,11 @@ using namespace std;
 using namespace nlohmann;
 using namespace filesystem;
 
+void setWallpaper(const Wallpaper &wallpaper) {
+    system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + "\"").c_str());
+    system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
+}
+
 void readConfig() {
     path configFilePath = string(getenv("HOME")) + "/.config/blaadpapers.json";
     json configData;
@@ -60,7 +65,7 @@ void loadWallpapers() {
     }
 }
 
-void parseArgs(const int argc, const char *argv[]) {
+void parseArgs(const int argc, const char **argv) {
     if(argc < 2) return;
 
     const string arg = argv[1];
@@ -85,17 +90,16 @@ void parseArgs(const int argc, const char *argv[]) {
 
         const Wallpaper temp(imageName, defaultWallpaperData);
         const auto iterator = wallpapers.lower_bound(temp);
-        const Wallpaper *wallpaperToSet = nullptr;
 
-        if(strcasecmp(iterator->getName().c_str(), imageName) == 0) {
-            wallpaperToSet = &*iterator;
-        }
-
-        if(wallpaperToSet == nullptr) {
+        if(strcasecmp(iterator->getName().c_str(), imageName) != 0) {
             cout << "No wallpaper found" << endl;
-        } else {
-            cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
+            return;
         }
+
+        const Wallpaper &wallpaperToSet = *iterator;
+
+        setWallpaper(wallpaperToSet);
+        cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 
         return;
     }
@@ -106,9 +110,10 @@ void parseArgs(const int argc, const char *argv[]) {
         uniform_int_distribution randomDistribution(0, static_cast<int>(wallpapers.size()) - 1);
 
         const auto iterator = next(wallpapers.begin(), randomDistribution(rand));
-        const Wallpaper *wallpaperToSet = &*iterator;
+        const Wallpaper &wallpaperToSet = *iterator;
 
-        cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
+        setWallpaper(wallpaperToSet);
+        cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 
         return;
     }
@@ -136,7 +141,7 @@ void parseArgs(const int argc, const char *argv[]) {
     cout << "Unknown option: " << arg << endl;
 }
 
-int main(const int argc, const char *argv[]) {
+int main(const int argc, const char **argv) {
     readConfig();
     loadWallpapers();
     parseArgs(argc, argv);
