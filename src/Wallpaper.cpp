@@ -1,6 +1,3 @@
-#include <fstream>
-#include <json/json.hpp>
-
 #include "Wallpaper.hpp"
 #include "Global.hpp"
 
@@ -28,6 +25,7 @@ string Wallpaper::getFilePath() const {
 
 json Wallpaper::toJson() const {
     return {
+        {"name", name},
         {"description", description},
         {"tags", tags}
     };
