@@ -17,5 +17,5 @@ inline nlohmann::json defaultConfig = {
 
 inline nlohmann::json defaultWallpaperData = {
     {"description", ""},
-    {"tags", {"SFW"}}
+    {"tags", {"General"}}
 };

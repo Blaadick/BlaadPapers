@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
-#include <json/json.hpp>
 #include <random>
+#include <json/json.hpp>
 
 #include "Defaults.hpp"
 #include "Global.hpp"
@@ -66,7 +66,10 @@ void loadWallpapers() {
 }
 
 void parseArgs(const int argc, const char **argv) {
-    if(argc < 2) return;
+    if(argc < 2) {
+        cout << helpMessage << endl;
+        return;
+    }
 
     const string arg = argv[1];
 
@@ -119,8 +122,6 @@ void parseArgs(const int argc, const char **argv) {
     }
 
     if(arg == "-l" || arg == "--list") {
-        cout << "All available wallpapers: " << endl;
-
         for(const auto &wallpaper: wallpapers) {
             cout << wallpaper.getName() << endl;
         }
@@ -129,8 +130,6 @@ void parseArgs(const int argc, const char **argv) {
     }
 
     if(arg == "-L" || arg == "--list-json") {
-        cout << "All available wallpapers:" << endl;
-
         for(const auto &wallpaper: wallpapers) {
             cout << "\"" << wallpaper.getName() << "\": " << wallpaper.toJson().dump(4) << endl;
         }
