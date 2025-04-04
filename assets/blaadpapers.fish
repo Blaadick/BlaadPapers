@@ -9,4 +9,4 @@ function __blaadpapers_needs_completion
 end
 
 complete -c blaadpapers -f
-complete -c blaadpapers -n "__blaadpapers_needs_completion" -a "(blaadpapers -l)"
+complete -c blaadpapers -n "__blaadpapers_needs_completion" -a "(blaadpapers -L)"
