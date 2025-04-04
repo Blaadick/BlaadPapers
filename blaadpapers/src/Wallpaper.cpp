@@ -33,6 +33,6 @@ json Wallpaper::toJson() const {
     };
 }
 
-bool Wallpaper::operator<(const Wallpaper& other) const {
+bool Wallpaper::operator<(const Wallpaper &other) const {
     return strcasecmp(name.c_str(), other.name.c_str()) < 0;
 }

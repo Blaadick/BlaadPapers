@@ -22,7 +22,13 @@ int main() {
     bind(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
     listen(fd, 1);
 
-    signal(SIGINT, [](int){ unlink(SOCK_PATH); exit(0); });
+    signal(
+        SIGINT,
+        [](int) {
+            unlink(SOCK_PATH);
+            exit(0);
+        }
+    );
 
     while(true) {
         const int cli = accept(fd, nullptr, nullptr);
