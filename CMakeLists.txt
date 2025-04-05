@@ -15,6 +15,4 @@ set(CMAKE_CXX_STANDARD 26)
 
 include_directories(include lib)
 add_compile_definitions(VERSION="${PROJECT_VERSION}")
-add_executable(blaadpapers ${SOURCES}
-    src/OptionExecutor.cpp
-    include/OptionExecutor.hpp)
+add_executable(blaadpapers ${SOURCES})

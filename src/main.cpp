@@ -63,9 +63,9 @@ int main(const int argc, const char **argv) {
     readConfig();
     loadWallpapers();
 
-    if(argc >= 2 && argv[1][0] == '-') {
-        OptionExecutor executor;
-
-        executor.executeOption(argv);
+    if(argc >= 2) {
+        OptionExecutor::getInstance().executeOption(argv);
+    } else {
+        //TODO Run GUI application
     }
 }

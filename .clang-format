@@ -13,10 +13,10 @@ AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakAfterDefinitionReturnType: false
-AlwaysBreakTemplateDeclarations: Yes
+AlwaysBreakTemplateDeclarations: No
 BinPackArguments: false
 BinPackParameters: false
-BraceWrapping:
+BraceWrapping: 
   AfterCaseLabel: false
   AfterClass: false
   AfterControlStatement: false
@@ -38,7 +38,7 @@ BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
 ColumnLimit: 0
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-IncludeCategories:
+IncludeCategories: 
   - Regex: '^<.*'
     Priority: 1
   - Regex: '^".*'
