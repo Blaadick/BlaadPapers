@@ -4,27 +4,23 @@
 #include <vector>
 #include <json/json.hpp>
 
-using namespace std;
-using namespace nlohmann;
-using namespace filesystem;
-
 class Wallpaper {
-    string name;
-    string description;
-    vector<string> tags;
+    std::string name;
+    std::string description;
+    std::vector<std::string> tags;
 
 public:
-    Wallpaper(const string &name, const json &data);
+    Wallpaper(const std::string &name, const nlohmann::json &data);
 
-    [[nodiscard]] string getName() const;
+    [[nodiscard]] std::string getName() const;
 
-    [[nodiscard]] string getDescription() const;
+    [[nodiscard]] std::string getDescription() const;
 
-    [[nodiscard]] vector<string> getTags() const;
+    [[nodiscard]] std::vector<std::string> getTags() const;
 
-    [[nodiscard]] string getFilePath() const;
+    [[nodiscard]] std::string getFilePath() const;
 
-    [[nodiscard]] json toJson() const;
+    [[nodiscard]] nlohmann::json toJson() const;
 
     [[nodiscard]] bool operator<(const Wallpaper &other) const;
 };

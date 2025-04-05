@@ -1,29 +1,27 @@
+#include <filesystem>
 #include <fstream>
 #include <json/json.hpp>
 
+#include "Defaults.hpp"
 #include "Global.hpp"
 #include "OptionExecutor.hpp"
 
-using namespace std;
-using namespace nlohmann;
-using namespace filesystem;
-
 void readConfig() {
-    path configFilePath = string(getenv("HOME")) + "/.config/blaadpapers.json";
-    json configData;
+    std::filesystem::path configFilePath = std::string(getenv("HOME")) + "/.config/blaadpapers.json";
+    nlohmann::json configData;
 
     if(exists(configFilePath)) {
-        ifstream configFile(configFilePath);
+        std::ifstream configFile(configFilePath);
         configFile >> configData;
         configFile.close();
     } else {
         configData = defaultConfig;
     }
 
-    string rawWorkingDir = configData["working_dir"];
+    std::string rawWorkingDir = configData["working_dir"];
 
     if(rawWorkingDir[0] == '~') {
-        workingDir = string(getenv("HOME")) + rawWorkingDir.substr(1);
+        workingDir = std::string(getenv("HOME")) + rawWorkingDir.substr(1);
     } else {
         workingDir = rawWorkingDir;
     }
@@ -34,19 +32,19 @@ void loadWallpapers() {
         create_directory(workingDir / ".index");
     }
 
-    for(const auto &entry: directory_iterator(workingDir)) {
+    for(const auto &entry: std::filesystem::directory_iterator(workingDir)) {
         if(entry.path().extension() != ".png") continue;
 
-        string imageName = entry.path().stem();
-        path dataFilePath = workingDir / ".index" / (imageName + ".json");
-        json data;
+        std::string imageName = entry.path().stem();
+        std::filesystem::path dataFilePath = workingDir / ".index" / (imageName + ".json");
+        nlohmann::json data;
 
         if(exists(dataFilePath)) {
-            ifstream dataFile(dataFilePath);
+            std::ifstream dataFile(dataFilePath);
             dataFile >> data;
             dataFile.close();
         } else {
-            ofstream dataFile(dataFilePath);
+            std::ofstream dataFile(dataFilePath);
             dataFile << defaultWallpaperData.dump(4);
             dataFile.close();
 
