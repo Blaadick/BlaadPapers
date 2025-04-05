@@ -12,21 +12,30 @@ Main options:
 
 Universal sub options:
     h  ->  Shows help for main option and exit
-    q  ->  Disables command output
-    j  ->  Outputs some command outputs in JSON format)#";
+    q  ->  Disables command output (it'll be working soon)
+)#";
 
-inline std::string_view helpHelpMessage = "WTF bro?";
+inline std::string_view versionHelpMessage = R"#(Usage:
+    blaadpapers -V[SubOptions]
 
-inline std::string_view versionHelpMessage = "It's just a version, nothing more.";
+Sub options:
+    j  ->  Outputs command result in JSON format)#";
 
 inline std::string_view setHelpMessage = R"#(Usage:
     blaadpapers -S[SubOptions] <WallpaperName>)#";
 
 inline std::string_view randomHelpMessage = R"#(Usage:
-    blaadpapers -R[SubOptions])#";
+    blaadpapers -R[SubOptions]
+    blaadpapers -Rf[SubOptions] <TagsListInJsonFormat>
+
+Sub options:
+    f  ->  Specifies the tags with which the wallpaper can be installed)#";
 
 inline std::string_view listHelpMessage = R"#(Usage:
-    blaadpapers -L[SubOptions])#";
+    blaadpapers -L[SubOptions]
+
+Sub options:
+    j  ->  Outputs command result in JSON format)#";
 
 inline nlohmann::json defaultConfig = {
     {"working_dir", "~/Pictures/Wallpapers/"}
