@@ -6,22 +6,26 @@
 #include "Global.hpp"
 #include "OptionExecutor.hpp"
 
+using namespace std;
+using namespace filesystem;
+using nlohmann::json;
+
 void readConfig() {
-    std::filesystem::path configFilePath = std::string(getenv("HOME")) + "/.config/blaadpapers.json";
-    nlohmann::json configData;
+    path configFilePath = string(getenv("HOME")) + "/.config/blaadpapers.json";
+    json configData;
 
     if(exists(configFilePath)) {
-        std::ifstream configFile(configFilePath);
+        ifstream configFile(configFilePath);
         configFile >> configData;
         configFile.close();
     } else {
         configData = defaultConfig;
     }
 
-    std::string rawWorkingDir = configData["working_dir"];
+    string rawWorkingDir = configData["working_dir"];
 
     if(rawWorkingDir[0] == '~') {
-        workingDir = std::string(getenv("HOME")) + rawWorkingDir.substr(1);
+        workingDir = string(getenv("HOME")) + rawWorkingDir.substr(1);
     } else {
         workingDir = rawWorkingDir;
     }
@@ -32,19 +36,19 @@ void loadWallpapers() {
         create_directory(workingDir / ".index");
     }
 
-    for(const auto &entry: std::filesystem::directory_iterator(workingDir)) {
+    for(const auto &entry: directory_iterator(workingDir)) {
         if(entry.path().extension() != ".png") continue;
 
-        std::string imageName = entry.path().stem();
-        std::filesystem::path dataFilePath = workingDir / ".index" / (imageName + ".json");
-        nlohmann::json data;
+        string imageName = entry.path().stem();
+        path dataFilePath = workingDir / ".index" / (imageName + ".json");
+        json data;
 
         if(exists(dataFilePath)) {
-            std::ifstream dataFile(dataFilePath);
+            ifstream dataFile(dataFilePath);
             dataFile >> data;
             dataFile.close();
         } else {
-            std::ofstream dataFile(dataFilePath);
+            ofstream dataFile(dataFilePath);
             dataFile << defaultWallpaperData.dump(4);
             dataFile.close();
 

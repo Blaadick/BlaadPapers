@@ -7,29 +7,32 @@
 #include "Defaults.hpp"
 #include "Global.hpp"
 
+using namespace std;
+using nlohmann::json;
+
 void setWallpaper(const Wallpaper &wallpaper) {
     //TODO move away
     system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + "\"").c_str());
     system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
 }
 
-void OptionExecutor::help(const std::pmr::set<char> &, const char **) {
-    std::cout << mainHelpMessage << std::endl;
+void OptionExecutor::help(const pmr::set<char> &, const char **) {
+    cout << mainHelpMessage << endl;
 }
 
-void OptionExecutor::version(const std::pmr::set<char> &subOptions, const char **) {
+void OptionExecutor::version(const pmr::set<char> &subOptions, const char **) {
     if(subOptions.contains('j')) {
-        std::cout << nlohmann::json {{"version", VERSION}} << std::endl;
+        cout << json {{"version", VERSION}} << endl;
     } else {
-        std::cout << "Version: " << VERSION << std::endl;
+        cout << "Version: " << VERSION << endl;
     }
 }
 
-void OptionExecutor::set(const std::pmr::set<char> &, const char **arguments) {
+void OptionExecutor::set(const pmr::set<char> &, const char **arguments) {
     const char *imageName = arguments[2];
 
     if(imageName == nullptr) {
-        std::cout << "Wallpaper name not set!" << std::endl;
+        cout << "Wallpaper name not set!" << endl;
         return;
     }
 
@@ -37,37 +40,37 @@ void OptionExecutor::set(const std::pmr::set<char> &, const char **arguments) {
     const auto wallpaperToSet = wallpapers.lower_bound(temp);
 
     if(strcasecmp(wallpaperToSet->getName().c_str(), imageName) != 0) {
-        std::cout << "No wallpaper found" << std::endl;
+        cout << "No wallpaper found" << endl;
         return;
     }
 
     setWallpaper(*wallpaperToSet);
 
-    std::cout << "Wallpaper " << wallpaperToSet->getName() << " set" << std::endl;
+    cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::random(const std::pmr::set<char> &, const char **) {
-    std::random_device randomDevice;
-    std::mt19937 rand(randomDevice());
-    std::uniform_int_distribution randomDistribution(0, static_cast<int>(wallpapers.size()) - 1);
-    const auto wallpaperToSet = std::next(wallpapers.begin(), randomDistribution(rand));
+void OptionExecutor::random(const pmr::set<char> &, const char **) {
+    random_device randomDevice;
+    mt19937 rand(randomDevice());
+    uniform_int_distribution randomDistribution(0, static_cast<int>(wallpapers.size()) - 1);
+    const auto wallpaperToSet = next(wallpapers.begin(), randomDistribution(rand));
 
     setWallpaper(*wallpaperToSet);
-    std::cout << "Wallpaper " << wallpaperToSet->getName() << " set" << std::endl;
+    cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::list(const std::pmr::set<char> &subOptions, const char **) {
+void OptionExecutor::list(const pmr::set<char> &subOptions, const char **) {
     if(subOptions.contains('j')) {
-        std::cout << "{";
+        cout << "{";
 
         for(const auto &wallpaper: wallpapers) {
-            std::cout << wallpaper.toJson() << ",";
+            cout << wallpaper.toJson() << ",";
         }
 
-        std::cout << "\b" << "}" << std::endl;
+        cout << "\b" << "}" << endl;
     } else {
         for(const auto &wallpaper: wallpapers) {
-            std::cout << wallpaper.getName() << std::endl;
+            cout << wallpaper.getName() << endl;
         }
     }
 }
@@ -82,17 +85,17 @@ OptionExecutor::OptionExecutor() {
 
 void OptionExecutor::executeOption(const char **arguments) {
     const char &mainOption = arguments[1][1];
-    std::pmr::set<char> subOptions;
+    pmr::set<char> subOptions;
 
     for(int i = 2; i <= strlen(arguments[1]) - 1; i++) {
         switch(arguments[1][i]) {
             case 'h': {
-                std::cout << options[mainOption].helpMessage << std::endl;
+                cout << options[mainOption].helpMessage << endl;
                 return;
             }
             case 'q': {
                 //TODO supress output
-                std::cout << "Be Quiet!" << std::endl;
+                cout << "Be Quiet!" << endl;
                 break;
             }
             default: {
@@ -105,6 +108,6 @@ void OptionExecutor::executeOption(const char **arguments) {
     if(options.contains(mainOption)) {
         options[mainOption].func(subOptions, arguments);
     } else {
-        std::cout << "Unknown main option: " << mainOption << std::endl;
+        cout << "Unknown main option: " << mainOption << endl;
     }
 }
