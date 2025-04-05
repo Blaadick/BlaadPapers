@@ -3,5 +3,5 @@
 #include <set>
 #include <Wallpaper.hpp>
 
-inline path workingDir;
-inline set<Wallpaper> wallpapers;
+inline std::filesystem::path workingDir;
+inline std::pmr::set<Wallpaper> wallpapers;

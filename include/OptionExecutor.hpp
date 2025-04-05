@@ -2,38 +2,28 @@
 
 #include <functional>
 #include <map>
-#include <string_view>
-
-#include "Defaults.hpp"
-
-using namespace std;
+#include <set>
 
 class OptionExecutor {
     struct option {
-        function<void(const char **, const bool &)> func;
-        string_view helpMessage;
+        std::function<void(const std::pmr::set<char> &, const char **)> func;
+        std::string_view helpMessage;
     };
 
-    map<char, option> options;
+    std::pmr::map<char, option> options;
 
-    static void help(const char **arguments, const bool &jsonOutput);
+    static void help(const std::pmr::set<char> &subOptions, const char **arguments);
 
-    static void version(const char **arguments, const bool &jsonOutput);
+    static void version(const std::pmr::set<char> &subOptions, const char **arguments);
 
-    static void set(const char **arguments, const bool &jsonOutput);
+    static void set(const std::pmr::set<char> &subOptions, const char **arguments);
 
-    static void random(const char **arguments, const bool &jsonOutput);
+    static void random(const std::pmr::set<char> &subOptions, const char **arguments);
 
-    static void list(const char **arguments, const bool &jsonOutput);
+    static void list(const std::pmr::set<char> &subOptions, const char **arguments);
 
 public:
-    OptionExecutor() {
-        options['H'] = {help, helpHelpMessage};
-        options['V'] = {version, versionHelpMessage};
-        options['S'] = {set, setHelpMessage};
-        options['R'] = {random, randomHelpMessage};
-        options['L'] = {list, listHelpMessage};
-    }
+    OptionExecutor();
 
     void executeOption(const char **arguments);
 };

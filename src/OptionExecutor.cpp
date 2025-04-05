@@ -1,6 +1,7 @@
-#include <fstream>
 #include <iostream>
 #include <random>
+#include <Wallpaper.hpp>
+#include <json/json.hpp>
 
 #include "OptionExecutor.hpp"
 #include "Defaults.hpp"
@@ -12,23 +13,23 @@ void setWallpaper(const Wallpaper &wallpaper) {
     system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
 }
 
-void OptionExecutor::help(const char **, const bool &) {
-    cout << mainHelpMessage << endl;
+void OptionExecutor::help(const std::pmr::set<char> &, const char **) {
+    std::cout << mainHelpMessage << std::endl;
 }
 
-void OptionExecutor::version(const char **, const bool &jsonOutput) {
-    if(jsonOutput) {
-        cout << json {{"version", VERSION}} << endl;
+void OptionExecutor::version(const std::pmr::set<char> &subOptions, const char **) {
+    if(subOptions.contains('j')) {
+        std::cout << nlohmann::json {{"version", VERSION}} << std::endl;
     } else {
-        cout << "Version: " << VERSION << endl;
+        std::cout << "Version: " << VERSION << std::endl;
     }
 }
 
-void OptionExecutor::set(const char **arguments, const bool &) {
+void OptionExecutor::set(const std::pmr::set<char> &, const char **arguments) {
     const char *imageName = arguments[2];
 
     if(imageName == nullptr) {
-        cout << "Wallpaper name not set!" << endl;
+        std::cout << "Wallpaper name not set!" << std::endl;
         return;
     }
 
@@ -36,71 +37,74 @@ void OptionExecutor::set(const char **arguments, const bool &) {
     const auto wallpaperToSet = wallpapers.lower_bound(temp);
 
     if(strcasecmp(wallpaperToSet->getName().c_str(), imageName) != 0) {
-        cout << "No wallpaper found" << endl;
+        std::cout << "No wallpaper found" << std::endl;
         return;
     }
 
     setWallpaper(*wallpaperToSet);
 
-    cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
+    std::cout << "Wallpaper " << wallpaperToSet->getName() << " set" << std::endl;
 }
 
-void OptionExecutor::random(const char **, const bool &) {
-    random_device randomDevice;
-    mt19937 rand(randomDevice());
-    uniform_int_distribution randomDistribution(0, static_cast<int>(wallpapers.size()) - 1);
-    const auto wallpaperToSet = next(wallpapers.begin(), randomDistribution(rand));
+void OptionExecutor::random(const std::pmr::set<char> &, const char **) {
+    std::random_device randomDevice;
+    std::mt19937 rand(randomDevice());
+    std::uniform_int_distribution randomDistribution(0, static_cast<int>(wallpapers.size()) - 1);
+    const auto wallpaperToSet = std::next(wallpapers.begin(), randomDistribution(rand));
 
     setWallpaper(*wallpaperToSet);
-    cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
+    std::cout << "Wallpaper " << wallpaperToSet->getName() << " set" << std::endl;
 }
 
-void OptionExecutor::list(const char **, const bool &jsonOutput) {
-    if(jsonOutput) {
-        cout << "{";
+void OptionExecutor::list(const std::pmr::set<char> &subOptions, const char **) {
+    if(subOptions.contains('j')) {
+        std::cout << "{";
 
         for(const auto &wallpaper: wallpapers) {
-            cout << wallpaper.toJson() << ",";
+            std::cout << wallpaper.toJson() << ",";
         }
 
-        cout << "\b" << "}" << endl;
+        std::cout << "\b" << "}" << std::endl;
     } else {
         for(const auto &wallpaper: wallpapers) {
-            cout << wallpaper.getName() << endl;
+            std::cout << wallpaper.getName() << std::endl;
         }
     }
 }
 
-void OptionExecutor::executeOption(const char **arguments) {
-    const string arg = arguments[1];
-    const char mainOption = arg[1];
-    const string subOptions = arg.substr(2);
-    bool isJsonOutput = false;
+OptionExecutor::OptionExecutor() {
+    options['H'] = {help, helpHelpMessage};
+    options['V'] = {version, versionHelpMessage};
+    options['S'] = {set, setHelpMessage};
+    options['R'] = {random, randomHelpMessage};
+    options['L'] = {list, listHelpMessage};
+}
 
-    for(const char &opt: subOptions) {
-        switch(opt) {
+void OptionExecutor::executeOption(const char **arguments) {
+    const char &mainOption = arguments[1][1];
+    std::pmr::set<char> subOptions;
+
+    for(int i = 2; i <= strlen(arguments[1]) - 1; i++) {
+        switch(arguments[1][i]) {
             case 'h': {
-                cout << options[mainOption].helpMessage << endl;
+                std::cout << options[mainOption].helpMessage << std::endl;
                 return;
             }
             case 'q': {
-                //TODO suppress program output
-                break;
-            }
-            case 'j': {
-                isJsonOutput = true;
+                //TODO supress output
+                std::cout << "Be Quiet!" << std::endl;
                 break;
             }
             default: {
-                cout << "Unknown option: " << opt << endl;
-                return;
+                subOptions.insert(arguments[1][i]);
+                break;
             }
         }
     }
 
     if(options.contains(mainOption)) {
-        options[mainOption].func(arguments, isJsonOutput);
+        options[mainOption].func(subOptions, arguments);
     } else {
-        cout << "Unknown main option: " << mainOption << endl;
+        std::cout << "Unknown main option: " << mainOption << std::endl;
     }
 }
