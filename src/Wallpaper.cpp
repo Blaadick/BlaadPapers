@@ -1,29 +1,32 @@
 #include "Wallpaper.hpp"
 #include "Global.hpp"
 
-Wallpaper::Wallpaper(const std::string &name, const nlohmann::json &data) {
+using namespace std;
+using nlohmann::json;
+
+Wallpaper::Wallpaper(const string &name, const json &data) {
     this->name = name;
     this->description = data["description"];
     this->tags = data["tags"];
 }
 
-std::string Wallpaper::getName() const {
+string Wallpaper::getName() const {
     return name;
 }
 
-std::string Wallpaper::getDescription() const {
+string Wallpaper::getDescription() const {
     return description;
 }
 
-std::vector<std::string> Wallpaper::getTags() const {
+vector<string> Wallpaper::getTags() const {
     return tags;
 }
 
-std::string Wallpaper::getFilePath() const {
+string Wallpaper::getFilePath() const {
     return workingDir / (name + ".png");
 }
 
-nlohmann::json Wallpaper::toJson() const {
+json Wallpaper::toJson() const {
     return {
         {"name", name},
         {"description", description},
