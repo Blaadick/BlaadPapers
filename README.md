@@ -1,6 +1,8 @@
 <div align = center>
 
 # BlaadPapers
+![Static Badge](https://img.shields.io/badge/random-bage-yellow?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/just_another-bage-purple?style=for-the-badge)
 
 </div>
 
@@ -11,4 +13,16 @@
 Super wallpaper manager
 
 ## Installation
-Not yet
+<details><summary>Arch Linux</summary>
+
+```shell
+yay -S blaadpapers
+```
+
+</details>
+
+<details><summary>Windows</summary>
+
+Application installation. Maby soon.
+
+</details>
