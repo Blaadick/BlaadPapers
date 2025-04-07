@@ -12,7 +12,13 @@ project(
 )
 
 set(CMAKE_CXX_STANDARD 26)
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTORCC ON)
+#set(CMAKE_AUTOUIC ON)
 
-include_directories(include lib)
-add_compile_definitions(VERSION="${PROJECT_VERSION}")
+find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+
 add_executable(blaadpapers ${SOURCES})
+add_compile_definitions(VERSION="${PROJECT_VERSION}")
+target_include_directories(blaadpapers PRIVATE include lib)
+target_link_libraries(blaadpapers PRIVATE Qt::Core Qt::Gui Qt::Widgets)
