@@ -3,7 +3,7 @@
 inline std::string_view mainHelpMessage = R"#(Usage:
     blaadpapers -[MainOption][SubOptions]
 
-Main options:
+Options:
     H  ->  Shows this help
     V  ->  Shows program version
     S  ->  Sets the wallpaper

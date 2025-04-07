@@ -1,9 +1,11 @@
+#include "OptionExecutor.hpp"
+
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <Wallpaper.hpp>
 #include <json/json.hpp>
 
-#include "OptionExecutor.hpp"
 #include "Defaults.hpp"
 #include "Global.hpp"
 
@@ -12,9 +14,13 @@ using nlohmann::json;
 
 void setWallpaper(const Wallpaper &wallpaper) {
     //TODO move away
-    system("hyprctl -q hyprpaper unload all");
     system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + "\"").c_str());
     system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
+
+    ofstream hyprpaperConfig(string(getenv("HOME")) + "/.config/hypr/hyprpaper.conf");
+    hyprpaperConfig << "preload = " << wallpaper.getFilePath() << endl;
+    hyprpaperConfig << "wallpaper = , " << wallpaper.getFilePath() << endl;
+    hyprpaperConfig.close();
 }
 
 OptionExecutor::OptionExecutor() {
@@ -42,7 +48,12 @@ void OptionExecutor::set(const pmr::set<char> &, const char **arguments) {
     const char *imageName = arguments[2];
 
     if(imageName == nullptr) {
-        cout << "Wallpaper name not set!" << endl;
+        cerr << "Wallpaper name not set" << endl;
+        return;
+    }
+
+    if(wallpapers.empty()) {
+        cerr << "No wallpaper found" << endl;
         return;
     }
 
@@ -50,7 +61,7 @@ void OptionExecutor::set(const pmr::set<char> &, const char **arguments) {
     const auto &wallpaperToSet = *wallpapers.lower_bound(temp);
 
     if(strcasecmp(wallpaperToSet.getName().c_str(), imageName) != 0) {
-        cout << "No wallpaper found" << endl;
+        cerr << "No wallpaper found" << endl;
         return;
     }
 
@@ -63,8 +74,26 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const char **argum
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
 
+    if(wallpapers.empty()) {
+        cerr << "No wallpapers found" << endl;
+        return;
+    }
+
     if(subOptions.contains('f')) {
-        const vector<string> includeTags = json::parse(arguments[2]);
+        vector<string> includeTags;
+        vector<string> excludeTags;
+
+        try {
+            includeTags = json::parse(arguments[2]);
+
+            if(arguments[3] != nullptr) {
+                excludeTags = json::parse(arguments[3]);
+            }
+        } catch(...) {
+            cerr << "Failed to parse passed tags" << endl;
+            return;
+        }
+
         pmr::set<const Wallpaper *> filteredWallpapers;
 
         for(const auto &wallpaper: wallpapers) {
@@ -75,12 +104,20 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const char **argum
                     return ranges::find(wallpaperTags, tag) != wallpaperTags.end();
                 }
             )) {
-                filteredWallpapers.insert(&wallpaper);
+                if(!ranges::any_of(
+                    excludeTags,
+                    [&wallpaper](const string &tag) {
+                        auto wallpaperTags = wallpaper.getTags();
+                        return ranges::find(wallpaperTags, tag) != wallpaperTags.end();
+                    }
+                )) {
+                    filteredWallpapers.insert(&wallpaper);
+                }
             }
         }
 
         if(filteredWallpapers.empty()) {
-            cout << "No Wallpaper found" << endl;
+            cerr << "No wallpaper found" << endl;
             return;
         }
 
@@ -102,6 +139,10 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const char **argum
 }
 
 void OptionExecutor::list(const pmr::set<char> &subOptions, const char **) {
+    if(wallpapers.empty()) {
+        return;
+    }
+
     if(subOptions.contains('j')) {
         cout << "{";
 
@@ -122,29 +163,29 @@ OptionExecutor &OptionExecutor::getInstance() {
     return instance;
 }
 
-void OptionExecutor::executeOption(const char **arguments) {
-    const char &mainOption = arguments[1][1];
+void OptionExecutor::execute(const char **arguments) {
+    const char &option = arguments[1][1];
     pmr::set<char> subOptions;
 
     if(arguments[1][0] != '-') {
-        cout << "Unknown argument: " << arguments[1] << endl;
+        cerr << "Unknown argument: " << arguments[1] << endl;
         return;
     }
 
     if(strlen(arguments[1]) < 2) {
-        cout << "Main option not specified" << endl;
+        cerr << "Option not specified" << endl;
         return;
     }
 
-    if(!options.contains(mainOption)) {
-        cout << "Unknown main option: " << mainOption << endl;
+    if(!options.contains(option)) {
+        cerr << "Unknown option: " << option << endl;
         return;
     }
 
     for(int i = 2; i < strlen(arguments[1]); i++) {
         switch(arguments[1][i]) {
             case 'h': {
-                cout << options[mainOption].helpMessage << endl;
+                cout << options[option].helpMessage << endl;
                 return;
             }
             case 'q': {
@@ -152,15 +193,15 @@ void OptionExecutor::executeOption(const char **arguments) {
                 break;
             }
             default: {
-                if(options[mainOption].allowableSubOptions.contains(arguments[1][i])) {
+                if(options[option].allowableSubOptions.contains(arguments[1][i])) {
                     subOptions.insert(arguments[1][i]);
                 } else {
-                    cout << "Unknown sub option: " << arguments[1][i] << endl;
+                    cerr << "Unknown sub option: " << arguments[1][i] << endl;
                     return;
                 }
             }
         }
     }
 
-    options[mainOption].func(subOptions, arguments);
+    options[option].func(subOptions, arguments);
 }

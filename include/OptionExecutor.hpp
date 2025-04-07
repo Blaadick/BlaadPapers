@@ -3,15 +3,16 @@
 #include <functional>
 #include <map>
 #include <set>
+#include <string_view>
 
 class OptionExecutor {
-    struct option {
+    struct Option {
         std::function<void(const std::pmr::set<char> &, const char **)> func;
         std::pmr::set<char> allowableSubOptions;
         std::string_view helpMessage;
     };
 
-    std::pmr::map<char, option> options;
+    std::pmr::map<char, Option> options;
 
     OptionExecutor();
 
@@ -32,5 +33,5 @@ public:
 
     static OptionExecutor &getInstance();
 
-    void executeOption(const char **arguments);
+    void execute(const char **arguments);
 };
