@@ -11,7 +11,7 @@ Options:
     L  ->  Shows list of all available wallpapers
 
 Universal sub options:
-    h  ->  Shows help for main option and exit
+    h  ->  Shows help for option and exit
     q  ->  Disables command output (it'll be working soon)
 )#";
 
@@ -26,7 +26,7 @@ inline std::string_view setHelpMessage = R"#(Usage:
 
 inline std::string_view randomHelpMessage = R"#(Usage:
     blaadpapers -R[SubOptions]
-    blaadpapers -Rf[SubOptions] <TagsListInJsonFormat>
+    blaadpapers -Rf[SubOptions] <includeTags> [excludeTags]
 
 Sub options:
     f  ->  Specifies the tags with which the wallpaper can be installed)#";
