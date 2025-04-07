@@ -14,6 +14,8 @@ using nlohmann::json;
 
 void setWallpaper(const Wallpaper &wallpaper) {
     //TODO move away
+    //TODO Setup CURRENT_WALLPAPER env variable
+
     system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + "\"").c_str());
     system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
 
@@ -121,16 +123,14 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const char **argum
             return;
         }
 
-        uniform_int_distribution<> randomDis(0, filteredWallpapers.size() - 1);
+        uniform_int_distribution randomDis(0, static_cast<int>(filteredWallpapers.size()) - 1);
         auto it = filteredWallpapers.begin();
         advance(it, randomDis(rand));
-
         wallpaperToSet = *it;
     } else {
-        uniform_int_distribution<> randomDis(0, wallpapers.size() - 1);
+        uniform_int_distribution randomDis(0, static_cast<int>(wallpapers.size()) - 1);
         auto it = wallpapers.begin();
         advance(it, randomDis(rand));
-
         wallpaperToSet = &*it;
     }
 

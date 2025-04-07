@@ -11,7 +11,7 @@ using namespace filesystem;
 using nlohmann::json;
 
 void readConfig() {
-    path configFilePath = string(getenv("HOME")) + "/.config/blaadpapers/config.json";
+    path configFilePath = configDir / "config.json";
     json configData;
 
     if(exists(configFilePath)) {
@@ -32,6 +32,10 @@ void readConfig() {
 }
 
 void loadWallpapers() {
+    if(!exists(workingDir / ".index")) {
+        create_directory(workingDir / ".index");
+    }
+
     for(const auto &entry: directory_iterator(workingDir)) {
         if(entry.path().extension() != ".png") continue;
 
