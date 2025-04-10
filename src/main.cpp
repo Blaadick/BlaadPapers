@@ -1,7 +1,15 @@
 #include <filesystem>
 #include <fstream>
 #include <QApplication>
-#include <QGridLayout>
+#include <QApplication>
+#include <QComboBox>
+#include <QDebug>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QMainWindow>
+#include <QScreen>
+#include <QSplitter>
+#include <QVBoxLayout>
 #include <QPushButton>
 #include <json/json.hpp>
 
@@ -62,6 +70,11 @@ void loadWallpapers() {
     }
 }
 
+QSize getAspectRatio(const QRect &geometry) {
+    const int divisor = std::gcd(geometry.width(), geometry.height());
+    return {geometry.width() / divisor, geometry.height() / divisor};
+}
+
 int main(int argc, const char **argv) {
     readConfig();
     loadWallpapers();
@@ -70,40 +83,56 @@ int main(int argc, const char **argv) {
         OptionExecutor::getInstance().execute(argv);
     } else {
         QApplication app(argc, nullptr);
-        QWidget window;
+        QMainWindow mainWindow;
 
-        QGridLayout grid(&window);
-        grid.setSpacing(10);
-
-        QPushButton btn00("00", &window);
-        QPushButton btn01("01", &window);
-        QPushButton btn02("02", &window);
-        QPushButton btn10("10", &window);
-        QPushButton btn11("11", &window);
-        QPushButton btn12("12", &window);
-        QPushButton btn20("20", &window);
-        QPushButton btn21("21", &window);
-        QPushButton btn22("22", &window);
-
-        const auto buttons = {&btn00, &btn01, &btn02, &btn10, &btn11, &btn12, &btn20, &btn21, &btn22};
-
-        for(QPushButton *button: buttons) {
-            button->setFixedSize(50, 50);
+        for(const auto screen: QGuiApplication::screens()) {
+            qDebug() << screen->name() << ":";
+            qDebug() << "  Physical Size:" << screen->physicalSize().width() << "x" << screen->physicalSize().height() << "mm";
+            qDebug() << "  Pixel Size:" << screen->geometry().width() << "x" << screen->geometry().height();
         }
 
-        grid.addWidget(&btn00, 0, 0);
-        grid.addWidget(&btn01, 0, 1);
-        grid.addWidget(&btn02, 0, 2);
+        const auto splitter = new QSplitter();
+        const auto wallpaperDetails = new QListWidget();
+        wallpaperDetails->setFixedWidth(300);
 
-        grid.addWidget(&btn10, 1, 0);
-        grid.addWidget(&btn11, 1, 1);
-        grid.addWidget(&btn12, 1, 2);
+        const auto topBatWidget = new QWidget();
+        const auto topBarLayout = new QHBoxLayout(topBatWidget);
+        const auto searchBox = new QLineEdit();
+        const auto monitorCombo = new QComboBox();
+        topBarLayout->addWidget(monitorCombo);
+        topBarLayout->addWidget(searchBox);
 
-        grid.addWidget(&btn20, 2, 0);
-        grid.addWidget(&btn21, 2, 1);
-        grid.addWidget(&btn22, 2, 2);
+        const auto rightWidget = new QWidget();
+        const auto mainLayout = new QVBoxLayout(rightWidget);
+        const auto wallpaperList = new QGridLayout();
 
-        window.show();
+        wallpaperList->setSpacing(10);
+        wallpaperList->setAlignment(Qt::AlignCenter);
+
+        mainLayout->addWidget(topBatWidget, 0, Qt::AlignTop);
+        mainLayout->addLayout(wallpaperList, 0);
+
+        splitter->addWidget(wallpaperDetails);
+        splitter->addWidget(rightWidget);
+
+        splitter->setChildrenCollapsible(false);
+
+        mainWindow.setCentralWidget(splitter);
+
+        int i = 0;
+        for(const auto &wallpaper: wallpapers) {
+            if(i >= 10) break;
+
+            const auto wallpaperWidget = new QPushButton(QIcon(wallpaper.getFilePath().c_str()), wallpaper.getName().c_str());
+
+            wallpaperWidget->setFixedSize(getAspectRatio(QGuiApplication::screens()[0]->geometry()) * 10);
+
+            wallpaperList->addWidget(wallpaperWidget, i / 4, i % 4);
+
+            i++;
+        }
+
+        mainWindow.show();
 
         return QApplication::exec();
     }

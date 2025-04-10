@@ -14,8 +14,6 @@ using nlohmann::json;
 
 void setWallpaper(const Wallpaper &wallpaper) {
     //TODO move away
-    //TODO Setup CURRENT_WALLPAPER env variable
-
     system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + "\"").c_str());
     system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
 
