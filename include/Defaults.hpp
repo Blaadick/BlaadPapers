@@ -1,7 +1,7 @@
 #pragma once
 
 inline std::string_view mainHelpMessage = R"#(Usage:
-    blaadpapers -[MainOption][SubOptions]
+    blaadpapers -<Option>[SubOptions]
 
 Options:
     H  ->  Shows this help
