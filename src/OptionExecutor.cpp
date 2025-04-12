@@ -32,11 +32,11 @@ OptionExecutor::OptionExecutor() {
     options['L'] = {list, {'j'}, listHelpMessage};
 }
 
-void OptionExecutor::help(const pmr::set<char> &, const char **) {
+void OptionExecutor::help(const pmr::set<char> &, char **) {
     cout << mainHelpMessage << endl;
 }
 
-void OptionExecutor::version(const pmr::set<char> &subOptions, const char **) {
+void OptionExecutor::version(const pmr::set<char> &subOptions, char **) {
     if(subOptions.contains('j')) {
         cout << json {{"version", VERSION}} << endl;
     } else {
@@ -44,7 +44,7 @@ void OptionExecutor::version(const pmr::set<char> &subOptions, const char **) {
     }
 }
 
-void OptionExecutor::set(const pmr::set<char> &, const char **arguments) {
+void OptionExecutor::set(const pmr::set<char> &, char **arguments) {
     const char *imageName = arguments[2];
 
     if(imageName == nullptr) {
@@ -70,7 +70,7 @@ void OptionExecutor::set(const pmr::set<char> &, const char **arguments) {
     cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 }
 
-void OptionExecutor::random(const pmr::set<char> &subOptions, const char **arguments) {
+void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) {
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
 
@@ -136,7 +136,7 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const char **argum
     cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::list(const pmr::set<char> &subOptions, const char **) {
+void OptionExecutor::list(const pmr::set<char> &subOptions, char **) {
     if(wallpapers.empty()) {
         return;
     }
@@ -161,7 +161,7 @@ OptionExecutor &OptionExecutor::getInstance() {
     return instance;
 }
 
-void OptionExecutor::execute(const char **arguments) {
+void OptionExecutor::execute(char **arguments) {
     const char &option = arguments[1][1];
     pmr::set<char> subOptions;
 
