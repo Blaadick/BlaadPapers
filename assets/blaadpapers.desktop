@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Blaadpapers
+GenericName=Wallpaper Manager
+Comment=Super wallpaper manager
+Categories=Application;Viewer;DesktopSettings;Qt;
+Exec=blaadpapers
+Terminal=false
+Keywords=wallpaper;
