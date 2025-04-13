@@ -6,7 +6,7 @@
 #include "Defaults.hpp"
 #include "Global.hpp"
 #include "OptionExecutor.hpp"
-#include "qt/MainWindow.hpp"
+#include "gui/MainWindow.hpp"
 
 using namespace std;
 using namespace filesystem;
@@ -69,7 +69,8 @@ int main(int argc, char **argv) {
         OptionExecutor::getInstance().execute(argv);
     } else {
         QApplication app(argc, argv);
-        MainWindow::getInstance().show();
+        MainWindow mainWindow;
+        mainWindow.show();
         return QApplication::exec();
     }
 }

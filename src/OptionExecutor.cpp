@@ -8,20 +8,10 @@
 
 #include "Defaults.hpp"
 #include "Global.hpp"
+#include "Util.hpp"
 
 using namespace std;
 using nlohmann::json;
-
-void setWallpaper(const Wallpaper &wallpaper) {
-    //TODO move away
-    system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + "\"").c_str());
-    system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + "\"").c_str());
-
-    ofstream hyprpaperConfig(string(getenv("HOME")) + "/.config/hypr/hyprpaper.conf");
-    hyprpaperConfig << "preload = " << wallpaper.getFilePath() << endl;
-    hyprpaperConfig << "wallpaper = , " << wallpaper.getFilePath() << endl;
-    hyprpaperConfig.close();
-}
 
 OptionExecutor::OptionExecutor() {
     options['H'] = {help, {}, "WTF bro?"};
