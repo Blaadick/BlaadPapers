@@ -7,5 +7,5 @@
 
 class QWallpaperPreview final : public QPushButton {
 public:
-    explicit QWallpaperPreview(const Wallpaper &wallpaper, QWidget *parent = nullptr);
+    explicit QWallpaperPreview(const QScreen *screen, const Wallpaper &wallpaper, QWidget *parent = nullptr);
 };
