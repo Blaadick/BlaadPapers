@@ -7,6 +7,8 @@ namespace Ui {
 }
 
 class MainWindow final : public QMainWindow {
+    Q_OBJECT
+
 public:
     static MainWindow &getInstance();
 

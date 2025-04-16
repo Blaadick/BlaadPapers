@@ -81,6 +81,9 @@
         </rect>
        </property>
        <layout class="QGridLayout" name="wallpaperGridLayout">
+        <property name="sizeConstraint">
+         <enum>QLayout::SizeConstraint::SetFixedSize</enum>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>

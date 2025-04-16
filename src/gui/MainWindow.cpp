@@ -22,8 +22,7 @@ MainWindow::MainWindow() : ui(new Ui::MainWindow) {
 
     int i = 0;
     for(const auto &wallpaper: wallpapers) {
-        const auto wallpaperPreview = new QWallpaperPreview(wallpaper);
-        ui->wallpaperGridLayout->addWidget(wallpaperPreview, i / 5, i % 5);
+        ui->wallpaperGridLayout->addWidget(new QWallpaperPreview(wallpaper), i / 5, i % 5);
         i++;
     }
 }
