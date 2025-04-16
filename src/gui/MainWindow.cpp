@@ -9,34 +9,26 @@
 #include "gui/ui_MainWindow.h"
 
 MainWindow::MainWindow() : ui(new Ui::MainWindow) {
-    selectedScreen = QGuiApplication::screens()[0];
-
     ui->setupUi(this);
+
+    ui->monitorCombo->hide();
+    if(QApplication::screens().count() > 1) {
+        ui->monitorCombo->show();
+
+        for(const auto *screen: QGuiApplication::screens()) {
+            ui->monitorCombo->addItem(screen->name());
+        }
+    }
 
     int i = 0;
     for(const auto &wallpaper: wallpapers) {
-        if(i >= 35) break;
-
-        const auto wallpaperPreview = new QWallpaperPreview(selectedScreen, wallpaper);
-
-        ui->wallpaperGrid->addWidget(wallpaperPreview, i / 5, i % 5);
-
-        connect(
-            wallpaperPreview,
-            &QAbstractButton::clicked,
-            [&] {
-                setWallpaper(wallpaper);
-            }
-        );
-
+        const auto wallpaperPreview = new QWallpaperPreview(wallpaper);
+        ui->wallpaperGridLayout->addWidget(wallpaperPreview, i / 5, i % 5);
         i++;
-    }
-
-    for(const auto *screen: QGuiApplication::screens()) {
-        ui->comboBox->addItem(screen->name());
     }
 }
 
-MainWindow::~MainWindow() {
-    delete ui;
+MainWindow &MainWindow::getInstance() {
+    static MainWindow instance;
+    return instance;
 }

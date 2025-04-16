@@ -14,7 +14,9 @@ Options:
 Universal sub options:
     h  ->  Shows help for option and exit
     q  ->  Disables command output (it'll be working soon)
-)#";
+
+Notes:
+    Setting wallpapers for individual monitors does not work correctly!)#";
 
 inline std::string_view versionHelpMessage = R"#(Usage:
     blaadpapers -V[SubOptions]
@@ -23,11 +25,11 @@ Sub options:
     j  ->  Outputs command result in JSON format)#";
 
 inline std::string_view setHelpMessage = R"#(Usage:
-    blaadpapers -S[SubOptions] <WallpaperName>)#";
+    blaadpapers -S[SubOptions] <monitorName> <WallpaperName>)#";
 
 inline std::string_view randomHelpMessage = R"#(Usage:
-    blaadpapers -R[SubOptions]
-    blaadpapers -Rf[SubOptions] <includeTags> [excludeTags]
+    blaadpapers -R[SubOptions] <monitorName>
+    blaadpapers -Rf[SubOptions] <monitorName> <includeTags> [excludeTags]
 
 Sub options:
     f  ->  Specifies the tags with which the wallpaper can be installed)#";

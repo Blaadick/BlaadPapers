@@ -35,7 +35,8 @@ void OptionExecutor::version(const pmr::set<char> &subOptions, char **) {
 }
 
 void OptionExecutor::set(const pmr::set<char> &, char **arguments) {
-    const char *imageName = arguments[2];
+    const char *monitorName = arguments[2];
+    const char *imageName = arguments[3];
 
     if(imageName == nullptr) {
         cerr << "Wallpaper name not set" << endl;
@@ -55,12 +56,13 @@ void OptionExecutor::set(const pmr::set<char> &, char **arguments) {
         return;
     }
 
-    setWallpaper(wallpaperToSet);
+    setWallpaper(monitorName, wallpaperToSet);
 
     cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 }
 
 void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) {
+    const char *monitorName = arguments[2];
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
 
@@ -74,10 +76,10 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) 
         vector<string> excludeTags;
 
         try {
-            includeTags = json::parse(arguments[2]);
+            includeTags = json::parse(arguments[3]);
 
-            if(arguments[3] != nullptr) {
-                excludeTags = json::parse(arguments[3]);
+            if(arguments[4] != nullptr) {
+                excludeTags = json::parse(arguments[4]);
             }
         } catch(...) {
             cerr << "Failed to parse passed tags" << endl;
@@ -122,7 +124,7 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) 
         wallpaperToSet = &*it;
     }
 
-    setWallpaper(*wallpaperToSet);
+    setWallpaper(monitorName, *wallpaperToSet);
     cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 

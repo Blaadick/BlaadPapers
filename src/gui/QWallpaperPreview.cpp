@@ -1,16 +1,16 @@
 #include "gui/QWallpaperPreview.hpp"
 
-#include <qguiapplication.h>
 #include <QPushButton>
 #include <QScreen>
 
 #include "Util.hpp"
 #include "Wallpaper.hpp"
-#include "gui/MainWindow.hpp"
 
+QWallpaperPreview::QWallpaperPreview(const Wallpaper &wallpaper): wallpaper(wallpaper) {
+    setText(this->wallpaper.getName().c_str());
+    setFixedSize(getAspectRatio(QGuiApplication::screens()[0]->geometry()) * 10.9);
 
-QWallpaperPreview::QWallpaperPreview(const QScreen *screen, const Wallpaper &wallpaper, QWidget *parent) {
-    setText(wallpaper.getName().c_str());
-    setParent(parent);
-    setFixedSize(getAspectRatio(screen->geometry()) * 11);
+    connect(this, &QWallpaperPreview::clicked, this, [this] {
+        setWallpaper("all", this->wallpaper);
+    });
 }
