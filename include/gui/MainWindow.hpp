@@ -7,10 +7,11 @@ namespace Ui {
 }
 
 class MainWindow final : public QMainWindow {
-    QScreen *selectedScreen;
+public:
+    static MainWindow &getInstance();
+
+private:
     Ui::MainWindow *ui;
 
-public:
     MainWindow();
-    ~MainWindow() override;
 };

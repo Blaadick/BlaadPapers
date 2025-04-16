@@ -67,10 +67,11 @@ int main(int argc, char **argv) {
 
     if(argc >= 2) {
         OptionExecutor::getInstance().execute(argv);
-    } else {
-        QApplication app(argc, argv);
-        MainWindow mainWindow;
-        mainWindow.show();
-        return QApplication::exec();
+        return 0;
     }
+
+    QApplication app(argc, argv);
+    MainWindow::getInstance().show();
+
+    return QApplication::exec();
 }
