@@ -5,6 +5,8 @@
 #include "Wallpaper.hpp"
 
 class QWallpaperPreview final : public QPushButton {
+    Q_OBJECT
+
 public:
     explicit QWallpaperPreview(const Wallpaper &wallpaper);
 
