@@ -18,15 +18,25 @@ OptionExecutor::OptionExecutor() {
     options['h'] = {help, {}, "WTF bro?"}; // Because it's familiar
     options['V'] = {version, {'j'}, versionHelpMessage};
     options['S'] = {set, {}, setHelpMessage};
-    options['R'] = {random, {'f'}, randomHelpMessage};
+    options['R'] = {random, {'s'}, randomHelpMessage};
     options['L'] = {list, {'j'}, listHelpMessage};
 }
 
-void OptionExecutor::help(const pmr::set<char> &, char **) {
+void OptionExecutor::help(const pmr::set<char> &, const int argNumber, const char **arguments) {
+    if(argNumber > 2) {
+        cerr << "Unknown argument: " << arguments[2] << endl;
+        return;
+    }
+
     cout << mainHelpMessage << endl;
 }
 
-void OptionExecutor::version(const pmr::set<char> &subOptions, char **) {
+void OptionExecutor::version(const pmr::set<char> &subOptions, const int argNumber, const char **arguments) {
+    if(argNumber > 2) {
+        cerr << "Unknown argument: " << arguments[2] << endl;
+        return;
+    }
+
     if(subOptions.contains('j')) {
         cout << json {{"version", VERSION}} << endl;
     } else {
@@ -34,9 +44,14 @@ void OptionExecutor::version(const pmr::set<char> &subOptions, char **) {
     }
 }
 
-void OptionExecutor::set(const pmr::set<char> &, char **arguments) {
+void OptionExecutor::set(const pmr::set<char> &, const int argNumber, const char **arguments) {
     const char *monitorName = arguments[2];
     const char *imageName = arguments[3];
+
+    if(argNumber > 4) {
+        cerr << "Unknown argument: " << arguments[4] << endl;
+        return;
+    }
 
     if(imageName == nullptr) {
         cerr << "Wallpaper name not set" << endl;
@@ -61,7 +76,7 @@ void OptionExecutor::set(const pmr::set<char> &, char **arguments) {
     cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 }
 
-void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) {
+void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumber, const char **arguments) {
     const char *monitorName = arguments[2];
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
@@ -71,7 +86,7 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) 
         return;
     }
 
-    if(subOptions.contains('f')) {
+    if(subOptions.contains('s')) {
         vector<string> includeTags;
         vector<string> excludeTags;
 
@@ -83,6 +98,11 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) 
             }
         } catch(...) {
             cerr << "Failed to parse passed tags" << endl;
+            return;
+        }
+
+        if(argNumber > 5) {
+            cerr << "Unknown argument: " << arguments[5] << endl;
             return;
         }
 
@@ -118,6 +138,11 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) 
         advance(it, randomDis(rand));
         wallpaperToSet = *it;
     } else {
+        if(argNumber > 3) {
+            cerr << "Unknown argument: " << arguments[3] << endl;
+            return;
+        }
+
         uniform_int_distribution randomDis(0, static_cast<int>(wallpapers.size()) - 1);
         auto it = wallpapers.begin();
         advance(it, randomDis(rand));
@@ -128,7 +153,12 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, char **arguments) 
     cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::list(const pmr::set<char> &subOptions, char **) {
+void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber, const char **arguments) {
+    if(argNumber > 2) {
+        cerr << "Unknown argument: " << arguments[2] << endl;
+        return;
+    }
+
     if(wallpapers.empty()) {
         return;
     }
@@ -153,7 +183,7 @@ OptionExecutor &OptionExecutor::getInstance() {
     return instance;
 }
 
-void OptionExecutor::execute(char **arguments) {
+void OptionExecutor::execute(const int argNumber, const char **arguments) {
     const char &option = arguments[1][1];
     pmr::set<char> subOptions;
 
@@ -193,5 +223,5 @@ void OptionExecutor::execute(char **arguments) {
         }
     }
 
-    options[option].func(subOptions, arguments);
+    options[option].func(subOptions, argNumber, arguments);
 }
