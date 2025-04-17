@@ -1,31 +1,27 @@
 #include "gui/MainWindow.hpp"
 
-#include <QListWidget>
-#include <QScreen>
-
+#include <QScrollArea>
+#include <QVBoxLayout>
+#include <QWidget>
 #include "Global.hpp"
-#include "Util.hpp"
 #include "gui/QWallpaperGrid.hpp"
-#include "gui/QWallpaperPreview.hpp"
-#include "gui/ui_MainWindow.h"
 
-MainWindow::MainWindow() : ui(new Ui::MainWindow) {
-    ui->setupUi(this);
+MainWindow::MainWindow() {
+    auto *centralWidget = new QWidget(this);
+    auto *centralWidgetLayout = new QVBoxLayout(centralWidget);
 
-    ui->monitorCombo->hide();
-    if(QApplication::screens().count() > 1) {
-        ui->monitorCombo->show();
-
-        for(const auto *screen: QGuiApplication::screens()) {
-            ui->monitorCombo->addItem(screen->name());
-        }
-    }
-
-    const auto wallpaperGrid = new QWallpaperGrid(ui->scrollArea);
+    auto *wallpaperGrid = new QWallpaperGrid(centralWidget);
     for(const auto &wallpaper: wallpapers) {
-        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, ui->scrollArea));
+        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper));
     }
-    ui->scrollArea->setWidget(wallpaperGrid);
+
+    auto *scrollArea = new QScrollArea(centralWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(wallpaperGrid);
+
+    centralWidgetLayout->addWidget(scrollArea);
+
+    setCentralWidget(centralWidget);
 }
 
 MainWindow &MainWindow::getInstance() {

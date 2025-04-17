@@ -5,7 +5,6 @@
 #include <random>
 #include <Wallpaper.hpp>
 #include <json/json.hpp>
-
 #include "Defaults.hpp"
 #include "Global.hpp"
 #include "Util.hpp"

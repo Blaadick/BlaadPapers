@@ -13,13 +13,12 @@ project(
 )
 
 set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt6 6.9 REQUIRED COMPONENTS Core Widgets)
 
-add_executable(blaadpapers ${SOURCES} ${HEADERS})
-add_compile_definitions(VERSION="${PROJECT_VERSION}")
+qt_standard_project_setup()
+
+qt_add_executable(blaadpapers ${SOURCES} ${HEADERS} "src/gui/MainWindow.ui")
+target_link_libraries(blaadpapers PRIVATE Qt::Core Qt::Widgets)
 target_include_directories(blaadpapers PRIVATE include lib)
-target_link_libraries(blaadpapers PRIVATE Qt::Core Qt::Gui Qt::Widgets)
+target_compile_definitions(blaadpapers PRIVATE VERSION="${PROJECT_VERSION}")

@@ -2,7 +2,6 @@
 #include <fstream>
 #include <QApplication>
 #include <json/json.hpp>
-
 #include "Defaults.hpp"
 #include "Global.hpp"
 #include "OptionExecutor.hpp"
