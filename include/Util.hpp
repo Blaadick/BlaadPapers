@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <QRect>
-
 #include "Wallpaper.hpp"
 
 inline void setWallpaper(const std::string &monitorName, const Wallpaper &wallpaper) {

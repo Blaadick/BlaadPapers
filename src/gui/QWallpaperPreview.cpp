@@ -2,7 +2,6 @@
 
 #include <QPushButton>
 #include <QScreen>
-
 #include "Util.hpp"
 #include "Wallpaper.hpp"
 

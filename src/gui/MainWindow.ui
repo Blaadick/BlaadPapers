@@ -1,97 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>800</width>
-    <height>600</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string notr="true">Blaadpapers</string>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="centralWidgetLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <property name="leftMargin">
-     <number>10</number>
-    </property>
-    <property name="topMargin">
-     <number>10</number>
-    </property>
-    <property name="rightMargin">
-     <number>10</number>
-    </property>
-    <property name="bottomMargin">
-     <number>10</number>
-    </property>
-    <item>
-     <widget class="QWidget" name="topBar" native="true">
-      <layout class="QHBoxLayout" name="topBarLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>10</number>
-       </property>
-       <item>
-        <widget class="QComboBox" name="monitorCombo">
-         <item>
-          <property name="text">
-           <string>all</string>
-          </property>
-         </item>
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>800</width>
+                <height>600</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string notr="true">Blaadpapers</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <layout class="QVBoxLayout" name="centralWidgetLayout">
+                <property name="spacing">
+                    <number>0</number>
+                </property>
+                <property name="leftMargin">
+                    <number>10</number>
+                </property>
+                <property name="topMargin">
+                    <number>10</number>
+                </property>
+                <property name="rightMargin">
+                    <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                    <number>10</number>
+                </property>
+                <item>
+                    <widget class="QWidget" name="topBar" native="true">
+                        <layout class="QHBoxLayout" name="topBarLayout">
+                            <property name="leftMargin">
+                                <number>0</number>
+                            </property>
+                            <property name="topMargin">
+                                <number>0</number>
+                            </property>
+                            <property name="rightMargin">
+                                <number>0</number>
+                            </property>
+                            <property name="bottomMargin">
+                                <number>10</number>
+                            </property>
+                            <item>
+                                <widget class="QComboBox" name="monitorCombo">
+                                    <item>
+                                        <property name="text">
+                                            <string>all</string>
+                                        </property>
+                                    </item>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QLineEdit" name="searchBox"/>
+                            </item>
+                        </layout>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QScrollArea" name="scrollArea">
+                        <property name="frameShape">
+                            <enum>QFrame::Shape::NoFrame</enum>
+                        </property>
+                        <property name="verticalScrollBarPolicy">
+                            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+                        </property>
+                        <property name="horizontalScrollBarPolicy">
+                            <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+                        </property>
+                        <property name="sizeAdjustPolicy">
+                            <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+                        </property>
+                        <property name="widgetResizable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+                        </property>
+                        <widget class="QWidget" name="scrollAreaWidgetContents">
+                            <property name="geometry">
+                                <rect>
+                                    <x>0</x>
+                                    <y>0</y>
+                                    <width>766</width>
+                                    <height>545</height>
+                                </rect>
+                            </property>
+                        </widget>
+                    </widget>
+                </item>
+            </layout>
         </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="searchBox"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="frameShape">
-       <enum>QFrame::Shape::NoFrame</enum>
-      </property>
-      <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
-      </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>766</width>
-         <height>545</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
-    </item>
-   </layout>
-  </widget>
- </widget>
- <resources/>
- <connections/>
+    </widget>
+    <resources/>
+    <connections/>
 </ui>
