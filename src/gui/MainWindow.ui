@@ -65,41 +65,27 @@
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
       </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
       </property>
-      <widget class="QWidget" name="wallpaperGrid">
+      <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>780</width>
+         <width>766</width>
          <height>545</height>
         </rect>
        </property>
-       <layout class="QGridLayout" name="wallpaperGridLayout">
-        <property name="sizeConstraint">
-         <enum>QLayout::SizeConstraint::SetFixedSize</enum>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>10</number>
-        </property>
-       </layout>
       </widget>
      </widget>
     </item>

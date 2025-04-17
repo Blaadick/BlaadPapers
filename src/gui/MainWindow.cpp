@@ -5,6 +5,7 @@
 
 #include "Global.hpp"
 #include "Util.hpp"
+#include "gui/QWallpaperGrid.hpp"
 #include "gui/QWallpaperPreview.hpp"
 #include "gui/ui_MainWindow.h"
 
@@ -20,11 +21,11 @@ MainWindow::MainWindow() : ui(new Ui::MainWindow) {
         }
     }
 
-    int i = 0;
+    const auto wallpaperGrid = new QWallpaperGrid(ui->scrollArea);
     for(const auto &wallpaper: wallpapers) {
-        ui->wallpaperGridLayout->addWidget(new QWallpaperPreview(wallpaper), i / 5, i % 5);
-        i++;
+        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, ui->scrollArea));
     }
+    ui->scrollArea->setWidget(wallpaperGrid);
 }
 
 MainWindow &MainWindow::getInstance() {

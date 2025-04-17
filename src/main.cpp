@@ -61,16 +61,16 @@ void loadWallpapers() {
     }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, const char **argv) {
     readConfig();
     loadWallpapers();
 
     if(argc >= 2) {
-        OptionExecutor::getInstance().execute(argv);
+        OptionExecutor::getInstance().execute(argc, argv);
         return 0;
     }
 
-    QApplication app(argc, argv);
+    QApplication app(argc, nullptr);
     MainWindow::getInstance().show();
 
     return QApplication::exec();
