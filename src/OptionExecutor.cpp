@@ -163,7 +163,7 @@ void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber,
     }
 
     if(subOptions.contains('j')) {
-        cout << "{\"wallpapers\":[";
+        cout << "[";
 
         int i = 0;
         for(const auto &wallpaper: wallpapers) {
@@ -174,7 +174,7 @@ void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber,
             }
         }
 
-        cout << "]}" << endl;
+        cout << "]" << endl;
     } else {
         for(const auto &wallpaper: wallpapers) {
             cout << wallpaper.getName() << endl;
