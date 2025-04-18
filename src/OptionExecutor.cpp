@@ -163,13 +163,18 @@ void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber,
     }
 
     if(subOptions.contains('j')) {
-        cout << "{";
+        cout << "{\"wallpapers\":[";
 
+        int i = 0;
         for(const auto &wallpaper: wallpapers) {
-            cout << wallpaper.toJson() << ",";
+            cout << wallpaper.toJson();
+
+            if(++i != wallpapers.size()) {
+                cout << ",";
+            }
         }
 
-        cout << "\b" << "}" << endl;
+        cout << "]}" << endl;
     } else {
         for(const auto &wallpaper: wallpapers) {
             cout << wallpaper.getName() << endl;
