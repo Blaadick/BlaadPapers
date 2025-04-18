@@ -18,7 +18,7 @@ find_package(Qt6 6.9 REQUIRED COMPONENTS Core Widgets)
 
 qt_standard_project_setup()
 
-qt_add_executable(blaadpapers ${SOURCES} ${HEADERS} "src/gui/MainWindow.ui")
+qt_add_executable(blaadpapers ${SOURCES} ${HEADERS})
 target_link_libraries(blaadpapers PRIVATE Qt::Core Qt::Widgets)
 target_include_directories(blaadpapers PRIVATE include lib)
 target_compile_definitions(blaadpapers PRIVATE VERSION="${PROJECT_VERSION}")

@@ -60,7 +60,7 @@ void loadWallpapers() {
     }
 }
 
-int main(int argc, const char **argv) {
+int main(int argc, const char *argv[]) {
     readConfig();
     loadWallpapers();
 

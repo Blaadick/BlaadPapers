@@ -21,7 +21,7 @@ OptionExecutor::OptionExecutor() {
     options['L'] = {list, {'j'}, listHelpMessage};
 }
 
-void OptionExecutor::help(const pmr::set<char> &, const int argNumber, const char **arguments) {
+void OptionExecutor::help(const pmr::set<char> &, const int argNumber, const char *arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -30,7 +30,7 @@ void OptionExecutor::help(const pmr::set<char> &, const int argNumber, const cha
     cout << mainHelpMessage << endl;
 }
 
-void OptionExecutor::version(const pmr::set<char> &subOptions, const int argNumber, const char **arguments) {
+void OptionExecutor::version(const pmr::set<char> &subOptions, const int argNumber, const char *arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -43,7 +43,7 @@ void OptionExecutor::version(const pmr::set<char> &subOptions, const int argNumb
     }
 }
 
-void OptionExecutor::set(const pmr::set<char> &, const int argNumber, const char **arguments) {
+void OptionExecutor::set(const pmr::set<char> &, const int argNumber, const char *arguments[]) {
     const char *monitorName = arguments[2];
     const char *imageName = arguments[3];
 
@@ -75,7 +75,7 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, const char
     cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 }
 
-void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumber, const char **arguments) {
+void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumber, const char *arguments[]) {
     const char *monitorName = arguments[2];
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
@@ -152,7 +152,7 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumbe
     cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber, const char **arguments) {
+void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber, const char *arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -182,7 +182,7 @@ OptionExecutor &OptionExecutor::getInstance() {
     return instance;
 }
 
-void OptionExecutor::execute(const int argNumber, const char **arguments) {
+void OptionExecutor::execute(const int argNumber, const char *arguments[]) {
     const char &option = arguments[1][1];
     pmr::set<char> subOptions;
 
