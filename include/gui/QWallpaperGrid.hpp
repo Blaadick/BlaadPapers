@@ -1,9 +1,5 @@
 #pragma once
 
-#include <QGridLayout>
-#include <QResizeEvent>
-#include <QWidget>
-
 #include "gui/QFlowLayout.hpp"
 #include "gui/QWallpaperPreview.hpp"
 

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <QRect>
+#include "Global.hpp"
 #include "Wallpaper.hpp"
 
 inline void setWallpaper(const std::string &monitorName, const Wallpaper &wallpaper) {
@@ -13,6 +14,11 @@ inline void setWallpaper(const std::string &monitorName, const Wallpaper &wallpa
     hyprpaperConfig << "preload = " << wallpaper.getFilePath() << std::endl;
     hyprpaperConfig << "wallpaper = , " << wallpaper.getFilePath() << std::endl;
     hyprpaperConfig.close();
+
+    const std::filesystem::path postScriptPath = configDir / "post.sh";
+    if(exists(postScriptPath)) {
+        system(("bash " + postScriptPath.string() + " \"" + wallpaper.getFilePath() + "\"").c_str());
+    }
 }
 
 inline QSize getAspectRatio(const QRect &geometry) {
