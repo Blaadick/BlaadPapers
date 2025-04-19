@@ -1,4 +1,5 @@
 #include "Wallpaper.hpp"
+
 #include "Global.hpp"
 
 using namespace std;

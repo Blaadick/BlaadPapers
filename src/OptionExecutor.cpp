@@ -52,6 +52,11 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, const char
         return;
     }
 
+    if(monitorName == nullptr) {
+        cerr << "Monitor not provided" << endl;
+        return;
+    }
+
     if(imageName == nullptr) {
         cerr << "Wallpaper name not set" << endl;
         return;
@@ -79,6 +84,11 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumbe
     const char *monitorName = arguments[2];
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
+
+    if(monitorName == nullptr) {
+        cerr << "Monitor not provided" << endl;
+        return;
+    }
 
     if(wallpapers.empty()) {
         cerr << "No wallpapers found" << endl;
