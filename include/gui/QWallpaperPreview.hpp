@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QPushButton>
+#include <QAbstractButton>
 #include "Wallpaper.hpp"
 
-class QWallpaperPreview final : public QPushButton {
+class QWallpaperPreview final : public QAbstractButton {
     Q_OBJECT
 
 public:
@@ -11,4 +11,9 @@ public:
 
 private:
     const Wallpaper &wallpaper;
+    QPixmap pixmap;
+
+    QPixmap loadCachedPreview() const;
+
+    void paintEvent(QPaintEvent *event) override;
 };
