@@ -13,4 +13,6 @@ public:
 
 private:
     QFlowLayout *grid;
+
+    void paintEvent(QPaintEvent *event) override;
 };

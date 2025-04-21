@@ -1,10 +1,12 @@
 #include <filesystem>
 #include <fstream>
 #include <QApplication>
+#include <QScreen>
 #include <json/json.hpp>
 #include "Defaults.hpp"
 #include "Global.hpp"
 #include "OptionExecutor.hpp"
+#include "Util.hpp"
 #include "gui/MainWindow.hpp"
 
 using namespace std;
@@ -60,6 +62,38 @@ void loadWallpapers() {
     }
 }
 
+void loadCache() {
+    if(!exists(cacheDir)) {
+        create_directory(cacheDir);
+    }
+
+    for(const auto &screen: QApplication::screens()) {
+        path screenCacheFolder = cacheDir / to_string(screen->devicePixelRatio());
+
+        if(!exists(screenCacheFolder)) {
+            create_directory(screenCacheFolder);
+        }
+
+        for(const auto &wallpaper: wallpapers) {
+            path cachedPreviewPath = screenCacheFolder / wallpaper.getName().append(".png");
+
+            if(!exists(cachedPreviewPath)) {
+                QImage maxSizedPreview = QImage(wallpaper.getFilePath().c_str()).scaled(
+                    getAspectRatio(screen->geometry()) * 18.4 * screen->devicePixelRatio(),
+                    Qt::KeepAspectRatioByExpanding,
+                    Qt::SmoothTransformation
+                );
+
+                if(maxSizedPreview.save(cachedPreviewPath.c_str(), "PNG")) {
+                    qDebug() << wallpaper.getName() << "with size" << screen->devicePixelRatio() << "preview caching success";
+                } else {
+                    qDebug() << wallpaper.getName() << "with size" << screen->devicePixelRatio() << "preview caching fail";
+                }
+            }
+        }
+    }
+}
+
 int main(int argc, const char *argv[]) {
     readConfig();
     loadWallpapers();
@@ -70,7 +104,11 @@ int main(int argc, const char *argv[]) {
     }
 
     QApplication app(argc, nullptr);
+
+    loadCache();
+
     MainWindow::getInstance().show();
+    MainWindow::getInstance().fillWidgets();
 
     return QApplication::exec();
 }
