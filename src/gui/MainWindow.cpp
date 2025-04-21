@@ -1,37 +1,41 @@
 #include "gui/MainWindow.hpp"
 
-#include <QComboBox>
-#include <QLineEdit>
+#include <QScreen>
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QWidget>
 #include "Global.hpp"
-#include "gui/QWallpaperGrid.hpp"
 
-int margin = 10;
+MainWindow &MainWindow::getInstance() {
+    static MainWindow instance;
+    return instance;
+}
+
+void MainWindow::fillWidgets() const {
+    for(const auto &wallpaper: wallpapers) {
+        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
+    }
+}
 
 MainWindow::MainWindow() {
     auto *centralWidget = new QWidget(this);
 
     auto *centralWidgetLayout = new QVBoxLayout(centralWidget);
-    centralWidgetLayout->setContentsMargins(margin, margin, margin, margin);
-    centralWidgetLayout->setSpacing(margin);
+    centralWidgetLayout->setContentsMargins(10, 10, 10, 10);
+    centralWidgetLayout->setSpacing(10);
     setCentralWidget(centralWidget);
 
     auto *topLayout = new QHBoxLayout();
-    topLayout->setSpacing(margin);
+    topLayout->setSpacing(10);
     centralWidgetLayout->addLayout(topLayout);
 
-    auto *monitorCombo = new QComboBox(centralWidget);
+    monitorCombo = new QComboBox(centralWidget);
     topLayout->addWidget(monitorCombo);
 
-    auto *searchBox = new QLineEdit(centralWidget);
+    searchBox = new QLineEdit(centralWidget);
     topLayout->addWidget(searchBox);
 
-    auto *wallpaperGrid = new QWallpaperGrid(centralWidget);
-    for(const auto &wallpaper: wallpapers) {
-        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper));
-    }
+    wallpaperGrid = new QWallpaperGrid(centralWidget);
 
     auto *scrollArea = new QScrollArea(centralWidget);
     scrollArea->setWidgetResizable(true);
@@ -40,9 +44,4 @@ MainWindow::MainWindow() {
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     centralWidgetLayout->addWidget(scrollArea);
-}
-
-MainWindow &MainWindow::getInstance() {
-    static MainWindow instance;
-    return instance;
 }

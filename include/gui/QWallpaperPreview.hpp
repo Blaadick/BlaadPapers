@@ -9,11 +9,11 @@ class QWallpaperPreview final : public QAbstractButton {
 public:
     explicit QWallpaperPreview(const Wallpaper &wallpaper, QWidget *parent = nullptr);
 
+    void refreshPreview();
+
 private:
     const Wallpaper &wallpaper;
     QPixmap pixmap;
-
-    QPixmap loadCachedPreview() const;
 
     void paintEvent(QPaintEvent *event) override;
 };
