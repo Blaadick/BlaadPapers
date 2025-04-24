@@ -14,7 +14,9 @@ public:
 
     std::vector<std::string> getTags() const;
 
-    std::string getFilePath() const;
+    std::filesystem::path getFilePath() const;
+
+    std::filesystem::path getPreviewPath(double devicePixelRatio) const;
 
     nlohmann::json toJson() const;
 

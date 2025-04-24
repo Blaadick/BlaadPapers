@@ -13,6 +13,7 @@ void QWallpaperGrid::paintEvent(QPaintEvent *event) {
 
     if(lastScreen != screen()) {
         lastScreen = screen();
+
         for(int i = 0; i < grid->count(); i++) {
             dynamic_cast<QWallpaperPreview *>(grid->itemAt(i)->widget())->refreshPreview();
         }
