@@ -3,8 +3,6 @@
 #include <QApplication>
 #include <QPainter>
 #include <QPainterPath>
-#include <QScreen>
-#include "Global.hpp"
 #include "Util.hpp"
 #include "Wallpaper.hpp"
 
@@ -12,15 +10,15 @@ using namespace std;
 using namespace filesystem;
 
 QWallpaperPreview::QWallpaperPreview(const Wallpaper &wallpaper, QWidget *parent) : QAbstractButton(parent), wallpaper(wallpaper) {
-    setFixedSize(getAspectRatio(screen()->geometry()) * 18.4);
+    setFixedSize(getAspectRatio(screen()) * 18.4);
     connect(this, &QWallpaperPreview::clicked, this, [this] {
         setWallpaper("all", this->wallpaper);
     });
 }
 
 void QWallpaperPreview::refreshPreview() {
-    const path cachedPreviewPath = cacheDir / to_string(screen()->devicePixelRatio()) / wallpaper.getName().append(".png");
-    pixmap = QPixmap::fromImage(QImage(cachedPreviewPath.c_str()));
+    const QImage image(wallpaper.getPreviewPath(screen()->devicePixelRatio()).c_str());
+    pixmap = QPixmap::fromImage(image);
 }
 
 void QWallpaperPreview::paintEvent(QPaintEvent *event) {

@@ -1,7 +1,6 @@
 #include <filesystem>
 #include <fstream>
 #include <QApplication>
-#include <QScreen>
 #include <json/json.hpp>
 #include "Defaults.hpp"
 #include "Global.hpp"
@@ -67,7 +66,7 @@ void loadCache() {
         create_directory(cacheDir);
     }
 
-    for(const auto &screen: QApplication::screens()) {
+    for(const auto *screen: QApplication::screens()) {
         path screenCacheFolder = cacheDir / to_string(screen->devicePixelRatio());
 
         if(!exists(screenCacheFolder)) {
@@ -75,11 +74,11 @@ void loadCache() {
         }
 
         for(const auto &wallpaper: wallpapers) {
-            path cachedPreviewPath = screenCacheFolder / wallpaper.getName().append(".png");
+            path cachedPreviewPath = wallpaper.getPreviewPath(screen->devicePixelRatio());
 
             if(!exists(cachedPreviewPath)) {
                 QImage maxSizedPreview = QImage(wallpaper.getFilePath().c_str()).scaled(
-                    getAspectRatio(screen->geometry()) * 18.4 * screen->devicePixelRatio(),
+                    getAspectRatio(screen) * 18.4 * screen->devicePixelRatio(),
                     Qt::KeepAspectRatioByExpanding,
                     Qt::SmoothTransformation
                 );

@@ -3,6 +3,7 @@
 #include "Global.hpp"
 
 using namespace std;
+using namespace filesystem;
 using nlohmann::json;
 
 Wallpaper::Wallpaper(const string &name, const json &data) {
@@ -23,8 +24,12 @@ vector<string> Wallpaper::getTags() const {
     return tags;
 }
 
-string Wallpaper::getFilePath() const {
+path Wallpaper::getFilePath() const {
     return workingDir / (name + ".png");
+}
+
+path Wallpaper::getPreviewPath(const double devicePixelRatio) const {
+    return cacheDir / to_string(devicePixelRatio) / (name + ".png");
 }
 
 json Wallpaper::toJson() const {
