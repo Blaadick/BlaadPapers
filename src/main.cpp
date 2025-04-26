@@ -2,7 +2,6 @@
 #include <fstream>
 #include <QApplication>
 #include <json/json.hpp>
-#include "Defaults.hpp"
 #include "Global.hpp"
 #include "OptionExecutor.hpp"
 #include "Util.hpp"
@@ -12,28 +11,9 @@ using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-void readConfig() {
-    path configFilePath = configDir / "config.json";
-    json configData;
-
-    if(exists(configFilePath)) {
-        ifstream configFile(configFilePath);
-        configFile >> configData;
-        configFile.close();
-    } else {
-        configData = defaultConfig;
-    }
-
-    string rawWorkingDir = configData["working_dir"];
-
-    if(rawWorkingDir[0] == '~') {
-        workingDir = string(getenv("HOME")) + rawWorkingDir.substr(1);
-    } else {
-        workingDir = rawWorkingDir;
-    }
-}
-
 void loadWallpapers() {
+    const path workingDir = ConfigReader::getWorkingDir();
+
     if(!exists(workingDir / ".index")) {
         create_directory(workingDir / ".index");
     }
@@ -84,17 +64,17 @@ void loadCache() {
                 );
 
                 if(maxSizedPreview.save(cachedPreviewPath.c_str(), "PNG")) {
-                    qDebug() << wallpaper.getName() << "with size" << screen->devicePixelRatio() << "preview caching success";
+                    qDebug() << "wallpaper" << wallpaper.getName() << "with screen size" << screen->devicePixelRatio() << "preview caching success";
                 } else {
-                    qDebug() << wallpaper.getName() << "with size" << screen->devicePixelRatio() << "preview caching fail";
+                    qDebug() << "wallpaper" << wallpaper.getName() << "with screen size" << screen->devicePixelRatio() << "preview caching fail";
                 }
             }
         }
     }
 }
 
-int main(int argc, const char *argv[]) {
-    readConfig();
+int main(int argc, char *argv[]) {
+    ConfigReader::readConfig();
     loadWallpapers();
 
     if(argc >= 2) {
@@ -102,7 +82,7 @@ int main(int argc, const char *argv[]) {
         return 0;
     }
 
-    QApplication app(argc, nullptr);
+    QApplication app(argc, argv);
 
     loadCache();
 

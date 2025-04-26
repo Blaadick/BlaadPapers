@@ -7,9 +7,9 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 string(STRIP ${VER_RAW} PROJECT_VERSION)
 
 project(
-        BlaadPapers
-        DESCRIPTION "Super wallpaper manager"
-        VERSION ${PROJECT_VERSION}
+    BlaadPapers
+    DESCRIPTION "Super wallpaper manager"
+    VERSION ${PROJECT_VERSION}
 )
 
 set(CMAKE_CXX_STANDARD 26)

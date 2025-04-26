@@ -39,12 +39,3 @@ inline std::string_view listHelpMessage = R"#(Usage:
 
 Sub options:
     j  ->  Outputs command result in JSON format)#";
-
-inline nlohmann::json defaultConfig = {
-    {"working_dir", "~/Pictures/Wallpapers/"}
-};
-
-inline nlohmann::json defaultWallpaperData = {
-    {"description", ""},
-    {"tags", {"General"}}
-};

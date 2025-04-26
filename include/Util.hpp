@@ -2,22 +2,24 @@
 
 #include <fstream>
 #include <QScreen>
-#include "Global.hpp"
+#include "ConfigReader.hpp"
 #include "Wallpaper.hpp"
 
+//TODO move away
 inline void setWallpaper(const std::string &monitorName, const Wallpaper &wallpaper) {
-    //TODO move away
-    system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath().string() + "\"").c_str());
-    system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath().string() + "\"").c_str());
+    std::string wallpaperFilePath = wallpaper.getFilePath().string();
+
+    system(("hyprctl -q hyprpaper preload " + wallpaperFilePath).c_str());
+    system(("hyprctl -q hyprpaper wallpaper , " + wallpaperFilePath).c_str());
 
     std::ofstream hyprpaperConfig(((std::string(getenv("HOME")) + "/.config/hypr/hyprpaper.conf").c_str()));
-    hyprpaperConfig << "preload = " << wallpaper.getFilePath() << std::endl;
-    hyprpaperConfig << "wallpaper = , " << wallpaper.getFilePath() << std::endl;
+    hyprpaperConfig << "preload = " << wallpaperFilePath << std::endl;
+    hyprpaperConfig << "wallpaper = , " << wallpaperFilePath << std::endl;
     hyprpaperConfig.close();
 
-    const std::filesystem::path postScriptPath = configDir / "post.sh";
+    const std::filesystem::path postScriptPath = ConfigReader::getWorkingDir() / "post.sh";
     if(exists(postScriptPath)) {
-        system(("bash " + postScriptPath.string() + " \"" + wallpaper.getFilePath().string() + "\"").c_str());
+        system(("bash " + postScriptPath.string() + " \"" + wallpaperFilePath + "\"").c_str());
     }
 }
 
