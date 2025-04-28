@@ -6,6 +6,11 @@
 
 class Wallpaper {
 public:
+    inline static const nlohmann::json defaultWallpaperData = {
+        {"description", ""},
+        {"tags", {"General"}}
+    };
+
     Wallpaper(const std::string &name, const nlohmann::json &data);
 
     std::string getName() const;

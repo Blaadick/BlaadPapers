@@ -67,7 +67,7 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *argu
         return;
     }
 
-    const Wallpaper temp(imageName, defaultWallpaperData);
+    const Wallpaper temp(imageName, Wallpaper::defaultWallpaperData);
     const auto &wallpaperToSet = *wallpapers.lower_bound(temp);
 
     if(strcasecmp(wallpaperToSet.getName().c_str(), imageName) != 0) {
