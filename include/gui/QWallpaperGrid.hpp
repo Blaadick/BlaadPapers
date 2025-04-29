@@ -7,12 +7,12 @@ class QWallpaperGrid final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit QWallpaperGrid(QWidget *parent = nullptr);
+    explicit QWallpaperGrid(QWidget* parent = nullptr);
 
-    void addPreview(QWallpaperPreview *preview) const;
+    void addPreview(QWallpaperPreview* preview) const;
 
 private:
-    QFlowLayout *grid;
+    QFlowLayout* grid;
 
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent* event) override;
 };

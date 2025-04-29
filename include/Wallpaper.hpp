@@ -11,7 +11,7 @@ public:
         {"tags", {"General"}}
     };
 
-    Wallpaper(const std::string &name, const nlohmann::json &data);
+    Wallpaper(const std::string& name, const nlohmann::json& data);
 
     std::string getName() const;
 
@@ -23,7 +23,7 @@ public:
 
     nlohmann::json toJson() const;
 
-    bool operator<(const Wallpaper &other) const;
+    bool operator<(const Wallpaper& other) const;
 
 private:
     std::string name;

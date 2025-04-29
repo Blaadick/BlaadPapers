@@ -9,7 +9,7 @@ using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     ConfigManager::readConfig();
     WallpaperManager::loadWallpapers();
 
@@ -20,9 +20,11 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
+    MainWindow mainWindow;
+    mainWindow.show();
+
     CacheLoader::loadCache();
-    MainWindow::getInstance().show();
-    MainWindow::getInstance().fillWidgets();
+    mainWindow.fillWidgets();
 
     return QApplication::exec();
 }

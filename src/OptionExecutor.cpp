@@ -21,7 +21,7 @@ std::pmr::map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'L', {list, {'j'}, listHelpMessage}},
 };
 
-void OptionExecutor::help(const pmr::set<char> &, const int argNumber, char *arguments[]) {
+void OptionExecutor::help(const pmr::set<char>&, const int argNumber, char* arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -30,23 +30,23 @@ void OptionExecutor::help(const pmr::set<char> &, const int argNumber, char *arg
     cout << mainHelpMessage << endl;
 }
 
-void OptionExecutor::version(const pmr::set<char> &subOptions, const int argNumber, char *arguments[]) {
+void OptionExecutor::version(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
     }
 
     if(subOptions.contains('j')) {
-        cout << json {{"version", VERSION}} << endl;
+        cout << json{{"version", VERSION}} << endl;
     } else {
         cout << "Version: " << VERSION << endl;
     }
 }
 
-void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *arguments[]) {
-    const auto &wallpapers = WallpaperManager::getWallpapers();
-    const char *monitorName = arguments[2];
-    const char *imageName = arguments[3];
+void OptionExecutor::set(const pmr::set<char>&, const int argNumber, char* arguments[]) {
+    const auto& wallpapers = WallpaperManager::getWallpapers();
+    const char* monitorName = arguments[2];
+    const char* imageName = arguments[3];
 
     if(argNumber > 4) {
         cerr << "Unknown argument: " << arguments[4] << endl;
@@ -68,7 +68,7 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *argu
         return;
     }
 
-    const auto wallpaperToSet = *ranges::find_if(wallpapers, [imageName](const Wallpaper &wallpaper){
+    const auto wallpaperToSet = *ranges::find_if(wallpapers, [imageName](const Wallpaper& wallpaper) {
         return wallpaper.getName() == imageName;
     });
 
@@ -82,11 +82,11 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *argu
     cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 }
 
-void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumber, char *arguments[]) {
-    const auto &wallpapers = WallpaperManager::getWallpapers();
-    const char *monitorName = arguments[2];
-    mt19937 rand(random_device {}());
-    const Wallpaper *wallpaperToSet;
+void OptionExecutor::random(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
+    const auto& wallpapers = WallpaperManager::getWallpapers();
+    const char* monitorName = arguments[2];
+    mt19937 rand(random_device{}());
+    const Wallpaper* wallpaperToSet;
 
     if(monitorName == nullptr) {
         cerr << "Monitor not provided" << endl;
@@ -118,19 +118,19 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumbe
             return;
         }
 
-        pmr::set<const Wallpaper *> filteredWallpapers;
+        pmr::set<const Wallpaper*> filteredWallpapers;
 
-        for(const auto &wallpaper: wallpapers) {
+        for(const auto& wallpaper : wallpapers) {
             if(ranges::all_of(
                 includeTags,
-                [&wallpaper](const string &tag) {
+                [&wallpaper](const string& tag) {
                     auto wallpaperTags = wallpaper.getTags();
                     return ranges::find(wallpaperTags, tag) != wallpaperTags.end();
                 }
             )) {
                 if(!ranges::any_of(
                     excludeTags,
-                    [&wallpaper](const string &tag) {
+                    [&wallpaper](const string& tag) {
                         auto wallpaperTags = wallpaper.getTags();
                         return ranges::find(wallpaperTags, tag) != wallpaperTags.end();
                     }
@@ -165,8 +165,8 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumbe
     cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber, char *arguments[]) {
-    const auto &wallpapers = WallpaperManager::getWallpapers();
+void OptionExecutor::list(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
+    const auto& wallpapers = WallpaperManager::getWallpapers();
 
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
@@ -181,7 +181,7 @@ void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber,
         cout << "[";
 
         int i = 0;
-        for(const auto &wallpaper: wallpapers) {
+        for(const auto& wallpaper : wallpapers) {
             cout << wallpaper.toJson();
 
             if(++i != wallpapers.size()) {
@@ -191,14 +191,14 @@ void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber,
 
         cout << "]" << endl;
     } else {
-        for(const auto &wallpaper: wallpapers) {
+        for(const auto& wallpaper : wallpapers) {
             cout << wallpaper.getName() << endl;
         }
     }
 }
 
-void OptionExecutor::execute(const int argNumber, char *arguments[]) {
-    const char &option = arguments[1][1];
+void OptionExecutor::execute(const int argNumber, char* arguments[]) {
+    const char& option = arguments[1][1];
     pmr::set<char> subOptions;
 
     if(arguments[1][0] != '-') {

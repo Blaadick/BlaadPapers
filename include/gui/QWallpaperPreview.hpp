@@ -7,13 +7,13 @@ class QWallpaperPreview final : public QAbstractButton {
     Q_OBJECT
 
 public:
-    explicit QWallpaperPreview(const Wallpaper &wallpaper, QWidget *parent = nullptr);
+    explicit QWallpaperPreview(const Wallpaper& wallpaper, QWidget* parent = nullptr);
 
     void refreshPreview();
 
 private:
-    const Wallpaper &wallpaper;
+    const Wallpaper& wallpaper;
     QPixmap pixmap;
 
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent* event) override;
 };
