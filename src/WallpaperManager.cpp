@@ -9,8 +9,6 @@ using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-vector<Wallpaper> WallpaperManager::wallpapers;
-
 void WallpaperManager::loadWallpapers() {
     const path workingDir = ConfigManager::getWorkingDir();
 
@@ -18,7 +16,7 @@ void WallpaperManager::loadWallpapers() {
         create_directory(workingDir / ".index");
     }
 
-    for(const auto &entry: directory_iterator(workingDir)) {
+    for(const auto& entry : directory_iterator(workingDir)) {
         if(entry.path().extension() != ".png") continue;
 
         string imageName = entry.path().stem();
@@ -44,3 +42,5 @@ void WallpaperManager::loadWallpapers() {
 const std::vector<Wallpaper>& WallpaperManager::getWallpapers() {
     return wallpapers;
 }
+
+vector<Wallpaper> WallpaperManager::wallpapers;

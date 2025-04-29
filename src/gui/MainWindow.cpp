@@ -7,26 +7,15 @@
 
 #include "WallpaperManager.hpp"
 
-MainWindow &MainWindow::getInstance() {
-    static MainWindow instance;
-    return instance;
-}
-
-void MainWindow::fillWidgets() const {
-    for(const auto &wallpaper: WallpaperManager::getWallpapers()) {
-        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
-    }
-}
-
 MainWindow::MainWindow() {
-    auto *centralWidget = new QWidget(this);
+    auto* centralWidget = new QWidget(this);
 
-    auto *centralWidgetLayout = new QVBoxLayout(centralWidget);
+    auto* centralWidgetLayout = new QVBoxLayout(centralWidget);
     centralWidgetLayout->setContentsMargins(10, 10, 10, 10);
     centralWidgetLayout->setSpacing(10);
     setCentralWidget(centralWidget);
 
-    auto *topLayout = new QHBoxLayout();
+    auto* topLayout = new QHBoxLayout();
     topLayout->setSpacing(10);
     centralWidgetLayout->addLayout(topLayout);
 
@@ -38,11 +27,17 @@ MainWindow::MainWindow() {
 
     wallpaperGrid = new QWallpaperGrid(centralWidget);
 
-    auto *scrollArea = new QScrollArea(centralWidget);
+    auto* scrollArea = new QScrollArea(centralWidget);
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(wallpaperGrid);
     scrollArea->setFrameShape(QFrame::NoFrame);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     centralWidgetLayout->addWidget(scrollArea);
+}
+
+void MainWindow::fillWidgets() const {
+    for(const auto& wallpaper : WallpaperManager::getWallpapers()) {
+        wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
+    }
 }

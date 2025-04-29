@@ -6,7 +6,7 @@
 #include "Wallpaper.hpp"
 
 //TODO move away
-inline void setWallpaper(const std::string &monitorName, const Wallpaper &wallpaper) {
+inline void setWallpaper(const std::string& monitorName, const Wallpaper& wallpaper) {
     std::string wallpaperFilePath = wallpaper.getFilePath().string();
 
     system(("hyprctl -q hyprpaper preload " + wallpaperFilePath).c_str());
@@ -23,7 +23,7 @@ inline void setWallpaper(const std::string &monitorName, const Wallpaper &wallpa
     }
 }
 
-inline QSize getAspectRatio(const QScreen *screen) {
+inline QSize getAspectRatio(const QScreen* screen) {
     const int divisor = std::gcd(screen->geometry().width(), screen->geometry().height());
     return screen->geometry().size() / divisor;
 }

@@ -6,7 +6,7 @@ using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-Wallpaper::Wallpaper(const string &name, const json &data) {
+Wallpaper::Wallpaper(const string& name, const json& data) {
     this->name = name;
     this->description = data["description"];
     this->tags = data["tags"];
@@ -36,6 +36,6 @@ json Wallpaper::toJson() const {
     };
 }
 
-bool Wallpaper::operator<(const Wallpaper &other) const {
+bool Wallpaper::operator<(const Wallpaper& other) const {
     return strcasecmp(name.c_str(), other.name.c_str()) < 0;
 }

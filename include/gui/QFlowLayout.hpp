@@ -7,11 +7,11 @@
 
 class QFlowLayout final : public QLayout {
 public:
-    explicit QFlowLayout(int margin = 0, int hSpacing = -1, int vSpacing = -1, QWidget *parent = nullptr);
+    explicit QFlowLayout(int margin = 0, int hSpacing = -1, int vSpacing = -1, QWidget* parent = nullptr);
 
     ~QFlowLayout() override;
 
-    void addItem(QLayoutItem *item) override;
+    void addItem(QLayoutItem* item) override;
 
     int horizontalSpacing() const;
 
@@ -25,22 +25,22 @@ public:
 
     int count() const override;
 
-    QLayoutItem *itemAt(int index) const override;
+    QLayoutItem* itemAt(int index) const override;
 
     QSize minimumSize() const override;
 
-    void setGeometry(const QRect &rect) override;
+    void setGeometry(const QRect& rect) override;
 
     QSize sizeHint() const override;
 
-    QLayoutItem *takeAt(int index) override;
+    QLayoutItem* takeAt(int index) override;
 
 private:
-    std::vector<QLayoutItem *> itemList;
+    std::vector<QLayoutItem*> itemList;
     int m_hSpace;
     int m_vSpace;
 
-    int doLayout(const QRect &rect, bool testOnly) const;
+    int doLayout(const QRect& rect, bool testOnly) const;
 
     int smartSpacing(QStyle::PixelMetric pm) const;
 };

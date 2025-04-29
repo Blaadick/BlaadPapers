@@ -2,18 +2,18 @@
 
 #include <QWidget>
 
-QFlowLayout::QFlowLayout(const int margin, const int hSpacing, const int vSpacing, QWidget *parent) : QLayout(parent) {
+QFlowLayout::QFlowLayout(const int margin, const int hSpacing, const int vSpacing, QWidget* parent) : QLayout(parent) {
     m_hSpace = hSpacing;
     m_vSpace = vSpacing;
     setContentsMargins(margin, margin, margin, margin);
 }
 
 QFlowLayout::~QFlowLayout() {
-    QLayoutItem *item;
+    QLayoutItem* item;
     while((item = takeAt(0))) delete item;
 }
 
-void QFlowLayout::addItem(QLayoutItem *item) {
+void QFlowLayout::addItem(QLayoutItem* item) {
     itemList.push_back(item);
 }
 
@@ -37,11 +37,11 @@ int QFlowLayout::count() const {
     return static_cast<int>(itemList.size());
 }
 
-QLayoutItem *QFlowLayout::itemAt(const int index) const {
+QLayoutItem* QFlowLayout::itemAt(const int index) const {
     return index >= 0 && index < static_cast<int>(itemList.size()) ? itemList[index] : nullptr;
 }
 
-QLayoutItem *QFlowLayout::takeAt(const int index) {
+QLayoutItem* QFlowLayout::takeAt(const int index) {
     if(index >= 0 && index < static_cast<int>(itemList.size())) {
         const auto item = itemList[index];
         itemList.erase(itemList.begin() + index);
@@ -63,7 +63,7 @@ int QFlowLayout::heightForWidth(const int width) const {
     return height;
 }
 
-void QFlowLayout::setGeometry(const QRect &rect) {
+void QFlowLayout::setGeometry(const QRect& rect) {
     QLayout::setGeometry(rect);
     doLayout(rect, false);
 }
@@ -74,14 +74,14 @@ QSize QFlowLayout::sizeHint() const {
 
 QSize QFlowLayout::minimumSize() const {
     QSize size;
-    for(const auto item: itemList) size = size.expandedTo(item->minimumSize());
+    for(const auto item : itemList) size = size.expandedTo(item->minimumSize());
 
     const auto margins = contentsMargins();
     size += QSize(margins.left() + margins.right(), margins.top() + margins.bottom());
     return size;
 }
 
-int QFlowLayout::doLayout(const QRect &rect, const bool testOnly) const {
+int QFlowLayout::doLayout(const QRect& rect, const bool testOnly) const {
     int left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     const QRect effectiveRect = rect.adjusted(+left, +top, -right, -bottom);
@@ -89,8 +89,8 @@ int QFlowLayout::doLayout(const QRect &rect, const bool testOnly) const {
     int y = effectiveRect.y();
     int lineHeight = 0;
 
-    for(const auto item: itemList) {
-        const auto *wid = item->widget();
+    for(const auto item : itemList) {
+        const auto* wid = item->widget();
         int spaceX = horizontalSpacing();
         if(spaceX == -1)
             spaceX = wid->style()->layoutSpacing(
@@ -123,15 +123,15 @@ int QFlowLayout::doLayout(const QRect &rect, const bool testOnly) const {
 }
 
 int QFlowLayout::smartSpacing(const QStyle::PixelMetric pm) const {
-    QObject *parent = this->parent();
+    QObject* parent = this->parent();
     if(!parent) {
         return -1;
     }
 
     if(parent->isWidgetType()) {
-        const auto pw = dynamic_cast<QWidget *>(parent);
+        const auto pw = dynamic_cast<QWidget*>(parent);
         return pw->style()->pixelMetric(pm, nullptr, pw);
     }
 
-    return dynamic_cast<QLayout *>(parent)->spacing();
+    return dynamic_cast<QLayout*>(parent)->spacing();
 }

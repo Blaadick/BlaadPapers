@@ -12,14 +12,14 @@ void CacheLoader::loadCache() {
         create_directory(cacheDir);
     }
 
-    for(const auto *screen: QApplication::screens()) {
+    for(const auto* screen : QApplication::screens()) {
         path screenCacheFolder = cacheDir / to_string(screen->devicePixelRatio());
 
         if(!exists(screenCacheFolder)) {
             create_directory(screenCacheFolder);
         }
 
-        for(const auto &wallpaper: WallpaperManager::getWallpapers()) {
+        for(const auto& wallpaper : WallpaperManager::getWallpapers()) {
             path cachedPreviewPath = getPreviewPath(wallpaper, screen->devicePixelRatio());
 
             if(!exists(cachedPreviewPath)) {
@@ -39,6 +39,6 @@ void CacheLoader::loadCache() {
     }
 }
 
-path CacheLoader::getPreviewPath(const Wallpaper &wallpaper, const double devicePixelRatio) {
+path CacheLoader::getPreviewPath(const Wallpaper& wallpaper, const double devicePixelRatio) {
     return cacheDir / to_string(devicePixelRatio) / (wallpaper.getName() + ".png");
 }

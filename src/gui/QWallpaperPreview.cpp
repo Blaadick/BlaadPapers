@@ -11,7 +11,7 @@
 using namespace std;
 using namespace filesystem;
 
-QWallpaperPreview::QWallpaperPreview(const Wallpaper &wallpaper, QWidget *parent) : QAbstractButton(parent), wallpaper(wallpaper) {
+QWallpaperPreview::QWallpaperPreview(const Wallpaper& wallpaper, QWidget* parent) : QAbstractButton(parent), wallpaper(wallpaper) {
     setFixedSize(getAspectRatio(screen()) * 18.4);
     connect(this, &QWallpaperPreview::clicked, this, [this] {
         setWallpaper("all", this->wallpaper);
@@ -23,7 +23,7 @@ void QWallpaperPreview::refreshPreview() {
     pixmap = QPixmap::fromImage(image);
 }
 
-void QWallpaperPreview::paintEvent(QPaintEvent *event) {
+void QWallpaperPreview::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     const QRect rect(0, 0, width(), height());
 
