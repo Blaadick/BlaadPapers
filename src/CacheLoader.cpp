@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include "Util.hpp"
+#include "WallpaperManager.hpp"
 
 using namespace std;
 using namespace filesystem;
@@ -18,8 +19,8 @@ void CacheLoader::loadCache() {
             create_directory(screenCacheFolder);
         }
 
-        for(const auto &wallpaper: wallpapers) {
-            path cachedPreviewPath = wallpaper.getPreviewPath(screen->devicePixelRatio());
+        for(const auto &wallpaper: WallpaperManager::getWallpapers()) {
+            path cachedPreviewPath = getPreviewPath(wallpaper, screen->devicePixelRatio());
 
             if(!exists(cachedPreviewPath)) {
                 QImage maxSizedPreview = QImage(wallpaper.getFilePath().c_str()).scaled(
@@ -36,4 +37,8 @@ void CacheLoader::loadCache() {
             }
         }
     }
+}
+
+path CacheLoader::getPreviewPath(const Wallpaper &wallpaper, const double devicePixelRatio) {
+    return cacheDir / to_string(devicePixelRatio) / (wallpaper.getName() + ".png");
 }

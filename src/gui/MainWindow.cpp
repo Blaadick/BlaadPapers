@@ -4,7 +4,8 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QWidget>
-#include "Global.hpp"
+
+#include "WallpaperManager.hpp"
 
 MainWindow &MainWindow::getInstance() {
     static MainWindow instance;
@@ -12,7 +13,7 @@ MainWindow &MainWindow::getInstance() {
 }
 
 void MainWindow::fillWidgets() const {
-    for(const auto &wallpaper: wallpapers) {
+    for(const auto &wallpaper: WallpaperManager::getWallpapers()) {
         wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
     }
 }

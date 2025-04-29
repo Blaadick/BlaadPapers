@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <json/json.hpp>
 
-class ConfigReader {
+class ConfigManager {
 public:
     static void readConfig();
 

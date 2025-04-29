@@ -21,8 +21,6 @@ public:
 
     std::filesystem::path getFilePath() const;
 
-    std::filesystem::path getPreviewPath(double devicePixelRatio) const;
-
     nlohmann::json toJson() const;
 
     bool operator<(const Wallpaper &other) const;
