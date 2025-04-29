@@ -27,6 +27,16 @@ void ConfigManager::readConfig() {
     }
 }
 
+path ConfigManager::getConfigDir() {
+    return configDir;
+}
+
 path ConfigManager::getWorkingDir() {
     return workingDir;
 }
+
+const path ConfigManager::configDir = std::string(getenv("HOME")) + "/.config/blaadpapers/";
+const json ConfigManager::defaultConfig = {
+    {"working_dir", "~/Pictures/Wallpapers/"}
+};
+path ConfigManager::workingDir;

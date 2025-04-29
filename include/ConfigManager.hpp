@@ -9,10 +9,10 @@ public:
 
     static std::filesystem::path getWorkingDir();
 
+    static std::filesystem::path getConfigDir();
+
 private:
-    inline static const std::filesystem::path configDir = std::string(getenv("HOME")) + "/.config/blaadpapers/";
-    inline static const nlohmann::json defaultConfig = {
-        {"working_dir", "~/Pictures/Wallpapers/"}
-    };
-    inline static std::filesystem::path workingDir;
+    static const std::filesystem::path configDir;
+    static const nlohmann::json defaultConfig;
+    static std::filesystem::path workingDir;
 };
