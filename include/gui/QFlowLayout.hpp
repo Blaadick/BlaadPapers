@@ -6,6 +6,8 @@
 #include <vector>
 
 class QFlowLayout final : public QLayout {
+    Q_OBJECT
+
 public:
     explicit QFlowLayout(int margin = 0, int hSpacing = -1, int vSpacing = -1, QWidget* parent = nullptr);
 

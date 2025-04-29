@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <iostream>
 #include <QScreen>
 #include "ConfigManager.hpp"
 #include "Wallpaper.hpp"
@@ -17,7 +18,8 @@ inline void setWallpaper(const std::string& monitorName, const Wallpaper& wallpa
     hyprpaperConfig << "wallpaper = , " << wallpaperFilePath << std::endl;
     hyprpaperConfig.close();
 
-    const std::filesystem::path postScriptPath = ConfigManager::getWorkingDir() / "post.sh";
+    const std::filesystem::path postScriptPath = ConfigManager::getConfigDir() / "post.sh";
+    std::cout << postScriptPath;
     if(exists(postScriptPath)) {
         system(("bash " + postScriptPath.string() + " \"" + wallpaperFilePath + "\"").c_str());
     }

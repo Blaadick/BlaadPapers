@@ -3,7 +3,6 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QMainWindow>
-
 #include "gui/QWallpaperGrid.hpp"
 
 class MainWindow final : public QMainWindow {
