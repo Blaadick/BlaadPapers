@@ -1,4 +1,4 @@
-#include "ConfigReader.hpp"
+#include "ConfigManager.hpp"
 
 #include <fstream>
 
@@ -6,7 +6,7 @@ using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-void ConfigReader::readConfig() {
+void ConfigManager::readConfig() {
     path configFilePath = configDir / "config.json";
     json configData;
 
@@ -27,6 +27,6 @@ void ConfigReader::readConfig() {
     }
 }
 
-path ConfigReader::getWorkingDir() {
+path ConfigManager::getWorkingDir() {
     return workingDir;
 }

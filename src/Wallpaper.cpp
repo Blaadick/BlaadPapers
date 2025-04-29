@@ -1,7 +1,6 @@
 #include "Wallpaper.hpp"
 
-#include "ConfigReader.hpp"
-#include "Global.hpp"
+#include "ConfigManager.hpp"
 
 using namespace std;
 using namespace filesystem;
@@ -26,11 +25,7 @@ vector<string> Wallpaper::getTags() const {
 }
 
 path Wallpaper::getFilePath() const {
-    return ConfigReader::getWorkingDir() / (name + ".png");
-}
-
-path Wallpaper::getPreviewPath(const double devicePixelRatio) const {
-    return cacheDir / to_string(devicePixelRatio) / (name + ".png");
+    return ConfigManager::getWorkingDir() / (name + ".png");
 }
 
 json Wallpaper::toJson() const {

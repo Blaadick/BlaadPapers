@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QPainter>
 #include <QPainterPath>
+
+#include "CacheLoader.hpp"
 #include "Util.hpp"
 #include "Wallpaper.hpp"
 
@@ -17,7 +19,7 @@ QWallpaperPreview::QWallpaperPreview(const Wallpaper &wallpaper, QWidget *parent
 }
 
 void QWallpaperPreview::refreshPreview() {
-    const QImage image(wallpaper.getPreviewPath(screen()->devicePixelRatio()).c_str());
+    const QImage image(CacheLoader::getPreviewPath(wallpaper, screen()->devicePixelRatio()).c_str());
     pixmap = QPixmap::fromImage(image);
 }
 

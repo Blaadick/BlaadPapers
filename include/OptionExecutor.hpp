@@ -12,9 +12,7 @@ class OptionExecutor {
         std::string_view helpMessage;
     };
 
-    std::pmr::map<char, Option> options;
-
-    OptionExecutor();
+    static std::pmr::map<char, Option> options;
 
     static void help(const std::pmr::set<char> &subOptions, int argNumber, char *arguments[]);
 
@@ -27,11 +25,5 @@ class OptionExecutor {
     static void list(const std::pmr::set<char> &subOptions, int argNumber, char *arguments[]);
 
 public:
-    OptionExecutor(const OptionExecutor &) = delete;
-
-    OptionExecutor operator=(const OptionExecutor &) = delete;
-
-    static OptionExecutor &getInstance();
-
-    void execute(int argNumber, char *arguments[]);
+    static void execute(int argNumber, char *arguments[]);
 };

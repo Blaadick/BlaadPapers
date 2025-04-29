@@ -6,20 +6,20 @@
 #include <Wallpaper.hpp>
 #include <json/json.hpp>
 #include "HelpStrings.hpp"
-#include "Global.hpp"
 #include "Util.hpp"
+#include "WallpaperManager.hpp"
 
 using namespace std;
 using nlohmann::json;
 
-OptionExecutor::OptionExecutor() {
-    options['H'] = {help, {}, "WTF bro?"};
-    options['h'] = {help, {}, "WTF bro?"}; // Because it's familiar
-    options['V'] = {version, {'j'}, versionHelpMessage};
-    options['S'] = {set, {}, setHelpMessage};
-    options['R'] = {random, {'s'}, randomHelpMessage};
-    options['L'] = {list, {'j'}, listHelpMessage};
-}
+std::pmr::map<char, OptionExecutor::Option> OptionExecutor::options = {
+    {'H', {help, {}, "WTF bro?"}},
+    {'h', {help, {}, "WTF bro?"}}, // Because it's familiar
+    {'V', {version, {'j'}, versionHelpMessage}},
+    {'S', {set, {}, setHelpMessage}},
+    {'R', {random, {'s'}, randomHelpMessage}},
+    {'L', {list, {'j'}, listHelpMessage}},
+};
 
 void OptionExecutor::help(const pmr::set<char> &, const int argNumber, char *arguments[]) {
     if(argNumber > 2) {
@@ -44,6 +44,7 @@ void OptionExecutor::version(const pmr::set<char> &subOptions, const int argNumb
 }
 
 void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *arguments[]) {
+    const auto &wallpapers = WallpaperManager::getWallpapers();
     const char *monitorName = arguments[2];
     const char *imageName = arguments[3];
 
@@ -67,8 +68,9 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *argu
         return;
     }
 
-    const Wallpaper temp(imageName, Wallpaper::defaultWallpaperData);
-    const auto &wallpaperToSet = *wallpapers.lower_bound(temp);
+    const auto wallpaperToSet = *ranges::find_if(wallpapers, [imageName](const Wallpaper &wallpaper){
+        return wallpaper.getName() == imageName;
+    });
 
     if(strcasecmp(wallpaperToSet.getName().c_str(), imageName) != 0) {
         cerr << "No wallpaper found" << endl;
@@ -81,6 +83,7 @@ void OptionExecutor::set(const pmr::set<char> &, const int argNumber, char *argu
 }
 
 void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumber, char *arguments[]) {
+    const auto &wallpapers = WallpaperManager::getWallpapers();
     const char *monitorName = arguments[2];
     mt19937 rand(random_device {}());
     const Wallpaper *wallpaperToSet;
@@ -163,6 +166,8 @@ void OptionExecutor::random(const pmr::set<char> &subOptions, const int argNumbe
 }
 
 void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber, char *arguments[]) {
+    const auto &wallpapers = WallpaperManager::getWallpapers();
+
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -190,11 +195,6 @@ void OptionExecutor::list(const pmr::set<char> &subOptions, const int argNumber,
             cout << wallpaper.getName() << endl;
         }
     }
-}
-
-OptionExecutor &OptionExecutor::getInstance() {
-    static OptionExecutor instance;
-    return instance;
 }
 
 void OptionExecutor::execute(const int argNumber, char *arguments[]) {
