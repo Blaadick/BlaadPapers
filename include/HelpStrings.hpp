@@ -13,10 +13,11 @@ Options:
 
 Universal sub options:
     h  ->  Shows help for option and exit
-    q  ->  Disables command output (it'll be working soon)
+    q  ->  Disables command output
 
 Notes:
-    Setting wallpapers for individual monitors does not work correctly!)#";
+    Setting wallpapers for individual monitors does not work
+    Quiet output does not work)#";
 
 inline std::string_view versionHelpMessage = R"#(Usage:
     blaadpapers -V[SubOptions]
