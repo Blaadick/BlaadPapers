@@ -12,16 +12,7 @@
 using namespace std;
 using nlohmann::json;
 
-std::pmr::map<char, OptionExecutor::Option> OptionExecutor::options = {
-    {'H', {help, {}, "WTF bro?"}},
-    {'h', {help, {}, "WTF bro?"}}, // Because it's familiar
-    {'V', {version, {'j'}, versionHelpMessage}},
-    {'S', {set, {}, setHelpMessage}},
-    {'R', {random, {'s'}, randomHelpMessage}},
-    {'L', {list, {'j'}, listHelpMessage}},
-};
-
-void OptionExecutor::help(const pmr::set<char>&, const int argNumber, char* arguments[]) {
+void helpOption(const pmr::set<char>&, const int argNumber, char* arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -30,7 +21,7 @@ void OptionExecutor::help(const pmr::set<char>&, const int argNumber, char* argu
     cout << mainHelpMessage << endl;
 }
 
-void OptionExecutor::version(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
+void versionOption(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;
         return;
@@ -43,7 +34,7 @@ void OptionExecutor::version(const pmr::set<char>& subOptions, const int argNumb
     }
 }
 
-void OptionExecutor::set(const pmr::set<char>&, const int argNumber, char* arguments[]) {
+void setOption(const pmr::set<char>&, const int argNumber, char* arguments[]) {
     const auto& wallpapers = WallpaperManager::getWallpapers();
     const char* monitorName = arguments[2];
     const char* imageName = arguments[3];
@@ -82,7 +73,7 @@ void OptionExecutor::set(const pmr::set<char>&, const int argNumber, char* argum
     cout << "Wallpaper " << wallpaperToSet.getName() << " set" << endl;
 }
 
-void OptionExecutor::random(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
+void randomOption(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
     const auto& wallpapers = WallpaperManager::getWallpapers();
     const char* monitorName = arguments[2];
     mt19937 rand(random_device{}());
@@ -165,7 +156,7 @@ void OptionExecutor::random(const pmr::set<char>& subOptions, const int argNumbe
     cout << "Wallpaper " << wallpaperToSet->getName() << " set" << endl;
 }
 
-void OptionExecutor::list(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
+void listOption(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
     const auto& wallpapers = WallpaperManager::getWallpapers();
 
     if(argNumber > 2) {
@@ -239,3 +230,12 @@ void OptionExecutor::execute(const int argNumber, char* arguments[]) {
 
     options[option].func(subOptions, argNumber, arguments);
 }
+
+pmr::map<char, OptionExecutor::Option> OptionExecutor::options = {
+    {'H', {helpOption, {}, "WTF bro?"}},
+    {'h', {helpOption, {}, "WTF bro?"}}, // Because it's familiar
+    {'V', {versionOption, {'j'}, versionHelpMessage}},
+    {'S', {setOption, {}, setHelpMessage}},
+    {'R', {randomOption, {'s'}, randomHelpMessage}},
+    {'L', {listOption, {'j'}, listHelpMessage}},
+};
