@@ -1,4 +1,4 @@
-#include "ConfigManager.hpp"
+#include "Config.hpp"
 
 #include <fstream>
 
@@ -6,7 +6,7 @@ using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-void ConfigManager::readConfig() {
+void Config::readConfig() {
     path configFilePath = configDir / "config.json";
     json configData;
 
@@ -27,16 +27,16 @@ void ConfigManager::readConfig() {
     }
 }
 
-path ConfigManager::getConfigDir() {
-    return configDir;
-}
-
-path ConfigManager::getWorkingDir() {
+path Config::getWorkingDir() {
     return workingDir;
 }
 
-const path ConfigManager::configDir = std::string(getenv("HOME")) + "/.config/blaadpapers/";
-const json ConfigManager::defaultConfig = {
+path Config::getPostSetScriptPath() {
+    return configDir / "post_set.sh";
+}
+
+const path Config::configDir = std::string(getenv("HOME")) + "/.config/blaadpapers/";
+const json Config::defaultConfig = {
     {"working_dir", "~/Pictures/Wallpapers/"}
 };
-path ConfigManager::workingDir;
+path Config::workingDir;

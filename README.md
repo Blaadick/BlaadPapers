@@ -1,10 +1,10 @@
 <div align = center>
-    <img src="/res/blaadpapers.svg" alt="BlaadPapersLogo" width="100"/>
+    <img src="/res/blaadpapers.svg" alt="BlaadPapersLogo" width="135"/>
     <h1>BlaadPapers</h1>
 </div>
 
 > [!NOTE]  
-> The application is temporarily using hyprpaper IPC as back-end
+> The application is temporarily using hyprpaper IPC as the back-end
 
 ## Description
 

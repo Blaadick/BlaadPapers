@@ -1,6 +1,6 @@
 #include "Wallpaper.hpp"
 
-#include "ConfigManager.hpp"
+#include "Config.hpp"
 
 using namespace std;
 using namespace filesystem;
@@ -25,7 +25,7 @@ vector<string> Wallpaper::getTags() const {
 }
 
 path Wallpaper::getFilePath() const {
-    return ConfigManager::getWorkingDir() / (name + ".png");
+    return Config::getWorkingDir() / (name + ".png");
 }
 
 json Wallpaper::toJson() const {

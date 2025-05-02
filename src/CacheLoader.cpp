@@ -2,7 +2,7 @@
 
 #include <QApplication>
 #include "Util.hpp"
-#include "WallpaperManager.hpp"
+#include "Wallpapers.hpp"
 
 using namespace std;
 using namespace filesystem;
@@ -19,7 +19,7 @@ void CacheLoader::loadCache() {
             create_directory(screenCacheFolder);
         }
 
-        for(const auto& wallpaper : WallpaperManager::getWallpapers()) {
+        for(const auto& wallpaper : Wallpapers::getWallpapers()) {
             path cachedPreviewPath = getPreviewPath(wallpaper, screen->devicePixelRatio());
 
             if(!exists(cachedPreviewPath)) {
