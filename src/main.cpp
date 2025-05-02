@@ -2,7 +2,7 @@
 #include "CacheLoader.hpp"
 #include "OptionExecutor.hpp"
 #include "Util.hpp"
-#include "WallpaperManager.hpp"
+#include "Wallpapers.hpp"
 #include "gui/MainWindow.hpp"
 
 using namespace std;
@@ -10,8 +10,8 @@ using namespace filesystem;
 using nlohmann::json;
 
 int main(int argc, char* argv[]) {
-    ConfigManager::readConfig();
-    WallpaperManager::loadWallpapers();
+    Config::readConfig();
+    Wallpapers::loadWallpapers();
 
     if(argc >= 2) {
         OptionExecutor::execute(argc, argv);
@@ -22,7 +22,6 @@ int main(int argc, char* argv[]) {
 
     MainWindow mainWindow;
     mainWindow.show();
-
     CacheLoader::loadCache();
     mainWindow.fillWidgets();
 

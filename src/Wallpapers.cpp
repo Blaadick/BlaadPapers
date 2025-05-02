@@ -1,16 +1,16 @@
-#include "WallpaperManager.hpp"
+#include "Wallpapers.hpp"
 
 #include <filesystem>
 #include <fstream>
-#include "ConfigManager.hpp"
+#include "Config.hpp"
 #include "Wallpaper.hpp"
 
 using namespace std;
 using namespace filesystem;
 using nlohmann::json;
 
-void WallpaperManager::loadWallpapers() {
-    const path workingDir = ConfigManager::getWorkingDir();
+void Wallpapers::loadWallpapers() {
+    const path workingDir = Config::getWorkingDir();
 
     if(!exists(workingDir / ".index")) {
         create_directory(workingDir / ".index");
@@ -35,12 +35,12 @@ void WallpaperManager::loadWallpapers() {
             data = Wallpaper::defaultWallpaperData;
         }
 
-        wallpapers.push_back(Wallpaper(imageName, data));
+        wallpapers.emplace_back(imageName, data);
     }
 }
 
-const std::vector<Wallpaper>& WallpaperManager::getWallpapers() {
+const std::vector<Wallpaper>& Wallpapers::getWallpapers() {
     return wallpapers;
 }
 
-vector<Wallpaper> WallpaperManager::wallpapers;
+vector<Wallpaper> Wallpapers::wallpapers;

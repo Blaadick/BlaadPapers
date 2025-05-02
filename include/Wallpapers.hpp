@@ -3,7 +3,7 @@
 #include <vector>
 #include "Wallpaper.hpp"
 
-class WallpaperManager {
+class Wallpapers {
 public:
     static void loadWallpapers();
 

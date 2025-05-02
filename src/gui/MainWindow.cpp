@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "WallpaperManager.hpp"
+#include "Wallpapers.hpp"
 
 MainWindow::MainWindow() {
     auto* centralWidget = new QWidget(this);
@@ -37,7 +37,7 @@ MainWindow::MainWindow() {
 }
 
 void MainWindow::fillWidgets() const {
-    for(const auto& wallpaper : WallpaperManager::getWallpapers()) {
+    for(const auto& wallpaper : Wallpapers::getWallpapers()) {
         wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
     }
 }

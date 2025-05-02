@@ -7,7 +7,7 @@
 #include <json/json.hpp>
 #include "HelpStrings.hpp"
 #include "Util.hpp"
-#include "WallpaperManager.hpp"
+#include "Wallpapers.hpp"
 
 using namespace std;
 using nlohmann::json;
@@ -35,7 +35,7 @@ void versionOption(const pmr::set<char>& subOptions, const int argNumber, char* 
 }
 
 void setOption(const pmr::set<char>&, const int argNumber, char* arguments[]) {
-    const auto& wallpapers = WallpaperManager::getWallpapers();
+    const auto& wallpapers = Wallpapers::getWallpapers();
     const char* monitorName = arguments[2];
     const char* imageName = arguments[3];
 
@@ -74,7 +74,7 @@ void setOption(const pmr::set<char>&, const int argNumber, char* arguments[]) {
 }
 
 void randomOption(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
-    const auto& wallpapers = WallpaperManager::getWallpapers();
+    const auto& wallpapers = Wallpapers::getWallpapers();
     const char* monitorName = arguments[2];
     mt19937 rand(random_device{}());
     const Wallpaper* wallpaperToSet;
@@ -157,7 +157,7 @@ void randomOption(const pmr::set<char>& subOptions, const int argNumber, char* a
 }
 
 void listOption(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
-    const auto& wallpapers = WallpaperManager::getWallpapers();
+    const auto& wallpapers = Wallpapers::getWallpapers();
 
     if(argNumber > 2) {
         cerr << "Unknown argument: " << arguments[2] << endl;

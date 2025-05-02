@@ -3,12 +3,12 @@
 #include <fstream>
 #include <iostream>
 #include <QScreen>
-#include "ConfigManager.hpp"
+#include "Config.hpp"
 #include "Wallpaper.hpp"
 
 //TODO move away
 inline void setWallpaper(const std::string& monitorName, const Wallpaper& wallpaper) {
-    std::string wallpaperFilePath = wallpaper.getFilePath().string();
+    const std::string wallpaperFilePath = wallpaper.getFilePath().string();
 
     system(("hyprctl -q hyprpaper preload " + wallpaperFilePath).c_str());
     system(("hyprctl -q hyprpaper wallpaper , " + wallpaperFilePath).c_str());
@@ -18,10 +18,8 @@ inline void setWallpaper(const std::string& monitorName, const Wallpaper& wallpa
     hyprpaperConfig << "wallpaper = , " << wallpaperFilePath << std::endl;
     hyprpaperConfig.close();
 
-    const std::filesystem::path postScriptPath = ConfigManager::getConfigDir() / "post.sh";
-    std::cout << postScriptPath;
-    if(exists(postScriptPath)) {
-        system(("bash " + postScriptPath.string() + " \"" + wallpaperFilePath + "\"").c_str());
+    if(exists(Config::getPostSetScriptPath())) {
+        system(("bash " + Config::getPostSetScriptPath().string() + " \"" + wallpaperFilePath + "\"").c_str());
     }
 }
 
