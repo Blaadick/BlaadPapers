@@ -13,6 +13,7 @@ Super wallpaper manager
 ## Installation
 
 <details><summary>Arch Linux</summary>
+It's not working right now
 
 ```shell
 yay -S blaadpapers
@@ -21,7 +22,8 @@ yay -S blaadpapers
 </details>
 
 <details><summary>Windows</summary>
+It's not working right now
 
-Application installation. Maby soon.
+[APP_LINK]
 
 </details>
