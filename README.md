@@ -7,23 +7,18 @@
 > The application is temporarily using hyprpaper IPC as the back-end
 
 ## Description
-
 Super wallpaper manager
 
 ## Installation
-
-<details><summary>Arch Linux</summary>
-It's not working right now
-
-```shell
+<details open>
+    <summary>Arch Linux</summary>
+    
+```bash
 yay -S blaadpapers
 ```
 
 </details>
-
-<details><summary>Windows</summary>
-It's not working right now
-
-[APP_LINK]
-
+<details>
+    <summary>Windows</summary>
+    SOON
 </details>
