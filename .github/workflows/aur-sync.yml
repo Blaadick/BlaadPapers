@@ -1,0 +1,16 @@
+name: AUR Synchronization
+
+on:
+    release:
+        types: [published]
+    workflow_dispatch:
+
+jobs:
+    aur-sync:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: Blaadworks/AurSynchronization@v0.1.0
+              with:
+                  pkg_name: blaadpapers
+                  ssh_private_key: ${{ secrets.SSH_KEY_AUR }}
