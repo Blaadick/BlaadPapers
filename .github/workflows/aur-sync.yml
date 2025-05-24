@@ -3,14 +3,23 @@ name: AUR Synchronization
 on:
     release:
         types: [published]
-    workflow_dispatch:
 
 jobs:
     aur-sync:
         runs-on: ubuntu-latest
         steps:
-            # - uses: actions/checkout@v4.2.2
-            - uses: Blaadworks/AurSynchronization@v1.0.0
-              with:
-                  pkg_name: blaadpapers
-                  ssh_key: ${{ secrets.SSH_KEY_AUR }}
+          - name: Get repo description
+            id: repo
+            uses: actions/github-script@v7.0.1
+            with:
+                script: |
+                    const repo = await github.rest.repos.get({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo
+                    });
+                    core.setOutput("description", repo.data.description);
+          - uses: Blaadworks/AurSynchronization@v1.0.0
+            with:
+                pkg_name: blaadpapers
+                pkg_desc: ${{ steps.repo.outputs.description }}
+                ssh_key: ${{ secrets.SSH_KEY_AUR }}
