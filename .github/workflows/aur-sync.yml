@@ -9,8 +9,8 @@ jobs:
     aur-sync:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: Blaadworks/AurSynchronization@v0.1.0
+            - uses: actions/checkout@v4.2.2
+            - uses: Blaadworks/AurSynchronization@v1.0.0
               with:
                   pkg_name: blaadpapers
-                  ssh_private_key: ${{ secrets.SSH_KEY_AUR }}
+                  ssh_key: ${{ secrets.SSH_KEY_AUR }}
