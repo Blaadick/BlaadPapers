@@ -1,23 +1,21 @@
-<div align = center>
+<div align="center">
     <img src="/res/blaadpapers.svg" alt="BlaadPapersLogo" width="135"/>
     <h1>BlaadPapers</h1>
 </div>
 
-> [!NOTE]  
+> [!NOTE]
 > The application is temporarily using hyprpaper IPC as the back-end
 
-## Description
-Super wallpaper manager
+<h2>Description</h2>
+<p>Convenient wallpaper manager supporting both GUI and CLI usage. I want to make it as fast, convenient and pleasing to the eye as possible.</p>
+<p>Keep in mind that the application is being developed and tested on and for linux systems. I will try to keep it running on other platforms as well, but this is not a priority.</p>
 
-## Installation
+<h2>Installation</h2>
 <details open>
     <summary>Arch Linux</summary>
-
-```bash
-yay -S blaadpapers
-```
+    <pre><code class="language-bash">yay -S blaadpapers</code></pre>
 </details>
 <details>
     <summary>Windows</summary>
-    SOON
+    <p>Expected after adding major features and implementing own wallpaper rendering.</p>
 </details>
