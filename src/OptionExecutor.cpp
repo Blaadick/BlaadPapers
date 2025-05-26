@@ -36,8 +36,8 @@ void versionOption(const pmr::set<char>& subOptions, const int argNumber, char* 
 
 void setOption(const pmr::set<char>&, const int argNumber, char* arguments[]) {
     const auto& wallpapers = Wallpapers::getWallpapers();
-    const char* monitorName = arguments[2];
-    const char* imageName = arguments[3];
+    const auto* monitorName = arguments[2];
+    const auto* imageName = arguments[3];
 
     if(argNumber > 4) {
         cerr << "Unknown argument: " << arguments[4] << endl;
@@ -75,7 +75,7 @@ void setOption(const pmr::set<char>&, const int argNumber, char* arguments[]) {
 
 void randomOption(const pmr::set<char>& subOptions, const int argNumber, char* arguments[]) {
     const auto& wallpapers = Wallpapers::getWallpapers();
-    const char* monitorName = arguments[2];
+    const auto* monitorName = arguments[2];
     mt19937 rand(random_device{}());
     const Wallpaper* wallpaperToSet;
 
@@ -171,7 +171,7 @@ void listOption(const pmr::set<char>& subOptions, const int argNumber, char* arg
     if(subOptions.contains('j')) {
         cout << "[";
 
-        int i = 0;
+        auto i = 0;
         for(const auto& wallpaper : wallpapers) {
             cout << wallpaper.toJson();
 
@@ -189,7 +189,7 @@ void listOption(const pmr::set<char>& subOptions, const int argNumber, char* arg
 }
 
 void OptionExecutor::execute(const int argNumber, char* arguments[]) {
-    const char& option = arguments[1][1];
+    const auto& option = arguments[1][1];
     pmr::set<char> subOptions;
 
     if(arguments[1][0] != '-') {
@@ -207,24 +207,24 @@ void OptionExecutor::execute(const int argNumber, char* arguments[]) {
         return;
     }
 
-    for(int i = 2; i < strlen(arguments[1]); i++) {
+    for(auto i = 2; i < strlen(arguments[1]); i++) {
         switch(arguments[1][i]) {
-        case 'h': {
-            cout << options[option].helpMessage << endl;
-            return;
-        }
-        case 'q': {
-            //TODO supress output
-            break;
-        }
-        default: {
-            if(options[option].allowableSubOptions.contains(arguments[1][i])) {
-                subOptions.insert(arguments[1][i]);
-            } else {
-                cerr << "Unknown sub option: " << arguments[1][i] << endl;
+            case 'h': {
+                cout << options[option].helpMessage << endl;
                 return;
             }
-        }
+            case 'q': {
+                //TODO supress output
+                break;
+            }
+            default: {
+                if(options[option].allowableSubOptions.contains(arguments[1][i])) {
+                    subOptions.insert(arguments[1][i]);
+                } else {
+                    cerr << "Unknown sub option: " << arguments[1][i] << endl;
+                    return;
+                }
+            }
         }
     }
 

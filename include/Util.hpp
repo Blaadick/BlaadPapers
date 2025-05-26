@@ -1,7 +1,6 @@
 #pragma once
 
 #include <fstream>
-#include <iostream>
 #include <QScreen>
 #include "Config.hpp"
 #include "Wallpaper.hpp"

@@ -11,6 +11,8 @@ public:
 
     void refreshPreview();
 
+    void refreshSize();
+
 private:
     const Wallpaper& wallpaper;
     QPixmap pixmap;
