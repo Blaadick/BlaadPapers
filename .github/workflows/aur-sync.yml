@@ -15,7 +15,7 @@ jobs:
                     const { description, license } = (await github.rest.repos.get(context.repo)).data;
 
                     core.setOutput("description", description);
-                    core.setOutput("license", license.spdx_id);
+                    core.setOutput("license", license?.spdx_id);
         -   uses: Blaadworks/AurSynchronization@v1.1.0
             with:
                 ssh_key: ${{ secrets.SSH_KEY_AUR }}
