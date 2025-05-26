@@ -1,5 +1,6 @@
 #include "gui/MainWindow.hpp"
 
+#include <QApplication>
 #include <QScreen>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -37,6 +38,12 @@ MainWindow::MainWindow() {
 }
 
 void MainWindow::fillWidgets() const {
+    monitorCombo->addItem("all");
+    for(const auto& screen : QApplication::screens()) {
+        monitorCombo->addItem(screen->name());
+    }
+    monitorCombo->setDisabled(true);
+
     for(const auto& wallpaper : Wallpapers::getWallpapers()) {
         wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
     }

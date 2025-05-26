@@ -12,11 +12,10 @@ Super wallpaper manager
 ## Installation
 <details open>
     <summary>Arch Linux</summary>
-    
+
 ```bash
 yay -S blaadpapers
 ```
-
 </details>
 <details>
     <summary>Windows</summary>
