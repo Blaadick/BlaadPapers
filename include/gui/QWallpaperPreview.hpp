@@ -15,6 +15,7 @@ public:
 
 private:
     const Wallpaper& wallpaper;
+    bool isBadWallpaper;
     QPixmap pixmap;
 
     void paintEvent(QPaintEvent* event) override;

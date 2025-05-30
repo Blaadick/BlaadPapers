@@ -6,8 +6,8 @@
 #include <Wallpaper.hpp>
 #include <json/json.hpp>
 #include "HelpStrings.hpp"
-#include "Util.hpp"
 #include "Wallpapers.hpp"
+#include "util/ScreenUtils.hpp"
 
 using namespace std;
 using nlohmann::json;
@@ -89,7 +89,7 @@ void randomOption(const pmr::set<char>& subOptions, const int argNumber, char* a
         return;
     }
 
-    if(subOptions.contains('s')) {
+    if(subOptions.contains('f')) {
         vector<string> includeTags;
         vector<string> excludeTags;
 
@@ -236,6 +236,6 @@ pmr::map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'h', {helpOption, {}, "WTF bro?"}}, // Because it's familiar
     {'V', {versionOption, {'j'}, versionHelpMessage}},
     {'S', {setOption, {}, setHelpMessage}},
-    {'R', {randomOption, {'s'}, randomHelpMessage}},
+    {'R', {randomOption, {'f'}, randomHelpMessage}},
     {'L', {listOption, {'j'}, listHelpMessage}},
 };

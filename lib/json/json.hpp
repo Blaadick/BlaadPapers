@@ -17543,25 +17543,25 @@ class binary_writer
     // such a conversion is required to allow values greater than 128.
     // See <https://github.com/nlohmann/json/issues/1286> for a discussion.
     template < typename C = CharType,
-               enable_if_t < std::is_signed<C>::value && std::is_signed<char>::value > * = nullptr >
+               enable_if_t < std::is_signed_v<C> && std::is_signed<char>::value > * = nullptr >
     static constexpr CharType to_char_type(std::uint8_t x) noexcept
     {
         return *reinterpret_cast<char*>(&x);
     }
 
     template < typename C = CharType,
-               enable_if_t < std::is_signed<C>::value && std::is_unsigned<char>::value > * = nullptr >
+               enable_if_t < std::is_signed_v<C> && std::is_unsigned<char>::value > * = nullptr >
     static CharType to_char_type(std::uint8_t x) noexcept
     {
         static_assert(sizeof(std::uint8_t) == sizeof(CharType), "size of CharType must be equal to std::uint8_t");
-        static_assert(std::is_trivial<CharType>::value, "CharType must be trivial");
+        static_assert(std::is_trivial_v<CharType>, "CharType must be trivial");
         CharType result;
         std::memcpy(&result, &x, sizeof(x));
         return result;
     }
 
     template<typename C = CharType,
-             enable_if_t<std::is_unsigned<C>::value>* = nullptr>
+             enable_if_t<std::is_unsigned_v<C>>* = nullptr>
     static constexpr CharType to_char_type(std::uint8_t x) noexcept
     {
         return x;

@@ -33,7 +33,7 @@ inline std::string_view randomHelpMessage = R"#(Usage:
     blaadpapers -Rf[SubOptions] <monitorName> <includeTags> [excludeTags]
 
 Sub options:
-    s  ->  Specifies the tags with which the wallpaper can be installed)#";
+    f  ->  Specifies the tags with which the wallpaper can be installed)#";
 
 inline std::string_view listHelpMessage = R"#(Usage:
     blaadpapers -L[SubOptions]
