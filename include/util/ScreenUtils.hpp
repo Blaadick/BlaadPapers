@@ -2,6 +2,8 @@
 
 #include <fstream>
 #include <QScreen>
+#include <QSizeF>
+#include <string>
 #include "Config.hpp"
 #include "Wallpaper.hpp"
 

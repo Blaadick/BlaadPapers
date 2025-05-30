@@ -1,6 +1,7 @@
 #include "Config.hpp"
 
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 using namespace filesystem;
@@ -8,35 +9,46 @@ using nlohmann::json;
 
 void Config::readConfig() {
     path configFilePath = configDir / "config.json";
-    json configData;
 
     if(exists(configFilePath)) {
         ifstream configFile(configFilePath);
         configFile >> configData;
         configFile.close();
     } else {
-        configData = defaultConfig;
+        ofstream configFile(configFilePath);
+        configFile << defaultConfigData.dump(4);
+        configFile.close();
+
+        configData = defaultConfigData;
     }
 
-    const string rawWorkingDir = configData["working_dir"];
-
-    if(rawWorkingDir[0] == '~') {
-        workingDir = string(getenv("HOME")) + rawWorkingDir.substr(1);
-    } else {
-        workingDir = rawWorkingDir;
-    }
+    workingDir = readDirProperty("working_dir");
+    badTags = readProperty<vector<string>>("bad_tags");
 }
 
-path Config::getWorkingDir() {
+const path& Config::getWorkingDir() {
     return workingDir;
+}
+
+const std::vector<std::string>& Config::getBadTags() {
+    return badTags;
 }
 
 path Config::getPostSetScriptPath() {
     return configDir / "post_set.sh";
 }
 
-const path Config::configDir = std::string(getenv("HOME")) + "/.config/blaadpapers/";
-const json Config::defaultConfig = {
-    {"working_dir", "~/Pictures/Wallpapers/"}
-};
+json Config::configData;
 path Config::workingDir;
+vector<string> Config::badTags;
+
+path Config::readDirProperty(const std::string& name) {
+    const auto rawDir = readProperty<string>(name);
+    return rawDir.starts_with('~') ? string(getenv("HOME")) + rawDir.substr(1) : rawDir;
+}
+
+template<typename T>
+T Config::readProperty(const std::string& name) {
+    const auto value = configData[name];
+    return value.is_null() ? defaultConfigData[name] : value;
+}

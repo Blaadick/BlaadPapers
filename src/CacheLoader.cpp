@@ -1,8 +1,9 @@
 #include "CacheLoader.hpp"
 
 #include <QApplication>
-#include "Util.hpp"
 #include "Wallpapers.hpp"
+#include "util/PathUtils.hpp"
+#include "util/ScreenUtils.hpp"
 
 using namespace std;
 using namespace filesystem;
@@ -13,17 +14,17 @@ void CacheLoader::loadCache() {
     }
 
     for(const auto* screen : QApplication::screens()) {
-        path screenCacheFolder = cacheDir / to_string(screen->devicePixelRatio());
+        auto screenCacheFolder = cacheDir / to_string(screen->devicePixelRatio());
 
         if(!exists(screenCacheFolder)) {
             create_directory(screenCacheFolder);
         }
 
         for(const auto& wallpaper : Wallpapers::getWallpapers()) {
-            path cachedPreviewPath = getPreviewPath(wallpaper, screen->devicePixelRatio());
+            auto cachedPreviewPath = getPreviewPath(wallpaper, screen->devicePixelRatio());
 
             if(!exists(cachedPreviewPath)) {
-                QImage maxSizedPreview = QImage(wallpaper.getFilePath().c_str()).scaled(
+                auto maxSizedPreview = QImage(wallpaper.getFilePath().c_str()).scaled(
                     getAspectRatio(screen) * 18.4 * screen->devicePixelRatio(),
                     Qt::KeepAspectRatioByExpanding,
                     Qt::SmoothTransformation
@@ -42,3 +43,5 @@ void CacheLoader::loadCache() {
 path CacheLoader::getPreviewPath(const Wallpaper& wallpaper, const double devicePixelRatio) {
     return cacheDir / to_string(devicePixelRatio) / (wallpaper.getName() + ".png");
 }
+
+const path CacheLoader::cacheDir = getCachePath() / "blaadpapers";

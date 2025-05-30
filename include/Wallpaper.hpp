@@ -13,11 +13,11 @@ public:
 
     Wallpaper(const std::string& name, const nlohmann::json& data);
 
-    std::string getName() const;
+    const std::string& getName() const;
 
-    std::string getDescription() const;
+    const std::string& getDescription() const;
 
-    std::vector<std::string> getTags() const;
+    const std::vector<std::string>& getTags() const;
 
     std::filesystem::path getFilePath() const;
 

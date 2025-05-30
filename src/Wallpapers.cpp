@@ -10,7 +10,7 @@ using namespace filesystem;
 using nlohmann::json;
 
 void Wallpapers::loadWallpapers() {
-    const path workingDir = Config::getWorkingDir();
+    const auto& workingDir = Config::getWorkingDir();
 
     if(!exists(workingDir / ".index")) {
         create_directory(workingDir / ".index");
@@ -20,7 +20,7 @@ void Wallpapers::loadWallpapers() {
         if(entry.path().extension() != ".png") continue;
 
         string imageName = entry.path().stem();
-        path dataFilePath = workingDir / ".index" / (imageName + ".json");
+        auto dataFilePath = workingDir / ".index" / (imageName + ".json");
         json data;
 
         if(exists(dataFilePath)) {
@@ -37,10 +37,12 @@ void Wallpapers::loadWallpapers() {
 
         wallpapers.emplace_back(imageName, data);
     }
+
+    ranges::sort(wallpapers, [](const Wallpaper& lhs, const Wallpaper& rhs) {
+        return lhs.getName() < rhs.getName();
+    });
 }
 
 const std::vector<Wallpaper>& Wallpapers::getWallpapers() {
     return wallpapers;
 }
-
-vector<Wallpaper> Wallpapers::wallpapers;

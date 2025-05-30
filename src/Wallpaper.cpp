@@ -12,15 +12,15 @@ Wallpaper::Wallpaper(const string& name, const json& data) {
     this->tags = data["tags"];
 }
 
-string Wallpaper::getName() const {
+const string& Wallpaper::getName() const {
     return name;
 }
 
-string Wallpaper::getDescription() const {
+const string& Wallpaper::getDescription() const {
     return description;
 }
 
-vector<string> Wallpaper::getTags() const {
+const vector<string>& Wallpaper::getTags() const {
     return tags;
 }
 

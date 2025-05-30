@@ -1,7 +1,7 @@
 #include <QApplication>
 #include "CacheLoader.hpp"
+#include "Config.hpp"
 #include "OptionExecutor.hpp"
-#include "Util.hpp"
 #include "Wallpapers.hpp"
 #include "gui/MainWindow.hpp"
 

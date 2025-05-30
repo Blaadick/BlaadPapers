@@ -10,5 +10,5 @@ public:
     static const std::vector<Wallpaper>& getWallpapers();
 
 private:
-    static std::vector<Wallpaper> wallpapers;
+    inline static std::vector<Wallpaper> wallpapers;
 };

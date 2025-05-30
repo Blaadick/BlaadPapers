@@ -5,7 +5,6 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QWidget>
-
 #include "Wallpapers.hpp"
 
 MainWindow::MainWindow() {
@@ -38,13 +37,22 @@ MainWindow::MainWindow() {
 }
 
 void MainWindow::fillWidgets() const {
-    monitorCombo->addItem("all");
-    for(const auto& screen : QApplication::screens()) {
-        monitorCombo->addItem(screen->name());
+    if(QApplication::screens().size() == 1) {
+        monitorCombo->hide();
+    } else {
+        monitorCombo->addItem("all");
+        for(const auto& screen : QApplication::screens()) {
+            monitorCombo->addItem(screen->name());
+        }
+        monitorCombo->setDisabled(true);
     }
-    monitorCombo->setDisabled(true);
 
     for(const auto& wallpaper : Wallpapers::getWallpapers()) {
         wallpaperGrid->addPreview(new QWallpaperPreview(wallpaper, wallpaperGrid));
     }
+
+
+    //TODO Add it back later
+    monitorCombo->hide();
+    searchBox->hide();
 }
