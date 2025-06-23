@@ -13,9 +13,8 @@ I want to make it as fast, convenient and pleasing to the eye as possible.
 Keep in mind that the application is being developed and tested on and for linux systems.
 I will try to keep it running on other platforms as well, but this is not a priority.
 
-## Preview
 <div align="center">
-    <img src="resources/preview.png" alt="Application preview" width="450">
+    <img src="resources/preview.png" alt="Application preview" width="700">
 </div>
 Looks like a piece of shit, right?
 It's all nailed down, and it lags at high resolutions.
