@@ -1,8 +1,9 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 #include <vector>
-#include <json/json.hpp>
+#include <nlohmann/json.hpp>
 
 class Wallpaper {
 public:

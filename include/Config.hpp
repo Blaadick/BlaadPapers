@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include <json/json.hpp>
+#include <nlohmann/json.hpp>
 #include "util/PathUtils.hpp"
 
 class Config {

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <Wallpaper.hpp>
-#include <json/json.hpp>
+#include <json/json.h>
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
 #include "util/ScreenUtils.hpp"
