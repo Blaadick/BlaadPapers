@@ -1,33 +1,31 @@
 #pragma once
 
-#include <filesystem>
-#include <string>
-#include <vector>
-#include <nlohmann/json.hpp>
+#include <QJsonObject>
+#include <QString>
+#include <QVector>
 
 class Wallpaper {
 public:
-    inline static const nlohmann::json defaultWallpaperData = {
-        {"description", ""},
-        {"tags", {"General"}}
-    };
+    Wallpaper(
+        const QString& name,
+        const QString& description,
+        const QString& picturePath,
+        const QVector<QString>& tags
+    );
 
-    Wallpaper(const std::string& name, const nlohmann::json& data);
+    const QString& getName() const;
 
-    const std::string& getName() const;
+    const QString& getDescription() const;
 
-    const std::string& getDescription() const;
+    const QString& getPicturePath() const;
 
-    const std::vector<std::string>& getTags() const;
+    const QVector<QString>& getTags() const;
 
-    std::filesystem::path getFilePath() const;
-
-    nlohmann::json toJson() const;
-
-    bool operator<(const Wallpaper& other) const;
+    QJsonObject toJson() const;
 
 private:
-    std::string name;
-    std::string description;
-    std::vector<std::string> tags;
+    QString name;
+    QString description;
+    QString picturePath;
+    QVector<QString> tags;
 };

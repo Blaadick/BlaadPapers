@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string_view>
+
 inline std::string_view mainHelpMessage = R"#(Usage:
     blaadpapers
     blaadpapers -<Option>[SubOptions]
@@ -13,11 +15,7 @@ Options:
 
 Universal sub options:
     h  ->  Shows help for option and exit
-    q  ->  Disables command output
-
-Notes:
-    Setting wallpapers for individual monitors does not work
-    Quiet output does not work)#";
+    q  ->  Disables command output)#";
 
 inline std::string_view versionHelpMessage = R"#(Usage:
     blaadpapers -V[SubOptions]
@@ -26,11 +24,12 @@ Sub options:
     j  ->  Outputs command result in JSON format)#";
 
 inline std::string_view setHelpMessage = R"#(Usage:
-    blaadpapers -S[SubOptions] <monitorName> <WallpaperName>)#";
+    blaadpapers -S[SubOptions] <WallpaperName>)#";
 
 inline std::string_view randomHelpMessage = R"#(Usage:
-    blaadpapers -R[SubOptions] <monitorName>
-    blaadpapers -Rf[SubOptions] <monitorName> <includeTags> [excludeTags]
+    blaadpapers -R[SubOptions]
+    blaadpapers -Rf[SubOptions] <includeTags> [excludeTags]
+    blaadpapers -Rf '["General","Anime"]'
 
 Sub options:
     f  ->  Specifies the tags with which the wallpaper can be installed)#";

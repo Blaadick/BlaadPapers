@@ -1,48 +1,74 @@
 #include "Wallpapers.hpp"
 
-#include <filesystem>
-#include <fstream>
-#include "Config.hpp"
-#include "Wallpaper.hpp"
+#include <QDirIterator>
+#include <QFile>
+#include <QJsonDocument>
+#include <QRandomGenerator>
+#include <QStandardPaths>
 
-using namespace std;
-using namespace filesystem;
-using nlohmann::json;
+void Wallpapers::load() {
+    const QString wallpapersPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/";
+    const QString wallpapersDataPath = wallpapersPath + ".index/";
+    QDirIterator dirIterator(wallpapersPath, {"*.png", "*.jpg"});
 
-void Wallpapers::loadWallpapers() {
-    const auto& workingDir = Config::getWorkingDir();
-
-    if(!exists(workingDir / ".index")) {
-        create_directory(workingDir / ".index");
+    if(QDir wallpapersDataDir(wallpapersDataPath); !wallpapersDataDir.exists()) {
+        wallpapersDataDir.mkpath(wallpapersDataPath);
     }
 
-    for(const auto& entry : directory_iterator(workingDir)) {
-        if(entry.path().extension() != ".png") continue;
+    while(dirIterator.hasNext()) {
+        dirIterator.next();
 
-        string imageName = entry.path().stem();
-        auto dataFilePath = workingDir / ".index" / (imageName + ".json");
-        json data;
+        QString wallpaperName = dirIterator.fileInfo().baseName();
+        QJsonObject wallpaperData;
 
-        if(exists(dataFilePath)) {
-            ifstream dataFile(dataFilePath);
-            dataFile >> data;
+        if(QFile dataFile(wallpapersDataPath + wallpaperName + ".json"); dataFile.exists()) {
+            dataFile.open(QIODeviceBase::ReadOnly);
+            wallpaperData = QJsonDocument::fromJson(dataFile.readAll()).object();
             dataFile.close();
         } else {
-            ofstream dataFile(dataFilePath);
-            dataFile << Wallpaper::defaultWallpaperData.dump(4);
+            dataFile.open(QIODeviceBase::WriteOnly);
+            dataFile.write(QJsonDocument(defaultWallpaperData).toJson());
             dataFile.close();
 
-            data = Wallpaper::defaultWallpaperData;
+            wallpaperData = defaultWallpaperData;
         }
 
-        wallpapers.emplace_back(imageName, data);
+        QVector<QString> wallpaperTags{};
+
+        for(auto tag : wallpaperData["tags"].toArray()) {
+            wallpaperTags.emplace_back(tag.toString());
+        }
+
+        wallpapers.append(
+            Wallpaper(
+                wallpaperName,
+                wallpaperData["description"].toString(),
+                dirIterator.filePath(),
+                wallpaperTags
+            )
+        );
     }
 
-    ranges::sort(wallpapers, [](const Wallpaper& lhs, const Wallpaper& rhs) {
-        return lhs.getName() < rhs.getName();
+    std::ranges::sort(wallpapers, [](const Wallpaper& w1, const Wallpaper& w2) {
+        return w1.getName() < w2.getName();
     });
 }
 
-const std::vector<Wallpaper>& Wallpapers::getWallpapers() {
+QVector<Wallpaper> Wallpapers::getWallpapers() {
     return wallpapers;
 }
+
+QJsonArray Wallpapers::toJson() {
+    QJsonArray wallpapersData;
+
+    for(const auto& wallpaper : wallpapers) {
+        auto wallpaperData = wallpaper.toJson();
+
+        wallpaperData["name"] = wallpaper.getName();
+        wallpapersData.append(wallpaperData);
+    }
+
+    return wallpapersData;
+}
+
+QVector<Wallpaper> Wallpapers::wallpapers;
