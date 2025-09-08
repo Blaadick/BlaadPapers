@@ -18,7 +18,8 @@ void helpOption(const set<char>&, const vector<char*>&) {
 void versionOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
         const QJsonObject outputData{
-            {"name", "BlaadPapers"},
+            {"name", PROJECT_NAME},
+            {"description", PROJECT_DESCRIPTION},
             {"version", PROJECT_VERSION}
         };
 
