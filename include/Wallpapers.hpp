@@ -1,14 +1,20 @@
 #pragma once
 
-#include <vector>
+#include <QJsonArray>
 #include "Wallpaper.hpp"
 
 class Wallpapers {
 public:
-    static void loadWallpapers();
+    static void load();
 
-    static const std::vector<Wallpaper>& getWallpapers();
+    static QVector<Wallpaper> getWallpapers();
+
+    static QJsonArray toJson();
 
 private:
-    inline static std::vector<Wallpaper> wallpapers;
+    static const inline QJsonObject defaultWallpaperData = {
+        {"description", "Wallpaper description."},
+        {"tags", QJsonArray{"General"}}
+    };
+    static QVector<Wallpaper> wallpapers;
 };
