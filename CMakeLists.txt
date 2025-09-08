@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 4.1)
 
-file(READ VERSION VER_RAW)
-string(STRIP ${VER_RAW} PROJECT_VERSION)
-
 project(BlaadPapers
     DESCRIPTION "Super wallpaper manager"
-    VERSION ${PROJECT_VERSION}
+    VERSION 0.1.0
     LANGUAGES CXX
 )
 
@@ -32,4 +29,8 @@ qt_add_qml_module(blaadpapers
 
 target_link_libraries(blaadpapers PRIVATE Qt6::Core Qt6::Concurrent Qt6::Quick Qt6::Qml)
 target_include_directories(blaadpapers PRIVATE include)
-target_compile_definitions(blaadpapers PRIVATE PROJECT_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(blaadpapers PRIVATE
+    PROJECT_NAME="${PROJECT_NAME}"
+    PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION}"
+    PROJECT_VERSION="${PROJECT_VERSION}"
+)

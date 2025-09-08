@@ -39,6 +39,8 @@ void Wallpapers::load() {
             wallpaperTags.emplace_back(tag.toString());
         }
 
+        if(!wallpaperTags.contains("General")) continue;
+
         wallpapers.append(
             Wallpaper(
                 wallpaperName,
