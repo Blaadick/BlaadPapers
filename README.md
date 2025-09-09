@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="resources/blaadpapers.svg" alt="BlaadPapersLogo" width="135"/>
+    <img src="resource/blaadpapers.svg" alt="BlaadPapersLogo" width="135"/>
     <h1>BlaadPapers</h1>
 </div>
 
@@ -12,7 +12,7 @@ Convenient wallpaper manager supporting both GUI and CLI usage. I will try to ma
 Keep in mind that the application is being developed and tested on and for linux systems. I will try to keep it running on other platforms as well, but this is not a priority.
 
 <div align="center">
-    <img src="resources/preview.png" alt="Application preview">
+    <img src="resource/preview.png" alt="Application preview">
 </div>
 
 ## Installation

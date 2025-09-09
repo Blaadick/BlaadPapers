@@ -1,10 +1,12 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+#include "Config.hpp"
 #include "OptionExecutor.hpp"
 #include "Wallpapers.hpp"
 #include "model/WallpaperList.hpp"
 
 int main(int argc, char** argv) {
+    Config::readConfig();
     Wallpapers::load();
 
     if(argc > 1) {
