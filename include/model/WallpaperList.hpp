@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include "Wallpaper.hpp"
 
 class WallpaperList : public QAbstractListModel {
     Q_OBJECT
@@ -13,8 +14,6 @@ public:
         TagsRole
     };
 
-    explicit WallpaperList(QObject* parent = nullptr);
-
     static void loadPreviews();
 
     int rowCount(const QModelIndex& parent) const override;
@@ -23,5 +22,5 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE static void setWallpaper(const QString& picturePath);
+    Q_INVOKABLE void setWallpaper(const QString& picturePath);
 };

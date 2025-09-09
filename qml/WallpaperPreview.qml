@@ -1,27 +1,11 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 import BlaadPapers
 
-Image {
+Item {
     id: preview
-    source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${name}.png`
     scale: isPressed ? 0.97 : (isHovered ? 1.03 : 1)
-    layer {
-        enabled: true
-        smooth: true
-        mipmap: true
-        effect: OpacityMask {
-            maskSource: Rectangle {
-                width: preview.width
-                height: preview.height
-                radius: 10
-            }
-        }
-    }
-    fillMode: Image.PreserveAspectCrop
-    asynchronous: true
 
     Behavior on scale {
         NumberAnimation {
@@ -33,8 +17,17 @@ Image {
     property string name
     property string description
     property string picturePath
-    property bool isPressed: false
-    property bool isHovered: false
+    property bool isPressed
+    property bool isHovered
+
+    Image {
+        id: picture
+        anchors.fill: parent
+        source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.name}.png`
+        fillMode: Image.PreserveAspectCrop
+        asynchronous: true
+        cache: false
+    }
 
     ToolTip {
         id: tooltip
@@ -42,9 +35,9 @@ Image {
     }
 
     MouseArea {
+        anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-        anchors.fill: parent
 
         onPressed: {
             preview.isPressed = true
@@ -52,7 +45,7 @@ Image {
 
         onReleased: {
             preview.isPressed = false
-            WallpaperList.setWallpaper(picturePath)
+            WallpaperList.setWallpaper(preview.picturePath)
         }
 
         onCanceled: {

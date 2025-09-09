@@ -25,12 +25,12 @@ package() {
     cd "$reponame-$pkgver" || exit
 
     install -Dm755 "./cmake-build-release/$pkgname" "$pkgdir/usr/bin/$pkgname"
-    install -Dm644 "./resources/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
-    install -Dm644 "./resources/$pkgname.fish" "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
-    install -Dm644 "./resources/$pkgname.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+    install -Dm644 "./resource/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+    install -Dm644 "./resource/$pkgname.fish" "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
+    install -Dm644 "./resource/$pkgname.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
 
     for size in 16 22 24 32 36 48 64 72 96 128 192 256 384 512; do
         install -d "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-        rsvg-convert -w $size -h $size -o "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png" "./resources/$pkgname.svg"
+        rsvg-convert -w $size -h $size -o "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png" "./resource/$pkgname.svg"
     done
 }

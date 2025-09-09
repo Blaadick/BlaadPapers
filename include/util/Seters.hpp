@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QFile>
-#include <qrunnable.h>
 #include <QStandardPaths>
 #include <QString>
 
