@@ -4,12 +4,9 @@
 #include <QFile>
 #include <QImage>
 #include <QScreen>
-#include <QStandardPaths>
 #include <QtConcurrentRun>
 #include "Wallpapers.hpp"
 #include "util/Seters.hpp"
-
-WallpaperList::WallpaperList(QObject* parent) : QAbstractListModel(parent) {}
 
 void WallpaperList::loadPreviews() {
     QThreadPool::globalInstance()->start([] {
