@@ -31,33 +31,27 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
 
 void setOption(const set<char>&, const vector<char*>& arguments) {
     const auto& wallpapers = Wallpapers::getWallpapers();
-    const auto& targetWallpaperName = arguments[0];
 
-    if(wallpapers.empty()) {
-        cerr << "No wallpapers found" << endl;
-        return;
-    }
-
-    if(targetWallpaperName == nullptr) {
+    if(arguments.size() < 1) {
         cerr << "Wallpaper name expected" << endl;
         return;
     }
 
     for(const auto& wallpaper : wallpapers) {
-        if(wallpaper.getName() == targetWallpaperName) {
+        if(wallpaper.getName() == arguments[0]) {
             applyWallpaper(wallpaper.getPicturePath());
             return;
         }
     }
 
-    cerr << "Wallpaper " << targetWallpaperName << " not found" << endl;
+    cerr << "Wallpaper not found" << endl;
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
     const auto& wallpapers = Wallpapers::getWallpapers();
 
     if(wallpapers.empty()) {
-        cerr << "No wallpapers found" << endl;
+        cerr << "No wallpapers" << endl;
         return;
     }
 
@@ -66,7 +60,7 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         QVector<QString> excludeTags;
         QVector<Wallpaper> filteredWallpapers;
 
-        if(arguments[0] != nullptr) {
+        if(arguments.size() > 0) {
             for(auto tag : QJsonDocument::fromJson(arguments[0]).array()) {
                 includeTags.append(tag.toString());
             }
@@ -75,32 +69,39 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
             return;
         }
 
-        if(arguments[1] != nullptr) {
+        if(arguments.size() > 1) {
             for(auto tag : QJsonDocument::fromJson(arguments[1]).array()) {
                 excludeTags.append(tag.toString());
             }
         }
 
         for(const auto& wallpaper : wallpapers) {
-            if(
-                ranges::all_of(
-                    includeTags,
-                    [&wallpaper](const QString& tag) {
-                        return wallpaper.getTags().contains(tag);
-                    }
-                )
-            ) {
-                if(
-                    !ranges::any_of(
-                        excludeTags,
-                        [&wallpaper](const QString& tag) {
-                            return wallpaper.getTags().contains(tag);
-                        }
-                    )
-                ) {
-                    filteredWallpapers.emplace_back(wallpaper);
+            const bool containsIncludeTags = ranges::all_of(
+                includeTags,
+                [&wallpaper](const QString& tag) {
+                    return wallpaper.getTags().contains(tag);
                 }
+            );
+
+            const bool containsExcludeTags = ranges::any_of(
+                excludeTags,
+                [&wallpaper](const QString& tag) {
+                    return wallpaper.getTags().contains(tag);
+                }
+            );
+
+            if(containsIncludeTags && !containsExcludeTags) {
+                filteredWallpapers.append(wallpaper);
             }
+        }
+
+        for(const auto& wallpaper : filteredWallpapers) {
+            qDebug() << "Filtered: " << wallpaper.getName();
+        }
+
+        if(filteredWallpapers.empty()) {
+            cout << "No wallpapers found" << endl;
+            return;
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());

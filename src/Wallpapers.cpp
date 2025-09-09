@@ -6,8 +6,10 @@
 #include <QRandomGenerator>
 #include <QStandardPaths>
 
+#include "Config.hpp"
+
 void Wallpapers::load() {
-    const QString wallpapersPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/";
+    const QString wallpapersPath = Config::getWorkingPath() + "/Wallpapers/";
     const QString wallpapersDataPath = wallpapersPath + ".index/";
     QDirIterator dirIterator(wallpapersPath, {"*.png", "*.jpg"});
 
@@ -36,10 +38,8 @@ void Wallpapers::load() {
         QVector<QString> wallpaperTags{};
 
         for(auto tag : wallpaperData["tags"].toArray()) {
-            wallpaperTags.emplace_back(tag.toString());
+            wallpaperTags.append(tag.toString());
         }
-
-        if(!wallpaperTags.contains("General")) continue;
 
         wallpapers.append(
             Wallpaper(
