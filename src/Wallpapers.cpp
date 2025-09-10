@@ -16,6 +16,8 @@ void Wallpapers::load() {
         wallpapersDataDir.mkpath(wallpapersDataPath);
     }
 
+    wallpapers.clear();
+
     while(dirIterator.hasNext()) {
         dirIterator.next();
 
@@ -55,14 +57,14 @@ void Wallpapers::load() {
     });
 }
 
-const QVector<Wallpaper>& Wallpapers::getWallpapers() {
+const QVector<Wallpaper>& Wallpapers::getAll() {
     return wallpapers;
 }
 
-const Wallpaper& Wallpapers::getWallpaper(const QString& name) {
+const Wallpaper* Wallpapers::getWallpaper(const QString& name) {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper.getName() == name) {
-            return wallpaper;
+            return &wallpaper;
         }
     }
 

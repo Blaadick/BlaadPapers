@@ -21,6 +21,8 @@ public:
 
     const QVector<QString>& getTags() const;
 
+    bool isBad() const;
+
     QJsonObject toJson() const;
 
 private:

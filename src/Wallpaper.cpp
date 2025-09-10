@@ -2,6 +2,8 @@
 
 #include <QJsonArray>
 
+#include "Config.hpp"
+
 Wallpaper::Wallpaper(
     const QString& name,
     const QString& description,
@@ -23,6 +25,12 @@ const QString& Wallpaper::getPicturePath() const {
 
 const QVector<QString>& Wallpaper::getTags() const {
     return tags;
+}
+
+bool Wallpaper::isBad() const {
+    return std::ranges::any_of(Config::getBadTags(), [this](const QString& tag) {
+        return tags.contains(tag);
+    });
 }
 
 QJsonObject Wallpaper::toJson() const {

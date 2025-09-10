@@ -1,3 +1,4 @@
+#include <QFileSystemWatcher>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include "Config.hpp"
@@ -6,7 +7,7 @@
 #include "model/WallpaperList.hpp"
 
 int main(int argc, char** argv) {
-    Config::readConfig();
+    Config::read();
     Wallpapers::load();
 
     if(argc > 1) {
@@ -16,9 +17,13 @@ int main(int argc, char** argv) {
         QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
+        QFileSystemWatcher configWatcher;
+        configWatcher.addPath(Config::getConfigPath());
+        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, Config::update);
+
         WallpaperList::loadPreviews();
 
-        qmlRegisterSingletonInstance<WallpaperList>(PROJECT_NAME, 1, 0, "WallpaperList", new WallpaperList);
+        qmlRegisterSingletonInstance<WallpaperList>(PROJECT_NAME, 1, 0, "WallpaperList", new WallpaperList(&app));
 
         QQmlApplicationEngine engine;
         engine.loadFromModule(PROJECT_NAME, "MainWindow");

@@ -1,17 +1,18 @@
 #include "Config.hpp"
 
 #include <QFile>
-#include <QJsonArray>
+#include <qguiapplication.h>
 #include <QStandardPaths>
+#include "Wallpaper.hpp"
+#include "Wallpapers.hpp"
 
-void Config::readConfig() {
-    QString configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/config.json";
+void Config::read() {
     defaultData = {
         {"working_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"},
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}}
     };
 
-    if(QFile configFile(configPath); configFile.exists()) {
+    if(QFile configFile(getConfigPath()); configFile.exists()) {
         configFile.open(QIODevice::ReadOnly);
         data = QJsonDocument::fromJson(configFile.readAll()).object();
         configFile.close();
@@ -21,6 +22,20 @@ void Config::readConfig() {
         data = defaultData;
         configFile.close();
     }
+}
+
+void Config::update() {
+    //TODO Fix double config update emit
+    read();
+    Wallpapers::load();
+}
+
+QString Config::getConfigPath() {
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/config.json";
+}
+
+QString Config::getPostSetScriptPath() {
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/post_set.sh";
 }
 
 QString Config::getWorkingPath() {

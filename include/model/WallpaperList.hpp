@@ -10,8 +10,11 @@ public:
     enum WallpaperRoles {
         NameRole = Qt::UserRole + 1,
         DescriptionRole,
-        TagsRole
+        TagsRole,
+        IsBadRole
     };
+
+    explicit WallpaperList(QObject *parent = nullptr);
 
     static void loadPreviews();
 

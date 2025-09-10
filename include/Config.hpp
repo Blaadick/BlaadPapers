@@ -1,10 +1,17 @@
 #pragma once
 
 #include <QJsonObject>
+#include <QStandardPaths>
 
 class Config {
 public:
-    static void readConfig();
+    static void read();
+
+    static void update();
+
+    static QString getConfigPath();
+
+    static QString getPostSetScriptPath();
 
     static QString getWorkingPath();
 

@@ -30,7 +30,7 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
 }
 
 void setOption(const set<char>&, const vector<char*>& arguments) {
-    const auto& wallpapers = Wallpapers::getWallpapers();
+    const auto& wallpapers = Wallpapers::getAll();
 
     if(arguments.size() < 1) {
         cerr << "Wallpaper name expected" << endl;
@@ -48,7 +48,7 @@ void setOption(const set<char>&, const vector<char*>& arguments) {
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
-    const auto& wallpapers = Wallpapers::getWallpapers();
+    const auto& wallpapers = Wallpapers::getAll();
 
     if(wallpapers.empty()) {
         cerr << "No wallpapers" << endl;
@@ -116,7 +116,7 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
         cout << QJsonDocument(Wallpapers::toJson()).toJson(QJsonDocument::Compact) << endl;
     } else {
-        for(const auto& wallpaper : Wallpapers::getWallpapers()) {
+        for(const auto& wallpaper : Wallpapers::getAll()) {
             cout << wallpaper.getName() << endl;
         }
     }

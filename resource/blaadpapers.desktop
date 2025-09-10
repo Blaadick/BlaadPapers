@@ -2,7 +2,7 @@
 Type=Application
 Name=BlaadPapers
 GenericName=Wallpaper Manager
-Comment=Super wallpaper manager
+Comment=Fast & clean wallpaper manager
 Icon=blaadpapers
 Terminal=false
 Exec=blaadpapers
