@@ -10,7 +10,6 @@ public:
     enum WallpaperRoles {
         NameRole = Qt::UserRole + 1,
         DescriptionRole,
-        PicturePathRole,
         TagsRole
     };
 
@@ -22,5 +21,5 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void setWallpaper(const QString& picturePath);
+    Q_INVOKABLE void setWallpaper(const QString& wallpaperName);
 };

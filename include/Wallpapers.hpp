@@ -7,7 +7,9 @@ class Wallpapers {
 public:
     static void load();
 
-    static QVector<Wallpaper> getWallpapers();
+    static const QVector<Wallpaper>& getWallpapers();
+
+    static const Wallpaper& getWallpaper(const QString& name);
 
     static QJsonArray toJson();
 
