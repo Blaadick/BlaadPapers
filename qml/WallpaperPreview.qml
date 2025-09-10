@@ -16,7 +16,6 @@ Item {
 
     property string name
     property string description
-    property string picturePath
     property bool isPressed
     property bool isHovered
 
@@ -45,7 +44,7 @@ Item {
 
         onReleased: {
             preview.isPressed = false
-            WallpaperList.setWallpaper(preview.picturePath)
+            WallpaperList.setWallpaper(preview.name)
         }
 
         onCanceled: {

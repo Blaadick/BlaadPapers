@@ -47,7 +47,6 @@ QVariant WallpaperList::data(const QModelIndex& index, const int role) const {
     switch(role) {
         case NameRole: return wallpaper.getName();
         case DescriptionRole: return wallpaper.getDescription();
-        case PicturePathRole: return wallpaper.getPicturePath();
         default: return {};
     }
 }
@@ -56,12 +55,11 @@ QHash<int, QByteArray> WallpaperList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NameRole] = "wallpaperName";
     roles[DescriptionRole] = "wallpaperDescription";
-    roles[PicturePathRole] = "wallpaperPicturePath";
     return roles;
 }
 
-void WallpaperList::setWallpaper(const QString& picturePath) {
+void WallpaperList::setWallpaper(const QString& wallpaperName) {
     QThreadPool::globalInstance()->start([=] {
-        applyWallpaper(picturePath);
+        applyWallpaper(wallpaperName);
     });
 }

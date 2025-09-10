@@ -9,9 +9,8 @@
 #include "Config.hpp"
 
 void Wallpapers::load() {
-    const QString wallpapersPath = Config::getWorkingPath() + "/Wallpapers/";
-    const QString wallpapersDataPath = wallpapersPath + ".index/";
-    QDirIterator dirIterator(wallpapersPath, {"*.png", "*.jpg"});
+    const QString wallpapersDataPath = Config::getWorkingPath() + ".index/";
+    QDirIterator dirIterator(Config::getWorkingPath(), {"*.png", "*.jpg"});
 
     if(QDir wallpapersDataDir(wallpapersDataPath); !wallpapersDataDir.exists()) {
         wallpapersDataDir.mkpath(wallpapersDataPath);
@@ -56,8 +55,18 @@ void Wallpapers::load() {
     });
 }
 
-QVector<Wallpaper> Wallpapers::getWallpapers() {
+const QVector<Wallpaper>& Wallpapers::getWallpapers() {
     return wallpapers;
+}
+
+const Wallpaper& Wallpapers::getWallpaper(const QString& name) {
+    for(const auto& wallpaper : wallpapers) {
+        if(wallpaper.getName() == name) {
+            return wallpaper;
+        }
+    }
+
+    return nullptr;
 }
 
 QJsonArray Wallpapers::toJson() {
