@@ -1,20 +1,28 @@
 #pragma once
 
+#include <iostream>
 #include <QFile>
-#include <QStandardPaths>
 #include <QString>
+#include "Config.hpp"
 
-inline void applyWallpaper(const QString& picturePath) {
-    //TODO Move some variables to Config.cpp
+inline void applyWallpaper(const QString& wallpaperName) {
     //TODO Remove when implement own renderer
 
-    QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
-    QString blaadpapersConfigPath(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/");
+    const Wallpaper* wallpaper = Wallpapers::getWallpaper(wallpaperName);
 
+    if(!wallpaper) {
+        std::cerr << "Wallpaper not found";
+        return;
+    }
+
+    const QString& picturePath = wallpaper->getPicturePath();
+
+    QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
+
+    system(("bash " + Config::getPostSetScriptPath() + " \"" + picturePath + '\"').toStdString().c_str());
     system("hyprctl -q hyprpaper unload all");
     system(("hyprctl -q hyprpaper preload \"" + picturePath + '\"').toStdString().c_str());
     system(("hyprctl -q hyprpaper wallpaper \", " + picturePath + '\"').toStdString().c_str());
-    system(("bash " + blaadpapersConfigPath + "post_set.sh \"" + picturePath + '\"').toStdString().c_str());
 
     hyprpaperConfig.open(QIODevice::WriteOnly);
     hyprpaperConfig.write(("preload = " + picturePath + '\n').toStdString().c_str());

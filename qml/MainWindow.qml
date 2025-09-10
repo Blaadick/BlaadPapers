@@ -57,7 +57,7 @@ ApplicationWindow {
                         height: flow.itemHeight
                         name: wallpaperName
                         description: wallpaperDescription
-                        picturePath: wallpaperPicturePath
+                        isBad: isWallpaperBad
                     }
                 }
             }

@@ -8,6 +8,8 @@
 #include "Wallpapers.hpp"
 #include "util/Seters.hpp"
 
+WallpaperList::WallpaperList(QObject* parent) : QAbstractListModel(parent) {}
+
 void WallpaperList::loadPreviews() {
     QThreadPool::globalInstance()->start([] {
         const QString previewsPath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
@@ -20,7 +22,7 @@ void WallpaperList::loadPreviews() {
                 screenPreviewsDir.mkpath(screenPreviewsPath);
             }
 
-            for(const auto& wallpaper : Wallpapers::getWallpapers()) {
+            for(const auto& wallpaper : Wallpapers::getAll()) {
                 const QString previewPath = screenPreviewsPath + wallpaper.getName() + ".png";
 
                 if(QFile previewFile(previewPath); !previewFile.exists()) {
@@ -38,24 +40,28 @@ void WallpaperList::loadPreviews() {
 }
 
 int WallpaperList::rowCount(const QModelIndex& parent) const {
-    return static_cast<int>(Wallpapers::getWallpapers().count());
+    return static_cast<int>(Wallpapers::getAll().count());
 }
 
 QVariant WallpaperList::data(const QModelIndex& index, const int role) const {
-    const Wallpaper& wallpaper = Wallpapers::getWallpapers().at(index.row());
+    const Wallpaper& wallpaper = Wallpapers::getAll().at(index.row());
 
     switch(role) {
         case NameRole: return wallpaper.getName();
         case DescriptionRole: return wallpaper.getDescription();
+        case TagsRole: return wallpaper.getTags();
+        case IsBadRole: return wallpaper.isBad();
         default: return {};
     }
 }
 
 QHash<int, QByteArray> WallpaperList::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles[NameRole] = "wallpaperName";
-    roles[DescriptionRole] = "wallpaperDescription";
-    return roles;
+    return {
+        {NameRole, "wallpaperName"},
+        {DescriptionRole, "wallpaperDescription"},
+        {TagsRole, "wallpaperTags"},
+        {IsBadRole, "isWallpaperBad"},
+    };
 }
 
 void WallpaperList::setWallpaper(const QString& wallpaperName) {
