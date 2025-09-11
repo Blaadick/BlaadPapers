@@ -1,12 +1,10 @@
 #include "Config.hpp"
 
 #include <QFile>
-#include <qguiapplication.h>
+#include <QJsonArray>
 #include <QStandardPaths>
-#include "Wallpaper.hpp"
-#include "Wallpapers.hpp"
 
-void Config::read() {
+void Config::load() {
     defaultData = {
         {"working_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"},
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}}
@@ -22,12 +20,6 @@ void Config::read() {
         data = defaultData;
         configFile.close();
     }
-}
-
-void Config::update() {
-    //TODO Fix double config update emit
-    read();
-    Wallpapers::load();
 }
 
 QString Config::getConfigPath() {
