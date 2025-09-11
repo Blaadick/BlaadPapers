@@ -7,7 +7,7 @@
 #include "model/WallpaperList.hpp"
 
 int main(int argc, char** argv) {
-    Config::read();
+    Config::load();
     Wallpapers::load();
 
     if(argc > 1) {
@@ -19,7 +19,19 @@ int main(int argc, char** argv) {
 
         QFileSystemWatcher configWatcher;
         configWatcher.addPath(Config::getConfigPath());
-        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, Config::update);
+        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
+            //TODO Fix double config update emit
+            Config::load();
+            Wallpapers::load();
+            WallpaperList::loadPreviews();
+        });
+
+        QFileSystemWatcher wallpapersWatcher;
+        wallpapersWatcher.addPath(Config::getWorkingPath());
+        QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
+            Wallpapers::load();
+            WallpaperList::loadPreviews();
+        });
 
         WallpaperList::loadPreviews();
 

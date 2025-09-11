@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <QFile>
+#include <QStandardPaths>
 #include <QString>
 #include "Config.hpp"
 
