@@ -30,19 +30,12 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
 }
 
 void setOption(const set<char>&, const vector<char*>& arguments) {
-    const auto& wallpapers = Wallpapers::getAll();
-
     if(arguments.size() < 1) {
         cerr << "Wallpaper name expected" << endl;
         return;
     }
 
-    for(const auto& wallpaper : wallpapers) {
-        if(wallpaper.getName() == arguments[0]) {
-            applyWallpaper(wallpaper.getPicturePath());
-            return;
-        }
-    }
+    applyWallpaper(arguments[0]);
 
     cerr << "Wallpaper not found" << endl;
 }
@@ -95,20 +88,16 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
             }
         }
 
-        for(const auto& wallpaper : filteredWallpapers) {
-            qDebug() << "Filtered: " << wallpaper.getName();
-        }
-
         if(filteredWallpapers.empty()) {
             cout << "No wallpapers found" << endl;
             return;
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        applyWallpaper(filteredWallpapers[randomIndex].getPicturePath());
+        applyWallpaper(filteredWallpapers[randomIndex].getName());
     } else {
         const auto randomIndex = QRandomGenerator::global()->bounded(wallpapers.size());
-        applyWallpaper(wallpapers[randomIndex].getPicturePath());
+        applyWallpaper(wallpapers[randomIndex].getName());
     }
 }
 

@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
         QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
             //TODO Fix double config update emit
             Config::load();
+
             Wallpapers::load();
             WallpaperList::loadPreviews();
         });
