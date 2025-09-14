@@ -12,7 +12,7 @@ inline void applyWallpaper(const QString& wallpaperName) {
     const Wallpaper* wallpaper = Wallpapers::getWallpaper(wallpaperName);
 
     if(!wallpaper) {
-        std::cerr << "Wallpaper not found";
+        std::cerr << "Wallpaper not found" << std::endl;
         return;
     }
 
