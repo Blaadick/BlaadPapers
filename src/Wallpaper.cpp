@@ -6,9 +6,9 @@
 Wallpaper::Wallpaper(
     const QString& name,
     const QString& description,
-    const QString& picturePath,
+    const QString& filePath,
     const QVector<QString>& tags
-) : name(name), description(description), picturePath(picturePath), tags(tags) {}
+) : name(name), description(description), filePath(filePath), tags(tags) {}
 
 const QString& Wallpaper::getName() const {
     return name;
@@ -18,8 +18,8 @@ const QString& Wallpaper::getDescription() const {
     return description;
 }
 
-const QString& Wallpaper::getPicturePath() const {
-    return picturePath;
+const QString& Wallpaper::getFilePath() const {
+    return filePath;
 }
 
 const QVector<QString>& Wallpaper::getTags() const {

@@ -12,24 +12,21 @@ void applyWatchers() {
     configWatcher.addPath(Config::getConfigPath());
     QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
         //TODO Fix double config update emit
-        Config::load();
-        Wallpapers::load();
-        WallpaperList::loadPreviews();
+        // Config::load();
+        // Wallpapers::load();
+        // WallpaperList::loadPreviews();
+
+        logInfo("Config reloaded");
     });
 
     QFileSystemWatcher wallpapersWatcher;
     wallpapersWatcher.addPath(Config::getWorkingPath());
     QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-        Wallpapers::load();
-        WallpaperList::loadPreviews();
-    });
-}
+        // Wallpapers::load();
+        // WallpaperList::loadPreviews();
 
-void printUniqueTags() {
-    logInfo("Unique tags:");
-    for(const auto& [tag, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
-        logInfo("  {:->4}: {}", quantity, tag.toStdString());
-    }
+        logInfo("Wallpapers reloaded");
+    });
 }
 
 int main(int argc, char** argv) {
@@ -42,10 +39,6 @@ int main(int argc, char** argv) {
         QGuiApplication app(argc, argv);
         QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
-
-        logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().size());
-
-        printUniqueTags();
 
         WallpaperList::loadPreviews();
 

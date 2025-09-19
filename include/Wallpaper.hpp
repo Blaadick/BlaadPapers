@@ -9,7 +9,7 @@ public:
     Wallpaper(
         const QString& name,
         const QString& description,
-        const QString& picturePath,
+        const QString& filePath,
         const QVector<QString>& tags
     );
 
@@ -17,7 +17,7 @@ public:
 
     const QString& getDescription() const;
 
-    const QString& getPicturePath() const;
+    const QString& getFilePath() const;
 
     const QVector<QString>& getTags() const;
 
@@ -28,6 +28,6 @@ public:
 private:
     QString name;
     QString description;
-    QString picturePath;
+    QString filePath;
     QVector<QString> tags;
 };
