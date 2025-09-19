@@ -1,11 +1,11 @@
 #include "Wallpapers.hpp"
 
+#include <iostream>
 #include <QDirIterator>
 #include <QFile>
 #include <QJsonDocument>
 #include <QRandomGenerator>
 #include <QStandardPaths>
-
 #include "Config.hpp"
 
 void Wallpapers::load() {
@@ -50,6 +50,14 @@ void Wallpapers::load() {
                 wallpaperTags
             )
         );
+
+        for(const auto& tag : wallpaperTags) {
+            if(!uniqueTags.contains(tag)) {
+                uniqueTags.insert(tag, 1);
+            } else {
+                uniqueTags[tag] += 1;
+            }
+        }
     }
 
     std::ranges::sort(wallpapers, [](const Wallpaper& w1, const Wallpaper& w2) {
@@ -57,7 +65,7 @@ void Wallpapers::load() {
     });
 }
 
-const QVector<Wallpaper>& Wallpapers::getAll() {
+const QVector<Wallpaper>& Wallpapers::getWallpapers() {
     return wallpapers;
 }
 
@@ -69,6 +77,10 @@ const Wallpaper* Wallpapers::getWallpaper(const QString& name) {
     }
 
     return nullptr;
+}
+
+const QMap<QString, int>& Wallpapers::getUniqueTags() {
+    return uniqueTags;
 }
 
 QJsonArray Wallpapers::toJson() {
@@ -85,3 +97,4 @@ QJsonArray Wallpapers::toJson() {
 }
 
 QVector<Wallpaper> Wallpapers::wallpapers;
+QMap<QString, int> Wallpapers::uniqueTags;

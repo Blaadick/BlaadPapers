@@ -6,7 +6,6 @@
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
 #include "model/WallpaperList.hpp"
-#include "util/Operators.hpp"
 #include "util/Seters.hpp"
 
 using namespace std;
@@ -22,29 +21,26 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
             {"description", PROJECT_DESCRIPTION},
             {"version", PROJECT_VERSION}
         };
-
-        cout << QJsonDocument(outputData).toJson(QJsonDocument::Compact) << endl;
+        logInfo(QJsonDocument(outputData));
     } else {
-        cout << PROJECT_VERSION << endl;
+        logInfo("{} {}", PROJECT_NAME, PROJECT_VERSION);
     }
 }
 
 void setOption(const set<char>&, const vector<char*>& arguments) {
-    if(arguments.size() < 1) {
-        cerr << "Wallpaper name expected" << endl;
+    if(arguments.empty()) {
+        logError("Wallpaper name expected");
         return;
     }
 
     applyWallpaper(arguments[0]);
-
-    cerr << "Wallpaper not found" << endl;
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
-    const auto& wallpapers = Wallpapers::getAll();
+    const auto& wallpapers = Wallpapers::getWallpapers();
 
     if(wallpapers.empty()) {
-        cerr << "No wallpapers" << endl;
+        logInfo("No Wallpapers");
         return;
     }
 
@@ -53,12 +49,12 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         QVector<QString> excludeTags;
         QVector<Wallpaper> filteredWallpapers;
 
-        if(arguments.size() > 0) {
+        if(!arguments.empty()) {
             for(auto tag : QJsonDocument::fromJson(arguments[0]).array()) {
                 includeTags.append(tag.toString());
             }
         } else {
-            cerr << "Array with include tags expected" << endl;
+            logError("Array with include tags expected");
             return;
         }
 
@@ -89,7 +85,7 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         if(filteredWallpapers.empty()) {
-            cout << "No wallpapers found" << endl;
+            logInfo("No wallpapers found");
             return;
         }
 
@@ -103,10 +99,10 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
 
 void listOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
-        cout << QJsonDocument(Wallpapers::toJson()).toJson(QJsonDocument::Compact) << endl;
+        logInfo(QJsonDocument(Wallpapers::toJson()));
     } else {
-        for(const auto& wallpaper : Wallpapers::getAll()) {
-            cout << wallpaper.getName() << endl;
+        for(const auto& wallpaper : Wallpapers::getWallpapers()) {
+            logInfo(wallpaper.getName());
         }
     }
 }
@@ -116,17 +112,17 @@ void OptionExecutor::execute(const int argc, char** argv) {
     set<char> subOptions;
 
     if(argv[1][0] != '-') {
-        cerr << "Unknown argument: " << argv[1] << endl;
+        logError("Unknown argument: {}", argv[1]);
         return;
     }
 
     if(strlen(argv[1]) < 2) {
-        cerr << "Option not specified" << endl;
+        logError("Option not specified");
         return;
     }
 
     if(!options.contains(option)) {
-        cerr << "Unknown option: " << option << endl;
+        logError("Unknown option: {}", option);
         return;
     }
 
@@ -145,7 +141,7 @@ void OptionExecutor::execute(const int argc, char** argv) {
                 if(options[option].allowableSubOptions.contains(argv[1][i])) {
                     subOptions.insert(argv[1][i]);
                 } else {
-                    cerr << "Unknown sub option: " << argv[1][i] << endl;
+                    logError("Unknown sub option: {}", argv[1][i]);
                     return;
                 }
             }

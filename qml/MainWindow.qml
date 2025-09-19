@@ -1,10 +1,14 @@
 import QtQuick
 import QtQuick.Controls
+import QtMultimedia
 import BlaadPapers
 
 ApplicationWindow {
-    font.family: "monospace"
     visible: true
+    minimumWidth: 280 + flow.spacing * 2
+    minimumHeight: 157 + flow.spacing * 3 + search.height
+    color: Qt.rgba(0, 0, 0, 0.3)
+    font.family: "monospace"
 
     TextField {
         id: search
@@ -49,6 +53,15 @@ ApplicationWindow {
                 property int cols: Math.max(Math.floor((width + spacing) / (280 + spacing)), 1)
                 property real itemWidth: (width - (cols - 1) * spacing - 1) / cols
                 property real itemHeight: itemWidth / (Screen.width / Screen.height)
+
+                Video {
+                    width: flow.itemWidth
+                    height: flow.itemHeight
+                    source: "file:///home/blaadick/preview2.webm"
+                    fillMode: Image.PreserveAspectCrop
+                    loops: MediaPlayer.Infinite
+                    autoPlay: true
+                }
 
                 Repeater {
                     model: WallpaperList

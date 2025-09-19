@@ -1,10 +1,10 @@
 #pragma once
 
-#include <iostream>
 #include <QFile>
 #include <QStandardPaths>
 #include <QString>
 #include "Config.hpp"
+#include "util/Loggers.hpp"
 
 inline void applyWallpaper(const QString& wallpaperName) {
     //TODO Remove when implement own renderer
@@ -12,12 +12,11 @@ inline void applyWallpaper(const QString& wallpaperName) {
     const Wallpaper* wallpaper = Wallpapers::getWallpaper(wallpaperName);
 
     if(!wallpaper) {
-        std::cerr << "Wallpaper not found" << std::endl;
+        logError("Wallpaper not found");
         return;
     }
 
     const QString& picturePath = wallpaper->getPicturePath();
-
     QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
 
     system(("bash " + Config::getPostSetScriptPath() + " \"" + picturePath + '\"').toStdString().c_str());
@@ -29,4 +28,6 @@ inline void applyWallpaper(const QString& wallpaperName) {
     hyprpaperConfig.write(("preload = " + picturePath + '\n').toStdString().c_str());
     hyprpaperConfig.write(("wallpaper = , " + picturePath).toStdString().c_str());
     hyprpaperConfig.close();
+
+    logInfo("Wallpaper \"{}\" set", wallpaperName.toStdString());
 }

@@ -5,6 +5,32 @@
 #include "OptionExecutor.hpp"
 #include "Wallpapers.hpp"
 #include "model/WallpaperList.hpp"
+#include "util/Loggers.hpp"
+
+void applyWatchers() {
+    QFileSystemWatcher configWatcher;
+    configWatcher.addPath(Config::getConfigPath());
+    QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
+        //TODO Fix double config update emit
+        Config::load();
+        Wallpapers::load();
+        WallpaperList::loadPreviews();
+    });
+
+    QFileSystemWatcher wallpapersWatcher;
+    wallpapersWatcher.addPath(Config::getWorkingPath());
+    QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
+        Wallpapers::load();
+        WallpaperList::loadPreviews();
+    });
+}
+
+void printUniqueTags() {
+    logInfo("Unique tags:");
+    for(const auto& [tag, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
+        logInfo("  {:->4}: {}", quantity, tag.toStdString());
+    }
+}
 
 int main(int argc, char** argv) {
     Config::load();
@@ -17,27 +43,15 @@ int main(int argc, char** argv) {
         QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
-        QFileSystemWatcher configWatcher;
-        configWatcher.addPath(Config::getConfigPath());
-        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
-            //TODO Fix double config update emit
-            Config::load();
+        logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().size());
 
-            Wallpapers::load();
-            WallpaperList::loadPreviews();
-        });
-
-        QFileSystemWatcher wallpapersWatcher;
-        wallpapersWatcher.addPath(Config::getWorkingPath());
-        QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-            Wallpapers::load();
-            WallpaperList::loadPreviews();
-        });
+        printUniqueTags();
 
         WallpaperList::loadPreviews();
 
-        qmlRegisterSingletonInstance<WallpaperList>(PROJECT_NAME, 1, 0, "WallpaperList", new WallpaperList(&app));
+        applyWatchers();
 
+        qmlRegisterSingletonInstance<WallpaperList>(PROJECT_NAME, 1, 0, "WallpaperList", new WallpaperList(&app));
         QQmlApplicationEngine engine;
         engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
