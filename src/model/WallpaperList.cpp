@@ -22,7 +22,7 @@ void WallpaperList::loadPreviews() {
                 screenPreviewsDir.mkpath(screenPreviewsPath);
             }
 
-            for(const auto& wallpaper : Wallpapers::getAll()) {
+            for(const auto& wallpaper : Wallpapers::getWallpapers()) {
                 const QString previewPath = screenPreviewsPath + wallpaper.getName() + ".png";
 
                 if(QFile previewFile(previewPath); !previewFile.exists()) {
@@ -40,11 +40,11 @@ void WallpaperList::loadPreviews() {
 }
 
 int WallpaperList::rowCount(const QModelIndex& parent) const {
-    return static_cast<int>(Wallpapers::getAll().count());
+    return static_cast<int>(Wallpapers::getWallpapers().count());
 }
 
 QVariant WallpaperList::data(const QModelIndex& index, const int role) const {
-    const Wallpaper& wallpaper = Wallpapers::getAll().at(index.row());
+    const Wallpaper& wallpaper = Wallpapers::getWallpapers().at(index.row());
 
     switch(role) {
         case NameRole: return wallpaper.getName();

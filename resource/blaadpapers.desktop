@@ -8,3 +8,8 @@ Terminal=false
 Exec=blaadpapers
 Categories=Graphics;Viewer;Qt
 Keywords=wallpaper
+Actions=random-wallpaper
+
+[Desktop Action random-wallpaper]
+Name=Set random wallpaper
+Exec=blaadpapers -R

@@ -12,7 +12,7 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 set(QT_FORCE_CMP0156_TO_VALUE NEW)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Concurrent Quick Qml ShaderTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Concurrent Quick Qml Multimedia ShaderTools)
 
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS include/*.hpp)
@@ -33,7 +33,7 @@ qt_add_shaders(blaadpapers
     FILES ${SHADERS}
 )
 
-target_link_libraries(blaadpapers PRIVATE Qt6::Core Qt6::Concurrent Qt6::Quick Qt6::Qml)
+target_link_libraries(blaadpapers PRIVATE Qt6::Core Qt6::Concurrent Qt6::Quick Qt6::Qml Qt6::Multimedia)
 target_include_directories(blaadpapers PRIVATE include)
 target_compile_definitions(blaadpapers PRIVATE
     PROJECT_NAME="${PROJECT_NAME}"

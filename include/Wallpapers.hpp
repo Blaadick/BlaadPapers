@@ -7,9 +7,11 @@ class Wallpapers {
 public:
     static void load();
 
-    static const QVector<Wallpaper>& getAll();
+    static const QVector<Wallpaper>& getWallpapers();
 
     static const Wallpaper* getWallpaper(const QString& name);
+
+    static const QMap<QString, int>& getUniqueTags();
 
     static QJsonArray toJson();
 
@@ -19,4 +21,5 @@ private:
         {"tags", QJsonArray{"General"}}
     };
     static QVector<Wallpaper> wallpapers;
+    static QMap<QString, int> uniqueTags;
 };

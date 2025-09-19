@@ -1,7 +1,6 @@
 #include "Wallpaper.hpp"
 
 #include <QJsonArray>
-
 #include "Config.hpp"
 
 Wallpaper::Wallpaper(

@@ -21,13 +21,11 @@ Item {
     property bool isHovered
 
     Image {
-        id: picture
         anchors.fill: parent
         visible: !preview.isBad || preview.isHovered
         source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.name}.png`
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
-        cache: false
     }
 
     Rectangle {
