@@ -23,16 +23,16 @@ void WallpaperList::loadPreviews() {
             }
 
             for(const auto& wallpaper : Wallpapers::getWallpapers()) {
-                const QString previewPath = screenPreviewsPath + wallpaper.getName() + ".png";
+                const QString previewPath = screenPreviewsPath + wallpaper.getName() + ".webp";
 
                 if(QFile previewFile(previewPath); !previewFile.exists()) {
-                    auto preview = QImage(wallpaper.getPicturePath()).scaled(
+                    auto preview = QImage(wallpaper.getFilePath()).scaled(
                         screenAspectRatio * 20 * screen->devicePixelRatio(),
                         Qt::KeepAspectRatioByExpanding,
                         Qt::SmoothTransformation
                     );
 
-                    preview.save(previewPath, "PNG");
+                    preview.save(previewPath, "WEBP");
                 }
             }
         }

@@ -16,17 +16,16 @@ inline void applyWallpaper(const QString& wallpaperName) {
         return;
     }
 
-    const QString& picturePath = wallpaper->getPicturePath();
     QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
 
-    system(("bash " + Config::getPostSetScriptPath() + " \"" + picturePath + '\"').toStdString().c_str());
+    system(("bash " + Config::getPostSetScriptPath() + " \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
     system("hyprctl -q hyprpaper unload all");
-    system(("hyprctl -q hyprpaper preload \"" + picturePath + '\"').toStdString().c_str());
-    system(("hyprctl -q hyprpaper wallpaper \", " + picturePath + '\"').toStdString().c_str());
+    system(("hyprctl -q hyprpaper preload \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
+    system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper->getFilePath() + '\"').toStdString().c_str());
 
     hyprpaperConfig.open(QIODevice::WriteOnly);
-    hyprpaperConfig.write(("preload = " + picturePath + '\n').toStdString().c_str());
-    hyprpaperConfig.write(("wallpaper = , " + picturePath).toStdString().c_str());
+    hyprpaperConfig.write(("preload = " + wallpaper->getFilePath() + '\n').toStdString().c_str());
+    hyprpaperConfig.write(("wallpaper = , " + wallpaper->getFilePath()).toStdString().c_str());
     hyprpaperConfig.close();
 
     logInfo("Wallpaper \"{}\" set", wallpaperName.toStdString());

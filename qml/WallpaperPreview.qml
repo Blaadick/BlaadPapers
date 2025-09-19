@@ -23,7 +23,7 @@ Item {
     Image {
         anchors.fill: parent
         visible: !preview.isBad || preview.isHovered
-        source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.name}.png`
+        source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.name}.webp`
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
     }

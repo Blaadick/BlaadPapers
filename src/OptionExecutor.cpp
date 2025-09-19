@@ -98,6 +98,27 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
 }
 
 void listOption(const set<char>& subOptions, const vector<char*>&) {
+    if(subOptions.contains('t')) {
+        if(subOptions.contains('j')) {
+            QJsonArray outputData;
+
+            for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
+                outputData.append(QJsonObject{
+                    {"name", name},
+                    {"quantity", quantity}
+                });
+            }
+
+            logInfo(QJsonDocument(outputData));
+        } else {
+            for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
+                logInfo("{:->4}: {}", quantity, name.toStdString());
+            }
+        }
+
+        return;
+    }
+
     if(subOptions.contains('j')) {
         logInfo(QJsonDocument(Wallpapers::toJson()));
     } else {
@@ -159,5 +180,5 @@ map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'V', {versionOption, {'j'}, versionHelpMessage}},
     {'S', {setOption, {}, setHelpMessage}},
     {'R', {randomOption, {'f'}, randomHelpMessage}},
-    {'L', {listOption, {'j'}, listHelpMessage}},
+    {'L', {listOption, {'t', 'j'}, listHelpMessage}}
 };
