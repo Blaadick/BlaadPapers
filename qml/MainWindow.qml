@@ -54,22 +54,23 @@ ApplicationWindow {
                 property real itemWidth: (width - (cols - 1) * spacing - 1) / cols
                 property real itemHeight: itemWidth / (Screen.width / Screen.height)
 
-                Video {
-                    width: flow.itemWidth
-                    height: flow.itemHeight
-                    source: "file:///home/blaadick/preview2.webm"
-                    fillMode: Image.PreserveAspectCrop
-                    loops: MediaPlayer.Infinite
-                    autoPlay: true
-                }
+                // Video {
+                //     width: flow.itemWidth
+                //     height: flow.itemHeight
+                //     source: "file:///home/blaadick/preview2.webm"
+                //     fillMode: Image.PreserveAspectCrop
+                //     loops: MediaPlayer.Infinite
+                //     autoPlay: true
+                // }
 
                 Repeater {
-                    model: WallpaperList
+                    model: WallpapersModel
                     delegate: WallpaperPreview {
                         width: flow.itemWidth
                         height: flow.itemHeight
                         name: wallpaperName
                         description: wallpaperDescription
+                        tags: wallpaperTags
                         isBad: isWallpaperBad
                     }
                 }

@@ -16,6 +16,7 @@ Item {
 
     property string name
     property string description
+    property var tags
     property bool isBad
     property bool isPressed
     property bool isHovered
@@ -44,7 +45,7 @@ Item {
 
     ToolTip {
         id: tooltip
-        text: `${name}${description === "" ? "" : `\n${description}`}`
+        text: `${name}${description === "" ? "" : `\n${description}`}\n${tags.join(", ")}`
     }
 
     MouseArea {
@@ -58,7 +59,7 @@ Item {
 
         onReleased: {
             preview.isPressed = false
-            WallpaperList.setWallpaper(preview.name)
+            WallpapersModel.applyWallpaper(preview.name)
         }
 
         onCanceled: {

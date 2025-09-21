@@ -1,4 +1,4 @@
-#include "model/WallpaperList.hpp"
+#include "model/WallpapersModel.hpp"
 
 #include <QDir>
 #include <QFile>
@@ -8,9 +8,9 @@
 #include "Wallpapers.hpp"
 #include "util/Seters.hpp"
 
-WallpaperList::WallpaperList(QObject* parent) : QAbstractListModel(parent) {}
+WallpapersModel::WallpapersModel(QObject* parent) : QAbstractListModel(parent) {}
 
-void WallpaperList::loadPreviews() {
+void WallpapersModel::loadPreviews() {
     QThreadPool::globalInstance()->start([] {
         const QString previewsPath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
 
@@ -32,18 +32,18 @@ void WallpaperList::loadPreviews() {
                         Qt::SmoothTransformation
                     );
 
-                    preview.save(previewPath, "WEBP");
+                    preview.save(previewPath, "WEBP", 100);
                 }
             }
         }
     });
 }
 
-int WallpaperList::rowCount(const QModelIndex& parent) const {
+int WallpapersModel::rowCount(const QModelIndex& parent) const {
     return static_cast<int>(Wallpapers::getWallpapers().count());
 }
 
-QVariant WallpaperList::data(const QModelIndex& index, const int role) const {
+QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     const Wallpaper& wallpaper = Wallpapers::getWallpapers().at(index.row());
 
     switch(role) {
@@ -55,7 +55,7 @@ QVariant WallpaperList::data(const QModelIndex& index, const int role) const {
     }
 }
 
-QHash<int, QByteArray> WallpaperList::roleNames() const {
+QHash<int, QByteArray> WallpapersModel::roleNames() const {
     return {
         {NameRole, "wallpaperName"},
         {DescriptionRole, "wallpaperDescription"},
@@ -64,8 +64,13 @@ QHash<int, QByteArray> WallpaperList::roleNames() const {
     };
 }
 
-void WallpaperList::setWallpaper(const QString& wallpaperName) {
+void WallpapersModel::refresh() {
+    beginResetModel();
+    endResetModel();
+}
+
+void WallpapersModel::applyWallpaper(const QString& wallpaperName) {
     QThreadPool::globalInstance()->start([=] {
-        applyWallpaper(wallpaperName);
+        util::applyWallpaper(wallpaperName);
     });
 }

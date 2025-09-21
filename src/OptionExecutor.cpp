@@ -5,7 +5,7 @@
 #include <QRandomGenerator>
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
-#include "model/WallpaperList.hpp"
+#include "model/WallpapersModel.hpp"
 #include "util/Seters.hpp"
 
 using namespace std;
@@ -33,7 +33,7 @@ void setOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    applyWallpaper(arguments[0]);
+    util::applyWallpaper(arguments[0]);
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
@@ -90,10 +90,10 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        applyWallpaper(filteredWallpapers[randomIndex].getName());
+        util::applyWallpaper(filteredWallpapers[randomIndex].getName());
     } else {
         const auto randomIndex = QRandomGenerator::global()->bounded(wallpapers.size());
-        applyWallpaper(wallpapers[randomIndex].getName());
+        util::applyWallpaper(wallpapers[randomIndex].getName());
     }
 }
 
