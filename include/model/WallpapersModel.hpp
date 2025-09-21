@@ -3,7 +3,7 @@
 #include <QAbstractListModel>
 #include "Wallpaper.hpp"
 
-class WallpaperList : public QAbstractListModel {
+class WallpapersModel : public QAbstractListModel {
     Q_OBJECT
 
 public:
@@ -14,7 +14,7 @@ public:
         IsBadRole
     };
 
-    explicit WallpaperList(QObject *parent = nullptr);
+    explicit WallpapersModel(QObject* parent = nullptr);
 
     static void loadPreviews();
 
@@ -24,5 +24,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void setWallpaper(const QString& wallpaperName);
+    Q_INVOKABLE void refresh();
+
+    Q_INVOKABLE static void applyWallpaper(const QString& wallpaperName);
 };

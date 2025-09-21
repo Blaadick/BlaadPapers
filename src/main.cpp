@@ -4,30 +4,8 @@
 #include "Config.hpp"
 #include "OptionExecutor.hpp"
 #include "Wallpapers.hpp"
-#include "model/WallpaperList.hpp"
+#include "model/WallpapersModel.hpp"
 #include "util/Loggers.hpp"
-
-void applyWatchers() {
-    QFileSystemWatcher configWatcher;
-    configWatcher.addPath(Config::getConfigPath());
-    QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
-        //TODO Fix double config update emit
-        // Config::load();
-        // Wallpapers::load();
-        // WallpaperList::loadPreviews();
-
-        logInfo("Config reloaded");
-    });
-
-    QFileSystemWatcher wallpapersWatcher;
-    wallpapersWatcher.addPath(Config::getWorkingPath());
-    QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-        // Wallpapers::load();
-        // WallpaperList::loadPreviews();
-
-        logInfo("Wallpapers reloaded");
-    });
-}
 
 int main(int argc, char** argv) {
     Config::load();
@@ -40,11 +18,31 @@ int main(int argc, char** argv) {
         QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
-        WallpaperList::loadPreviews();
+        const auto wallpaperModel = new WallpapersModel(&app);
+        WallpapersModel::loadPreviews();
 
-        applyWatchers();
+        QFileSystemWatcher wallpapersWatcher;
+        wallpapersWatcher.addPath(Config::getWorkingPath());
+        QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [wallpaperModel] {
+            Wallpapers::load();
+            WallpapersModel::loadPreviews();
+            wallpaperModel->refresh();
 
-        qmlRegisterSingletonInstance<WallpaperList>(PROJECT_NAME, 1, 0, "WallpaperList", new WallpaperList(&app));
+            logInfo("Wallpapers reloaded");
+        });
+
+        QFileSystemWatcher configWatcher;
+        configWatcher.addPath(Config::getConfigPath());
+        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [wallpaperModel] {
+            Config::load();
+            Wallpapers::load();
+            WallpapersModel::loadPreviews();
+            wallpaperModel->refresh();
+
+            logInfo("Wallpapers reloaded");
+        });
+
+        qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", wallpaperModel);
         QQmlApplicationEngine engine;
         engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
