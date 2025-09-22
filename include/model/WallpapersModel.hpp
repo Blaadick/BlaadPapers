@@ -14,7 +14,7 @@ public:
         IsBadRole
     };
 
-    explicit WallpapersModel(QObject* parent = nullptr);
+    static WallpapersModel& inst();;
 
     static void loadPreviews();
 

@@ -6,9 +6,13 @@
 #include <QScreen>
 #include <QtConcurrentRun>
 #include "Wallpapers.hpp"
+#include "util/Loggers.hpp"
 #include "util/Seters.hpp"
 
-WallpapersModel::WallpapersModel(QObject* parent) : QAbstractListModel(parent) {}
+WallpapersModel& WallpapersModel::inst() {
+    static WallpapersModel instance;
+    return instance;
+}
 
 void WallpapersModel::loadPreviews() {
     QThreadPool::globalInstance()->start([] {
@@ -19,7 +23,9 @@ void WallpapersModel::loadPreviews() {
             const QSize screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
 
             if(QDir screenPreviewsDir(screenPreviewsPath); !screenPreviewsDir.exists()) {
-                screenPreviewsDir.mkpath(screenPreviewsPath);
+                if(!screenPreviewsDir.mkpath(screenPreviewsPath)) {
+                    logError("Cant create previews cache dir {}", screenPreviewsPath.toStdString());
+                }
             }
 
             for(const auto& wallpaper : Wallpapers::getWallpapers()) {
@@ -32,7 +38,9 @@ void WallpapersModel::loadPreviews() {
                         Qt::SmoothTransformation
                     );
 
-                    preview.save(previewPath, "WEBP", 100);
+                    if(!preview.save(previewPath, "WEBP", 100)) {
+                        logError("Unable to save preview to {}", previewPath.toStdString());
+                    }
                 }
             }
         }
