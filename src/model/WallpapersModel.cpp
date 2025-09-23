@@ -56,7 +56,6 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
 
     switch(role) {
         case NameRole: return wallpaper.getName();
-        case DescriptionRole: return wallpaper.getDescription();
         case TagsRole: return wallpaper.getTags();
         case IsBadRole: return wallpaper.isBad();
         default: return {};
@@ -66,7 +65,6 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
 QHash<int, QByteArray> WallpapersModel::roleNames() const {
     return {
         {NameRole, "wallpaperName"},
-        {DescriptionRole, "wallpaperDescription"},
         {TagsRole, "wallpaperTags"},
         {IsBadRole, "isWallpaperBad"},
     };

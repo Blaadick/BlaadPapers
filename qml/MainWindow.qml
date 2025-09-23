@@ -74,7 +74,6 @@ ApplicationWindow {
                             width: flow.itemWidth
                             height: flow.itemHeight
                             name: wallpaperName
-                            description: wallpaperDescription
                             tags: wallpaperTags
                             isBad: isWallpaperBad
                         }

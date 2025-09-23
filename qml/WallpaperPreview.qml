@@ -15,7 +15,6 @@ Item {
     }
 
     property string name
-    property string description
     property var tags
     property bool isBad
     property bool isPressed
@@ -45,7 +44,7 @@ Item {
 
     ToolTip {
         id: tooltip
-        text: `${name}${description === "" ? "" : `\n${description}`}\n${tags.join(", ")}`
+        text: `${name}\n${tags.join(", ")}`
     }
 
     MouseArea {

@@ -17,7 +17,6 @@ public:
 
 private:
     static const inline QJsonObject defaultWallpaperData = {
-        {"description", "Wallpaper description."},
         {"tags", QJsonArray{"General"}}
     };
     static QVector<Wallpaper> wallpapers;

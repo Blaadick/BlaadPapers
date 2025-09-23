@@ -45,7 +45,6 @@ void Wallpapers::load() {
         wallpapers.append(
             Wallpaper(
                 wallpaperName,
-                wallpaperData["description"].toString(),
                 dirIterator.filePath(),
                 wallpaperTags
             )
