@@ -5,17 +5,12 @@
 
 Wallpaper::Wallpaper(
     const QString& name,
-    const QString& description,
     const QString& filePath,
     const QVector<QString>& tags
-) : name(name), description(description), filePath(filePath), tags(tags) {}
+) : name(name), filePath(filePath), tags(tags) {}
 
 const QString& Wallpaper::getName() const {
     return name;
-}
-
-const QString& Wallpaper::getDescription() const {
-    return description;
 }
 
 const QString& Wallpaper::getFilePath() const {
@@ -40,7 +35,6 @@ QJsonObject Wallpaper::toJson() const {
     }
 
     return QJsonObject{
-        {"description", description},
         {"tags", wallpaperTags}
     };
 }

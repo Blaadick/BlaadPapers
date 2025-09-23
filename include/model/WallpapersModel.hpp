@@ -9,7 +9,6 @@ class WallpapersModel : public QAbstractListModel {
 public:
     enum WallpaperRoles {
         NameRole = Qt::UserRole + 1,
-        DescriptionRole,
         TagsRole,
         IsBadRole
     };

@@ -8,14 +8,11 @@ class Wallpaper {
 public:
     Wallpaper(
         const QString& name,
-        const QString& description,
         const QString& filePath,
         const QVector<QString>& tags
     );
 
     const QString& getName() const;
-
-    const QString& getDescription() const;
 
     const QString& getFilePath() const;
 
@@ -27,7 +24,6 @@ public:
 
 private:
     QString name;
-    QString description;
     QString filePath;
     QVector<QString> tags;
 };
