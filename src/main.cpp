@@ -29,7 +29,8 @@ int main(int argc, char** argv) {
             WallpapersModel::loadPreviews();
             WallpapersModel::inst().refresh();
 
-            logInfo("Wallpapers reloaded", true);
+            logInfo("Wallpapers reloaded");
+            sendStatus("Wallpapers reloaded");
         });
 
         QFileSystemWatcher configWatcher;
@@ -40,7 +41,8 @@ int main(int argc, char** argv) {
             WallpapersModel::loadPreviews();
             WallpapersModel::inst().refresh();
 
-            logInfo("Config reloaded", true);
+            logInfo("Config reloaded");
+            sendStatus("Config reloaded");
         });
 
         qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", &WallpapersModel::inst());
@@ -49,7 +51,8 @@ int main(int argc, char** argv) {
         QQmlApplicationEngine engine;
         engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
-        logInfo("Loaded " + QString::number(Wallpapers::getWallpapers().count()) + " wallpapers", true);
+        logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
+        sendStatus("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
 
         return QGuiApplication::exec();
     }

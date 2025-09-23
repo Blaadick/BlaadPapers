@@ -30,5 +30,6 @@ namespace util {
         hyprpaperConfig.close();
 
         logInfo("Wallpaper \"{}\" set", wallpaperName.toStdString());
+        sendStatus("Wallpaper \"{}\" set", wallpaperName.toStdString());
     }
 }
