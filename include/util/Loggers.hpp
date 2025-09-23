@@ -4,20 +4,22 @@
 #include <print>
 #include <model/StatusModel.hpp>
 
-inline void logInfo(const char* str, const bool sendStatus = false) {
-    std::cout << str << std::endl;
-
-    if(sendStatus) {
-        StatusModel::inst().setStatusText(str);
-    }
+inline void sendStatus(const QString& str) {
+    StatusModel::inst().setStatusText(str);
 }
 
-inline void logInfo(const QString& str, const bool sendStatus = false) {
-    std::cout << str.toStdString() << std::endl;
+template<typename... T>
+void sendStatus(std::format_string<T...> fmt, T&&... args) {
+    auto formated = std::format(fmt, std::forward<T>(args)...);
+    StatusModel::inst().setStatusText(QString::fromStdString(formated));
+}
 
-    if(sendStatus) {
-        StatusModel::inst().setStatusText(str);
-    }
+inline void logInfo(const char* str) {
+    std::cout << str << std::endl;
+}
+
+inline void logInfo(const QString& str) {
+    std::cout << str.toStdString() << std::endl;
 }
 
 inline void logInfo(const QJsonDocument& json) {
