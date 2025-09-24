@@ -6,7 +6,7 @@
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
 #include "model/WallpapersModel.hpp"
-#include "util/Seters.hpp"
+#include "util/WallpaperUtils.hpp"
 
 using namespace std;
 
@@ -128,6 +128,15 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
     }
 }
 
+void deleteOption(const set<char>&, const vector<char*>& arguments) {
+    if(arguments.empty()) {
+        logInfo("Wallpaper name expected");
+        return;
+    }
+
+    util::deleteWallpaper(arguments[0]);
+}
+
 void OptionExecutor::execute(const int argc, char** argv) {
     const auto& option = argv[1][1];
     set<char> subOptions;
@@ -179,6 +188,7 @@ map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'h', {helpOption, {}, "Ha ha!"}}, // Because it's familiar
     {'V', {versionOption, {'j'}, versionHelpMessage}},
     {'S', {setOption, {}, setHelpMessage}},
+    {'D', {deleteOption, {}, deleteHelpMessage}},
     {'R', {randomOption, {'f'}, randomHelpMessage}},
     {'L', {listOption, {'t', 'j'}, listHelpMessage}}
 };

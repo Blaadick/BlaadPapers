@@ -11,6 +11,8 @@ public:
 
     static const Wallpaper* getWallpaper(const QString& name);
 
+    static void deleteWallpaper(const Wallpaper& wallpaper);
+
     static const QMap<QString, int>& getUniqueTags();
 
     static QJsonArray toJson();

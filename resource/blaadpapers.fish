@@ -5,6 +5,10 @@ function __blaadpapers_needs_wallpaper
         return 0
     end
 
+    if test (count $cmd) -eq 2; and string match -q -- '-D*' $cmd[2]
+        return 0
+    end
+
     return 1
 end
 

@@ -20,26 +20,19 @@ int main(int argc, char** argv) {
         QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
-        WallpapersModel::loadPreviews();
+        WallpapersModel::inst().load();
 
         QFileSystemWatcher wallpapersWatcher;
         wallpapersWatcher.addPath(Config::getWorkingPath());
         QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-            Wallpapers::load();
-            WallpapersModel::loadPreviews();
-            WallpapersModel::inst().refresh();
-
-            logInfo("Wallpapers reloaded");
-            sendStatus("Wallpapers reloaded");
+            WallpapersModel::inst().load();
         });
 
         QFileSystemWatcher configWatcher;
         configWatcher.addPath(Config::getConfigPath());
         QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
             Config::load();
-            Wallpapers::load();
-            WallpapersModel::loadPreviews();
-            WallpapersModel::inst().refresh();
+            WallpapersModel::inst().load();
 
             logInfo("Config reloaded");
             sendStatus("Config reloaded");
@@ -49,6 +42,7 @@ int main(int argc, char** argv) {
         qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "ConfigModel", &ConfigModel::inst());
         qmlRegisterSingletonInstance<StatusModel>(PROJECT_NAME, 1, 0, "StatusModel", &StatusModel::inst());
         QQmlApplicationEngine engine;
+        engine.addImportPath("");
         engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
         logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().count());

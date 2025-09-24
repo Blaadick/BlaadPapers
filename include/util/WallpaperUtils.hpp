@@ -32,4 +32,19 @@ namespace util {
         logInfo("Wallpaper \"{}\" set", wallpaperName.toStdString());
         sendStatus("Wallpaper \"{}\" set", wallpaperName.toStdString());
     }
+
+    inline void deleteWallpaper(const QString& wallpaperName) {
+        const auto wallpaper = Wallpapers::getWallpaper(wallpaperName);
+
+        if(!wallpaper) {
+            logError("Wallpaper \"{}\" not found", wallpaperName.toStdString());
+            sendStatus("Wallpaper \"{}\" not found", wallpaperName.toStdString());
+            return;
+        }
+
+        Wallpapers::deleteWallpaper(*wallpaper);
+
+        logInfo("Wallpaper \"{}\" deleted", wallpaperName.toStdString());
+        sendStatus("Wallpaper \"{}\" deleted", wallpaperName.toStdString());
+    }
 }

@@ -5,14 +5,21 @@ import QtMultimedia
 import BlaadPapers
 
 ApplicationWindow {
-    visible: true
-    minimumWidth: 280 + flow.spacing * 2
-    minimumHeight: 157 + flow.spacing * 3 + search.height
+    id: mainWindow
+    minimumWidth: 280 + 10 * 2
+    minimumHeight: (menuBar.visible ? menuBar.height : 0)
+        + (searchBar.visible ? searchBar.height : 0)
+        + 157
+        + (statusBar.visible ? statusBar.height : 0)
+        + 10 * 4
     font.family: "monospace"
-
+    visible: true
     menuBar: MenuBar {
+        // visible: false
+
         Menu {
             title: "&File"
+
             Action {
                 text: "Open Config"
                 onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigPath()}`)
@@ -21,6 +28,7 @@ ApplicationWindow {
 
         Menu {
             title: "&Window"
+
             Action {
                 text: "Status Bar"
                 checkable: true
@@ -35,55 +43,33 @@ ApplicationWindow {
         anchors.margins: 10
         spacing: 10
 
-        TextField {
-            id: search
-            placeholderText: "Search"
-            Layout.fillWidth: true
-        }
+        RowLayout {
+            Button {
+            }
+            ToolButton {
+                icon.name: "document-open"
 
-        Item {
-            clip: true
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            Flickable {
-                contentHeight: flow.implicitHeight
-                boundsBehavior: Flickable.StopAtBounds
-                anchors {
-                    fill: parent
-                    // leftMargin: -10
-                    // rightMargin: -10
-                }
-
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AlwaysOn
-                }
-
-                Flow {
-                    id: flow
-                    width: parent.width
-                    spacing: 10
-
-                    property int cols: Math.max(Math.floor((width + spacing) / (280 + spacing)), 1)
-                    property real itemWidth: (width - (cols - 1) * spacing - 1) / cols
-                    property real itemHeight: itemWidth / (Screen.width / Screen.height)
-
-                    Repeater {
-                        model: WallpapersModel
-                        delegate: WallpaperPreview {
-                            width: flow.itemWidth
-                            height: flow.itemHeight
-                            name: wallpaperName
-                            tags: wallpaperTags
-                            isBad: isWallpaperBad
-                        }
-                    }
+                onClicked: {
+                    // console.log(Qt.quickControls2AvailableStyles())
                 }
             }
+
+            TextField {
+                id: searchBar
+                placeholderText: "Search"
+                Layout.fillWidth: true
+            }
+        }
+
+        WallpaperFlow {
+            id: wallpaperFlow
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
 
         StatusBar {
             id: statusBar
+            visible: false
             Layout.fillWidth: true
         }
     }
