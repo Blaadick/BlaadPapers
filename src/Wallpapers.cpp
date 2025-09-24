@@ -1,12 +1,12 @@
 #include "Wallpapers.hpp"
 
-#include <iostream>
 #include <QDirIterator>
 #include <QFile>
 #include <QJsonDocument>
 #include <QRandomGenerator>
 #include <QStandardPaths>
 #include "Config.hpp"
+#include "util/Loggers.hpp"
 
 void Wallpapers::load() {
     const QString wallpapersDataPath = Config::getWorkingPath() + ".index/";
@@ -76,6 +76,17 @@ const Wallpaper* Wallpapers::getWallpaper(const QString& name) {
     }
 
     return nullptr;
+}
+
+void Wallpapers::deleteWallpaper(const Wallpaper& wallpaper) {
+    auto wallpaperFile = QFile(wallpaper.getFilePath());
+    auto wallpaperDataFile = QFile(Config::getWorkingPath() + ".index/" + wallpaper.getName() + ".json");
+    auto wallpaperPreviewFile = QFile(Config::getWorkingPath() + ".index/" + wallpaper.getName() + ".json");
+
+    //TODO Remove cached previews
+    wallpaperFile.remove();
+    wallpaperDataFile.remove();
+    wallpapers.removeOne(wallpaper);
 }
 
 const QMap<QString, int>& Wallpapers::getUniqueTags() {

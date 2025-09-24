@@ -47,18 +47,39 @@ Item {
         text: `${name}\n${tags.join(", ")}`
     }
 
+    Menu {
+        id: contextMenu
+
+        Action {
+            text: "Apply"
+            onTriggered: WallpapersModel.applyWallpaper(preview.name)
+        }
+
+        Action {
+            text: "Delete"
+            onTriggered: WallpapersModel.deleteWallpaper(preview.name)
+        }
+    }
+
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
 
-        onPressed: {
-            preview.isPressed = true
+        onPressed: (event) => {
+            if(event.button === Qt.LeftButton) {
+                preview.isPressed = true
+            } else {
+                contextMenu.popup()
+            }
         }
 
-        onReleased: {
-            preview.isPressed = false
-            WallpapersModel.applyWallpaper(preview.name)
+        onReleased: (event) => {
+            if(event.button === Qt.LeftButton) {
+                preview.isPressed = false
+                WallpapersModel.applyWallpaper(preview.name)
+            }
         }
 
         onCanceled: {

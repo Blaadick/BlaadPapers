@@ -8,5 +8,5 @@ class ConfigModel : public QObject {
 public:
     static ConfigModel& inst();
 
-    Q_INVOKABLE static QString getConfigPath();
+    Q_INVOKABLE QString getConfigPath();
 };

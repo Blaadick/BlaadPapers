@@ -38,3 +38,7 @@ QJsonObject Wallpaper::toJson() const {
         {"tags", wallpaperTags}
     };
 }
+
+bool Wallpaper::operator==(const Wallpaper& other) const {
+    return filePath == other.filePath;
+}

@@ -4,14 +4,19 @@
 #include <print>
 #include <model/StatusModel.hpp>
 
-inline void sendStatus(const QString& str) {
-    StatusModel::inst().setStatusText(str);
+inline void sendStatus(const QString& newStatus) {
+    if(StatusModel::inst().getStatusText() == newStatus) {
+        StatusModel::inst().increaseRepeatCount();
+    } else {
+        StatusModel::inst().setStatusText(newStatus);
+        StatusModel::inst().resetRepeatCount();
+    }
 }
 
 template<typename... T>
 void sendStatus(std::format_string<T...> fmt, T&&... args) {
     auto formated = std::format(fmt, std::forward<T>(args)...);
-    StatusModel::inst().setStatusText(QString::fromStdString(formated));
+    sendStatus(QString::fromStdString(formated));
 }
 
 inline void logInfo(const char* str) {

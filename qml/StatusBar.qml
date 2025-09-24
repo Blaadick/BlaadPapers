@@ -2,20 +2,50 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-RowLayout {
-    spacing: 10
+Item {
+    width: layout.width
+    height: layout.height
 
-    Label {
-        id: info
-        text: StatusModel.statusText
+    RowLayout {
+        id: layout
+        anchors.left: parent.left
+        anchors.right: parent.right
+        spacing: 10
+
+        Label {
+            id: info
+            text: `${StatusModel.statusText}${StatusModel.repeatCount > 1 ? ` x${StatusModel.repeatCount}` : ''}`
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        Label {
+            id: wallpaperCount
+            text: WallpapersModel.rowCount()
+        }
     }
 
-    Item {
-        Layout.fillWidth: true
-    }
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
 
-    Label {
-        id: wallpaperCount
-        text: WallpapersModel.rowCount()
+        Menu {
+            id: contextMenu
+
+            Action {
+                text: "Wallpaper Count"
+                checkable: true
+                checked: wallpaperCount.visible
+                onTriggered: {
+                    wallpaperCount.visible = !wallpaperCount.visible
+                }
+            }
+        }
+
+        onClicked: {
+            contextMenu.popup()
+        }
     }
 }

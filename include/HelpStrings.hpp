@@ -26,6 +26,9 @@ Sub options:
 inline std::string_view setHelpMessage = R"#(Usage:
     blaadpapers -S[SubOptions] <WallpaperName>)#";
 
+inline std::string_view deleteHelpMessage = R"#(Usage:
+    blaadpapers -D[SubOptions] <WallpaperName>)#";
+
 inline std::string_view randomHelpMessage = R"#(Usage:
     blaadpapers -R[SubOptions]
     blaadpapers -Rf[SubOptions] <includeTags> [excludeTags]

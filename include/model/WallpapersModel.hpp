@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include "Wallpaper.hpp"
 
 class WallpapersModel : public QAbstractListModel {
     Q_OBJECT
@@ -13,17 +12,17 @@ public:
         IsBadRole
     };
 
-    static WallpapersModel& inst();;
+    static WallpapersModel& inst();
 
-    static void loadPreviews();
+    Q_INVOKABLE void load();
+
+    Q_INVOKABLE void applyWallpaper(const QString& wallpaperName) const;
+
+    Q_INVOKABLE void deleteWallpaper(const QString& wallpaperName) const;
 
     int rowCount(const QModelIndex& parent) const override;
 
     QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
-
-    Q_INVOKABLE void refresh();
-
-    Q_INVOKABLE static void applyWallpaper(const QString& wallpaperName);
 };

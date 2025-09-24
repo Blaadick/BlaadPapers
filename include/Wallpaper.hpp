@@ -22,6 +22,8 @@ public:
 
     QJsonObject toJson() const;
 
+    bool operator==(const Wallpaper& other) const;
+
 private:
     QString name;
     QString filePath;
