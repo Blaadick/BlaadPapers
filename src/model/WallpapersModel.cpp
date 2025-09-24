@@ -3,7 +3,6 @@
 #include <QDir>
 #include <QFile>
 #include <QImage>
-#include <QScreen>
 #include <QtConcurrentRun>
 #include "Wallpapers.hpp"
 #include "util/Loggers.hpp"

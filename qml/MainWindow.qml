@@ -7,34 +7,25 @@ import BlaadPapers
 ApplicationWindow {
     id: mainWindow
     minimumWidth: 280 + 10 * 2
-    minimumHeight: (menuBar.visible ? menuBar.height : 0)
-        + (searchBar.visible ? searchBar.height : 0)
-        + 157
-        + (statusBar.visible ? statusBar.height : 0)
-        + 10 * 4
+    minimumHeight: (searchBar.visible ? searchBar.height : 0) + 157 + (statusBar.visible ? statusBar.height : 0) + 10 * 4
     font.family: "monospace"
     visible: true
-    menuBar: MenuBar {
-        // visible: false
 
-        Menu {
-            title: "&File"
+    Menu {
+        id: contextMenu
 
-            Action {
-                text: "Open Config"
-                onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigPath()}`)
-            }
+        Action {
+            text: "Open Config"
+            onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigPath()}`)
         }
 
-        Menu {
-            title: "&Window"
+        MenuSeparator {}
 
-            Action {
-                text: "Status Bar"
-                checkable: true
-                checked: statusBar.visible
-                onTriggered: statusBar.visible = !statusBar.visible
-            }
+        Action {
+            text: "Status Bar"
+            checkable: true
+            checked: statusBar.visible
+            onTriggered: statusBar.visible = !statusBar.visible
         }
     }
 
@@ -44,13 +35,11 @@ ApplicationWindow {
         spacing: 10
 
         RowLayout {
-            Button {
-            }
             ToolButton {
                 icon.name: "document-open"
 
                 onClicked: {
-                    // console.log(Qt.quickControls2AvailableStyles())
+                    contextMenu.popup()
                 }
             }
 
@@ -69,7 +58,6 @@ ApplicationWindow {
 
         StatusBar {
             id: statusBar
-            visible: false
             Layout.fillWidth: true
         }
     }

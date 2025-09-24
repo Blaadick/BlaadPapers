@@ -3,8 +3,8 @@
 #include <QObject>
 
 class StatusModel : public QObject {
-    Q_OBJECT Q_PROPERTY(QString statusText READ getStatusText NOTIFY statusTextChanged)
-
+    Q_OBJECT
+    Q_PROPERTY(QString statusText READ getStatusText NOTIFY statusTextChanged)
     Q_PROPERTY(int repeatCount READ getRepeatCount NOTIFY repeatCountChanged)
 
 public:
@@ -20,9 +20,7 @@ public:
 
     void resetRepeatCount();
 
-    signals :
-    
-
+signals :
     void statusTextChanged();
 
     void repeatCountChanged();

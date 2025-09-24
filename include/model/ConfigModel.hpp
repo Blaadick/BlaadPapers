@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
+#include <QObject>
 
 class ConfigModel : public QObject {
     Q_OBJECT

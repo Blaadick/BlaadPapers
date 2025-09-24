@@ -24,6 +24,7 @@ Item {
         Label {
             id: wallpaperCount
             text: WallpapersModel.rowCount()
+            visible: false
         }
     }
 

@@ -20,7 +20,7 @@ public:
 
     Q_INVOKABLE void deleteWallpaper(const QString& wallpaperName) const;
 
-    int rowCount(const QModelIndex& parent) const override;
+    Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex& index, int role) const override;
 
