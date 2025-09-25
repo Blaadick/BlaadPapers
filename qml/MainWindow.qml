@@ -1,13 +1,11 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtMultimedia
-import BlaadPapers
 
 ApplicationWindow {
     id: mainWindow
     minimumWidth: 280 + 10 * 2
-    minimumHeight: (searchBar.visible ? searchBar.height : 0) + 157 + (statusBar.visible ? statusBar.height : 0) + 10 * 4
+    minimumHeight: searchBar.height + 157 + (statusBar.visible ? statusBar.height : 0) + 10 * 4
     font.family: "monospace"
     visible: true
 

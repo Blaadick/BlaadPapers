@@ -1,8 +1,8 @@
 #include "OptionExecutor.hpp"
 
+#include <QRandomGenerator>
 #include <cstring>
 #include <iostream>
-#include <QRandomGenerator>
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
 #include "model/WallpapersModel.hpp"
@@ -11,7 +11,7 @@
 using namespace std;
 
 void helpOption(const set<char>&, const vector<char*>&) {
-    cout << mainHelpMessage;
+    cout << mainHelpMessage << endl;
 }
 
 void versionOption(const set<char>& subOptions, const vector<char*>&) {
@@ -21,15 +21,15 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
             {"description", PROJECT_DESCRIPTION},
             {"version", PROJECT_VERSION}
         };
-        logInfo(QJsonDocument(outputData));
+        util::logInfo(QJsonDocument(outputData));
     } else {
-        logInfo("{} {}", PROJECT_NAME, PROJECT_VERSION);
+        util::logInfo("{} {}", PROJECT_NAME, PROJECT_VERSION);
     }
 }
 
 void setOption(const set<char>&, const vector<char*>& arguments) {
     if(arguments.empty()) {
-        logError("Wallpaper name expected");
+        util::logError("Wallpaper id expected");
         return;
     }
 
@@ -40,7 +40,7 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
     const auto& wallpapers = Wallpapers::getWallpapers();
 
     if(wallpapers.empty()) {
-        logInfo("No Wallpapers");
+        util::logInfo("No Wallpapers");
         return;
     }
 
@@ -54,7 +54,7 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
                 includeTags.append(tag.toString());
             }
         } else {
-            logError("Array with include tags expected");
+            util::logError("Array with include tags expected");
             return;
         }
 
@@ -85,15 +85,15 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         if(filteredWallpapers.empty()) {
-            logInfo("No wallpapers found");
+            util::logInfo("No wallpapers found");
             return;
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        util::applyWallpaper(filteredWallpapers[randomIndex].getName());
+        util::applyWallpaper(filteredWallpapers[randomIndex].getId());
     } else {
         const auto randomIndex = QRandomGenerator::global()->bounded(wallpapers.size());
-        util::applyWallpaper(wallpapers[randomIndex].getName());
+        util::applyWallpaper(wallpapers[randomIndex].getId());
     }
 }
 
@@ -109,10 +109,10 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
                 });
             }
 
-            logInfo(QJsonDocument(outputData));
+            util::logInfo(QJsonDocument(outputData));
         } else {
             for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
-                logInfo("{:->4}: {}", quantity, name.toStdString());
+                util::logInfo("{:->4}: {}", quantity, name.toStdString());
             }
         }
 
@@ -120,17 +120,17 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
     }
 
     if(subOptions.contains('j')) {
-        logInfo(QJsonDocument(Wallpapers::toJson()));
+        util::logInfo(QJsonDocument(Wallpapers::toJson()));
     } else {
         for(const auto& wallpaper : Wallpapers::getWallpapers()) {
-            logInfo(wallpaper.getName());
+            util::logInfo(wallpaper.getId());
         }
     }
 }
 
 void deleteOption(const set<char>&, const vector<char*>& arguments) {
     if(arguments.empty()) {
-        logInfo("Wallpaper name expected");
+        util::logInfo("Wallpaper id expected");
         return;
     }
 
@@ -142,17 +142,17 @@ void OptionExecutor::execute(const int argc, char** argv) {
     set<char> subOptions;
 
     if(argv[1][0] != '-') {
-        logError("Unknown argument: {}", argv[1]);
+        util::logError("Unknown argument: {}", argv[1]);
         return;
     }
 
     if(strlen(argv[1]) < 2) {
-        logError("Option not specified");
+        util::logError("Option not specified");
         return;
     }
 
     if(!options.contains(option)) {
-        logError("Unknown option: {}", option);
+        util::logError("Unknown option: {}", option);
         return;
     }
 
@@ -171,7 +171,7 @@ void OptionExecutor::execute(const int argc, char** argv) {
                 if(options[option].allowableSubOptions.contains(argv[1][i])) {
                     subOptions.insert(argv[1][i]);
                 } else {
-                    logError("Unknown sub option: {}", argv[1][i]);
+                    util::logError("Unknown sub option: {}", argv[1][i]);
                     return;
                 }
             }

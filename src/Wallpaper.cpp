@@ -4,21 +4,34 @@
 #include "Config.hpp"
 
 Wallpaper::Wallpaper(
+    const QString& id,
+    const QString& format,
     const QString& name,
-    const QString& filePath,
     const QVector<QString>& tags
-) : name(name), filePath(filePath), tags(tags) {}
+) : id(id), format(format), name(name), tags(tags) {}
+
+const QString& Wallpaper::getId() const {
+    return id;
+}
+
+const QString& Wallpaper::getFormat() const {
+    return format;
+}
 
 const QString& Wallpaper::getName() const {
     return name;
 }
 
-const QString& Wallpaper::getFilePath() const {
-    return filePath;
-}
-
 const QVector<QString>& Wallpaper::getTags() const {
     return tags;
+}
+
+QString Wallpaper::getFilePath() const {
+    return Config::getWallpapersPath() + '/' + id + '.' + format;
+}
+
+bool Wallpaper::isAnimated() const {
+    return util::supportedAnimatedFormats.contains(format);
 }
 
 bool Wallpaper::isBad() const {
@@ -35,10 +48,11 @@ QJsonObject Wallpaper::toJson() const {
     }
 
     return QJsonObject{
+        {"name", name},
         {"tags", wallpaperTags}
     };
 }
 
 bool Wallpaper::operator==(const Wallpaper& other) const {
-    return filePath == other.filePath;
+    return id == other.getId();
 }

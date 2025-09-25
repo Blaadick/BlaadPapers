@@ -4,13 +4,14 @@
 
 inline std::string_view mainHelpMessage = R"#(Usage:
     blaadpapers
-    blaadpapers -<Option>[SubOptions]
+    blaadpapers -<option>[sub_options]
 
 Options:
     H  ->  Shows this help
     V  ->  Shows program version
     S  ->  Sets the wallpaper
     R  ->  Sets the random wallpaper
+    D  ->  Deletes the wallpaper
     L  ->  Shows list of all available wallpapers
 
 Universal sub options:
@@ -18,27 +19,28 @@ Universal sub options:
     q  ->  Disables command output)#";
 
 inline std::string_view versionHelpMessage = R"#(Usage:
-    blaadpapers -V[SubOptions]
+    blaadpapers -V[sub_options]
 
 Sub options:
     j  ->  Outputs command result in JSON format)#";
 
 inline std::string_view setHelpMessage = R"#(Usage:
-    blaadpapers -S[SubOptions] <WallpaperName>)#";
-
-inline std::string_view deleteHelpMessage = R"#(Usage:
-    blaadpapers -D[SubOptions] <WallpaperName>)#";
+    blaadpapers -S[sub_options] <wallpaper_id>)#";
 
 inline std::string_view randomHelpMessage = R"#(Usage:
-    blaadpapers -R[SubOptions]
-    blaadpapers -Rf[SubOptions] <includeTags> [excludeTags]
+    blaadpapers -R[sub_options]
+    blaadpapers -Rf[sub_options] <include_tags> [exclude_tags]
     blaadpapers -Rf '["General","Anime"]'
 
 Sub options:
     f  ->  Specifies the tags with which the wallpaper can be installed)#";
 
+inline std::string_view deleteHelpMessage = R"#(Usage:
+    blaadpapers -D[sub_options] <wallpaper_id>)#";
+
 inline std::string_view listHelpMessage = R"#(Usage:
-    blaadpapers -L[SubOptions]
+    blaadpapers -L[sub_options]
 
 Sub options:
+    t  ->  Outputs list of unique tags instead wallpapers
     j  ->  Outputs command result in JSON format)#";

@@ -19,14 +19,20 @@ void WallpapersModel::load() {
     Wallpapers::load();
     endResetModel();
 
+    util::logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
+    util::sendStatus("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
+
     QThreadPool::globalInstance()->start([] {
         const QString previewsPath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
 
         for(const auto screen : QGuiApplication::screens()) {
+            const QString screenPreviewsPath = previewsPath + QString::number(screen->geometry().width() * screen->devicePixelRatio()) + "x" + QString::number(screen->geometry().height() * screen->devicePixelRatio()) + '/';
             const QSize screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
 
+            util::createDirIfNotExists(screenPreviewsPath);
+
             for(const auto& wallpaper : Wallpapers::getWallpapers()) {
-                const QString previewPath = util::getPreviewPath(screen, wallpaper.getName());
+                const QString previewPath = screenPreviewsPath + wallpaper.getId() + ".webp";
 
                 if(QFile previewFile(previewPath); !previewFile.exists()) {
                     auto preview = QImage(wallpaper.getFilePath()).scaled(
@@ -36,8 +42,8 @@ void WallpapersModel::load() {
                     );
 
                     if(!preview.save(previewPath, "WEBP", 100)) {
-                        logError("Unable to save preview to {}", previewPath.toStdString());
-                        sendStatus("Unable to save preview to {}", previewPath.toStdString());
+                        util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                        util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
                     }
                 }
             }
@@ -45,15 +51,16 @@ void WallpapersModel::load() {
     });
 }
 
-void WallpapersModel::applyWallpaper(const QString& wallpaperName) const {
+void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start([=] {
-        util::applyWallpaper(wallpaperName);
+        util::applyWallpaper(wallpaperId);
     });
 }
 
-void WallpapersModel::deleteWallpaper(const QString& wallpaperName) const {
+void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start([=] {
-        util::deleteWallpaper(wallpaperName);
+        //TODO Fix model updating and fast deleting crash
+        util::deleteWallpaper(wallpaperId);
     });
 }
 
@@ -65,8 +72,10 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     const Wallpaper& wallpaper = Wallpapers::getWallpapers().at(index.row());
 
     switch(role) {
+        case IdRole: return wallpaper.getId();
         case NameRole: return wallpaper.getName();
         case TagsRole: return wallpaper.getTags();
+        case IsAnimatedRole: return wallpaper.isAnimated();
         case IsBadRole: return wallpaper.isBad();
         default: return {};
     }
@@ -74,8 +83,10 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
 
 QHash<int, QByteArray> WallpapersModel::roleNames() const {
     return {
+        {IdRole, "wallpaperId"},
         {NameRole, "wallpaperName"},
         {TagsRole, "wallpaperTags"},
+        {IsAnimatedRole, "isWallpaperAnimated"},
         {IsBadRole, "isWallpaperBad"},
     };
 }

@@ -1,7 +1,6 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls
-import BlaadPapers
 
 Item {
     id: preview
@@ -14,8 +13,10 @@ Item {
         }
     }
 
+    property string wid
     property string name
     property var tags
+    property bool isAnimated
     property bool isBad
     property bool isPressed
     property bool isHovered
@@ -23,7 +24,7 @@ Item {
     Image {
         anchors.fill: parent
         visible: !preview.isBad || preview.isHovered
-        source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.name}.webp`
+        source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.wid}.webp`
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
     }
@@ -44,7 +45,7 @@ Item {
 
     ToolTip {
         id: tooltip
-        text: `${name}\n${tags.join(", ")}`
+        text: `${preview.name} (${preview.wid})\n${preview.tags.join(", ")}`
     }
 
     Menu {
@@ -52,12 +53,12 @@ Item {
 
         Action {
             text: "Apply"
-            onTriggered: WallpapersModel.applyWallpaper(preview.name)
+            onTriggered: WallpapersModel.applyWallpaper(preview.wid)
         }
 
         Action {
             text: "Delete"
-            onTriggered: WallpapersModel.deleteWallpaper(preview.name)
+            onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
         }
     }
 
@@ -78,7 +79,7 @@ Item {
         onReleased: (event) => {
             if(event.button === Qt.LeftButton) {
                 preview.isPressed = false
-                WallpapersModel.applyWallpaper(preview.name)
+                WallpapersModel.applyWallpaper(preview.wid)
             }
         }
 
