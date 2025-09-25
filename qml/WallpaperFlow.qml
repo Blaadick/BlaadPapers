@@ -24,8 +24,10 @@ Flickable {
             delegate: WallpaperPreview {
                 width: flow.itemWidth
                 height: flow.itemHeight
+                wid: wallpaperId
                 name: wallpaperName
                 tags: wallpaperTags
+                isAnimated: isWallpaperAnimated
                 isBad: isWallpaperBad
             }
         }

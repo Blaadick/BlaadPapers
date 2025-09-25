@@ -6,7 +6,7 @@
 
 void Config::load() {
     defaultData = {
-        {"working_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"},
+        {"wallpapers_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"},
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}}
     };
 
@@ -30,8 +30,8 @@ QString Config::getPostSetScriptPath() {
     return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/post_set.sh";
 }
 
-QString Config::getWorkingPath() {
-    return getValue("working_path").toString();
+QString Config::getWallpapersPath() {
+    return getValue("wallpapers_path").toString();
 }
 
 QVector<QString> Config::getBadTags() {

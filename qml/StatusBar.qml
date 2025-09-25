@@ -16,37 +16,5 @@ Item {
             id: info
             text: `${StatusModel.statusText}${StatusModel.repeatCount > 1 ? ` x${StatusModel.repeatCount}` : ''}`
         }
-
-        Item {
-            Layout.fillWidth: true
-        }
-
-        Label {
-            id: wallpaperCount
-            text: WallpapersModel.rowCount()
-            visible: false
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-
-        Menu {
-            id: contextMenu
-
-            Action {
-                text: "Wallpaper Count"
-                checkable: true
-                checked: wallpaperCount.visible
-                onTriggered: {
-                    wallpaperCount.visible = !wallpaperCount.visible
-                }
-            }
-        }
-
-        onClicked: {
-            contextMenu.popup()
-        }
     }
 }

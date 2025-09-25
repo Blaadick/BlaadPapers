@@ -10,7 +10,7 @@ public:
 
     static QString getPostSetScriptPath();
 
-    static QString getWorkingPath();
+    static QString getWallpapersPath();
 
     static QVector<QString> getBadTags();
 

@@ -9,7 +9,7 @@ public:
 
     static const QVector<Wallpaper>& getWallpapers();
 
-    static const Wallpaper* getWallpaper(const QString& name);
+    static const Wallpaper* getWallpaper(const QString& id);
 
     static void deleteWallpaper(const Wallpaper& wallpaper);
 
@@ -18,9 +18,6 @@ public:
     static QJsonArray toJson();
 
 private:
-    static const inline QJsonObject defaultWallpaperData = {
-        {"tags", QJsonArray{"General"}}
-    };
     static QVector<Wallpaper> wallpapers;
     static QMap<QString, int> uniqueTags;
 };

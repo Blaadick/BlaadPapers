@@ -3,19 +3,24 @@
 #include <QScreen>
 #include <QStandardPaths>
 #include <QString>
+#include "util/Loggers.hpp"
 
 namespace util {
-    inline QString getPreviewPath(const QScreen* screen, const QString& wallpaperName) {
+    inline void createDirIfNotExists(const QString& path) {
+        if(const QDir dir(path); !dir.exists()) {
+            if(!dir.mkpath(path)) {
+                logError("Can't create directory \"{}\"", path.toStdString());
+                sendStatus("Can't create directory \"{}\"", path.toStdString());
+            }
+        }
+    }
+
+    inline QString getPreviewPath(const QScreen* screen, const QString& wallpaperId) {
         const QString previewsPath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
         const QString screenPreviewsPath = previewsPath + QString::number(screen->geometry().width() * screen->devicePixelRatio()) + "x" + QString::number(screen->geometry().height() * screen->devicePixelRatio()) + '/';
 
-        if(QDir screenPreviewsDir(screenPreviewsPath); !screenPreviewsDir.exists()) {
-            if(!screenPreviewsDir.mkpath(screenPreviewsPath)) {
-                logError("Cant create previews cache dir {}", screenPreviewsPath.toStdString());
-                sendStatus("Cant create previews cache dir {}", screenPreviewsPath.toStdString());
-            }
-        }
+        createDirIfNotExists(screenPreviewsPath);
 
-        return screenPreviewsPath + wallpaperName + ".webp";
+        return screenPreviewsPath + wallpaperId + ".webp";
     }
 }
