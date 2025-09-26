@@ -1,6 +1,7 @@
 #include <QFileSystemWatcher>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+#include <QQuickStyle>
 #include "Config.hpp"
 #include "OptionExecutor.hpp"
 #include "Wallpapers.hpp"
@@ -37,6 +38,8 @@ int main(int argc, char** argv) {
             util::logInfo("Config reloaded");
             util::sendStatus("Config reloaded");
         });
+
+        QQuickStyle::setStyle(PROJECT_NAME);
 
         qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", &WallpapersModel::inst());
         qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "ConfigModel", &ConfigModel::inst());

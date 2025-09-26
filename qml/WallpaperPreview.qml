@@ -56,6 +56,8 @@ Item {
             onTriggered: WallpapersModel.applyWallpaper(preview.wid)
         }
 
+        MenuSeparator {}
+
         Action {
             text: "Delete"
             onTriggered: WallpapersModel.deleteWallpaper(preview.wid)

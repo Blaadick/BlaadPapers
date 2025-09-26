@@ -4,21 +4,21 @@ repoowner="Blaadick"
 reponame="BlaadPapers"
 pkgname="blaadpapers"
 pkgdesc="Fast & clean wallpaper manager"
+license=("MIT")
 pkgver="0.1.0"
 pkgrel=1
 arch=("any")
 depends=("qt6-base" "hyprpaper")
 makedepends=("cmake" "ninja" "librsvg")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$repoowner/$reponame/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=("23c5d15c5e4a388954fdc71a029277faa222c5404df01e701e566e888b872d91")
+sha256sums=("SKIP")
 url="https://github.com/$repoowner/$reponame"
-license=("MIT")
 options=("!debug")
 
 build() {
     cd "$reponame-$pkgver" || exit
     cmake -B cmake-build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
-    cmake --build cmake-build-release
+    cmake --build cmake-build-release -j "$(nproc --ignore=2)"
 }
 
 package() {
