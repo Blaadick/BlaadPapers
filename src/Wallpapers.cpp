@@ -52,10 +52,10 @@ namespace {
     }
 
     /**
-     * We are not in DOS time!
+     * We are not in DOS time! I turn it off if it is too annoying.
      */
     void shaitanMachine() {
-        QDirIterator dirIterator(Config::getWallpapersPath(), {"*.jpg"});
+        QDirIterator dirIterator(Config::getWallpapersPath(), {"*.jpg", "*.jpe", "*.JPG"});
 
         while(dirIterator.hasNext()) {
             auto file = dirIterator.next();
@@ -63,6 +63,7 @@ namespace {
 
             newFile.chop(4);
             newFile.append(".jpeg");
+
             QFile::rename(file, newFile);
         }
     }

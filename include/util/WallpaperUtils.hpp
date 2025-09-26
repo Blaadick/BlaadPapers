@@ -18,7 +18,7 @@ namespace util {
             return;
         }
 
-        const auto de = std::string(getenv("XDG_SESSION_DESKTOP"));
+        const auto de = qgetenv("XDG_SESSION_DESKTOP").toStdString();
         if(de == "Hyprland") {
             QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
 
