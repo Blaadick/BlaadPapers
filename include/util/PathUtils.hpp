@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDir>
 #include <QScreen>
 #include <QStandardPaths>
 #include <QString>
