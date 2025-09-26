@@ -14,10 +14,11 @@ ApplicationWindow {
 
         Action {
             text: "Open Config"
-            onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigPath()}`)
+            onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigFilePath()}`)
         }
 
-        MenuSeparator {}
+        MenuSeparator {
+        }
 
         Action {
             text: "Status Bar"

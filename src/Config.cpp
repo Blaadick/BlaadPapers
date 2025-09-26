@@ -1,8 +1,7 @@
 #include "Config.hpp"
 
-#include <QFile>
 #include <QJsonArray>
-#include <QStandardPaths>
+#include "util/PathUtils.hpp"
 
 void Config::load() {
     defaultData = {
@@ -10,7 +9,9 @@ void Config::load() {
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}}
     };
 
-    if(QFile configFile(getConfigPath()); configFile.exists()) {
+    util::createDirIfNotExists(getConfigPath());
+
+    if(QFile configFile(getConfigFilePath()); configFile.exists()) {
         configFile.open(QIODevice::ReadOnly);
         data = QJsonDocument::fromJson(configFile.readAll()).object();
         configFile.close();
@@ -23,11 +24,15 @@ void Config::load() {
 }
 
 QString Config::getConfigPath() {
-    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/config.json";
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/";
+}
+
+QString Config::getConfigFilePath() {
+    return getConfigPath() + "config.json";
 }
 
 QString Config::getPostSetScriptPath() {
-    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/post_set.sh";
+    return getConfigPath() + "post_set.sh";
 }
 
 QString Config::getWallpapersPath() {

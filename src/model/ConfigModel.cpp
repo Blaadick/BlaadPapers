@@ -7,6 +7,6 @@ ConfigModel& ConfigModel::inst() {
     return instance;
 }
 
-QString ConfigModel::getConfigPath() {
-    return Config::getConfigPath();
+QString ConfigModel::getConfigFilePath() {
+    return Config::getConfigFilePath();
 }

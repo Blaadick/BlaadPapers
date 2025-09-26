@@ -8,6 +8,8 @@ public:
 
     static QString getConfigPath();
 
+    static QString getConfigFilePath();
+
     static QString getPostSetScriptPath();
 
     static QString getWallpapersPath();
