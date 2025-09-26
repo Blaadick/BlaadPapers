@@ -18,14 +18,10 @@ namespace util {
             return;
         }
 
-        QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
+        const auto de = std::string(getenv("XDG_SESSION_DESKTOP"));
+        if(de == "Hyprland") {
+            QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
 
-        logInfo("Wallpaper {} set", wallpaperId.toStdString());
-        sendStatus("Wallpaper {} set", wallpaperId.toStdString());
-        system(("bash " + Config::getPostSetScriptPath() + " \"" + wallpaper->getName() + '\"' + " \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
-
-        const auto desktopEnvironment = std::string(getenv("XDG_SESSION_DESKTOP"));
-        if(desktopEnvironment == "Hyprland") {
             system("hyprctl -q hyprpaper unload all");
             system(("hyprctl -q hyprpaper preload \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
             system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper->getFilePath() + '\"').toStdString().c_str());
@@ -34,15 +30,20 @@ namespace util {
             hyprpaperConfig.write(("preload = " + wallpaper->getFilePath() + '\n').toStdString().c_str());
             hyprpaperConfig.write(("wallpaper = , " + wallpaper->getFilePath()).toStdString().c_str());
             hyprpaperConfig.close();
-        } else if(desktopEnvironment == "KDE") {
+        } else if(de == "KDE") {
             system(("plasma-apply-wallpaperimage \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
-        } else if(desktopEnvironment == "gnome") {
+        } else if(de == "gnome" || de == "ubuntu") {
             system(("gsettings set org.gnome.desktop.background picture-uri \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
             system(("gsettings set org.gnome.desktop.background picture-uri-dark \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
         } else {
-            logError("Desktop environment \"{}\" unsupported", desktopEnvironment);
-            sendStatus("Desktop environment \"{}\" unsupported", desktopEnvironment);
+            logError("Desktop environment \"{}\" unsupported", de);
+            sendStatus("Desktop environment \"{}\" unsupported", de);
+            return;
         }
+
+        logInfo("Wallpaper {} set", wallpaperId.toStdString());
+        sendStatus("Wallpaper {} set", wallpaperId.toStdString());
+        system(("bash " + Config::getPostSetScriptPath() + " \"" + wallpaper->getName() + '\"' + " \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
     }
 
     inline void deleteWallpaper(const QString& wallpaperId) {
