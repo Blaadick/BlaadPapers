@@ -4,7 +4,7 @@
 </div>
 
 > [!NOTE]
-> The application is temporarily using hyprpaper on Hyprland, plasma-apply-wallpaperimage on KDE, and gsettings in Gnome
+> The application is temporarily using hyprpaper on Hyprland, plasma-apply-wallpaperimage on KDE, and gsettings on Gnome
 
 ## Description
 Convenient wallpaper manager supporting both GUI and CLI usage. I will try to make it as fast and pleasing to the eye as possible.
