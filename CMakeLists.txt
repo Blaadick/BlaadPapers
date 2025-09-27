@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.1)
 
 project(BlaadPapers
     DESCRIPTION "Fast & clean wallpaper manager"
-    VERSION 0.1.0
+    VERSION 0.2.0
     LANGUAGES CXX
 )
 
