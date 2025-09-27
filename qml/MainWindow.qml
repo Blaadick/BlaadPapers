@@ -35,7 +35,7 @@ ApplicationWindow {
 
         RowLayout {
             ToolButton {
-                icon.name: "document-open"
+                icon.name: "settings-configure"
 
                 onClicked: {
                     contextMenu.popup()

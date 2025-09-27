@@ -4,8 +4,8 @@ import QtQuick.Controls
 ToolButton {
     id: control
 
-    implicitWidth: 30
-    implicitHeight: 30
+    implicitWidth: 40
+    implicitHeight: 40
     scale: pressed ? 0.97 : (hovered ? 1.03 : 1)
 
     background: Rectangle {

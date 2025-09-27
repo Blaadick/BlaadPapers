@@ -5,7 +5,7 @@ TextField {
     id: control
 
     implicitWidth: 90
-    implicitHeight: 30
+    implicitHeight: 40
 
     background: Rectangle {
         anchors.fill: parent
