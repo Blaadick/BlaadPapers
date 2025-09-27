@@ -1,7 +1,7 @@
 #include <QFileSystemWatcher>
 #include <QQmlApplicationEngine>
-#include <QQuickWindow>
 #include <QQuickStyle>
+#include <QQuickWindow>
 #include "Config.hpp"
 #include "OptionExecutor.hpp"
 #include "Wallpapers.hpp"
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
         });
 
         QFileSystemWatcher configWatcher;
-        configWatcher.addPath(Config::getConfigPath());
+        configWatcher.addPath(Config::getConfigFilePath());
         QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
             Config::load();
             WallpapersModel::inst().load();
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
             util::sendStatus("Config reloaded");
         });
 
-        QQuickStyle::setStyle(PROJECT_NAME);
+        QQuickStyle::setStyle(Config::getStyle());
 
         qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", &WallpapersModel::inst());
         qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "ConfigModel", &ConfigModel::inst());

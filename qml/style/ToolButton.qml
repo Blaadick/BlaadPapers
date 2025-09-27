@@ -1,15 +1,18 @@
 import QtQuick
 import QtQuick.Controls
 
-TextField {
+ToolButton {
     id: control
 
-    implicitWidth: 90
+    implicitWidth: 30
     implicitHeight: 30
+    scale: pressed ? 0.97 : (hovered ? 1.03 : 1)
 
     background: Rectangle {
         anchors.fill: parent
+        color: "#2d2d2d"
         radius: 10
-        color: Qt.rgba(0, 0, 0, 0.3)
     }
+
+    Behavior on scale { ScaleAnim {} }
 }

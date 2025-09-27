@@ -43,7 +43,7 @@ namespace util {
 
         logInfo("Wallpaper {} set", wallpaperId.toStdString());
         sendStatus("Wallpaper {} set", wallpaperId.toStdString());
-        system(("bash " + Config::getPostSetScriptPath() + " \"" + wallpaper->getName() + '\"' + " \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
+        system(("bash " + Config::getPostSetScriptFilePath() + " \"" + wallpaper->getName() + '\"' + " \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());
     }
 
     inline void deleteWallpaper(const QString& wallpaperId) {
