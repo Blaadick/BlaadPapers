@@ -1,19 +1,13 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Effects
-import BlaadPapers as S
 
-Menu {
+MenuItem {
     id: control
-
-    delegate: S.MenuItem {}
 
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: 40
+        color: control.highlighted ? "#3a3a3a" : "transparent"
         radius: 10
-        color: Qt.rgba(0, 0, 0, 0.3)
     }
-
-    MultiEffect {}
 }

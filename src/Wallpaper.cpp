@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 #include "Config.hpp"
+#include "util/FormatUtils.hpp"
 
 Wallpaper::Wallpaper(
     const QString& id,

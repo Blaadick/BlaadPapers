@@ -6,19 +6,28 @@ class Config {
 public:
     static void load();
 
-    static QString getConfigPath();
-
+    [[nodiscard]]
     static QString getConfigFilePath();
 
-    static QString getPostSetScriptPath();
+    [[nodiscard]]
+    static QString getPostSetScriptFilePath();
 
-    static QString getWallpapersPath();
-
+    [[nodiscard]]
     static QVector<QString> getBadTags();
+
+    [[nodiscard]]
+    static QString getStyle();
+
+    [[nodiscard]]
+    static QString getWallpapersPath();
 
 private:
     static QJsonObject defaultData;
     static QJsonObject data;
 
-    static QJsonValueRef getValue(const QString& key);
+    [[nodiscard]]
+    inline static QString getConfigPath();
+
+    [[nodiscard]]
+    inline static QJsonValueRef getValue(const QString& key);
 };

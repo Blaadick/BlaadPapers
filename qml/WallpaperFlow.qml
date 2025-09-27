@@ -21,14 +21,19 @@ Flickable {
 
         Repeater {
             model: WallpapersModel
-            delegate: WallpaperPreview {
+            delegate: Item {
                 width: flow.itemWidth
                 height: flow.itemHeight
-                wid: wallpaperId
-                name: wallpaperName
-                tags: wallpaperTags
-                isAnimated: isWallpaperAnimated
-                isBad: isWallpaperBad
+                clip: true
+
+                WallpaperPreview {
+                    anchors.fill: parent
+                    wid: wallpaperId
+                    name: wallpaperName
+                    tags: wallpaperTags
+                    isAnimated: isWallpaperAnimated
+                    isBad: isWallpaperBad
+                }
             }
         }
     }
