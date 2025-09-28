@@ -16,11 +16,20 @@ Keep in mind that the application is being developed and tested on and for Linux
 </div>
 
 ## Installation
-<details open>
-    <summary>Arch Linux</summary>
-    <pre><code class="language-bash">yay -S blaadpapers</code></pre>
-</details>
-<details>
-    <summary>Windows</summary>
-    <p>Expected after adding major features and implementing own wallpaper rendering.</p>
-</details>
+### Arch Linux
+```bash
+yay -S blaadpapers
+```
+
+### Manual
+Install `Qt6 Base`, `Qt6 QML` and `Qt6 Multimedia`. Then run it:
+
+```bash
+git clone https://github.com/Blaadick/BlaadPapers.git
+cd BlaadPapers
+cmake -B cmake-build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build cmake-build-release --parallel
+```
+
+### Windows
+Expected after adding major features and implementing own wallpaper rendering.
