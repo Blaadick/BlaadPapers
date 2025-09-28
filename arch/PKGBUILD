@@ -8,17 +8,18 @@ license=("MIT")
 pkgver="0.2.0"
 pkgrel=1
 arch=("any")
-depends=("qt6-base" "hyprpaper")
+depends=("qt6-base" "qt6-declarative" "qt6-multimedia")
+optdepends=("hyprpaper: To set wallpapers on Hyprland")
 makedepends=("cmake" "ninja" "librsvg")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$repoowner/$reponame/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=("SKIP")
+sha512sums=("SKIP")
 url="https://github.com/$repoowner/$reponame"
 options=("!debug")
 
 build() {
     cd "$reponame-$pkgver" || exit
-    cmake -B cmake-build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
-    cmake --build cmake-build-release -j "$(nproc --ignore=2)"
+    cmake -B cmake-build-release -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-w"
+    cmake --build cmake-build-release --parallel
 }
 
 package() {

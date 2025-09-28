@@ -4,7 +4,7 @@ import QtQuick.Controls
 
 Item {
     id: preview
-    scale: isPressed ? 0.97 : (isHovered ? 1.03 : 1)
+    scale: isPressed || !isHovered ? 1 : 1.06
 
     Behavior on scale {
         NumberAnimation {
@@ -23,15 +23,17 @@ Item {
 
     Image {
         anchors.fill: parent
-        visible: !preview.isBad || preview.isHovered
+        visible: censor.opacity < 1
         source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.wid}.webp`
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
     }
 
     Rectangle {
+        id: censor
+
         anchors.fill: parent
-        visible: preview.isBad && !preview.isHovered
+        opacity: preview.isBad && !preview.isHovered ? 1 : 0
         color: "black"
 
         Text {
@@ -40,6 +42,13 @@ Item {
             font.pixelSize: parent.width * 0.5
             font.bold: true
             color: "darkred"
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 300
+            }
         }
     }
 

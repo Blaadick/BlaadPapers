@@ -39,7 +39,9 @@ int main(int argc, char** argv) {
             util::sendStatus("Config reloaded");
         });
 
-        QQuickStyle::setStyle(Config::getStyle());
+        if(qgetenv("QT_QUICK_CONTROLS_STYLE").isEmpty()) {
+            QQuickStyle::setStyle("BStyle");
+        }
 
         qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", &WallpapersModel::inst());
         qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "ConfigModel", &ConfigModel::inst());
