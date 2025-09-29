@@ -65,12 +65,45 @@ Item {
             onTriggered: WallpapersModel.applyWallpaper(preview.wid)
         }
 
+        Action {text: "Apply"; icon.name: "settings-configure"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+
+        Menu {
+            title: "Menu1"
+
+            Action {text: "Apply"; checkable: true}
+            Action {text: "Apply"; icon.name: "settings-configure"}
+            MenuSeparator {}
+            Action {text: "Apply"}
+
+            Menu {
+                title: "Menu2"
+
+                Action {text: "Apply"; checkable: true}
+                Action {text: "Apply"}
+                Action {text: "Apply"}
+                Action {text: "Apply"}
+                Action {text: "Apply"}
+                Action {text: "Apply"}
+            }
+        }
+
         MenuSeparator {}
 
-        Action {
-            text: "Delete"
-            onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
-        }
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+        Action {text: "Apply"}
+
+        // Action {
+        //     text: "Delete"
+        //     onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
+        // }
     }
 
     MouseArea {

@@ -17,9 +17,6 @@ ApplicationWindow {
             onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigFilePath()}`)
         }
 
-        MenuSeparator {
-        }
-
         Action {
             text: "Status Bar"
             checkable: true
@@ -58,6 +55,7 @@ ApplicationWindow {
         StatusBar {
             id: statusBar
             Layout.fillWidth: true
+            visible: false
         }
     }
 }
