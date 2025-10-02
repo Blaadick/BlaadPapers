@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
             util::sendStatus("Config reloaded");
         });
 
-        if(qgetenv("QT_QUICK_CONTROLS_STYLE").isEmpty()) {
+        if(qgetenv("QT_QUICK_CONTROLS_STYLE").isNull()) {
             QQuickStyle::setStyle("BStyle");
         }
 

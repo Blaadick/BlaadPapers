@@ -63,35 +63,15 @@ Item {
     Menu {
         id: contextMenu
 
-        Action {text: "Option"; icon.name: "settings-configure"}
-        Action {text: "Option"}
-        Action {text: "Option"; icon.name: "link-symbolic"}
-        Action {text: "Option"; icon.name: "insert-link-symbolic"}
-        Action {text: "Option"; icon.name: "system-user-prompt"}
-        Action {text: "Option"; icon.name: "system-user-list"}
-        Action {text: "Option"}
-
-        Menu {
-            title: "Menu"
-            icon.name: "settings"
-
-            Action {text: "Option"; checkable: true}
-            Action {text: "Option"; icon.name: "settings-configure"}
-            MenuSeparator {}
-            Action {text: "Option"}
-
-            Menu {
-                title: "Menu"
-
-                Action {text: "Option"; checkable: true}
-                Action {text: "Option"}
-                Action {text: "Option"}
-            }
+        Action {
+            text: "Apply"
+            onTriggered: WallpapersModel.applyWallpaper(preview.wid)
         }
 
-        MenuSeparator {}
-
-        Action {text: "Option"}
+        Action {
+            text: "Delete"
+            onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
+        }
     }
 
     MouseArea {
