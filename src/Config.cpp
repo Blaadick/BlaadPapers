@@ -9,7 +9,6 @@
 void Config::load() {
     defaultData = {
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}},
-        {"style", "BlaadPapers"},
         {"wallpapers_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"}
     };
 
@@ -49,10 +48,6 @@ QVector<QString> Config::getBadTags() {
     }
 
     return badTags;
-}
-
-QString Config::getStyle() {
-    return getValue("style").toString();
 }
 
 QString Config::getWallpapersPath() {
