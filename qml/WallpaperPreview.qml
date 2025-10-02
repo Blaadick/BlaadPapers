@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Blaadick
+// SPDX-License-Identifier: GPL-3.0-only
+
 import QtCore
 import QtQuick
 import QtQuick.Controls
@@ -60,50 +63,35 @@ Item {
     Menu {
         id: contextMenu
 
-        Action {
-            text: "Apply"
-            onTriggered: WallpapersModel.applyWallpaper(preview.wid)
-        }
-
-        Action {text: "Apply"; icon.name: "settings-configure"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
+        Action {text: "Option"; icon.name: "settings-configure"}
+        Action {text: "Option"}
+        Action {text: "Option"; icon.name: "link-symbolic"}
+        Action {text: "Option"; icon.name: "insert-link-symbolic"}
+        Action {text: "Option"; icon.name: "system-user-prompt"}
+        Action {text: "Option"; icon.name: "system-user-list"}
+        Action {text: "Option"}
 
         Menu {
-            title: "Menu1"
+            title: "Menu"
+            icon.name: "settings"
 
-            Action {text: "Apply"; checkable: true}
-            Action {text: "Apply"; icon.name: "settings-configure"}
+            Action {text: "Option"; checkable: true}
+            Action {text: "Option"; icon.name: "settings-configure"}
             MenuSeparator {}
-            Action {text: "Apply"}
+            Action {text: "Option"}
 
             Menu {
-                title: "Menu2"
+                title: "Menu"
 
-                Action {text: "Apply"; checkable: true}
-                Action {text: "Apply"}
-                Action {text: "Apply"}
-                Action {text: "Apply"}
-                Action {text: "Apply"}
-                Action {text: "Apply"}
+                Action {text: "Option"; checkable: true}
+                Action {text: "Option"}
+                Action {text: "Option"}
             }
         }
 
         MenuSeparator {}
 
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-        Action {text: "Apply"}
-
-        // Action {
-        //     text: "Delete"
-        //     onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
-        // }
+        Action {text: "Option"}
     }
 
     MouseArea {
