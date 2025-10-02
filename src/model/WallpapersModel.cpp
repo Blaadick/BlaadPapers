@@ -1,7 +1,8 @@
+// Copyright (C) 2025 Blaadick
+// SPDX-License-Identifier: GPL-3.0-only
+
 #include "model/WallpapersModel.hpp"
 
-#include <QDir>
-#include <QFile>
 #include <QImage>
 #include <QtConcurrentRun>
 #include "Wallpapers.hpp"

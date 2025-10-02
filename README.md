@@ -11,10 +11,6 @@ Convenient wallpaper manager supporting both GUI and CLI usage. I will try to ma
 
 Keep in mind that the application is being developed and tested on and for Linux systems. I will try to keep it running on other platforms as well, but this is not a priority.
 
-<div align="center">
-    <img src="resource/preview.png" alt="Application preview">
-</div>
-
 ## Installation
 ### Arch Linux
 ```bash
@@ -33,3 +29,6 @@ cmake --build cmake-build-release --parallel
 
 ### Windows
 Expected after adding major features and implementing own wallpaper rendering.
+
+## License
+Code is licensed under GPL-3.0-only
