@@ -12,10 +12,11 @@ inline std::string_view mainHelpMessage = R"#(Usage:
 Options:
     H  ->  Shows this help
     V  ->  Shows program version
-    S  ->  Sets the wallpaper
+    A  ->  Sets the wallpaper
     R  ->  Sets the random wallpaper
     D  ->  Deletes the wallpaper
     L  ->  Shows list of all available wallpapers
+    C  ->  Shows the wallpaper count
 
 Universal sub options:
     h  ->  Shows help for option and exit
@@ -27,8 +28,8 @@ inline std::string_view versionHelpMessage = R"#(Usage:
 Sub options:
     j  ->  Outputs command result in JSON format)#";
 
-inline std::string_view setHelpMessage = R"#(Usage:
-    blaadpapers -S[sub_options] <wallpaper_id>)#";
+inline std::string_view applyHelpMessage = R"#(Usage:
+    blaadpapers -A[sub_options] <wallpaper_id>)#";
 
 inline std::string_view randomHelpMessage = R"#(Usage:
     blaadpapers -R[sub_options]
@@ -46,4 +47,10 @@ inline std::string_view listHelpMessage = R"#(Usage:
 
 Sub options:
     t  ->  Outputs list of unique tags instead wallpapers
+    j  ->  Outputs command result in JSON format)#";
+
+inline std::string_view countHelpMessage = R"#(Usage:
+    blaadpapers -C[sub_options]
+
+Sub options:
     j  ->  Outputs command result in JSON format)#";

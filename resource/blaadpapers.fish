@@ -1,7 +1,7 @@
 function __blaadpapers_needs_wallpaper
     set -l cmd (commandline -opc)
 
-    if test (count $cmd) -eq 2; and string match -q -- '-S*' $cmd[2]
+    if test (count $cmd) -eq 2; and string match -q -- '-A*' $cmd[2]
         return 0
     end
 

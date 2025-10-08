@@ -30,7 +30,7 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
     }
 }
 
-void setOption(const set<char>&, const vector<char*>& arguments) {
+void applyOption(const set<char>&, const vector<char*>& arguments) {
     if(arguments.empty()) {
         util::logError("Wallpaper id expected");
         return;
@@ -100,6 +100,15 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
     }
 }
 
+void deleteOption(const set<char>&, const vector<char*>& arguments) {
+    if(arguments.empty()) {
+        util::logInfo("Wallpaper id expected");
+        return;
+    }
+
+    util::deleteWallpaper(arguments[0]);
+}
+
 void listOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('t')) {
         if(subOptions.contains('j')) {
@@ -131,13 +140,16 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
     }
 }
 
-void deleteOption(const set<char>&, const vector<char*>& arguments) {
-    if(arguments.empty()) {
-        util::logInfo("Wallpaper id expected");
-        return;
+void countOption(const set<char>& subOptions, const vector<char*>&) {
+    if(subOptions.contains('j')) {
+        const QJsonObject outputData{
+            {"wallpaper_count", Wallpapers::getWallpapers().count()},
+            {"unique_tag_count", Wallpapers::getUniqueTags().count()}
+        };
+        util::logInfo(QJsonDocument(outputData));
+    } else {
+        util::logInfo("{}", Wallpapers::getWallpapers().count());
     }
-
-    util::deleteWallpaper(arguments[0]);
 }
 
 void OptionExecutor::execute(const int argc, char** argv) {
@@ -187,11 +199,12 @@ void OptionExecutor::execute(const int argc, char** argv) {
 }
 
 map<char, OptionExecutor::Option> OptionExecutor::options = {
-    {'H', {helpOption, {}, "WTF bro? You really need help with it?"}},
     {'h', {helpOption, {}, "Ha ha!"}}, // Because it's familiar
+    {'H', {helpOption, {}, "WTF bro? You really need help with it?"}},
     {'V', {versionOption, {'j'}, versionHelpMessage}},
-    {'S', {setOption, {}, setHelpMessage}},
-    {'D', {deleteOption, {}, deleteHelpMessage}},
+    {'A', {applyOption, {}, applyHelpMessage}},
     {'R', {randomOption, {'f'}, randomHelpMessage}},
-    {'L', {listOption, {'t', 'j'}, listHelpMessage}}
+    {'D', {deleteOption, {}, deleteHelpMessage}},
+    {'L', {listOption, {'t', 'j'}, listHelpMessage}},
+    {'C', {countOption, {'j'}, countHelpMessage}}
 };
