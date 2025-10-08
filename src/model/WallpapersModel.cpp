@@ -4,11 +4,44 @@
 #include "model/WallpapersModel.hpp"
 
 #include <QImage>
-#include <QtConcurrentRun>
+#include <QtConcurrent>
 #include "Wallpapers.hpp"
 #include "util/Loggers.hpp"
 #include "util/PathUtils.hpp"
 #include "util/WallpaperUtils.hpp"
+
+namespace {
+    QString getScreenPreviewsPath(const QScreen* screen) {
+        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation)
+            + "/preview/"
+            + QString::number(screen->geometry().width() * screen->devicePixelRatio())
+            + "x"
+            + QString::number(screen->geometry().height() * screen->devicePixelRatio())
+            + '/';
+    }
+
+    void createAndSavePreview(const Wallpaper& wallpaper) {
+        for(const auto screen : QGuiApplication::screens()) {
+            const QString previewPath = getScreenPreviewsPath(screen) + wallpaper.getId() + ".webp";
+            const QSize screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
+
+            if(QFile previewFile(previewPath); !previewFile.exists()) {
+                auto preview = QImage(wallpaper.getFilePath()).scaled(
+                    screenAspectRatio * 20 * screen->devicePixelRatio(),
+                    Qt::KeepAspectRatioByExpanding,
+                    Qt::SmoothTransformation
+                );
+
+                if(!preview.save(previewPath, "WEBP", 100)) {
+                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+                } else {
+                    util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
+                }
+            }
+        }
+    }
+}
 
 WallpapersModel& WallpapersModel::inst() {
     static WallpapersModel instance;
@@ -20,36 +53,14 @@ void WallpapersModel::load() {
     Wallpapers::load();
     endResetModel();
 
+    for(const auto screen : QGuiApplication::screens()) {
+        util::createDirIfNotExists(getScreenPreviewsPath(screen));
+    }
+
+    QtConcurrent::map(Wallpapers::getWallpapers(), createAndSavePreview);
+
     util::logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
     util::sendStatus("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
-
-    QThreadPool::globalInstance()->start([] {
-        const QString previewsPath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
-
-        for(const auto screen : QGuiApplication::screens()) {
-            const QString screenPreviewsPath = previewsPath + QString::number(screen->geometry().width() * screen->devicePixelRatio()) + "x" + QString::number(screen->geometry().height() * screen->devicePixelRatio()) + '/';
-            const QSize screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
-
-            util::createDirIfNotExists(screenPreviewsPath);
-
-            for(const auto& wallpaper : Wallpapers::getWallpapers()) {
-                const QString previewPath = screenPreviewsPath + wallpaper.getId() + ".webp";
-
-                if(QFile previewFile(previewPath); !previewFile.exists()) {
-                    auto preview = QImage(wallpaper.getFilePath()).scaled(
-                        screenAspectRatio * 20 * screen->devicePixelRatio(),
-                        Qt::KeepAspectRatioByExpanding,
-                        Qt::SmoothTransformation
-                    );
-
-                    if(!preview.save(previewPath, "WEBP", 100)) {
-                        util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
-                        util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
-                    }
-                }
-            }
-        }
-    });
 }
 
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {

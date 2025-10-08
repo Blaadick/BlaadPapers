@@ -6,6 +6,9 @@
 > [!NOTE]
 > The application is temporarily using hyprpaper on Hyprland, plasma-apply-wallpaperimage on KDE, and gsettings on Gnome
 
+> [!NOTE]
+> At the moment, with ~2500 wallpapers, the app is not particularly pleasant to use
+
 ## Description
 Convenient wallpaper manager supporting both GUI and CLI usage. I will try to make it as fast and pleasing to the eye as possible.
 
@@ -18,7 +21,7 @@ yay -S blaadpapers
 ```
 
 ### Manual
-Install `Qt6 Base`, `Qt6 QML` and `Qt6 Multimedia`. Then run it:
+Install [BStyle](https://github.com/Blaadick/BStyle), `Qt6 Base`, `Qt6 QML` and `Qt6 Multimedia`. Then run it:
 
 ```bash
 git clone https://github.com/Blaadick/BlaadPapers.git

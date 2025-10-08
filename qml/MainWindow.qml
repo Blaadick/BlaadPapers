@@ -9,7 +9,6 @@ ApplicationWindow {
     id: mainWindow
     minimumWidth: 280 + 10 * 2
     minimumHeight: searchBar.height + 157 + (statusBar.visible ? statusBar.height : 0) + 10 * 4
-    font.family: "monospace"
     visible: true
 
     Menu {
@@ -17,6 +16,7 @@ ApplicationWindow {
 
         Action {
             text: "Open Config"
+            icon.name: "edittext"
             onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigFilePath()}`)
         }
 

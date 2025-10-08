@@ -69,7 +69,15 @@ Item {
         }
 
         Action {
+            text: "Edit"
+            icon.name: "editor"
+        }
+
+        MenuSeparator {}
+
+        Action {
             text: "Delete"
+            icon.name: "delete"
             onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
         }
     }
