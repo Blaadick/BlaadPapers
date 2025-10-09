@@ -7,6 +7,7 @@
 #include <QStandardPaths>
 #include <QString>
 #include "Config.hpp"
+#include "model/ConfigModel.hpp"
 #include "util/Loggers.hpp"
 
 namespace util {
@@ -43,6 +44,8 @@ namespace util {
             sendStatus("Desktop environment \"{}\" unsupported", de);
             return;
         }
+
+        ConfigModel::inst().setStatusBarVisible(!ConfigModel::inst().getStatusBarVisible());
 
         logInfo("Wallpaper {} set", wallpaperId.toStdString());
         sendStatus("Wallpaper {} set", wallpaperId.toStdString());

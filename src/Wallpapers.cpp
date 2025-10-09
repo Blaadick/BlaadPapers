@@ -14,7 +14,7 @@
 
 namespace {
     QJsonObject readWallpaperData(const QString& wallpaperId) {
-        const QString wallpaperDataPath = Config::getWallpapersPath() + ".index/" + wallpaperId + ".json";
+        const QString wallpaperDataPath = Config::getWallpapersDirPath() + ".index/" + wallpaperId + ".json";
         const QJsonObject defaultWallpaperData{
             {"name", wallpaperId},
             {"tags", QJsonArray{"General"}}
@@ -58,7 +58,7 @@ namespace {
      * We are not in DOS time! I turn it off if it is too annoying.
      */
     void shaitanMachine() {
-        QDirIterator dirIterator(Config::getWallpapersPath(), {"*.jpg", "*.jpe", "*.JPG"});
+        QDirIterator dirIterator(Config::getWallpapersDirPath(), {"*.jpg", "*.jpe", "*.JPG"});
 
         while(dirIterator.hasNext()) {
             auto file = dirIterator.next();
@@ -73,13 +73,13 @@ namespace {
 }
 
 void Wallpapers::load() {
-    const QString wallpapersDataPath = Config::getWallpapersPath() + ".index/";
+    const QString wallpapersDataPath = Config::getWallpapersDirPath() + ".index/";
     util::createDirIfNotExists(wallpapersDataPath);
 
     wallpapers.clear();
     shaitanMachine();
 
-    QDirIterator dirIterator(Config::getWallpapersPath(), util::getFileMask(util::supportedStaticFormats));
+    QDirIterator dirIterator(Config::getWallpapersDirPath(), util::getFileMask(util::supportedStaticFormats));
     while(dirIterator.hasNext()) {
         dirIterator.next();
 
@@ -130,7 +130,7 @@ const Wallpaper* Wallpapers::getWallpaper(const QString& id) {
 
 void Wallpapers::deleteWallpaper(const Wallpaper& wallpaper) {
     auto wallpaperFile = QFile(wallpaper.getFilePath());
-    auto wallpaperDataFile = QFile(Config::getWallpapersPath() + ".index/" + wallpaper.getId() + ".json");
+    auto wallpaperDataFile = QFile(Config::getWallpapersDirPath() + ".index/" + wallpaper.getId() + ".json");
 
     //TODO Remove cached previews
     wallpaperFile.remove();

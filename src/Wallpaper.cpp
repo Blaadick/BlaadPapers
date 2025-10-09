@@ -31,7 +31,7 @@ const QVector<QString>& Wallpaper::getTags() const {
 }
 
 QString Wallpaper::getFilePath() const {
-    return Config::getWallpapersPath() + '/' + id + '.' + format;
+    return Config::getWallpapersDirPath() + id + '.' + format;
 }
 
 bool Wallpaper::isAnimated() const {

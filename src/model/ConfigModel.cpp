@@ -13,3 +13,12 @@ ConfigModel& ConfigModel::inst() {
 QString ConfigModel::getConfigFilePath() {
     return Config::getConfigFilePath();
 }
+
+bool ConfigModel::getStatusBarVisible() {
+    return Config::getStatusBarVisible();
+}
+
+void ConfigModel::setStatusBarVisible(const bool isVisible) {
+    Config::setStatusBarVisible(isVisible);
+    emit statusBarVisibleChanged();
+}
