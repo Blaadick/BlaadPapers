@@ -7,9 +7,17 @@
 
 class ConfigModel : public QObject {
     Q_OBJECT
+    Q_PROPERTY(bool statusBarVisible READ getStatusBarVisible WRITE setStatusBarVisible NOTIFY statusBarVisibleChanged)
 
 public:
     static ConfigModel& inst();
 
     Q_INVOKABLE QString getConfigFilePath();
+
+    bool getStatusBarVisible();
+
+    void setStatusBarVisible(bool isVisible);
+
+signals:
+    void statusBarVisibleChanged();
 };

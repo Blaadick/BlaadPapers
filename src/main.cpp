@@ -28,25 +28,27 @@ int main(int argc, char** argv) {
         QThreadPool::globalInstance()->setMaxThreadCount(std::max(1, QThread::idealThreadCount() - 2));
         WallpapersModel::inst().load();
 
-        QFileSystemWatcher wallpapersWatcher;
-        wallpapersWatcher.addPath(Config::getWallpapersPath());
-        QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-            WallpapersModel::inst().load();
-        });
+        // QFileSystemWatcher wallpapersWatcher;
+        // wallpapersWatcher.addPath(Config::getWallpapersDirPath());
+        // QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
+        //     WallpapersModel::inst().load();
+        // });
+        //
+        // QFileSystemWatcher configWatcher;
+        // configWatcher.addPath(Config::getConfigFilePath());
+        // QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
+        //     Config::load();
+        //     WallpapersModel::inst().load();
+        //
+        //     util::logInfo("Config reloaded");
+        //     util::sendStatus("Config reloaded");
+        // });
 
-        QFileSystemWatcher configWatcher;
-        configWatcher.addPath(Config::getConfigFilePath());
-        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
-            Config::load();
-            WallpapersModel::inst().load();
-
-            util::logInfo("Config reloaded");
-            util::sendStatus("Config reloaded");
-        });
-
+        #ifdef __linux__
         if(qgetenv("QT_QUICK_CONTROLS_STYLE").isNull()) {
             QQuickStyle::setStyle("BStyle");
         }
+        #endif
 
         qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", &WallpapersModel::inst());
         qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "ConfigModel", &ConfigModel::inst());

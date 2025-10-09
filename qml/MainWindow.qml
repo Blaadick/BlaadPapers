@@ -4,6 +4,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import BlaadPapers
 
 ApplicationWindow {
     id: mainWindow
@@ -24,7 +25,7 @@ ApplicationWindow {
             text: "Status Bar"
             checkable: true
             checked: statusBar.visible
-            onTriggered: statusBar.visible = !statusBar.visible
+            onTriggered: ConfigModel.statusBarVisible = !statusBar.visible
         }
     }
 
@@ -58,7 +59,7 @@ ApplicationWindow {
         StatusBar {
             id: statusBar
             Layout.fillWidth: true
-            visible: false
+            visible: ConfigModel.statusBarVisible
         }
     }
 }

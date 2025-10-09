@@ -19,10 +19,12 @@ public:
     static QVector<QString> getBadTags();
 
     [[nodiscard]]
-    static QString getStyle();
+    static QString getWallpapersDirPath();
 
     [[nodiscard]]
-    static QString getWallpapersPath();
+    static bool getStatusBarVisible();
+
+    static void setStatusBarVisible(bool isVisible);
 
 private:
     static QJsonObject defaultData;
@@ -33,4 +35,6 @@ private:
 
     [[nodiscard]]
     inline static QJsonValueRef getValue(const QString& key);
+
+    inline static void setValue(const QString& key, const QJsonValue& value);
 };

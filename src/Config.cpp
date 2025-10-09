@@ -9,7 +9,8 @@
 void Config::load() {
     defaultData = {
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}},
-        {"wallpapers_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"}
+        {"wallpapers_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"},
+        {"status_bar_visible", true}
     };
 
     util::createDirIfNotExists(getConfigPath());
@@ -50,8 +51,17 @@ QVector<QString> Config::getBadTags() {
     return badTags;
 }
 
-QString Config::getWallpapersPath() {
-    return getValue("wallpapers_path").toString();
+QString Config::getWallpapersDirPath() {
+    auto path = getValue("wallpapers_path").toString();
+    return path.endsWith('/') ? path : path.append('/');
+}
+
+bool Config::getStatusBarVisible() {
+    return getValue("status_bar_visible").toBool();
+}
+
+void Config::setStatusBarVisible(const bool isVisible) {
+    setValue("status_bar_visible", isVisible);
 }
 
 QJsonObject Config::defaultData;
@@ -63,4 +73,13 @@ QString Config::getConfigPath() {
 
 QJsonValueRef Config::getValue(const QString& key) {
     return data[key].isNull() ? defaultData[key] : data[key];
+}
+
+void Config::setValue(const QString& key, const QJsonValue& value) {
+    data[key] = value;
+
+    QFile configFile(getConfigFilePath());
+    configFile.open(QIODeviceBase::WriteOnly);
+    configFile.write(QJsonDocument(data).toJson());
+    configFile.close();
 }
