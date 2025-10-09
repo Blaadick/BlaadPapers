@@ -65,7 +65,7 @@ Item {
 
         Action {
             text: "Apply"
-            onTriggered: WallpapersModel.applyWallpaper(preview.wid)
+            onTriggered: Wallpapers.applyWallpaper(preview.wid)
         }
 
         Action {
@@ -78,7 +78,7 @@ Item {
         Action {
             text: "Delete"
             icon.name: "delete"
-            onTriggered: WallpapersModel.deleteWallpaper(preview.wid)
+            onTriggered: Wallpapers.deleteWallpaper(preview.wid)
         }
     }
 
@@ -99,7 +99,7 @@ Item {
         onReleased: (event) => {
             if(event.button === Qt.LeftButton) {
                 preview.isPressed = false
-                WallpapersModel.applyWallpaper(preview.wid)
+                Wallpapers.applyWallpaper(preview.wid)
             }
         }
 

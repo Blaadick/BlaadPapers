@@ -50,9 +50,9 @@ int main(int argc, char** argv) {
         }
         #endif
 
-        qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "WallpapersModel", &WallpapersModel::inst());
-        qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "ConfigModel", &ConfigModel::inst());
-        qmlRegisterSingletonInstance<StatusModel>(PROJECT_NAME, 1, 0, "StatusModel", &StatusModel::inst());
+        qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "Wallpapers", &WallpapersModel::inst());
+        qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "Config", &ConfigModel::inst());
+        qmlRegisterSingletonInstance<StatusModel>(PROJECT_NAME, 1, 0, "Status", &StatusModel::inst());
         QQmlApplicationEngine engine;
         engine.loadFromModule(PROJECT_NAME, "MainWindow");
 

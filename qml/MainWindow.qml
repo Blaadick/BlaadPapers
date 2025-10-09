@@ -18,14 +18,14 @@ ApplicationWindow {
         Action {
             text: "Open Config"
             icon.name: "edittext"
-            onTriggered: Qt.openUrlExternally(`file://${ConfigModel.getConfigFilePath()}`)
+            onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
         }
 
         Action {
             text: "Status Bar"
             checkable: true
             checked: statusBar.visible
-            onTriggered: ConfigModel.statusBarVisible = !statusBar.visible
+            onTriggered: Config.statusBarVisible = !statusBar.visible
         }
     }
 
@@ -59,7 +59,7 @@ ApplicationWindow {
         StatusBar {
             id: statusBar
             Layout.fillWidth: true
-            visible: ConfigModel.statusBarVisible
+            visible: Config.statusBarVisible
         }
     }
 }
