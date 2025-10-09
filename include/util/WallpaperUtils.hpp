@@ -45,8 +45,6 @@ namespace util {
             return;
         }
 
-        ConfigModel::inst().setStatusBarVisible(!ConfigModel::inst().getStatusBarVisible());
-
         logInfo("Wallpaper {} set", wallpaperId.toStdString());
         sendStatus("Wallpaper {} set", wallpaperId.toStdString());
         system(("bash " + Config::getPostSetScriptFilePath() + " \"" + wallpaper->getName() + '\"' + " \"" + wallpaper->getFilePath() + '\"').toStdString().c_str());

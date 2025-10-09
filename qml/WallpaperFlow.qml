@@ -23,7 +23,7 @@ Flickable {
         property real itemHeight: itemWidth / (Screen.width / Screen.height)
 
         Repeater {
-            model: WallpapersModel
+            model: Wallpapers
             delegate: Item {
                 width: flow.itemWidth
                 height: flow.itemHeight
