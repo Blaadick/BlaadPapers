@@ -79,7 +79,7 @@ void Wallpapers::load() {
     wallpapers.clear();
     shaitanMachine();
 
-    QDirIterator dirIterator(Config::getWallpapersDirPath(), util::getFileMask(util::supportedStaticFormats));
+    QDirIterator dirIterator(Config::getWallpapersDirPath(), util::getFileMask(util::supportedFormats));
     while(dirIterator.hasNext()) {
         dirIterator.next();
 

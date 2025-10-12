@@ -28,12 +28,12 @@ int main(int argc, char** argv) {
         QThreadPool::globalInstance()->setMaxThreadCount(std::max(1, QThread::idealThreadCount() - 2));
         WallpapersModel::inst().load();
 
-        // QFileSystemWatcher wallpapersWatcher;
-        // wallpapersWatcher.addPath(Config::getWallpapersDirPath());
-        // QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-        //     WallpapersModel::inst().load();
-        // });
-        //
+        QFileSystemWatcher wallpapersWatcher;
+        wallpapersWatcher.addPath(Config::getWallpapersDirPath());
+        QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
+            WallpapersModel::inst().load();
+        });
+
         // QFileSystemWatcher configWatcher;
         // configWatcher.addPath(Config::getConfigFilePath());
         // QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {

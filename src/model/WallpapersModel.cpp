@@ -22,12 +22,35 @@ namespace {
 
     void createAndSavePreview(const Wallpaper& wallpaper) {
         for(const auto screen : QGuiApplication::screens()) {
-            const QString previewPath = getScreenPreviewsPath(screen) + wallpaper.getId() + ".webp";
-            const QSize screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
+            const auto previewPath = getScreenPreviewsPath(screen) + wallpaper.getId() + ".webp";
+            const auto screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
+            const auto previewSize = screenAspectRatio * 20 * screen->devicePixelRatio();
 
-            if(QFile previewFile(previewPath); !previewFile.exists()) {
+            if(QFile previewFile(previewPath); previewFile.exists()) continue;
+
+            if(wallpaper.isAnimated()) {
+                QProcess ffmpeg;
+
+                ffmpeg.start("ffmpeg", {
+                    "-y",
+                    "-i", wallpaper.getFilePath(),
+                    "-t 5",
+                    "-vf fps=24,scale=" + QString::number(previewSize.width()) + ':' + QString::number(previewSize.height()) + ":force_original_aspect_ratio=decrease",
+                    "-loop 0",
+                    "-lossless 1",
+                    "-compression_level 6",
+                    previewPath
+                });
+
+                if(ffmpeg.exitCode() != 0) {
+                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+                } else {
+                    util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
+                }
+            } else {
                 auto preview = QImage(wallpaper.getFilePath()).scaled(
-                    screenAspectRatio * 20 * screen->devicePixelRatio(),
+                    previewSize,
                     Qt::KeepAspectRatioByExpanding,
                     Qt::SmoothTransformation
                 );
