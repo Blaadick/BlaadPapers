@@ -24,7 +24,7 @@ Item {
     property bool isPressed
     property bool isHovered
 
-    Image {
+    AnimatedImage {
         anchors.fill: parent
         visible: censor.opacity < 1
         source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.wid}.webp`
@@ -57,7 +57,7 @@ Item {
 
     ToolTip {
         id: tooltip
-        text: `${preview.name} (${preview.wid})\n${preview.tags.join(", ")}`
+        text: `${preview.name}\n${preview.tags.join(", ")}`
     }
 
     Menu {

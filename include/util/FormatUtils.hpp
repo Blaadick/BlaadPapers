@@ -11,9 +11,11 @@ namespace util {
     };
 
     inline const QVector<QString> supportedAnimatedFormats = {
-        "mp4"
+        "mp4",
         "webm"
     };
+
+    inline const QVector<QString> supportedFormats = supportedStaticFormats + supportedAnimatedFormats;
 
     inline QVector<QString> getFileMask(QVector<QString> vector) {
         for(auto& item : vector) {

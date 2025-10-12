@@ -13,14 +13,14 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Concurrent QuickControls2 ShaderTools Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Concurrent QuickControls2 ShaderTools)
 
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS include/*.hpp)
 file(GLOB_RECURSE QMLS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS qml/*.qml)
 file(GLOB_RECURSE SHADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS shader/*)
 
-qt_standard_project_setup(REQUIRES 6.9)
+qt_standard_project_setup(REQUIRES 6.10)
 qt_add_executable(blaadpapers ${SOURCES} ${HEADERS})
 
 qt_add_qml_module(blaadpapers
@@ -34,7 +34,7 @@ qt_add_shaders(blaadpapers
     FILES ${SHADERS}
 )
 
-target_link_libraries(blaadpapers PRIVATE Qt6::Concurrent Qt6::QuickControls2 Qt6::Multimedia)
+target_link_libraries(blaadpapers PRIVATE Qt6::Concurrent Qt6::QuickControls2)
 target_include_directories(blaadpapers PRIVATE include)
 target_compile_definitions(blaadpapers PRIVATE
     PROJECT_NAME="${PROJECT_NAME}"
