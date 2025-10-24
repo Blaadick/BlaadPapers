@@ -5,21 +5,23 @@
 
 #include <QJsonArray>
 #include "Config.hpp"
-#include "util/FormatUtils.hpp"
 
-Wallpaper::Wallpaper(
-    const QString& id,
-    const QString& format,
-    const QString& name,
-    const QVector<QString>& tags
-) : id(id), format(format), name(name), tags(tags) {}
+Wallpaper::Wallpaper(const QString& id, const QString& filePath, const QJsonObject& data) {
+    this->id = id;
+    this->filePath = filePath;
+    this->name = data["name"].toString();
+
+    for(auto tag : data["tags"].toArray()) {
+        tags.append(tag.toString());
+    }
+}
 
 const QString& Wallpaper::getId() const {
     return id;
 }
 
-const QString& Wallpaper::getFormat() const {
-    return format;
+const QString& Wallpaper::getFilePath() const {
+    return filePath;
 }
 
 const QString& Wallpaper::getName() const {
@@ -28,14 +30,6 @@ const QString& Wallpaper::getName() const {
 
 const QVector<QString>& Wallpaper::getTags() const {
     return tags;
-}
-
-QString Wallpaper::getFilePath() const {
-    return Config::getWallpapersDirPath() + id + '.' + format;
-}
-
-bool Wallpaper::isAnimated() const {
-    return util::supportedAnimatedFormats.contains(format);
 }
 
 bool Wallpaper::isBad() const {

@@ -9,6 +9,9 @@
 #include <QRandomGenerator>
 #include <util/PathUtils.hpp>
 #include "Config.hpp"
+#include "PictureWallpaper.hpp"
+#include "SceneWallpaper.hpp"
+#include "VideoWallpaper.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/Loggers.hpp"
 
@@ -26,22 +29,12 @@ namespace {
             wallpaperData = QJsonDocument::fromJson(dataFile.readAll()).object();
             dataFile.close();
 
-            auto notFull = false;
-
             if(wallpaperData["name"].isNull()) {
                 wallpaperData["name"] = defaultWallpaperData["name"];
-                notFull = true;
             }
 
             if(wallpaperData["tags"].isNull()) {
                 wallpaperData["tags"] = defaultWallpaperData["tags"];
-                notFull = true;
-            }
-
-            if(notFull) {
-                dataFile.open(QIODeviceBase::WriteOnly);
-                dataFile.write(QJsonDocument(wallpaperData).toJson());
-                dataFile.close();
             }
         } else {
             dataFile.open(QIODeviceBase::WriteOnly);
@@ -79,35 +72,58 @@ void Wallpapers::load() {
     wallpapers.clear();
     shaitanMachine();
 
-    QDirIterator dirIterator(Config::getWallpapersDirPath(), util::getFileMask(util::supportedFormats));
-    while(dirIterator.hasNext()) {
-        dirIterator.next();
+    QDirIterator dirPictureIterator(
+        Config::getWallpapersDirPath(),
+        util::getFileMask(util::supportedPictureFormats),
+        QDir::NoFilter,
+        {QDirIterator::Subdirectories}
+    );
 
-        auto wallpaperId = dirIterator.fileInfo().baseName();
-        auto wallpaperData = readWallpaperData(wallpaperId);
+    QDirIterator dirVideoIterator(
+        Config::getWallpapersDirPath(),
+        util::getFileMask(util::supportedVideoFormats),
+        QDir::Files,
+        {QDirIterator::Subdirectories}
+    );
 
-        QVector<QString> wallpaperTags;
-        for(auto tag : wallpaperData["tags"].toArray()) {
-            wallpaperTags.append(tag.toString());
-        }
+    // QDirIterator dirSceneIterator(
+    //     Config::getWallpapersDirPath(),
+    //     util::getFileMask(util::supportedSceneFormats),
+    //     QDir::Files,
+    //     {QDirIterator::Subdirectories}
+    // );
 
-        wallpapers.append(
-            Wallpaper(
-                wallpaperId,
-                dirIterator.fileInfo().suffix(),
-                wallpaperData["name"].toString(),
-                wallpaperTags
-            )
-        );
+    while(dirPictureIterator.hasNext()) {
+        dirPictureIterator.next();
+        auto wallpaperId = dirPictureIterator.fileInfo().baseName();
 
-        for(const auto& tag : wallpaperTags) {
-            if(!uniqueTags.contains(tag)) {
-                uniqueTags.insert(tag, 1);
-            } else {
-                uniqueTags[tag] += 1;
-            }
-        }
+        wallpapers.append(PictureWallpaper(
+            wallpaperId,
+            dirPictureIterator.filePath(),
+            readWallpaperData(wallpaperId)
+        ));
     }
+
+    while(dirVideoIterator.hasNext()) {
+        dirVideoIterator.next();
+        auto wallpaperId = dirVideoIterator.fileInfo().baseName();
+
+        wallpapers.append(VideoWallpaper(
+            wallpaperId,
+            dirVideoIterator.filePath(),
+            readWallpaperData(wallpaperId)
+        ));
+    }
+
+    // while(dirSceneIterator.hasNext()) {
+    //     dirSceneIterator.next();
+    //     auto wallpaperId = dirSceneIterator.fileInfo().baseName();
+    //     wallpapers.append(SceneWallpaper(
+    //         wallpaperId,
+    //         dirSceneIterator.filePath(),
+    //         readWallpaperData(wallpaperId)
+    //     ));
+    // }
 
     std::ranges::sort(wallpapers, [](const Wallpaper& w1, const Wallpaper& w2) {
         return w1.getName() < w2.getName();
@@ -118,9 +134,9 @@ const QVector<Wallpaper>& Wallpapers::getWallpapers() {
     return wallpapers;
 }
 
-const Wallpaper* Wallpapers::getWallpaper(const QString& id) {
+const Wallpaper* Wallpapers::getWallpaper(const QString& wallpaperId) {
     for(const auto& wallpaper : wallpapers) {
-        if(wallpaper.getId() == id) {
+        if(wallpaper.getId() == wallpaperId) {
             return &wallpaper;
         }
     }
@@ -136,10 +152,65 @@ void Wallpapers::deleteWallpaper(const Wallpaper& wallpaper) {
     wallpaperFile.remove();
     wallpaperDataFile.remove();
     wallpapers.removeOne(wallpaper);
+
+    util::logInfo("Wallpaper {} deleted", wallpaper.getId().toStdString());
+    util::sendStatus("Wallpaper {} deleted", wallpaper.getId().toStdString());
 }
 
-const QMap<QString, int>& Wallpapers::getUniqueTags() {
-    return uniqueTags;
+void Wallpapers::deleteWallpaper(const QString& wallpaperId) {
+    const auto wallpaper = getWallpaper(wallpaperId);
+
+    if(!wallpaper) {
+        util::logError("Wallpaper {} not found", wallpaperId.toStdString());
+        util::sendStatus("Wallpaper {} not found", wallpaperId.toStdString());
+        return;
+    }
+
+    deleteWallpaper(*wallpaper);
+}
+
+void Wallpapers::applyWallpaper(const Wallpaper& wallpaper) {
+    //TODO Remove when implement own renderer
+
+    const auto de = qgetenv("XDG_SESSION_DESKTOP").toStdString();
+    if(de == "Hyprland") {
+        QFile hyprpaperConfig(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/hypr/hyprpaper.conf");
+
+        system("hyprctl -q hyprpaper unload all");
+        system(("hyprctl -q hyprpaper preload \"" + wallpaper.getFilePath() + '\"').toStdString().c_str());
+        system(("hyprctl -q hyprpaper wallpaper \", " + wallpaper.getFilePath() + '\"').toStdString().c_str());
+
+        hyprpaperConfig.open(QIODevice::WriteOnly);
+        hyprpaperConfig.write(("preload = " + wallpaper.getFilePath() + '\n').toStdString().c_str());
+        hyprpaperConfig.write(("wallpaper = , " + wallpaper.getFilePath()).toStdString().c_str());
+        hyprpaperConfig.close();
+    } else if(de == "KDE") {
+        system(("plasma-apply-wallpaperimage \"" + wallpaper.getFilePath() + '\"').toStdString().c_str());
+    } else if(de == "gnome" || de == "ubuntu") {
+        system(("gsettings set org.gnome.desktop.background picture-uri \"" + wallpaper.getFilePath() + '\"').toStdString().c_str());
+        system(("gsettings set org.gnome.desktop.background picture-uri-dark \"" + wallpaper.getFilePath() + '\"').toStdString().c_str());
+    } else {
+        util::logError("Desktop environment \"{}\" unsupported", de);
+        util::sendStatus("Desktop environment \"{}\" unsupported", de);
+        return;
+    }
+
+    util::logInfo("Wallpaper {} set", wallpaper.getId().toStdString());
+    util::sendStatus("Wallpaper {} set", wallpaper.getId().toStdString());
+
+    system(("bash " + Config::getPostSetScriptFilePath() + " \"" + wallpaper.getName() + '\"' + " \"" + wallpaper.getFilePath() + '\"').toStdString().c_str());
+}
+
+void Wallpapers::applyWallpaper(const QString& wallpaperId) {
+    const Wallpaper* wallpaper = getWallpaper(wallpaperId);
+
+    if(!wallpaper) {
+        util::logError("Wallpaper {} not found", wallpaperId.toStdString());
+        util::sendStatus("Wallpaper {} not found", wallpaperId.toStdString());
+        return;
+    }
+
+    applyWallpaper(*wallpaper);
 }
 
 QJsonArray Wallpapers::toJson() {
@@ -153,4 +224,3 @@ QJsonArray Wallpapers::toJson() {
 }
 
 QVector<Wallpaper> Wallpapers::wallpapers;
-QMap<QString, int> Wallpapers::uniqueTags;

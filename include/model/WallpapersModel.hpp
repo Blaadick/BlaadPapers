@@ -13,7 +13,6 @@ public:
         IdRole = Qt::UserRole + 1,
         NameRole,
         TagsRole,
-        IsAnimatedRole,
         IsBadRole
     };
 

@@ -9,30 +9,23 @@
 
 class Wallpaper {
 public:
-    Wallpaper(
-        const QString& id,
-        const QString& format,
-        const QString& name,
-        const QVector<QString>& tags
-    );
+    Wallpaper(const QString& id, const QString& filePath, const QJsonObject& data);
+
+    Wallpaper() = default;
+
+    virtual ~Wallpaper() = default;
 
     [[nodiscard]]
     const QString& getId() const;
 
     [[nodiscard]]
-    const QString& getFormat() const;
+    const QString& getFilePath() const;
 
     [[nodiscard]]
     const QString& getName() const;
 
     [[nodiscard]]
     const QVector<QString>& getTags() const;
-
-    [[nodiscard]]
-    QString getFilePath() const;
-
-    [[nodiscard]]
-    bool isAnimated() const;
 
     [[nodiscard]]
     bool isBad() const;
@@ -45,7 +38,7 @@ public:
 
 private:
     QString id;
-    QString format;
+    QString filePath;
     QString name;
     QVector<QString> tags;
 };
