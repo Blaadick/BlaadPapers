@@ -34,7 +34,6 @@ Flickable {
                     wid: wallpaperId
                     name: wallpaperName
                     tags: wallpaperTags
-                    isAnimated: isWallpaperAnimated
                     isBad: isWallpaperBad
                 }
             }

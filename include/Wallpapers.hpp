@@ -14,17 +14,19 @@ public:
     static const QVector<Wallpaper>& getWallpapers();
 
     [[nodiscard]]
-    static const Wallpaper* getWallpaper(const QString& id);
+    static const Wallpaper* getWallpaper(const QString& wallpaperId);
 
     static void deleteWallpaper(const Wallpaper& wallpaper);
 
-    [[nodiscard]]
-    static const QMap<QString, int>& getUniqueTags();
+    static void deleteWallpaper(const QString& wallpaperId);
+
+    static void applyWallpaper(const Wallpaper& wallpaper);
+
+    static void applyWallpaper(const QString& wallpaperId);
 
     [[nodiscard]]
     static QJsonArray toJson();
 
 private:
     static QVector<Wallpaper> wallpapers;
-    static QMap<QString, int> uniqueTags;
 };

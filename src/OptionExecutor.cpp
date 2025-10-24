@@ -9,7 +9,7 @@
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
 #include "model/WallpapersModel.hpp"
-#include "util/WallpaperUtils.hpp"
+#include "util/Loggers.hpp"
 
 using namespace std;
 
@@ -36,7 +36,7 @@ void applyOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    util::applyWallpaper(arguments[0]);
+    Wallpapers::applyWallpaper(arguments[0]);
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
@@ -93,10 +93,10 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        util::applyWallpaper(filteredWallpapers[randomIndex].getId());
+        Wallpapers::applyWallpaper(filteredWallpapers[randomIndex].getId());
     } else {
         const auto randomIndex = QRandomGenerator::global()->bounded(wallpapers.size());
-        util::applyWallpaper(wallpapers[randomIndex].getId());
+        Wallpapers::applyWallpaper(wallpapers[randomIndex].getId());
     }
 }
 
@@ -106,30 +106,30 @@ void deleteOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    util::deleteWallpaper(arguments[0]);
+    Wallpapers::deleteWallpaper(arguments[0]);
 }
 
 void listOption(const set<char>& subOptions, const vector<char*>&) {
-    if(subOptions.contains('t')) {
-        if(subOptions.contains('j')) {
-            QJsonArray outputData;
-
-            for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
-                outputData.append(QJsonObject{
-                    {"name", name},
-                    {"quantity", quantity}
-                });
-            }
-
-            util::logInfo(QJsonDocument(outputData));
-        } else {
-            for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
-                util::logInfo("{:->4}: {}", quantity, name.toStdString());
-            }
-        }
-
-        return;
-    }
+    // if(subOptions.contains('t')) {
+    //     if(subOptions.contains('j')) {
+    //         QJsonArray outputData;
+    //
+    //         for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
+    //             outputData.append(QJsonObject{
+    //                 {"name", name},
+    //                 {"quantity", quantity}
+    //             });
+    //         }
+    //
+    //         util::logInfo(QJsonDocument(outputData));
+    //     } else {
+    //         for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
+    //             util::logInfo("{:->4}: {}", quantity, name.toStdString());
+    //         }
+    //     }
+    //
+    //     return;
+    // }
 
     if(subOptions.contains('j')) {
         util::logInfo(QJsonDocument(Wallpapers::toJson()));
@@ -144,7 +144,7 @@ void countOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
         const QJsonObject outputData{
             {"wallpaper_count", Wallpapers::getWallpapers().count()},
-            {"unique_tag_count", Wallpapers::getUniqueTags().count()}
+            // {"unique_tag_count", Wallpapers::getUniqueTags().count()}
         };
         util::logInfo(QJsonDocument(outputData));
     } else {
