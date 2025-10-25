@@ -4,7 +4,7 @@
 #pragma once
 
 #include <QJsonArray>
-#include "Wallpaper.hpp"
+#include "data/Wallpaper.hpp"
 
 class Wallpapers {
 public:
@@ -15,6 +15,9 @@ public:
 
     [[nodiscard]]
     static const Wallpaper* getWallpaper(const QString& wallpaperId);
+
+    [[nodiscard]]
+    static int count();
 
     static void deleteWallpaper(const Wallpaper& wallpaper);
 

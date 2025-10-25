@@ -29,7 +29,7 @@ public:
     [[nodiscard]]
     const QString& getName() const;
 
-    void setName(const QString& name);
+    void setName(const QString& newName);
 
     [[nodiscard]]
     const QVector<QString>& getTags() const;

@@ -1,7 +1,7 @@
 // Copyright (C) 2025 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "Wallpaper.hpp"
+#include "data/Wallpaper.hpp"
 
 #include <QJsonArray>
 #include "Config.hpp"
@@ -33,8 +33,8 @@ const QString& Wallpaper::getName() const {
     return name;
 }
 
-void Wallpaper::setName(const QString& name) {
-    this->name = name;
+void Wallpaper::setName(const QString& newName) {
+    name = newName;
 }
 
 const QVector<QString>& Wallpaper::getTags() const {

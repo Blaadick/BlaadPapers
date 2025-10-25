@@ -1,3 +1,6 @@
+# Copyright (C) 2025 Blaadick
+# SPDX-License-Identifier: GPL-3.0-only
+
 # Maintainer: Blaadick <null>
 
 repoowner="Blaadick"
@@ -8,7 +11,7 @@ license=("GPL-3.0-only")
 pkgver="0.2.1"
 pkgrel=1
 arch=("any")
-depends=("qt6-base" "qt6-declarative" "bstyle-qml-theme")
+depends=("qt6-base" "qt6-declarative" "bstyle-qml-theme" "ffmpeg")
 optdepends=("hyprpaper: To set wallpapers on Hyprland")
 makedepends=("cmake" "ninja" "librsvg")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$repoowner/$reponame/archive/refs/tags/v$pkgver.tar.gz")

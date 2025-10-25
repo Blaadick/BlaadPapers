@@ -5,8 +5,6 @@
 
 #include <QDir>
 #include <QScreen>
-#include <QStandardPaths>
-#include <QString>
 #include "util/Loggers.hpp"
 
 namespace util {
@@ -17,5 +15,17 @@ namespace util {
                 sendStatus("Can't create directory \"{}\"", path.toStdString());
             }
         }
+    }
+
+    inline QString getPreviewsPath() {
+        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
+    }
+
+    inline QString getScreenPreviewsPath(const QScreen* screen) {
+        return getPreviewsPath()
+            + QString::number(screen->geometry().width() * screen->devicePixelRatio())
+            + 'x'
+            + QString::number(screen->geometry().height() * screen->devicePixelRatio())
+            + '/';
     }
 }

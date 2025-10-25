@@ -7,8 +7,10 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QRandomGenerator>
+#include <QStandardPaths>
 #include <util/PathUtils.hpp>
 #include "Config.hpp"
+#include "Tags.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/Loggers.hpp"
 
@@ -68,7 +70,7 @@ namespace {
 }
 
 void Wallpapers::load() {
-    const QString wallpapersDataPath = Config::getWallpapersDirPath() + ".index/";
+    const auto wallpapersDataPath = Config::getWallpapersDirPath() + ".index/";
     util::createDirIfNotExists(wallpapersDataPath);
 
     wallpapers.clear();
@@ -78,21 +80,21 @@ void Wallpapers::load() {
         Config::getWallpapersDirPath(),
         util::getFileMask(util::supportedPictureFormats),
         QDir::NoFilter,
-        {QDirIterator::Subdirectories}
+        QDirIterator::Subdirectories
     );
 
-    QDirIterator dirVideoIterator(
-        Config::getWallpapersDirPath(),
-        util::getFileMask(util::supportedVideoFormats),
-        QDir::Files,
-        {QDirIterator::Subdirectories}
-    );
-
+    // QDirIterator dirVideoIterator(
+    //     Config::getWallpapersDirPath(),
+    //     util::getFileMask(util::supportedVideoFormats),
+    //     QDir::Files,
+    //     QDirIterator::Subdirectories
+    // );
+    //
     // QDirIterator dirSceneIterator(
     //     Config::getWallpapersDirPath(),
     //     util::getFileMask(util::supportedSceneFormats),
     //     QDir::Files,
-    //     {QDirIterator::Subdirectories}
+    //     QDirIterator::Subdirectories
     // );
 
     while(dirPictureIterator.hasNext()) {
@@ -107,18 +109,18 @@ void Wallpapers::load() {
         ));
     }
 
-    while(dirVideoIterator.hasNext()) {
-        dirVideoIterator.next();
-        auto wallpaperId = dirVideoIterator.fileInfo().baseName();
-
-        wallpapers.append(Wallpaper(
-            wallpaperId,
-            dirVideoIterator.filePath(),
-            Wallpaper::VIDEO,
-            readWallpaperData(wallpaperId)
-        ));
-    }
-
+    // while(dirVideoIterator.hasNext()) {
+    //     dirVideoIterator.next();
+    //     auto wallpaperId = dirVideoIterator.fileInfo().baseName();
+    //
+    //     wallpapers.append(Wallpaper(
+    //         wallpaperId,
+    //         dirVideoIterator.filePath(),
+    //         Wallpaper::VIDEO,
+    //         readWallpaperData(wallpaperId)
+    //     ));
+    // }
+    //
     // while(dirSceneIterator.hasNext()) {
     //     dirSceneIterator.next();
     //     auto wallpaperId = dirSceneIterator.fileInfo().baseName();
@@ -134,6 +136,12 @@ void Wallpapers::load() {
     std::ranges::sort(wallpapers, [](const Wallpaper& w1, const Wallpaper& w2) {
         return w1.getName() < w2.getName();
     });
+
+    for(const auto& wallpaper : wallpapers) {
+        for(const auto& tag : wallpaper.getTags()) {
+            Tags::addTag(tag);
+        }
+    }
 }
 
 const QVector<Wallpaper>& Wallpapers::getWallpapers() {
@@ -150,13 +158,30 @@ const Wallpaper* Wallpapers::getWallpaper(const QString& wallpaperId) {
     return nullptr;
 }
 
-void Wallpapers::deleteWallpaper(const Wallpaper& wallpaper) {
-    auto wallpaperFile = QFile(wallpaper.getFilePath());
-    auto wallpaperDataFile = QFile(Config::getWallpapersDirPath() + ".index/" + wallpaper.getId() + ".json");
+int Wallpapers::count() {
+    return wallpapers.count();
+}
 
-    //TODO Remove cached previews
-    wallpaperFile.remove();
-    wallpaperDataFile.remove();
+void Wallpapers::deleteWallpaper(const Wallpaper& wallpaper) {
+    QFile(wallpaper.getFilePath()).remove();
+    QFile(Config::getWallpapersDirPath() + ".index/" + wallpaper.getId() + ".json").remove();
+
+    QDirIterator dirIterator(
+        util::getPreviewsPath(),
+        {wallpaper.getId() + ".webp"},
+        QDir::Files,
+        QDirIterator::Subdirectories
+    );
+
+    while(dirIterator.hasNext()) {
+        dirIterator.next();
+        QFile(dirIterator.filePath()).remove();
+    }
+
+    for(const auto& tag : wallpaper.getTags()) {
+        Tags::removeTag(tag);
+    }
+
     wallpapers.removeOne(wallpaper);
 
     util::logInfo("Wallpaper {} deleted", wallpaper.getId().toStdString());
@@ -208,7 +233,7 @@ void Wallpapers::applyWallpaper(const Wallpaper& wallpaper) {
 }
 
 void Wallpapers::applyWallpaper(const QString& wallpaperId) {
-    const Wallpaper* wallpaper = getWallpaper(wallpaperId);
+    const auto wallpaper = getWallpaper(wallpaperId);
 
     if(!wallpaper) {
         util::logError("Wallpaper {} not found", wallpaperId.toStdString());
