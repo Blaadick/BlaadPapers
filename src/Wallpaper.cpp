@@ -6,9 +6,10 @@
 #include <QJsonArray>
 #include "Config.hpp"
 
-Wallpaper::Wallpaper(const QString& id, const QString& filePath, const QJsonObject& data) {
+Wallpaper::Wallpaper(const QString& id, const QString& filePath, const WallpaperType& type, const QJsonObject& data) {
     this->id = id;
     this->filePath = filePath;
+    this->type = type;
     this->name = data["name"].toString();
 
     for(auto tag : data["tags"].toArray()) {
@@ -24,8 +25,16 @@ const QString& Wallpaper::getFilePath() const {
     return filePath;
 }
 
+const Wallpaper::WallpaperType& Wallpaper::getType() const {
+    return type;
+}
+
 const QString& Wallpaper::getName() const {
     return name;
+}
+
+void Wallpaper::setName(const QString& name) {
+    this->name = name;
 }
 
 const QVector<QString>& Wallpaper::getTags() const {

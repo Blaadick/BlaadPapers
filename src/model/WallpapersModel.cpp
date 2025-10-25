@@ -5,10 +5,6 @@
 
 #include <QImage>
 #include <QtConcurrent>
-#include <typeinfo>
-#include "PictureWallpaper.hpp"
-#include "SceneWallpaper.hpp"
-#include "VideoWallpaper.hpp"
 #include "Wallpapers.hpp"
 #include "util/Loggers.hpp"
 #include "util/PathUtils.hpp"
@@ -31,50 +27,51 @@ namespace {
 
             if(QFile previewFile(previewPath); previewFile.exists()) continue;
 
-            if(typeid(wallpaper) == typeid(PictureWallpaper)) {
-                const auto preview = QImage(wallpaper.getFilePath()).scaled(
-                    previewSize,
-                    Qt::KeepAspectRatioByExpanding,
-                    Qt::SmoothTransformation
-                );
+            switch(wallpaper.getType()) {
+                case Wallpaper::PICTURE: {
+                    const auto preview = QImage(wallpaper.getFilePath()).scaled(
+                        previewSize,
+                        Qt::KeepAspectRatioByExpanding,
+                        Qt::SmoothTransformation
+                    );
 
-                if(!preview.save(previewPath, "WEBP", 100)) {
-                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
-                    util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
-                } else {
-                    util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
+                    if(!preview.save(previewPath, "WEBP", 100)) {
+                        util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                        util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    } else {
+                        util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
+                    }
+                    break;
                 }
 
-                return;
-            }
+                case Wallpaper::VIDEO: {
+                    QProcess ffmpeg;
 
-            if(dynamic_cast<const VideoWallpaper*>(&wallpaper)) {
-                QProcess ffmpeg;
+                    ffmpeg.start("ffmpeg", {
+                        "-y",
+                        "-i", wallpaper.getFilePath(),
+                        "-t", "5",
+                        "-vf", "fps=24,scale=" + QString::number(previewSize.width()) + ':' + QString::number(previewSize.height()) + ":force_original_aspect_ratio=decrease",
+                        "-loop", "0",
+                        "-lossless", "1",
+                        "-compression_level", "6",
+                        previewPath
+                    });
 
-                ffmpeg.start("ffmpeg", {
-                    "-y",
-                    "-i", wallpaper.getFilePath(),
-                    "-t", "5",
-                    "-vf", "fps=24,scale=" + QString::number(previewSize.width()) + ':' + QString::number(previewSize.height()) + ":force_original_aspect_ratio=decrease",
-                    "-loop", "0",
-                    "-lossless", "1",
-                    "-compression_level", "6",
-                    previewPath
-                });
+                    ffmpeg.waitForFinished(-1);
 
-                ffmpeg.waitForFinished(-1);
-
-                if(ffmpeg.exitCode() != 0) {
-                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
-                    util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
-                } else {
-                    util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
+                    if(ffmpeg.exitCode() != 0) {
+                        util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                        util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    } else {
+                        util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
+                    }
                 }
 
-                return;
+                case Wallpaper::SCENE: {
+                    break;
+                }
             }
-
-            if(typeid(wallpaper) == typeid(SceneWallpaper)) {}
         }
     }
 }

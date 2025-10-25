@@ -9,9 +9,6 @@
 #include <QRandomGenerator>
 #include <util/PathUtils.hpp>
 #include "Config.hpp"
-#include "PictureWallpaper.hpp"
-#include "SceneWallpaper.hpp"
-#include "VideoWallpaper.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/Loggers.hpp"
 
@@ -51,14 +48,19 @@ namespace {
      * We are not in DOS time! I turn it off if it is too annoying.
      */
     void shaitanMachine() {
-        QDirIterator dirIterator(Config::getWallpapersDirPath(), {"*.jpg", "*.jpe", "*.JPG"});
+        QDirIterator dirIterator(
+            Config::getWallpapersDirPath(),
+            {"*.jpg", "*.jpe", "*.JPG"},
+            QDir::NoFilter,
+            {QDirIterator::Subdirectories}
+        );
 
         while(dirIterator.hasNext()) {
             auto file = dirIterator.next();
             auto newFile = file;
 
-            newFile.chop(4);
-            newFile.append(".jpeg");
+            newFile.chop(3);
+            newFile.append("jpeg");
 
             QFile::rename(file, newFile);
         }
@@ -97,9 +99,10 @@ void Wallpapers::load() {
         dirPictureIterator.next();
         auto wallpaperId = dirPictureIterator.fileInfo().baseName();
 
-        wallpapers.append(PictureWallpaper(
+        wallpapers.append(Wallpaper(
             wallpaperId,
             dirPictureIterator.filePath(),
+            Wallpaper::PICTURE,
             readWallpaperData(wallpaperId)
         ));
     }
@@ -108,9 +111,10 @@ void Wallpapers::load() {
         dirVideoIterator.next();
         auto wallpaperId = dirVideoIterator.fileInfo().baseName();
 
-        wallpapers.append(VideoWallpaper(
+        wallpapers.append(Wallpaper(
             wallpaperId,
             dirVideoIterator.filePath(),
+            Wallpaper::VIDEO,
             readWallpaperData(wallpaperId)
         ));
     }
@@ -118,9 +122,11 @@ void Wallpapers::load() {
     // while(dirSceneIterator.hasNext()) {
     //     dirSceneIterator.next();
     //     auto wallpaperId = dirSceneIterator.fileInfo().baseName();
-    //     wallpapers.append(SceneWallpaper(
+    //
+    //     wallpapers.append(Wallpaper(
     //         wallpaperId,
     //         dirSceneIterator.filePath(),
+    //         Wallpaper::SCENE,
     //         readWallpaperData(wallpaperId)
     //     ));
     // }

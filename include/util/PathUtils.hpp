@@ -18,13 +18,4 @@ namespace util {
             }
         }
     }
-
-    inline QString getPreviewPath(const QScreen* screen, const QString& wallpaperId) {
-        const QString previewsPath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
-        const QString screenPreviewsPath = previewsPath + QString::number(screen->geometry().width() * screen->devicePixelRatio()) + "x" + QString::number(screen->geometry().height() * screen->devicePixelRatio()) + '/';
-
-        createDirIfNotExists(screenPreviewsPath);
-
-        return screenPreviewsPath + wallpaperId + ".webp";
-    }
 }
