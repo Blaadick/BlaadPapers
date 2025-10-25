@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
         QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
-        QThreadPool::globalInstance()->setMaxThreadCount(std::max(1, QThread::idealThreadCount() - 2));
+        QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
         WallpapersModel::inst().load();
 
         QFileSystemWatcher wallpapersWatcher;

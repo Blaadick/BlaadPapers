@@ -9,11 +9,13 @@
 
 class Wallpaper {
 public:
-    Wallpaper(const QString& id, const QString& filePath, const QJsonObject& data);
+    enum WallpaperType {
+        PICTURE,
+        VIDEO,
+        SCENE
+    };
 
-    Wallpaper() = default;
-
-    virtual ~Wallpaper() = default;
+    Wallpaper(const QString& id, const QString& filePath, const WallpaperType& type, const QJsonObject& data);
 
     [[nodiscard]]
     const QString& getId() const;
@@ -22,7 +24,12 @@ public:
     const QString& getFilePath() const;
 
     [[nodiscard]]
+    const WallpaperType& getType() const;
+
+    [[nodiscard]]
     const QString& getName() const;
+
+    void setName(const QString& name);
 
     [[nodiscard]]
     const QVector<QString>& getTags() const;
@@ -39,6 +46,7 @@ public:
 private:
     QString id;
     QString filePath;
+    WallpaperType type;
     QString name;
     QVector<QString> tags;
 };
