@@ -10,18 +10,9 @@
 #include "util/PathUtils.hpp"
 
 namespace {
-    QString getScreenPreviewsPath(const QScreen* screen) {
-        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation)
-            + "/preview/"
-            + QString::number(screen->geometry().width() * screen->devicePixelRatio())
-            + "x"
-            + QString::number(screen->geometry().height() * screen->devicePixelRatio())
-            + '/';
-    }
-
     void createAndSavePreview(const Wallpaper& wallpaper) {
         for(const auto screen : QGuiApplication::screens()) {
-            const auto previewPath = getScreenPreviewsPath(screen) + wallpaper.getId() + ".webp";
+            const auto previewPath = util::getScreenPreviewsPath(screen) + wallpaper.getId() + ".webp";
             const auto screenAspectRatio = screen->geometry().size() / std::gcd(screen->geometry().width(), screen->geometry().height());
             const auto previewSize = screenAspectRatio * 20 * screen->devicePixelRatio();
 
@@ -87,13 +78,10 @@ void WallpapersModel::load() {
     endResetModel();
 
     for(const auto screen : QGuiApplication::screens()) {
-        util::createDirIfNotExists(getScreenPreviewsPath(screen));
+        util::createDirIfNotExists(util::getScreenPreviewsPath(screen));
     }
 
     QtConcurrent::map(Wallpapers::getWallpapers(), createAndSavePreview);
-
-    util::logInfo("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
-    util::sendStatus("Loaded {} wallpapers", Wallpapers::getWallpapers().count());
 }
 
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
@@ -110,7 +98,7 @@ void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
 }
 
 int WallpapersModel::rowCount(const QModelIndex& parent) const {
-    return static_cast<int>(Wallpapers::getWallpapers().count());
+    return Wallpapers::count();
 }
 
 QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {

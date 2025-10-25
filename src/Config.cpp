@@ -4,6 +4,7 @@
 #include "Config.hpp"
 
 #include <QJsonArray>
+#include <QStandardPaths>
 #include "util/PathUtils.hpp"
 
 void Config::load() {

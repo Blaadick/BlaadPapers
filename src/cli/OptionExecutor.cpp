@@ -1,13 +1,14 @@
 // Copyright (C) 2025 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "OptionExecutor.hpp"
+#include "cli/OptionExecutor.hpp"
 
 #include <QRandomGenerator>
 #include <cstring>
 #include <iostream>
-#include "HelpStrings.hpp"
+#include "Tags.hpp"
 #include "Wallpapers.hpp"
+#include "cli/HelpStrings.hpp"
 #include "model/WallpapersModel.hpp"
 #include "util/Loggers.hpp"
 
@@ -110,26 +111,26 @@ void deleteOption(const set<char>&, const vector<char*>& arguments) {
 }
 
 void listOption(const set<char>& subOptions, const vector<char*>&) {
-    // if(subOptions.contains('t')) {
-    //     if(subOptions.contains('j')) {
-    //         QJsonArray outputData;
-    //
-    //         for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
-    //             outputData.append(QJsonObject{
-    //                 {"name", name},
-    //                 {"quantity", quantity}
-    //             });
-    //         }
-    //
-    //         util::logInfo(QJsonDocument(outputData));
-    //     } else {
-    //         for(const auto& [name, quantity] : Wallpapers::getUniqueTags().asKeyValueRange()) {
-    //             util::logInfo("{:->4}: {}", quantity, name.toStdString());
-    //         }
-    //     }
-    //
-    //     return;
-    // }
+    if(subOptions.contains('t')) {
+        if(subOptions.contains('j')) {
+            QJsonArray outputData;
+
+            for(const auto& [name, quantity] : Tags::getUniqueTags().asKeyValueRange()) {
+                outputData.append(QJsonObject{
+                    {"name", name},
+                    {"quantity", quantity}
+                });
+            }
+
+            util::logInfo(QJsonDocument(outputData));
+        } else {
+            for(const auto& [name, quantity] : Tags::getUniqueTags().asKeyValueRange()) {
+                util::logInfo("{:->4}: {}", quantity, name.toStdString());
+            }
+        }
+
+        return;
+    }
 
     if(subOptions.contains('j')) {
         util::logInfo(QJsonDocument(Wallpapers::toJson()));
@@ -143,12 +144,12 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
 void countOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
         const QJsonObject outputData{
-            {"wallpaper_count", Wallpapers::getWallpapers().count()},
-            // {"unique_tag_count", Wallpapers::getUniqueTags().count()}
+            {"wallpaper_count", Wallpapers::count()},
+            {"unique_tag_count", Tags::count()}
         };
         util::logInfo(QJsonDocument(outputData));
     } else {
-        util::logInfo("{}", Wallpapers::getWallpapers().count());
+        util::logInfo("{}", Wallpapers::count());
     }
 }
 

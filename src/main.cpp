@@ -7,8 +7,8 @@
 #include <QQuickWindow>
 #include <QThreadPool>
 #include "Config.hpp"
-#include "OptionExecutor.hpp"
 #include "Wallpapers.hpp"
+#include "cli/OptionExecutor.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
@@ -27,6 +27,9 @@ int main(int argc, char** argv) {
 
         QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
         WallpapersModel::inst().load();
+
+        util::logInfo("Loaded {} wallpapers", Wallpapers::count());
+        util::sendStatus("Loaded {} wallpapers", Wallpapers::count());
 
         QFileSystemWatcher wallpapersWatcher;
         wallpapersWatcher.addPath(Config::getWallpapersDirPath());
