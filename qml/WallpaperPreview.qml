@@ -18,8 +18,10 @@ Item {
 
     property string wid
     property string name
+    property string resolution
+    property string source
     property var tags
-    property bool isAnimated
+    property string type
     property bool isBad
     property bool isPressed
     property bool isHovered
@@ -57,7 +59,7 @@ Item {
 
     ToolTip {
         id: tooltip
-        text: `${preview.name}\n${preview.tags.join(", ")}`
+        text: `${preview.name} (${preview.resolution})\n${preview.tags.join(", ")}${preview.source === "" ? "" : `\n${preview.source}`}`
     }
 
     Menu {

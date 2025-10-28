@@ -12,7 +12,10 @@ public:
     enum WallpaperRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
+        ResolutionRole,
+        SourceRole,
         TagsRole,
+        TypeRole,
         IsBadRole
     };
 

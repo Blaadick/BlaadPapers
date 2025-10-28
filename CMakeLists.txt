@@ -13,7 +13,9 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+find_package(PkgConfig REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent QuickControls2 ShaderTools)
+pkg_check_modules(FFmpeg REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
 
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS include/*.hpp)
@@ -34,7 +36,7 @@ qt_add_shaders(blaadpapers
     FILES ${SHADERS}
 )
 
-target_link_libraries(blaadpapers PRIVATE Qt6::Concurrent Qt6::QuickControls2)
+target_link_libraries(blaadpapers PRIVATE Qt6::Concurrent Qt6::QuickControls2 PkgConfig::FFmpeg)
 target_include_directories(blaadpapers PRIVATE include)
 target_compile_definitions(blaadpapers PRIVATE
     PROJECT_NAME="${PROJECT_NAME}"

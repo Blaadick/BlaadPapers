@@ -140,7 +140,6 @@ void infoOption(const set<char>& subOptions, const vector<char*>& arguments) {
             wallpaper->getFilePath().toStdString(),
             toString(wallpaper->getResolution()).toStdString(),
             wallpaper->getSource().toStdString(),
-            wallpaper->getFilePath().toStdString(),
             wallpaper->getTags().join(", ").toStdString(),
             toString(wallpaper->getType()).toStdString()
         );
@@ -183,6 +182,7 @@ void countOption(const set<char>& subOptions, const vector<char*>&) {
         const QJsonObject outputData{
             {"wallpaper_count", Wallpapers::count()}
         };
+
         util::logInfo(QJsonDocument(outputData));
     } else {
         util::logInfo("{}", Wallpapers::count());

@@ -33,7 +33,10 @@ Flickable {
                     anchors.fill: parent
                     wid: wallpaperId
                     name: wallpaperName
+                    resolution: wallpaperResolution
+                    source: wallpaperSource
                     tags: wallpaperTags
+                    type: wallpaperType
                     isBad: isWallpaperBad
                 }
             }

@@ -27,6 +27,6 @@ namespace util {
     }
 
     inline QString getScreenPreviewsPath(const QScreen* screen) {
-        return getPreviewsPath() + toString(screen->size()) + '/';
+        return getPreviewsPath() + toString(screen->size() * screen->devicePixelRatio()) + '/';
     }
 }
