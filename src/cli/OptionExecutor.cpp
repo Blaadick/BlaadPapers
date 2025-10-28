@@ -11,6 +11,7 @@
 #include "cli/HelpStrings.hpp"
 #include "model/WallpapersModel.hpp"
 #include "util/Loggers.hpp"
+#include "util/PathUtils.hpp"
 
 using namespace std;
 
@@ -103,11 +104,47 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
 
 void deleteOption(const set<char>&, const vector<char*>& arguments) {
     if(arguments.empty()) {
-        util::logInfo("Wallpaper id expected");
+        util::logError("Wallpaper id expected");
         return;
     }
 
     Wallpapers::deleteWallpaper(arguments[0]);
+}
+
+void infoOption(const set<char>& subOptions, const vector<char*>& arguments) {
+    if(arguments.empty()) {
+        util::logError("Wallpaper id expected");
+        return;
+    }
+
+    const auto wallpaper = Wallpapers::getWallpaper(arguments[0]);
+
+    if(!wallpaper) {
+        util::logError("Wallpaper {} not found", arguments[0]);
+        return;
+    }
+
+    if(subOptions.contains('j')) {
+        util::logInfo(QJsonDocument(wallpaper->toJson()));
+    } else {
+        util::logInfo(
+            "{}\n"
+            "    Id: {}\n"
+            "    Path: {}\n"
+            "    Resolution: {}\n"
+            "    Source: {}\n"
+            "    Tags: {}\n"
+            "    Type: {}",
+            wallpaper->getName().toStdString(),
+            wallpaper->getId().toStdString(),
+            wallpaper->getFilePath().toStdString(),
+            toString(wallpaper->getResolution()).toStdString(),
+            wallpaper->getSource().toStdString(),
+            wallpaper->getFilePath().toStdString(),
+            wallpaper->getTags().join(", ").toStdString(),
+            toString(wallpaper->getType()).toStdString()
+        );
+    }
 }
 
 void listOption(const set<char>& subOptions, const vector<char*>&) {
@@ -144,8 +181,7 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
 void countOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
         const QJsonObject outputData{
-            {"wallpaper_count", Wallpapers::count()},
-            {"unique_tag_count", Tags::count()}
+            {"wallpaper_count", Wallpapers::count()}
         };
         util::logInfo(QJsonDocument(outputData));
     } else {
@@ -206,6 +242,7 @@ map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'A', {applyOption, {}, applyHelpMessage}},
     {'R', {randomOption, {'f'}, randomHelpMessage}},
     {'D', {deleteOption, {}, deleteHelpMessage}},
+    {'I', {infoOption, {'j'}, infoHelpMessage}},
     {'L', {listOption, {'t', 'j'}, listHelpMessage}},
     {'C', {countOption, {'j'}, countHelpMessage}}
 };

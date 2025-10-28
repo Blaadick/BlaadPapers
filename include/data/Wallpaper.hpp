@@ -4,17 +4,13 @@
 #pragma once
 
 #include <QJsonObject>
+#include <QSize>
 #include <QString>
 #include <QVector>
+#include "data/WallpaperType.hpp"
 
 class Wallpaper {
 public:
-    enum WallpaperType {
-        PICTURE,
-        VIDEO,
-        SCENE
-    };
-
     Wallpaper(const QString& id, const QString& filePath, const WallpaperType& type, const QJsonObject& data);
 
     [[nodiscard]]
@@ -24,15 +20,21 @@ public:
     const QString& getFilePath() const;
 
     [[nodiscard]]
-    const WallpaperType& getType() const;
-
-    [[nodiscard]]
     const QString& getName() const;
 
     void setName(const QString& newName);
 
     [[nodiscard]]
+    const QSize& getResolution() const;
+
+    [[nodiscard]]
+    const QString& getSource() const;
+
+    [[nodiscard]]
     const QVector<QString>& getTags() const;
+
+    [[nodiscard]]
+    const WallpaperType& getType() const;
 
     [[nodiscard]]
     bool isBad() const;
@@ -46,7 +48,9 @@ public:
 private:
     QString id;
     QString filePath;
-    WallpaperType type;
     QString name;
+    QSize resolution;
+    QString source;
     QVector<QString> tags;
+    WallpaperType type;
 };

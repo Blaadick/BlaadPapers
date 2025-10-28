@@ -42,6 +42,12 @@ Sub options:
 inline std::string_view deleteHelpMessage = R"#(Usage:
     blaadpapers -D[sub_options] <wallpaper_id>)#";
 
+inline std::string_view infoHelpMessage = R"#(Usage:
+    blaadpapers -D[sub_options] <wallpaper_id>
+
+Sub options:
+    j  ->  Outputs command result in JSON format)#";
+
 inline std::string_view listHelpMessage = R"#(Usage:
     blaadpapers -L[sub_options]
 

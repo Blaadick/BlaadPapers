@@ -19,6 +19,7 @@ namespace {
         const QString wallpaperDataPath = Config::getWallpapersDirPath() + ".index/" + wallpaperId + ".json";
         const QJsonObject defaultWallpaperData{
             {"name", wallpaperId},
+            {"source", ""},
             {"tags", QJsonArray{"General"}}
         };
         QJsonObject wallpaperData;
@@ -28,12 +29,27 @@ namespace {
             wallpaperData = QJsonDocument::fromJson(dataFile.readAll()).object();
             dataFile.close();
 
+            auto isFull = true;
+
             if(wallpaperData["name"].isNull()) {
                 wallpaperData["name"] = defaultWallpaperData["name"];
+                isFull = false;
+            }
+
+            if(wallpaperData["source"].isNull()) {
+                wallpaperData["source"] = defaultWallpaperData["source"];
+                isFull = false;
             }
 
             if(wallpaperData["tags"].isNull()) {
                 wallpaperData["tags"] = defaultWallpaperData["tags"];
+                isFull = false;
+            }
+
+            if(!isFull) {
+                dataFile.open(QIODeviceBase::WriteOnly);
+                dataFile.write(QJsonDocument(wallpaperData).toJson());
+                dataFile.close();
             }
         } else {
             dataFile.open(QIODeviceBase::WriteOnly);
@@ -104,7 +120,7 @@ void Wallpapers::load() {
         wallpapers.append(Wallpaper(
             wallpaperId,
             dirPictureIterator.filePath(),
-            Wallpaper::PICTURE,
+            WallpaperType::PICTURE,
             readWallpaperData(wallpaperId)
         ));
     }
@@ -116,7 +132,7 @@ void Wallpapers::load() {
     //     wallpapers.append(Wallpaper(
     //         wallpaperId,
     //         dirVideoIterator.filePath(),
-    //         Wallpaper::VIDEO,
+    //         WallpaperType::VIDEO,
     //         readWallpaperData(wallpaperId)
     //     ));
     // }
@@ -128,7 +144,7 @@ void Wallpapers::load() {
     //     wallpapers.append(Wallpaper(
     //         wallpaperId,
     //         dirSceneIterator.filePath(),
-    //         Wallpaper::SCENE,
+    //         WallpaperType::SCENE,
     //         readWallpaperData(wallpaperId)
     //     ));
     // }

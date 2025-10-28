@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <format>
 #include <iostream>
 #include <model/StatusModel.hpp>
 #include <print>
