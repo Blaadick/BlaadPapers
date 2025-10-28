@@ -5,14 +5,14 @@
 
 #include <QDirIterator>
 #include <QFile>
+#include <QImageReader>
 #include <QJsonDocument>
-#include <QRandomGenerator>
-#include <QStandardPaths>
 #include <util/PathUtils.hpp>
 #include "Config.hpp"
 #include "Tags.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/Loggers.hpp"
+#include "util/ffmpeg.hpp"
 
 namespace {
     QJsonObject readWallpaperData(const QString& wallpaperId) {
@@ -86,10 +86,8 @@ namespace {
 }
 
 void Wallpapers::load() {
-    const auto wallpapersDataPath = Config::getWallpapersDirPath() + ".index/";
-    util::createDirIfNotExists(wallpapersDataPath);
-
     wallpapers.clear();
+    util::createDirIfNotExists(Config::getWallpapersDirPath() + ".index/");
     shaitanMachine();
 
     QDirIterator dirPictureIterator(
@@ -99,55 +97,60 @@ void Wallpapers::load() {
         QDirIterator::Subdirectories
     );
 
-    // QDirIterator dirVideoIterator(
-    //     Config::getWallpapersDirPath(),
-    //     util::getFileMask(util::supportedVideoFormats),
-    //     QDir::Files,
-    //     QDirIterator::Subdirectories
-    // );
-    //
-    // QDirIterator dirSceneIterator(
-    //     Config::getWallpapersDirPath(),
-    //     util::getFileMask(util::supportedSceneFormats),
-    //     QDir::Files,
-    //     QDirIterator::Subdirectories
-    // );
+    QDirIterator dirVideoIterator(
+        Config::getWallpapersDirPath(),
+        util::getFileMask(util::supportedVideoFormats),
+        QDir::Files,
+        QDirIterator::Subdirectories
+    );
+
+    QDirIterator dirSceneIterator(
+        Config::getWallpapersDirPath(),
+        util::getFileMask(util::supportedSceneFormats),
+        QDir::Files,
+        QDirIterator::Subdirectories
+    );
 
     while(dirPictureIterator.hasNext()) {
         dirPictureIterator.next();
         auto wallpaperId = dirPictureIterator.fileInfo().baseName();
 
+        QImageReader imageReader(dirPictureIterator.filePath());
+
         wallpapers.append(Wallpaper(
             wallpaperId,
             dirPictureIterator.filePath(),
-            WallpaperType::PICTURE,
+            imageReader.size(),
+            WallpaperType::Picture,
             readWallpaperData(wallpaperId)
         ));
     }
 
-    // while(dirVideoIterator.hasNext()) {
-    //     dirVideoIterator.next();
-    //     auto wallpaperId = dirVideoIterator.fileInfo().baseName();
-    //
-    //     wallpapers.append(Wallpaper(
-    //         wallpaperId,
-    //         dirVideoIterator.filePath(),
-    //         WallpaperType::VIDEO,
-    //         readWallpaperData(wallpaperId)
-    //     ));
-    // }
-    //
-    // while(dirSceneIterator.hasNext()) {
-    //     dirSceneIterator.next();
-    //     auto wallpaperId = dirSceneIterator.fileInfo().baseName();
-    //
-    //     wallpapers.append(Wallpaper(
-    //         wallpaperId,
-    //         dirSceneIterator.filePath(),
-    //         WallpaperType::SCENE,
-    //         readWallpaperData(wallpaperId)
-    //     ));
-    // }
+    while(dirVideoIterator.hasNext()) {
+        dirVideoIterator.next();
+        auto wallpaperId = dirVideoIterator.fileInfo().baseName();
+
+        wallpapers.append(Wallpaper(
+            wallpaperId,
+            dirVideoIterator.filePath(),
+            getVideoResolution(dirVideoIterator.filePath()),
+            WallpaperType::Video,
+            readWallpaperData(wallpaperId)
+        ));
+    }
+
+    while(dirSceneIterator.hasNext()) {
+        dirSceneIterator.next();
+        auto wallpaperId = dirSceneIterator.fileInfo().baseName();
+
+        wallpapers.append(Wallpaper(
+            wallpaperId,
+            dirSceneIterator.filePath(),
+            QSize(),
+            WallpaperType::Scene,
+            readWallpaperData(wallpaperId)
+        ));
+    }
 
     std::ranges::sort(wallpapers, [](const Wallpaper& w1, const Wallpaper& w2) {
         return w1.getName() < w2.getName();

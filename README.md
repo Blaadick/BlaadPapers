@@ -21,7 +21,7 @@ yay -S blaadpapers
 ```
 
 ### Manual
-Install [BStyle](https://github.com/Blaadick/BStyle), `Qt6 Base`, `Qt6 QML` and `Qt6 Multimedia`. Then run it:
+Install [BStyle](https://github.com/Blaadick/BStyle), `Qt6 Base`, `Qt6 QML` and `FFmpeg`. Then run it:
 
 ```bash
 git clone https://github.com/Blaadick/BlaadPapers.git

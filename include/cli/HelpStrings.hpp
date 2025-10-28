@@ -15,6 +15,7 @@ Options:
     A  ->  Sets the wallpaper
     R  ->  Sets the random wallpaper
     D  ->  Deletes the wallpaper
+    I  ->  Shows wallpaper information
     L  ->  Shows list of all available wallpapers
     C  ->  Shows the wallpaper count
 
@@ -43,7 +44,7 @@ inline std::string_view deleteHelpMessage = R"#(Usage:
     blaadpapers -D[sub_options] <wallpaper_id>)#";
 
 inline std::string_view infoHelpMessage = R"#(Usage:
-    blaadpapers -D[sub_options] <wallpaper_id>
+    blaadpapers -I[sub_options] <wallpaper_id>
 
 Sub options:
     j  ->  Outputs command result in JSON format)#";

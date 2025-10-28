@@ -8,16 +8,24 @@
 #include "data/WallpaperType.hpp"
 #include "util/PathUtils.hpp"
 
-Wallpaper::Wallpaper(const QString& id, const QString& filePath, const WallpaperType& type, const QJsonObject& data) {
+Wallpaper::Wallpaper(
+    const QString& id,
+    const QString& filePath,
+    const QSize& resolution,
+    const WallpaperType& type,
+    const QJsonObject& data
+) {
     this->id = id;
     this->filePath = filePath;
-    this->type = type;
     this->name = data["name"].toString();
+    this->resolution = resolution;
     this->source = data["source"].toString();
 
     for(auto tag : data["tags"].toArray()) {
         tags.append(tag.toString());
     }
+
+    this->type = type;
 }
 
 const QString& Wallpaper::getId() const {

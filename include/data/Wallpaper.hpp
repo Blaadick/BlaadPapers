@@ -11,7 +11,13 @@
 
 class Wallpaper {
 public:
-    Wallpaper(const QString& id, const QString& filePath, const WallpaperType& type, const QJsonObject& data);
+    Wallpaper(
+        const QString& id,
+        const QString& filePath,
+        const QSize& resolution,
+        const WallpaperType& type,
+        const QJsonObject& data
+    );
 
     [[nodiscard]]
     const QString& getId() const;

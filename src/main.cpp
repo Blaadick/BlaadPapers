@@ -1,6 +1,10 @@
 // Copyright (C) 2025 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
+extern "C" {
+    #include <libavutil/log.h>
+}
+
 #include <QFileSystemWatcher>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
@@ -15,6 +19,8 @@
 #include "util/Loggers.hpp"
 
 int main(int argc, char** argv) {
+    av_log_set_level(AV_LOG_ERROR);
+
     Config::load();
 
     if(argc > 1) {
@@ -37,15 +43,15 @@ int main(int argc, char** argv) {
             WallpapersModel::inst().load();
         });
 
-        // QFileSystemWatcher configWatcher;
-        // configWatcher.addPath(Config::getConfigFilePath());
-        // QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
-        //     Config::load();
-        //     WallpapersModel::inst().load();
-        //
-        //     util::logInfo("Config reloaded");
-        //     util::sendStatus("Config reloaded");
-        // });
+        QFileSystemWatcher configWatcher;
+        configWatcher.addPath(Config::getConfigFilePath());
+        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
+            Config::load();
+            WallpapersModel::inst().load();
+
+            util::logInfo("Config reloaded");
+            util::sendStatus("Config reloaded");
+        });
 
         #ifdef __linux__
         if(qgetenv("QT_QUICK_CONTROLS_STYLE").isNull()) {

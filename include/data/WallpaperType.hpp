@@ -7,16 +7,16 @@
 #include <QString>
 
 enum class WallpaperType {
-    PICTURE,
-    VIDEO,
-    SCENE
+    Picture,
+    Video,
+    Scene
 };
 
 inline QString toString(const WallpaperType& type) {
     static QMap<WallpaperType, QString> strings{
-        {WallpaperType::PICTURE, "Picture"},
-        {WallpaperType::VIDEO, "Video"},
-        {WallpaperType::SCENE, "Scene"}
+        {WallpaperType::Picture, "Picture"},
+        {WallpaperType::Video, "Video"},
+        {WallpaperType::Scene, "Scene"}
     };
 
     return strings[type];
