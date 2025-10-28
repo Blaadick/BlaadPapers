@@ -19,7 +19,7 @@ namespace {
             if(QFile previewFile(previewPath); previewFile.exists()) continue;
 
             switch(wallpaper.getType()) {
-                case Wallpaper::PICTURE: {
+                case WallpaperType::PICTURE: {
                     const auto preview = QImage(wallpaper.getFilePath()).scaled(
                         previewSize,
                         Qt::KeepAspectRatioByExpanding,
@@ -32,10 +32,11 @@ namespace {
                     } else {
                         util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
                     }
+
                     break;
                 }
 
-                case Wallpaper::VIDEO: {
+                case WallpaperType::VIDEO: {
                     QProcess ffmpeg;
 
                     ffmpeg.start("ffmpeg", {
@@ -57,9 +58,11 @@ namespace {
                     } else {
                         util::logInfo("Preview of {} for {} saved", wallpaper.getId().toStdString(), screen->devicePixelRatio());
                     }
+
+                    break;
                 }
 
-                case Wallpaper::SCENE: {
+                case WallpaperType::SCENE: {
                     break;
                 }
             }

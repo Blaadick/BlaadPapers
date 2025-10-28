@@ -5,7 +5,12 @@
 
 #include <QDir>
 #include <QScreen>
+#include <QStandardPaths>
 #include "util/Loggers.hpp"
+
+inline QString toString(const QSize& size) {
+    return QString::number(size.width()) + 'x' + QString::number(size.height());
+}
 
 namespace util {
     inline void createDirIfNotExists(const QString& path) {
@@ -22,10 +27,6 @@ namespace util {
     }
 
     inline QString getScreenPreviewsPath(const QScreen* screen) {
-        return getPreviewsPath()
-            + QString::number(screen->geometry().width() * screen->devicePixelRatio())
-            + 'x'
-            + QString::number(screen->geometry().height() * screen->devicePixelRatio())
-            + '/';
+        return getPreviewsPath() + toString(screen->size()) + '/';
     }
 }
