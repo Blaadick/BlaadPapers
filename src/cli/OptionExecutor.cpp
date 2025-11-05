@@ -127,22 +127,7 @@ void infoOption(const set<char>& subOptions, const vector<char*>& arguments) {
     if(subOptions.contains('j')) {
         util::logInfo(QJsonDocument(wallpaper->toJson()));
     } else {
-        util::logInfo(
-            "{}\n"
-            "    Id: {}\n"
-            "    Path: {}\n"
-            "    Resolution: {}\n"
-            "    Source: {}\n"
-            "    Tags: {}\n"
-            "    Type: {}",
-            wallpaper->getName().toStdString(),
-            wallpaper->getId().toStdString(),
-            wallpaper->getFilePath().toStdString(),
-            toString(wallpaper->getResolution()).toStdString(),
-            wallpaper->getSource().toStdString(),
-            wallpaper->getTags().join(", ").toStdString(),
-            toString(wallpaper->getType()).toStdString()
-        );
+        util::logInfo(wallpaper->toString());
     }
 }
 
