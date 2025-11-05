@@ -49,6 +49,9 @@ public:
     QJsonObject toJson() const;
 
     [[nodiscard]]
+    QString toString() const;
+
+    [[nodiscard]]
     bool operator==(const Wallpaper& other) const;
 
 private:

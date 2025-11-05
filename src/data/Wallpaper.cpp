@@ -77,11 +77,30 @@ QJsonObject Wallpaper::toJson() const {
         {"id", id},
         {"path", filePath},
         {"name", name},
-        {"resolution", toString(resolution)},
+        {"resolution", ::toString(resolution)},
         {"source", source},
         {"tags", wallpaperTags},
-        {"type", toString(type)}
+        {"type", ::toString(type)}
     };
+}
+
+QString Wallpaper::toString() const {
+    return QString(
+        "{}\n"
+        "    Id: {}\n"
+        "    Path: {}\n"
+        "    Resolution: {}\n"
+        "    Source: {}\n"
+        "    Tags: {}\n"
+        "    Type: {}"
+    )
+    .arg(name)
+    .arg(id)
+    .arg(filePath)
+    .arg(::toString(resolution))
+    .arg(source)
+    .arg(tags.join(", ").append('.'))
+    .arg(::toString(type));
 }
 
 bool Wallpaper::operator==(const Wallpaper& other) const {
