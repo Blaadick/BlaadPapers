@@ -14,7 +14,7 @@ public:
     static const QVector<Wallpaper>& getWallpapers();
 
     [[nodiscard]]
-    static const Wallpaper* getWallpaper(const QString& wallpaperId);
+    static std::optional<std::reference_wrapper<const Wallpaper>> getWallpaper(const QString& wallpaperId);
 
     [[nodiscard]]
     static int count();

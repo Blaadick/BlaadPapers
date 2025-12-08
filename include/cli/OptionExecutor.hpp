@@ -14,7 +14,7 @@ public:
 
 private:
     struct Option {
-        std::function<void(const std::set<char>&, const std::vector<char*>&)> func;
+        std::function<void(const std::set<char> &, const std::vector<char*> &)> func;
         std::set<char> allowableSubOptions;
         std::string_view helpMessage;
     };

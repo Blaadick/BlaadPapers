@@ -7,6 +7,7 @@ extern "C" {
 
 #include <QFileSystemWatcher>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QThreadPool>
@@ -37,6 +38,7 @@ int main(int argc, char** argv) {
         util::logInfo("Loaded {} wallpapers", Wallpapers::count());
         util::sendStatus("Loaded {} wallpapers", Wallpapers::count());
 
+        //TODO Redo watchers
         QFileSystemWatcher wallpapersWatcher;
         wallpapersWatcher.addPath(Config::getWallpapersDirPath());
         QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
@@ -53,16 +55,16 @@ int main(int argc, char** argv) {
             util::sendStatus("Config reloaded");
         });
 
-        #ifdef __linux__
+        #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
         if(qgetenv("QT_QUICK_CONTROLS_STYLE").isNull()) {
             QQuickStyle::setStyle("BStyle");
         }
         #endif
 
-        qmlRegisterSingletonInstance<WallpapersModel>(PROJECT_NAME, 1, 0, "Wallpapers", &WallpapersModel::inst());
-        qmlRegisterSingletonInstance<ConfigModel>(PROJECT_NAME, 1, 0, "Config", &ConfigModel::inst());
-        qmlRegisterSingletonInstance<StatusModel>(PROJECT_NAME, 1, 0, "Status", &StatusModel::inst());
         QQmlApplicationEngine engine;
+        engine.rootContext()->setContextProperty("Wallpapers", &WallpapersModel::inst());
+        engine.rootContext()->setContextProperty("Config", &ConfigModel::inst());
+        engine.rootContext()->setContextProperty("Status", &StatusModel::inst());
         engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
         return QGuiApplication::exec();

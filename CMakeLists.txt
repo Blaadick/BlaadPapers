@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.1)
+cmake_minimum_required(VERSION 4.2)
 
 project(BlaadPapers
     DESCRIPTION "Fast & clean wallpaper manager"
@@ -8,10 +8,6 @@ project(BlaadPapers
 
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-set(QT_FORCE_CMP0156_TO_VALUE NEW)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 
 find_package(PkgConfig REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent QuickControls2 ShaderTools)

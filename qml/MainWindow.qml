@@ -4,7 +4,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import BlaadPapers
 
 ApplicationWindow {
     id: mainWindow
@@ -39,7 +38,8 @@ ApplicationWindow {
                 icon.name: "settings-configure"
 
                 onClicked: {
-                    contextMenu.popup()
+                    const pos = parent.mapToGlobal(0, parent.height + 10)
+                    contextMenu.popup(pos)
                 }
             }
 

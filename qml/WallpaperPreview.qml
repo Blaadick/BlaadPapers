@@ -7,7 +7,7 @@ import QtQuick.Controls
 
 Item {
     id: preview
-    scale: isPressed || !isHovered ? 1 : 1.06
+    scale: isPressed || !isHovered ? 1 : 1.08
 
     Behavior on scale {
         NumberAnimation {

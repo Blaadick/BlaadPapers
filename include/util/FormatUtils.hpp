@@ -28,4 +28,25 @@ namespace util {
 
         return vector;
     }
+
+    /**
+    * We are not in DOS time! I turn it off if it is too annoying.
+    */
+    inline void jpegUnifier() {
+        QDirIterator dirIterator(
+            Config::getWallpapersDirPath(),
+            {"*.jpg", "*.jpe", "*.JPG"},
+            QDir::NoFilter
+        );
+
+        while(dirIterator.hasNext()) {
+            auto filePath = dirIterator.next();
+            auto newFilePath = filePath;
+
+            newFilePath.chop(3);
+            newFilePath.append("jpeg");
+
+            QFile::rename(filePath, newFilePath);
+        }
+    }
 }
