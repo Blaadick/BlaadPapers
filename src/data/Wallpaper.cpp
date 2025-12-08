@@ -94,13 +94,15 @@ QString Wallpaper::toString() const {
         "    Tags: {}\n"
         "    Type: {}"
     )
-    .arg(name)
-    .arg(id)
-    .arg(filePath)
-    .arg(::toString(resolution))
-    .arg(source)
-    .arg(tags.join(", ").append('.'))
-    .arg(::toString(type));
+    .arg(
+        name,
+        id,
+        filePath,
+        ::toString(resolution),
+        source,
+        tags.join(", ").append('.'),
+        ::toString(type)
+    );
 }
 
 bool Wallpaper::operator==(const Wallpaper& other) const {

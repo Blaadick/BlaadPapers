@@ -119,15 +119,15 @@ void infoOption(const set<char>& subOptions, const vector<char*>& arguments) {
 
     const auto wallpaper = Wallpapers::getWallpaper(arguments[0]);
 
-    if(!wallpaper) {
+    if(!wallpaper.has_value()) {
         util::logError("Wallpaper {} not found", arguments[0]);
         return;
     }
 
     if(subOptions.contains('j')) {
-        util::logInfo(QJsonDocument(wallpaper->toJson()));
+        util::logInfo(QJsonDocument(wallpaper->get().toJson()));
     } else {
-        util::logInfo(wallpaper->toString());
+        util::logInfo(wallpaper->get().toString());
     }
 }
 

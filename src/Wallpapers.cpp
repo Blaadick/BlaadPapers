@@ -61,54 +61,29 @@ namespace {
 
         return wallpaperData;
     }
-
-    /**
-     * We are not in DOS time! I turn it off if it is too annoying.
-     */
-    void shaitanMachine() {
-        QDirIterator dirIterator(
-            Config::getWallpapersDirPath(),
-            {"*.jpg", "*.jpe", "*.JPG"},
-            QDir::NoFilter,
-            {QDirIterator::Subdirectories}
-        );
-
-        while(dirIterator.hasNext()) {
-            auto file = dirIterator.next();
-            auto newFile = file;
-
-            newFile.chop(3);
-            newFile.append("jpeg");
-
-            QFile::rename(file, newFile);
-        }
-    }
 }
 
 void Wallpapers::load() {
     wallpapers.clear();
     util::createDirIfNotExists(Config::getWallpapersDirPath() + ".index/");
-    shaitanMachine();
+    util::jpegUnifier();
 
     QDirIterator dirPictureIterator(
         Config::getWallpapersDirPath(),
         util::getFileMask(util::supportedPictureFormats),
-        QDir::NoFilter,
-        QDirIterator::Subdirectories
+        QDir::NoFilter
     );
 
     QDirIterator dirVideoIterator(
         Config::getWallpapersDirPath(),
         util::getFileMask(util::supportedVideoFormats),
-        QDir::Files,
-        QDirIterator::Subdirectories
+        QDir::Files
     );
 
     QDirIterator dirSceneIterator(
         Config::getWallpapersDirPath(),
         util::getFileMask(util::supportedSceneFormats),
-        QDir::Files,
-        QDirIterator::Subdirectories
+        QDir::Files
     );
 
     while(dirPictureIterator.hasNext()) {
@@ -167,14 +142,14 @@ const QVector<Wallpaper>& Wallpapers::getWallpapers() {
     return wallpapers;
 }
 
-const Wallpaper* Wallpapers::getWallpaper(const QString& wallpaperId) {
+std::optional<std::reference_wrapper<const Wallpaper>> Wallpapers::getWallpaper(const QString& wallpaperId) {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper.getId() == wallpaperId) {
-            return &wallpaper;
+            return wallpaper;
         }
     }
 
-    return nullptr;
+    return std::nullopt;
 }
 
 int Wallpapers::count() {

@@ -1,3 +1,7 @@
 /.idea/
-/cmake-build-debug/
-/cmake-build-release/
+/cmake-build-debug-android/
+/cmake-build-debug-linux/
+/cmake-build-debug-windows/
+/cmake-build-release-android/
+/cmake-build-release-linux/
+/cmake-build-release-windows/
