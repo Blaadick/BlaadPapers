@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QScreen>
 #include <QStandardPaths>
+#include "model/StatusModel.hpp"
 #include "util/Loggers.hpp"
 
 inline QString toString(const QSize& size) {

@@ -86,13 +86,13 @@ QJsonObject Wallpaper::toJson() const {
 
 QString Wallpaper::toString() const {
     return QString(
-        "{}\n"
-        "    Id: {}\n"
-        "    Path: {}\n"
-        "    Resolution: {}\n"
-        "    Source: {}\n"
-        "    Tags: {}\n"
-        "    Type: {}"
+        "%1\n"
+        "    Id: %2\n"
+        "    Path: %3\n"
+        "    Resolution: %4\n"
+        "    Source: %5\n"
+        "    Tags: %6\n"
+        "    Type: %7\n"
     )
     .arg(
         name,
@@ -100,7 +100,7 @@ QString Wallpaper::toString() const {
         filePath,
         ::toString(resolution),
         source,
-        tags.join(", ").append('.'),
+        tags.join(", "),
         ::toString(type)
     );
 }

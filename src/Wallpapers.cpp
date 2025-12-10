@@ -177,21 +177,18 @@ void Wallpapers::deleteWallpaper(const Wallpaper& wallpaper) {
     }
 
     wallpapers.removeOne(wallpaper);
-
-    util::logInfo("Wallpaper {} deleted", wallpaper.getId().toStdString());
-    util::sendStatus("Wallpaper {} deleted", wallpaper.getId().toStdString());
 }
 
 void Wallpapers::deleteWallpaper(const QString& wallpaperId) {
     const auto wallpaper = getWallpaper(wallpaperId);
 
-    if(!wallpaper) {
-        util::logError("Wallpaper {} not found", wallpaperId.toStdString());
-        util::sendStatus("Wallpaper {} not found", wallpaperId.toStdString());
+    if(!wallpaper.has_value()) {
+        util::logError("Wallpaper \"{}\" not found", wallpaperId.toStdString());
+        util::sendStatus("Wallpaper \"{}\" not found", wallpaperId.toStdString());
         return;
     }
 
-    deleteWallpaper(*wallpaper);
+    deleteWallpaper(wallpaper->get());
 }
 
 void Wallpapers::applyWallpaper(const Wallpaper& wallpaper) {
@@ -220,22 +217,19 @@ void Wallpapers::applyWallpaper(const Wallpaper& wallpaper) {
         return;
     }
 
-    util::logInfo("Wallpaper {} set", wallpaper.getId().toStdString());
-    util::sendStatus("Wallpaper {} set", wallpaper.getId().toStdString());
-
     system(("bash " + Config::getPostSetScriptFilePath() + " \"" + wallpaper.getName() + '\"' + " \"" + wallpaper.getFilePath() + '\"').toStdString().c_str());
 }
 
 void Wallpapers::applyWallpaper(const QString& wallpaperId) {
     const auto wallpaper = getWallpaper(wallpaperId);
 
-    if(!wallpaper) {
-        util::logError("Wallpaper {} not found", wallpaperId.toStdString());
-        util::sendStatus("Wallpaper {} not found", wallpaperId.toStdString());
+    if(!wallpaper.has_value()) {
+        util::logError("Wallpaper \"{}\" not found", wallpaperId.toStdString());
+        util::sendStatus("Wallpaper \"{}\" not found", wallpaperId.toStdString());
         return;
     }
 
-    applyWallpaper(*wallpaper);
+    applyWallpaper(wallpaper->get());
 }
 
 QJsonArray Wallpapers::toJson() {
