@@ -32,3 +32,20 @@ private:
     QString statusText;
     int repeatCount = 1;
 };
+
+namespace util {
+    inline void sendStatus(const QString& newStatus) {
+        if(StatusModel::inst().getStatusText() == newStatus) {
+            StatusModel::inst().increaseRepeatCount();
+        } else {
+            StatusModel::inst().setStatusText(newStatus);
+            StatusModel::inst().resetRepeatCount();
+        }
+    }
+
+    template<typename... T>
+    void sendStatus(std::format_string<T...> fmt, T&&... args) {
+        auto formated = std::format(fmt, std::forward<T>(args)...);
+        sendStatus(QString::fromStdString(formated));
+    }
+}

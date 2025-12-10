@@ -99,6 +99,8 @@ void WallpapersModel::load() {
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start([=] {
         Wallpapers::applyWallpaper(wallpaperId);
+        util::logInfo("Wallpaper \"{}\" set", wallpaperId.toStdString());
+        util::sendStatus("Wallpaper \"{}\" set", wallpaperId.toStdString());
     });
 }
 
@@ -106,6 +108,8 @@ void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start([=] {
         //TODO Fix model updating and fast deleting crash
         Wallpapers::deleteWallpaper(wallpaperId);
+        util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+        util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
     });
 }
 
