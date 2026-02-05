@@ -1,11 +1,11 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "cli/OptionExecutor.hpp"
 
+#include <fcntl.h>
 #include <QRandomGenerator>
-#include <cstring>
-#include <iostream>
+#include <spawn.h>
 #include "Tags.hpp"
 #include "Wallpapers.hpp"
 #include "cli/HelpStrings.hpp"
@@ -33,14 +33,66 @@ void versionOption(const set<char>& subOptions, const vector<char*>&) {
     }
 }
 
+void startDaemonOption(const set<char>&, const vector<char*>& arguments) {
+    //TODO Implement own renderer
+
+    if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
+        std::println("Mpvpaper is already running");
+        return;
+    }
+
+    std::string mpvArgs = "input-ipc-server=/tmp/blaadpapers-mpvpaper.sock loop-file=inf no-audio panscan=1.0 ";
+    if(!arguments.empty()) {
+        mpvArgs += arguments[0];
+    }
+
+    std::string currentWallpaperPath = util::getDefaultWallpaperPath().toStdString();
+
+    if(QFile file(util::getCurrentWallpaperDataPath()); !file.exists()) {
+        file.open(QIODeviceBase::WriteOnly);
+        file.write("");
+        file.close();
+    } else {
+        file.open(QIODeviceBase::ReadOnly);
+        const QString currentWallpaperId = file.readAll();
+        file.close();
+
+        const auto currentWallpaper = Wallpapers::getWallpaper(currentWallpaperId);
+        if(currentWallpaper.has_value()) {
+            currentWallpaperPath = currentWallpaper->get().getFilePath().toStdString();
+        }
+    }
+
+    char* args[] = {
+        const_cast<char*>("/usr/bin/mpvpaper"),
+        const_cast<char*>("-o"),
+        const_cast<char*>(mpvArgs.c_str()),
+        const_cast<char*>("all"),
+        const_cast<char*>(currentWallpaperPath.c_str()),
+        nullptr
+    };
+
+    const int devNull = open("/dev/null", O_WRONLY);
+    posix_spawn_file_actions_t actions;
+    posix_spawn_file_actions_init(&actions);
+    posix_spawn_file_actions_adddup2(&actions, devNull, STDOUT_FILENO);
+    posix_spawn_file_actions_adddup2(&actions, devNull, STDERR_FILENO);
+    posix_spawn_file_actions_addclose(&actions, devNull);
+
+    pid_t pid;
+    posix_spawn(&pid, "/usr/bin/mpvpaper", &actions, nullptr, args, environ);
+    posix_spawn_file_actions_destroy(&actions);
+}
+
 void applyOption(const set<char>&, const vector<char*>& arguments) {
     if(arguments.empty()) {
         std::println(stderr, "Wallpaper id expected");
         return;
     }
 
-    Wallpapers::applyWallpaper(arguments[0]);
-    std::println("Wallpaper \"{}\" set", arguments[0]);
+    if(Wallpapers::applyWallpaper(arguments[0])) {
+        std::println("Wallpaper \"{}\" set", arguments[0]);
+    }
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
@@ -97,12 +149,14 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        Wallpapers::applyWallpaper(filteredWallpapers[randomIndex].getId());
-        std::println("Wallpaper \"{}\" set", filteredWallpapers[randomIndex].getId().toStdString());
+        if(Wallpapers::applyWallpaper(filteredWallpapers[randomIndex].getId())) {
+            std::println("Wallpaper \"{}\" set", filteredWallpapers[randomIndex].getId().toStdString());
+        }
     } else {
         const auto randomIndex = QRandomGenerator::global()->bounded(wallpapers.size());
-        Wallpapers::applyWallpaper(wallpapers[randomIndex].getId());
-        std::println("Wallpaper \"{}\" set", wallpapers[randomIndex].getId().toStdString());
+        if(Wallpapers::applyWallpaper(wallpapers[randomIndex].getId())) {
+            std::println("Wallpaper \"{}\" set", wallpapers[randomIndex].getId().toStdString());
+        }
     }
 }
 
@@ -233,6 +287,7 @@ map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'h', {helpOption, {}, "Ha ha!"}}, // Because it's familiar
     {'H', {helpOption, {}, "WTF bro? You really need help with it?"}},
     {'V', {versionOption, {'j'}, versionHelpMessage}},
+    {'S', {startDaemonOption, {}, startDaemonHelpMessage}},
     {'A', {applyOption, {}, applyHelpMessage}},
     {'R', {randomOption, {'f'}, randomHelpMessage}},
     {'D', {deleteOption, {}, deleteHelpMessage}},

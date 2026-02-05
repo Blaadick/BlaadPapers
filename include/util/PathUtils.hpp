@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
@@ -29,5 +29,17 @@ namespace util {
 
     inline QString getScreenPreviewsPath(const QScreen* screen) {
         return getPreviewsPath() + toString(screen->size() * screen->devicePixelRatio()) + '/';
+    }
+
+    inline QString getLocalDataPath() {
+        return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/blaadpapers/";
+    }
+
+    inline QString getCurrentWallpaperDataPath() {
+        return getLocalDataPath() + "current-wallpaper";
+    }
+
+    inline QString getDefaultWallpaperPath() {
+        return getLocalDataPath() + "default-wallpaper.png";
     }
 }

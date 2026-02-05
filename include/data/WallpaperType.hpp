@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
@@ -8,15 +8,13 @@
 
 enum class WallpaperType {
     Picture,
-    Video,
-    Scene
+    Video
 };
 
 inline QString toString(const WallpaperType& type) {
     static QMap<WallpaperType, QString> strings{
         {WallpaperType::Picture, "Picture"},
-        {WallpaperType::Video, "Video"},
-        {WallpaperType::Scene, "Scene"}
+        {WallpaperType::Video, "Video"}
     };
 
     return strings[type];

@@ -4,10 +4,10 @@
 </div>
 
 > [!NOTE]
-> The application is temporarily using hyprpaper on Hyprland, plasma-apply-wallpaperimage on KDE, and gsettings on Gnome
+> The application is temporarily use mpvpaper as wallpaper renderer
 
-> [!NOTE]
-> At the moment, with ~2500 wallpapers, the app is not particularly pleasant to use
+> [!WARNING]
+> Video wallpaper support is experimental
 
 ## Description
 Convenient wallpaper manager supporting both GUI and CLI usage. I will try to make it as fast and pleasing to the eye as possible.
@@ -21,7 +21,7 @@ yay -S blaadpapers
 ```
 
 ### Manual
-Install [BStyle](https://github.com/Blaadick/BStyle), `Qt6 Base`, `Qt6 QML` and `FFmpeg`. Then run it:
+Install [BStyle](https://github.com/Blaadick/BStyle), `Qt6 Base`, `Qt6 Declarative`, `Qt6 Svg`, `Qt6 ShaderTools` and `FFmpeg`. Then run it:
 
 ```bash
 git clone https://github.com/Blaadick/BlaadPapers.git
@@ -32,6 +32,11 @@ cmake --build cmake-build-release --parallel
 
 ### Windows
 Expected after adding major features and implementing own wallpaper rendering.
+
+## Usage
+Before use GUI application, run `blaadpapers -S`. You can add some mvp arguments like `blaadpapers -S "no-interpolation hwdec=vaapi"`.
+
+After that, you can run GUI with `blaadpapers`, or use CLI with `blaadpapers -H`.
 
 ## License
 Code is licensed under GPL-3.0-only

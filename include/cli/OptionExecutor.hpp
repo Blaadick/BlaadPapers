@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
@@ -14,7 +14,7 @@ public:
 
 private:
     struct Option {
-        std::function<void(const std::set<char> &, const std::vector<char*> &)> func;
+        std::function<void(const std::set<char>&, const std::vector<char*>&)> func;
         std::set<char> allowableSubOptions;
         std::string_view helpMessage;
     };

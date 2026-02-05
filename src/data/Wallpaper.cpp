@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "data/Wallpaper.hpp"
@@ -38,10 +38,6 @@ const QString& Wallpaper::getFilePath() const {
 
 const QString& Wallpaper::getName() const {
     return name;
-}
-
-void Wallpaper::setName(const QString& newName) {
-    name = newName;
 }
 
 const QSize& Wallpaper::getResolution() const {

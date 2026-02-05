@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
@@ -23,9 +23,9 @@ public:
 
     static void deleteWallpaper(const QString& wallpaperId);
 
-    static void applyWallpaper(const Wallpaper& wallpaper);
+    static bool applyWallpaper(const Wallpaper& wallpaper);
 
-    static void applyWallpaper(const QString& wallpaperId);
+    static bool applyWallpaper(const QString& wallpaperId);
 
     [[nodiscard]]
     static QJsonArray toJson();
