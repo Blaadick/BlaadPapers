@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "model/WallpapersModel.hpp"
@@ -70,10 +70,6 @@ namespace {
 
                     break;
                 }
-
-                case WallpaperType::Scene: {
-                    break;
-                }
             }
         }
     }
@@ -98,9 +94,10 @@ void WallpapersModel::load() {
 
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start([=] {
-        Wallpapers::applyWallpaper(wallpaperId);
-        util::logInfo("Wallpaper \"{}\" set", wallpaperId.toStdString());
-        util::sendStatus("Wallpaper \"{}\" set", wallpaperId.toStdString());
+        if(Wallpapers::applyWallpaper(wallpaperId)) {
+            util::logInfo("Wallpaper \"{}\" set", wallpaperId.toStdString());
+            util::sendStatus("Wallpaper \"{}\" set", wallpaperId.toStdString());
+        }
     });
 }
 

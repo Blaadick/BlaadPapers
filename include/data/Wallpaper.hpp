@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
@@ -27,8 +27,6 @@ public:
 
     [[nodiscard]]
     const QString& getName() const;
-
-    void setName(const QString& newName);
 
     [[nodiscard]]
     const QSize& getResolution() const;

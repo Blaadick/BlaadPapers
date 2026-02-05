@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
@@ -12,6 +12,7 @@ inline std::string_view mainHelpMessage = R"#(Usage:
 Options:
     H  ->  Shows this help
     V  ->  Shows program version
+    S  ->  Starts the renderer daemon
     A  ->  Sets the wallpaper
     R  ->  Sets the random wallpaper
     D  ->  Deletes the wallpaper
@@ -28,6 +29,9 @@ inline std::string_view versionHelpMessage = R"#(Usage:
 
 Sub options:
     j  ->  Outputs command result in JSON format)#";
+
+inline std::string_view startDaemonHelpMessage = R"#(Usage:
+    blaadpapers -S [mpv_args])#";
 
 inline std::string_view applyHelpMessage = R"#(Usage:
     blaadpapers -A[sub_options] <wallpaper_id>)#";

@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 import QtQuick
@@ -35,7 +35,7 @@ ApplicationWindow {
 
         RowLayout {
             ToolButton {
-                icon.name: "settings-configure"
+                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
 
                 onClicked: {
                     const pos = parent.mapToGlobal(0, parent.height + 10)

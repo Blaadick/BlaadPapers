@@ -1,25 +1,12 @@
-// Copyright (C) 2025 Blaadick
+// Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
 #pragma once
 
 namespace util {
-    inline const QVector<QString> supportedPictureFormats = {
-        "png",
-        "webp",
-        "jpeg"
-    };
-
-    inline const QVector<QString> supportedVideoFormats = {
-        "mp4",
-        "webm"
-    };
-
-    inline const QVector<QString> supportedSceneFormats = {
-        "tar"
-    };
-
-    inline const QVector<QString> supportedFormats = supportedPictureFormats + supportedVideoFormats + supportedSceneFormats;
+    inline const QVector<QString> supportedPictureFormats = {"png", "jpeg", "webp"};
+    inline const QVector<QString> supportedVideoFormats = {"mp4", "webm"};
+    inline const QVector<QString> supportedFormats = supportedPictureFormats + supportedVideoFormats;
 
     inline QVector<QString> getFileMask(QVector<QString> vector) {
         for(auto& item : vector) {
@@ -33,11 +20,7 @@ namespace util {
     * We are not in DOS time! I turn it off if it is too annoying.
     */
     inline void jpegUnifier() {
-        QDirIterator dirIterator(
-            Config::getWallpapersDirPath(),
-            {"*.jpg", "*.jpe", "*.JPG"},
-            QDir::NoFilter
-        );
+        QDirIterator dirIterator(Config::getWallpapersDirPath(), {"*.jpg", "*.jpe", "*.JPG"}, QDir::NoFilter);
 
         while(dirIterator.hasNext()) {
             auto filePath = dirIterator.next();
