@@ -16,7 +16,7 @@ ApplicationWindow {
 
         Action {
             text: "Open Config"
-            icon.name: "edittext"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
             onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
         }
 

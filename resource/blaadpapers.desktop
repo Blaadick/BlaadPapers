@@ -1,10 +1,14 @@
 [Desktop Entry]
-Type=Application
 Name=BlaadPapers
 GenericName=Wallpaper Manager
 Comment=Fast & clean wallpaper manager
 Icon=blaadpapers
-Terminal=false
+Type=Application
 Exec=blaadpapers
 Categories=Graphics;Viewer;Qt
+Actions=Daemon
 Keywords=wallpaper
+
+[Desktop Action Daemon]
+Name=Run Renderer Daemon
+Exec=blaadpapers -S

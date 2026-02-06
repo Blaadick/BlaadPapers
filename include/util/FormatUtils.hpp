@@ -20,7 +20,7 @@ namespace util {
     * We are not in DOS time! I turn it off if it is too annoying.
     */
     inline void jpegUnifier() {
-        QDirIterator dirIterator(Config::getWallpapersDirPath(), {"*.jpg", "*.jpe", "*.JPG"}, QDir::NoFilter);
+        QDirIterator dirIterator(Config::getWallpapersDirPath(), {"*.jpg", "*.jpe", "*.JPG"}, QDir::Files);
 
         while(dirIterator.hasNext()) {
             auto filePath = dirIterator.next();

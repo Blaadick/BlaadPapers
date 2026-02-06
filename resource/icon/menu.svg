@@ -1,7 +1,23 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="5" rx="2.5" fill="white"/>
-    <rect y="19" width="24" height="5" rx="2.5" fill="white"/>
-    <rect x="7" y="7" width="10" height="10" rx="4" fill="white"/>
-    <rect x="19" y="7" width="5" height="10" rx="2.5" fill="white"/>
-    <rect y="7" width="5" height="10" rx="2.5" fill="white"/>
+    <g clip-path="url(#clip0_11_29)">
+        <g filter="url(#filter0_f_11_29)">
+            <rect x="1" y="1" width="22" height="22" rx="2" fill="white" fill-opacity="0.2"/>
+        </g>
+        <rect x="18" y="8" width="4" height="14" rx="2" fill="white" fill-opacity="0.5"/>
+        <rect x="18" y="9" width="4" height="9" rx="2" fill="white"/>
+        <path d="M2 22C2 20.8954 2.89543 20 4 20H14C15.1046 20 16 20.8954 16 22H2Z" fill="white"/>
+        <rect x="2" y="13" width="14" height="5" rx="2" fill="white"/>
+        <path d="M2 8H16V9C16 10.1046 15.1046 11 14 11H4C2.89543 11 2 10.1046 2 9V8Z" fill="white"/>
+        <rect x="2" y="2" width="20" height="4" rx="2" fill="white"/>
+    </g>
+    <defs>
+        <filter id="filter0_f_11_29" x="0" y="0" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="0.5" result="effect1_foregroundBlur_11_29"/>
+        </filter>
+        <clipPath id="clip0_11_29">
+            <rect width="24" height="24" fill="white"/>
+        </clipPath>
+    </defs>
 </svg>

@@ -73,7 +73,7 @@ void Wallpapers::load() {
     QDirIterator dirPictureIterator(
         Config::getWallpapersDirPath(),
         util::getFileMask(util::supportedPictureFormats),
-        QDir::NoFilter
+        QDir::Files
     );
 
     QDirIterator dirVideoIterator(

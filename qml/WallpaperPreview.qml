@@ -72,14 +72,14 @@ Item {
 
         Action {
             text: "Edit"
-            icon.name: "editor"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
         }
 
         MenuSeparator {}
 
         Action {
             text: "Delete"
-            icon.name: "delete"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
             onTriggered: Wallpapers.deleteWallpaper(preview.wid)
         }
     }
