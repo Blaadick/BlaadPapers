@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.2)
+cmake_minimum_required(VERSION 4.3)
 
 project(BlaadPapers
     DESCRIPTION "Fast & clean wallpaper manager"
@@ -19,7 +19,7 @@ file(GLOB_RECURSE QMLS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS qml/*.qml)
 file(GLOB_RECURSE SHADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS shader/*)
 file(GLOB_RECURSE RESOURCES RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS resource/*.svg)
 
-qt_standard_project_setup(REQUIRES 6.10)
+qt_standard_project_setup(REQUIRES 6.11)
 qt_add_executable(blaadpapers ${SOURCES} ${HEADERS})
 
 qt_add_qml_module(blaadpapers

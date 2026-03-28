@@ -24,15 +24,16 @@ extern "C" {
 #include "util/PathUtils.hpp"
 
 int main(int argc, char** argv) {
+    QGuiApplication app(argc, argv);
+    QGuiApplication::setApplicationName(QString(PROJECT_NAME).toLower());
+    QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
+    QGuiApplication::setApplicationVersion(PROJECT_VERSION);
+    QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+    QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
     av_log_set_level(AV_LOG_ERROR);
-    QLoggingCategory::setFilterRules(
-        "qt.text.font.db=false\n"
-        "qt.gui.imageio=false"
-    );
 
     Config::load();
-
-    util::createDirIfNotExists(util::getLocalDataPath());
+    util::createDirIfNotExists(util::getDataPath());
 
     if(!QFile::exists(util::getDefaultWallpaperPath())) {
         // TODO Swap to ffmpeg api. Render for highest monitor resolution
@@ -50,11 +51,6 @@ int main(int argc, char** argv) {
         Wallpapers::load();
         OptionExecutor::execute(argc, argv);
     } else {
-        QGuiApplication app(argc, argv);
-        QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
-        QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
-
-        QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
         WallpapersModel::inst().load();
 
         util::logInfo("Loaded {} wallpapers", Wallpapers::count());
@@ -63,22 +59,30 @@ int main(int argc, char** argv) {
         //TODO Redo watchers
         QFileSystemWatcher wallpapersWatcher;
         wallpapersWatcher.addPath(Config::getWallpapersDirPath());
-        QObject::connect(&wallpapersWatcher, &QFileSystemWatcher::directoryChanged, [] {
-            WallpapersModel::inst().load();
-        });
+        QObject::connect(
+            &wallpapersWatcher,
+            &QFileSystemWatcher::directoryChanged,
+            [] {
+                WallpapersModel::inst().load();
+            }
+        );
 
         QFileSystemWatcher configWatcher;
         configWatcher.addPath(Config::getConfigFilePath());
-        QObject::connect(&configWatcher, &QFileSystemWatcher::fileChanged, [] {
-            Config::load();
-            WallpapersModel::inst().load();
+        QObject::connect(
+            &configWatcher,
+            &QFileSystemWatcher::fileChanged,
+            [] {
+                Config::load();
+                WallpapersModel::inst().load();
 
-            util::logInfo("Config reloaded");
-            util::sendStatus("Config reloaded");
-        });
+                util::logInfo("Config reloaded");
+                util::sendStatus("Config reloaded");
+            }
+        );
 
         #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-        if(qgetenv("QT_QUICK_CONTROLS_STYLE").isNull()) {
+        if(!qEnvironmentVariableIsSet("QT_QUICK_CONTROLS_STYLE")) {
             QQuickStyle::setStyle("BStyle");
         }
         #endif

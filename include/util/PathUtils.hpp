@@ -27,19 +27,19 @@ namespace util {
         return QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview/";
     }
 
-    inline QString getScreenPreviewsPath(const QScreen* screen) {
+    inline QString getPreviewsPath(const QScreen* screen) {
         return getPreviewsPath() + toString(screen->size() * screen->devicePixelRatio()) + '/';
     }
 
-    inline QString getLocalDataPath() {
-        return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/blaadpapers/";
+    inline QString getDataPath() {
+        return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + '/';
     }
 
     inline QString getCurrentWallpaperDataPath() {
-        return getLocalDataPath() + "current-wallpaper";
+        return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/current-wallpaper";
     }
 
     inline QString getDefaultWallpaperPath() {
-        return getLocalDataPath() + "default-wallpaper.png";
+        return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/default-wallpaper.png";
     }
 }

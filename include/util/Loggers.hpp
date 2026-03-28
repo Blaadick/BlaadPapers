@@ -7,6 +7,8 @@
 #include <format>
 #include <iostream>
 #include <print>
+#include <QJsonDocument>
+#include <QString>
 
 namespace std {
     inline void println(const QString& str) {

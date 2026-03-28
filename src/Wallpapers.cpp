@@ -209,7 +209,7 @@ bool Wallpapers::applyWallpaper(const Wallpaper& wallpaper) {
     file.close();
 
     system(
-        QString("bash '%1' '%2' '%3'").arg(
+        QString(R"(bash "%1" "%2" "%3")").arg(
             Config::getPostSetScriptFilePath(),
             wallpaper.getName(),
             wallpaper.getFilePath()

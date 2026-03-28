@@ -65,6 +65,7 @@ void startDaemonOption(const set<char>&, const vector<char*>& arguments) {
 
     char* args[] = {
         const_cast<char*>("/usr/bin/mpvpaper"),
+        const_cast<char*>("-f"),
         const_cast<char*>("-o"),
         const_cast<char*>(mpvArgs.c_str()),
         const_cast<char*>("all"),

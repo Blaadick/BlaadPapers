@@ -12,7 +12,7 @@
 namespace {
     void createAndSavePreview(const Wallpaper& wallpaper) {
         for(const auto screen : QGuiApplication::screens()) {
-            const auto previewPath = util::getScreenPreviewsPath(screen) + wallpaper.getId() + ".webp";
+            const auto previewPath = util::getPreviewsPath(screen) + wallpaper.getId() + ".webp";
             const auto screenAspectRatio = screen->size() / std::gcd(screen->size().width(), screen->size().height());
             const auto previewSize = screenAspectRatio * 20 * screen->devicePixelRatio();
 
@@ -86,7 +86,7 @@ void WallpapersModel::load() {
     endResetModel();
 
     for(const auto screen : QGuiApplication::screens()) {
-        util::createDirIfNotExists(util::getScreenPreviewsPath(screen));
+        util::createDirIfNotExists(util::getPreviewsPath(screen));
     }
 
     QtConcurrent::map(Wallpapers::getWallpapers(), createAndSavePreview);
