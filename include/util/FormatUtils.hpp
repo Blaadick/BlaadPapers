@@ -3,6 +3,10 @@
 
 #pragma once
 
+#include <QDirIterator>
+#include <QFile>
+#include <QString>
+
 namespace util {
     inline const QVector<QString> supportedPictureFormats = {"png", "jpeg", "webp"};
     inline const QVector<QString> supportedVideoFormats = {"mp4", "webm"};

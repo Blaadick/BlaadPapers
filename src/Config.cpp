@@ -29,7 +29,7 @@ void Config::load() {
 
     if(QFile postSetScriptFile(getPostSetScriptFilePath()); !postSetScriptFile.exists()) {
         postSetScriptFile.open(QIODevice::WriteOnly);
-        postSetScriptFile.write("wallpaperName=\"$1\"\nwallpaperFilePath=\"$2\"");
+        postSetScriptFile.write("#!/bin/bash\n\nwallpaperName=\"$1\"\nwallpaperFilePath=\"$2\"\n");
         postSetScriptFile.close();
     }
 }
@@ -69,7 +69,7 @@ QJsonObject Config::defaultData;
 QJsonObject Config::data;
 
 QString Config::getConfigPath() {
-    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/blaadpapers/";
+    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + '/';
 }
 
 QJsonValueRef Config::getValue(const QString& key) {
