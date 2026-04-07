@@ -5,41 +5,43 @@
 
 #include <QJsonArray>
 #include <QStandardPaths>
+
+#include "data/Wallpaper.hpp"
 #include "util/PathUtils.hpp"
 
 void Config::load() {
     defaultData = {
         {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}},
-        {"wallpapers_path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers/"},
+        {"wallpaper_paths", QJsonArray{QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers"}},
         {"status_bar_visible", true}
     };
 
     util::createDirIfNotExists(getConfigPath());
 
     if(QFile configFile(getConfigFilePath()); configFile.exists()) {
-        configFile.open(QIODevice::ReadOnly);
+        util::open(configFile, QIODeviceBase::ReadOnly);
         data = QJsonDocument::fromJson(configFile.readAll()).object();
         configFile.close();
     } else {
-        configFile.open(QIODevice::WriteOnly);
+        util::open(configFile, QIODeviceBase::WriteOnly);
         configFile.write(QJsonDocument(defaultData).toJson());
         data = defaultData;
         configFile.close();
     }
 
     if(QFile postSetScriptFile(getPostSetScriptFilePath()); !postSetScriptFile.exists()) {
-        postSetScriptFile.open(QIODevice::WriteOnly);
+        util::open(postSetScriptFile, QIODeviceBase::WriteOnly);
         postSetScriptFile.write("#!/bin/bash\n\nwallpaperName=\"$1\"\nwallpaperFilePath=\"$2\"\n");
         postSetScriptFile.close();
     }
 }
 
 QString Config::getConfigFilePath() {
-    return getConfigPath() + "config.json";
+    return getConfigPath() + "/config.json";
 }
 
 QString Config::getPostSetScriptFilePath() {
-    return getConfigPath() + "post_set.sh";
+    return getConfigPath() + "/post_set.sh";
 }
 
 QVector<QString> Config::getBadTags() {
@@ -52,9 +54,19 @@ QVector<QString> Config::getBadTags() {
     return badTags;
 }
 
-QString Config::getWallpapersDirPath() {
-    auto path = getValue("wallpapers_path").toString();
-    return path.endsWith('/') ? path : path.append('/');
+QVector<QString> Config::getWallpaperDirPaths() {
+    QVector<QString> paths;
+
+    for(auto value : getValue("wallpapers_paths").toArray()) {
+        auto str = value.toString();
+        if(str.endsWith('/')) {
+            str.chop(1);
+        }
+
+        paths.append(str);
+    }
+
+    return paths;
 }
 
 bool Config::getStatusBarVisible() {
@@ -69,7 +81,7 @@ QJsonObject Config::defaultData;
 QJsonObject Config::data;
 
 QString Config::getConfigPath() {
-    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + '/';
+    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 }
 
 QJsonValueRef Config::getValue(const QString& key) {
@@ -80,7 +92,7 @@ void Config::setValue(const QString& key, const QJsonValue& value) {
     data[key] = value;
 
     QFile configFile(getConfigFilePath());
-    configFile.open(QIODeviceBase::WriteOnly);
+    util::open(configFile, QIODeviceBase::WriteOnly);
     configFile.write(QJsonDocument(data).toJson());
     configFile.close();
 }

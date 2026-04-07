@@ -36,7 +36,6 @@ Flickable {
                     resolution: wallpaperResolution
                     source: wallpaperSource
                     tags: wallpaperTags
-                    type: wallpaperType
                     isBad: isWallpaperBad
                 }
             }

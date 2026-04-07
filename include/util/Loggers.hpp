@@ -30,7 +30,7 @@ namespace util {
     inline void logInfo(const char* str) {
         auto currentTime = floor<seconds>(system_clock::now());
 
-        std::println("[{:%H:%M:%S}] {}", currentTime, str);
+        std::println("[\033[94m{:%H:%M:%S}\033[0m] {}", currentTime, str);
     }
 
     template<typename... T>
@@ -38,7 +38,7 @@ namespace util {
         auto currentTime = floor<seconds>(system_clock::now());
         auto output = std::format(fmt, std::forward<T>(args)...);
 
-        std::println("[{:%H:%M:%S}] {}", currentTime, output);
+        std::println("[\033[94m{:%H:%M:%S}\033[0m] {}", currentTime, output);
     }
 
     template<typename... T>
@@ -46,6 +46,6 @@ namespace util {
         auto currentTime = floor<seconds>(system_clock::now());
         auto output = std::format(fmt, std::forward<T>(args)...);
 
-        std::println(stderr, "\033[31m[{:%H:%M:%S}] {}\033[0m", currentTime, output);
+        std::println(stderr, "[\033[91m{:%H:%M:%S}\033[0m] {}", currentTime, output);
     }
 }
