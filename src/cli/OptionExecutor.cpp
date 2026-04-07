@@ -4,9 +4,9 @@
 #include "cli/OptionExecutor.hpp"
 
 #include <fcntl.h>
+#include <QJsonArray>
 #include <QRandomGenerator>
 #include <spawn.h>
-#include "Tags.hpp"
 #include "Wallpapers.hpp"
 #include "cli/HelpStrings.hpp"
 #include "model/WallpapersModel.hpp"
@@ -49,17 +49,17 @@ void startDaemonOption(const set<char>&, const vector<char*>& arguments) {
     std::string currentWallpaperPath = util::getDefaultWallpaperPath().toStdString();
 
     if(QFile file(util::getCurrentWallpaperDataPath()); !file.exists()) {
-        file.open(QIODeviceBase::WriteOnly);
+        util::open(file, QIODeviceBase::WriteOnly);
         file.write("");
         file.close();
     } else {
-        file.open(QIODeviceBase::ReadOnly);
+        util::open(file, QIODeviceBase::ReadOnly);
         const QString currentWallpaperId = file.readAll();
         file.close();
 
-        const auto currentWallpaper = Wallpapers::getWallpaper(currentWallpaperId);
-        if(currentWallpaper.has_value()) {
-            currentWallpaperPath = currentWallpaper->get().getFilePath().toStdString();
+        const auto currentWallpaper = Wallpapers::inst().get(currentWallpaperId);
+        if(currentWallpaper) {
+            currentWallpaperPath = currentWallpaper->getFilePath().toStdString();
         }
     }
 
@@ -91,23 +91,25 @@ void applyOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    if(Wallpapers::applyWallpaper(arguments[0])) {
+    if(Wallpapers::inst().get(arguments[0])->apply()) {
         std::println("Wallpaper \"{}\" set", arguments[0]);
+    } else {
+        std::println(stderr, "Wallpaper \"{}\" not found", arguments[0]);
     }
 }
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
-    const auto& wallpapers = Wallpapers::getWallpapers();
-
-    if(wallpapers.empty()) {
+    if(Wallpapers::inst().count() < 1) {
         std::println("No Wallpapers");
         return;
     }
 
+    const Wallpaper* wallpaperToSet;
+
     if(subOptions.contains('f')) {
         QVector<QString> includeTags;
         QVector<QString> excludeTags;
-        QVector<Wallpaper> filteredWallpapers;
+        QVector<const Wallpaper*> filteredWallpapers;
 
         if(!arguments.empty()) {
             for(auto tag : QJsonDocument::fromJson(arguments[0]).array()) {
@@ -124,23 +126,23 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
             }
         }
 
-        for(const auto& wallpaper : wallpapers) {
+        for(const auto& wallpaper : Wallpapers::inst()) {
             const bool containsIncludeTags = ranges::all_of(
                 includeTags,
                 [&wallpaper](const QString& tag) {
-                    return wallpaper.getTags().contains(tag);
+                    return wallpaper->getTags().contains(tag);
                 }
             );
 
             const bool containsExcludeTags = ranges::any_of(
                 excludeTags,
                 [&wallpaper](const QString& tag) {
-                    return wallpaper.getTags().contains(tag);
+                    return wallpaper->getTags().contains(tag);
                 }
             );
 
             if(containsIncludeTags && !containsExcludeTags) {
-                filteredWallpapers.append(wallpaper);
+                filteredWallpapers.append(wallpaper.get());
             }
         }
 
@@ -150,14 +152,16 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        if(Wallpapers::applyWallpaper(filteredWallpapers[randomIndex].getId())) {
-            std::println("Wallpaper \"{}\" set", filteredWallpapers[randomIndex].getId().toStdString());
-        }
+        wallpaperToSet = filteredWallpapers[randomIndex];
     } else {
-        const auto randomIndex = QRandomGenerator::global()->bounded(wallpapers.size());
-        if(Wallpapers::applyWallpaper(wallpapers[randomIndex].getId())) {
-            std::println("Wallpaper \"{}\" set", wallpapers[randomIndex].getId().toStdString());
-        }
+        const auto randomIndex = QRandomGenerator::global()->bounded(Wallpapers::inst().count());
+        wallpaperToSet = Wallpapers::inst().get(randomIndex);
+    }
+
+    if(wallpaperToSet->apply()) {
+        std::println("Wallpaper \"{}\" set", wallpaperToSet->getId().toStdString());
+    } else {
+        std::println(stderr, "Wallpaper \"{}\" not found", wallpaperToSet->getId().toStdString());
     }
 }
 
@@ -167,7 +171,7 @@ void deleteOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    Wallpapers::deleteWallpaper(arguments[0]);
+    // Wallpapers::deleteWallpaper(arguments[0]);
     std::println("Wallpaper \"{}\" deleted", arguments[0]);
 }
 
@@ -177,49 +181,33 @@ void infoOption(const set<char>& subOptions, const vector<char*>& arguments) {
         return;
     }
 
-    const auto wallpaper = Wallpapers::getWallpaper(arguments[0]);
+    const auto wallpaper = Wallpapers::inst().get(arguments[0]);
 
-    if(!wallpaper.has_value()) {
+    if(!wallpaper) {
         std::println(stderr, "Wallpaper \"{}\" not found", arguments[0]);
         return;
     }
 
     if(subOptions.contains('j')) {
-        std::println(QJsonDocument(wallpaper->get().toJson()));
+        std::println(QJsonDocument(wallpaper->toJson()));
     } else {
-        std::println(wallpaper->get().toString());
+        std::println(wallpaper->toString());
     }
 }
 
 void listOption(const set<char>& subOptions, const vector<char*>&) {
-    if(subOptions.contains('t')) {
-        if(subOptions.contains('j')) {
-            QJsonArray outputData;
-
-            for(const auto& [name, quantity] : Tags::getUniqueTags().asKeyValueRange()) {
-                outputData.append(QJsonObject{
-                    {"name", name},
-                    {"quantity", quantity}
-                });
-            }
-
-            std::println(QJsonDocument(outputData));
-        } else {
-            for(const auto& [name, quantity] : Tags::getUniqueTags().asKeyValueRange()) {
-                std::println("{:->4}: {}", quantity, name.toStdString());
-            }
-        }
-
-        return;
-    }
-
     if(subOptions.contains('j')) {
-        std::println(QJsonDocument(Wallpapers::toJson()));
+        QJsonArray wallpapersData;
+
+        for(const auto& wallpaper : Wallpapers::inst()) {
+            wallpapersData.append(wallpaper->toJson());
+        }
+        std::println(QJsonDocument(wallpapersData));
     } else {
         QString output;
 
-        for(const auto& wallpaper : Wallpapers::getWallpapers()) {
-            output += wallpaper.toString() + '\n';
+        for(const auto& wallpaper : Wallpapers::inst()) {
+            output += wallpaper->toString() + '\n';
         }
 
         output.chop(2);
@@ -230,11 +218,11 @@ void listOption(const set<char>& subOptions, const vector<char*>&) {
 void countOption(const set<char>& subOptions, const vector<char*>&) {
     if(subOptions.contains('j')) {
         const QJsonObject outputData{
-            {"wallpaper_count", Wallpapers::count()}
+            {"wallpaper_count", Wallpapers::inst().count()}
         };
         std::println(QJsonDocument(outputData));
     } else {
-        std::println(Wallpapers::count());
+        std::println(Wallpapers::inst().count());
     }
 }
 
@@ -293,6 +281,6 @@ map<char, OptionExecutor::Option> OptionExecutor::options = {
     {'R', {randomOption, {'f'}, randomHelpMessage}},
     {'D', {deleteOption, {}, deleteHelpMessage}},
     {'I', {infoOption, {'j'}, infoHelpMessage}},
-    {'L', {listOption, {'t', 'j'}, listHelpMessage}},
+    {'L', {listOption, {'j'}, listHelpMessage}},
     {'C', {countOption, {'j'}, countHelpMessage}}
 };

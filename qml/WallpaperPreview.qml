@@ -21,7 +21,6 @@ Item {
     property string resolution
     property string source
     property var tags
-    property string type
     property bool isBad
     property bool isPressed
     property bool isHovered

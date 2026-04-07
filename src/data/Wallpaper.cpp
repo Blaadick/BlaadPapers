@@ -3,31 +3,6 @@
 
 #include "data/Wallpaper.hpp"
 
-#include <QJsonArray>
-#include "Config.hpp"
-#include "data/WallpaperType.hpp"
-#include "util/PathUtils.hpp"
-
-Wallpaper::Wallpaper(
-    const QString& id,
-    const QString& filePath,
-    const QSize& resolution,
-    const WallpaperType& type,
-    const QJsonObject& data
-) {
-    this->id = id;
-    this->filePath = filePath;
-    this->name = data["name"].toString();
-    this->resolution = resolution;
-    this->source = data["source"].toString();
-
-    for(auto tag : data["tags"].toArray()) {
-        tags.append(tag.toString());
-    }
-
-    this->type = type;
-}
-
 const QString& Wallpaper::getId() const {
     return id;
 }
@@ -52,52 +27,12 @@ const QVector<QString>& Wallpaper::getTags() const {
     return tags;
 }
 
-const WallpaperType& Wallpaper::getType() const {
-    return type;
-}
-
 bool Wallpaper::isBad() const {
-    return std::ranges::any_of(Config::getBadTags(), [this](const QString& tag) {
-        return tags.contains(tag);
-    });
-}
-
-QJsonObject Wallpaper::toJson() const {
-    QJsonArray wallpaperTags;
-
-    for(const auto& tag : tags) {
-        wallpaperTags.append(tag);
-    }
-
-    return QJsonObject{
-        {"id", id},
-        {"path", filePath},
-        {"name", name},
-        {"resolution", ::toString(resolution)},
-        {"source", source},
-        {"tags", wallpaperTags},
-        {"type", ::toString(type)}
-    };
-}
-
-QString Wallpaper::toString() const {
-    return QString(
-        "%1\n"
-        "    Id: %2\n"
-        "    Path: %3\n"
-        "    Resolution: %4\n"
-        "    Source: %5\n"
-        "    Tags: %6\n"
-        "    Type: %7\n"
-    )
-    .arg(
-        name,
-        id,
-        filePath,
-        ::toString(resolution),
-        source,
-        tags.join(", "),
-        ::toString(type)
+    return std::ranges::any_of(
+        Config::getBadTags(),
+        [this](const QString& tag) {
+            return tags.contains(tag);
+        }
     );
 }
 

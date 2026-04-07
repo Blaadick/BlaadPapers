@@ -19,7 +19,7 @@ public:
     static QVector<QString> getBadTags();
 
     [[nodiscard]]
-    static QString getWallpapersDirPath();
+    static QVector<QString> getWallpaperDirPaths();
 
     [[nodiscard]]
     static bool getStatusBarVisible();

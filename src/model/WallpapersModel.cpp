@@ -5,70 +5,68 @@
 
 #include <QImage>
 #include <QtConcurrent>
+
+#include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
+#include "model/StatusModel.hpp"
 #include "util/Loggers.hpp"
 #include "util/PathUtils.hpp"
 
 namespace {
-    void createAndSavePreview(const Wallpaper& wallpaper) {
+    void createAndSavePreview(const uptr<Wallpaper>& wallpaper) {
         for(const auto screen : QGuiApplication::screens()) {
-            const auto previewPath = util::getPreviewsPath(screen) + wallpaper.getId() + ".webp";
+            const auto previewPath = util::getPreviewsPath(screen) + '/' + wallpaper->getId() + ".webp";
             const auto screenAspectRatio = screen->size() / std::gcd(screen->size().width(), screen->size().height());
             const auto previewSize = screenAspectRatio * 20 * screen->devicePixelRatio();
 
             if(QFile previewFile(previewPath); previewFile.exists()) continue;
 
-            switch(wallpaper.getType()) {
-                case WallpaperType::Picture: {
-                    const auto preview = QImage(wallpaper.getFilePath()).scaled(
-                        previewSize,
-                        Qt::KeepAspectRatioByExpanding,
-                        Qt::SmoothTransformation
+            if(dynamic_cast<PictureWallpaper*>(wallpaper.get())) {
+                const auto preview = QImage(wallpaper->getFilePath()).scaled(
+                    previewSize,
+                    Qt::KeepAspectRatioByExpanding,
+                    Qt::SmoothTransformation
+                );
+
+                if(!preview.save(previewPath, "WEBP", 100)) {
+                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+                } else {
+                    util::logInfo(
+                        "Preview of {} for {} saved",
+                        wallpaper->getId().toStdString(),
+                        util::toString(screen->size() * screen->devicePixelRatio()).toStdString()
                     );
-
-                    if(!preview.save(previewPath, "WEBP", 100)) {
-                        util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
-                        util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
-                    } else {
-                        util::logInfo(
-                            "Preview of {} for {} saved",
-                            wallpaper.getId().toStdString(),
-                            toString(screen->size() * screen->devicePixelRatio()).toStdString()
-                        );
-                    }
-
-                    break;
                 }
+            } else if(dynamic_cast<VideoWallpaper*>(wallpaper.get())) {
+                //TODO Use libswscale here
+                QProcess ffmpeg;
 
-                case WallpaperType::Video: {
-                    //TODO Use libswscale here
-                    QProcess ffmpeg;
-
-                    ffmpeg.start("ffmpeg", {
+                ffmpeg.start(
+                    "ffmpeg",
+                    {
                         "-y",
-                        "-i", wallpaper.getFilePath(),
+                        "-i", wallpaper->getFilePath(),
                         "-t", "5",
                         "-vf", "fps=24,scale=" + QString::number(previewSize.width()) + ':' + QString::number(previewSize.height()) + ":force_original_aspect_ratio=decrease",
                         "-loop", "0",
                         "-lossless", "1",
                         "-compression_level", "6",
                         previewPath
-                    });
-
-                    ffmpeg.waitForFinished(-1);
-
-                    if(ffmpeg.exitCode() != 0) {
-                        util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
-                        util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
-                    } else {
-                        util::logInfo(
-                            "Preview of {} for {} saved",
-                            wallpaper.getId().toStdString(),
-                            toString(screen->size() * screen->devicePixelRatio()).toStdString()
-                        );
                     }
+                );
 
-                    break;
+                ffmpeg.waitForFinished(-1);
+
+                if(ffmpeg.exitCode() != 0) {
+                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+                } else {
+                    util::logInfo(
+                        "Preview of {} for {} saved",
+                        wallpaper->getId().toStdString(),
+                        util::toString(screen->size() * screen->devicePixelRatio()).toStdString()
+                    );
                 }
             }
         }
@@ -82,49 +80,52 @@ WallpapersModel& WallpapersModel::inst() {
 
 void WallpapersModel::load() {
     beginResetModel();
-    Wallpapers::load();
+    WallpaperLoader::loadWallpapers();
     endResetModel();
 
     for(const auto screen : QGuiApplication::screens()) {
         util::createDirIfNotExists(util::getPreviewsPath(screen));
     }
 
-    QtConcurrent::map(Wallpapers::getWallpapers(), createAndSavePreview);
+    QtConcurrent::map(Wallpapers::inst(), createAndSavePreview);
 }
 
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
-    QThreadPool::globalInstance()->start([=] {
-        if(Wallpapers::applyWallpaper(wallpaperId)) {
-            util::logInfo("Wallpaper \"{}\" set", wallpaperId.toStdString());
-            util::sendStatus("Wallpaper \"{}\" set", wallpaperId.toStdString());
+    QThreadPool::globalInstance()->start(
+        [=] {
+            if(Wallpapers::inst().get(wallpaperId)->apply()) {
+                util::logInfo("Wallpaper \"{}\" set", wallpaperId.toStdString());
+                util::sendStatus("Wallpaper \"{}\" set", wallpaperId.toStdString());
+            }
         }
-    });
+    );
 }
 
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
-    QThreadPool::globalInstance()->start([=] {
-        //TODO Fix model updating and fast deleting crash
-        Wallpapers::deleteWallpaper(wallpaperId);
-        util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
-        util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
-    });
+    QThreadPool::globalInstance()->start(
+        [=] {
+            //TODO Fix model updating and fast deleting crash
+            Wallpapers::inst().remove(wallpaperId);
+            util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+            util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+        }
+    );
 }
 
 int WallpapersModel::rowCount(const QModelIndex& parent) const {
-    return Wallpapers::count();
+    return Wallpapers::inst().count();
 }
 
 QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
-    const Wallpaper& wallpaper = Wallpapers::getWallpapers().at(index.row());
+    const Wallpaper* wallpaper = Wallpapers::inst().get(index.row());
 
     switch(role) {
-        case IdRole: return wallpaper.getId();
-        case NameRole: return wallpaper.getName();
-        case ResolutionRole: return toString(wallpaper.getResolution());
-        case SourceRole: return wallpaper.getSource();
-        case TagsRole: return wallpaper.getTags();
-        case TypeRole: return toString(wallpaper.getType());
-        case IsBadRole: return wallpaper.isBad();
+        case IdRole: return wallpaper->getId();
+        case NameRole: return wallpaper->getName();
+        case ResolutionRole: return util::toString(wallpaper->getResolution());
+        case SourceRole: return wallpaper->getSource();
+        case TagsRole: return wallpaper->getTags();
+        case IsBadRole: return wallpaper->isBad();
         default: return {};
     }
 }
@@ -136,7 +137,6 @@ QHash<int, QByteArray> WallpapersModel::roleNames() const {
         {ResolutionRole, "wallpaperResolution"},
         {SourceRole, "wallpaperSource"},
         {TagsRole, "wallpaperTags"},
-        {TypeRole, "wallpaperType"},
         {IsBadRole, "isWallpaperBad"},
     };
 }

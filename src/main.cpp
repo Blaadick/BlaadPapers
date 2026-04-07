@@ -1,6 +1,8 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
+#include "WallpaperLoader.hpp"
+
 extern "C" {
     #include <libavutil/log.h>
 }
@@ -48,17 +50,14 @@ int main(int argc, char** argv) {
     }
 
     if(argc > 1) {
-        Wallpapers::load();
+        WallpaperLoader::loadWallpapers();
         OptionExecutor::execute(argc, argv);
     } else {
         WallpapersModel::inst().load();
 
-        util::logInfo("Loaded {} wallpapers", Wallpapers::count());
-        util::sendStatus("Loaded {} wallpapers", Wallpapers::count());
-
         //TODO Redo watchers
         QFileSystemWatcher wallpapersWatcher;
-        wallpapersWatcher.addPath(Config::getWallpapersDirPath());
+        wallpapersWatcher.addPaths(Config::getWallpaperDirPaths());
         QObject::connect(
             &wallpapersWatcher,
             &QFileSystemWatcher::directoryChanged,

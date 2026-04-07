@@ -3,33 +3,45 @@
 
 #pragma once
 
-#include <QJsonArray>
 #include "data/Wallpaper.hpp"
+#include "util/Pointers.hpp"
 
 class Wallpapers {
 public:
-    static void load();
+    static Wallpapers& inst();
 
     [[nodiscard]]
-    static const QVector<Wallpaper>& getWallpapers();
+    Wallpaper* get(int index) const;
 
     [[nodiscard]]
-    static std::optional<std::reference_wrapper<const Wallpaper>> getWallpaper(const QString& wallpaperId);
+    Wallpaper* get(const QString& id) const;
+
+    void add(uptr<Wallpaper> wallpaper);
+
+    void remove(const QString& id);
+
+    void sortByName() {
+        std::ranges::sort(
+            wallpapers,
+            [](const uptr<Wallpaper>& w1, const uptr<Wallpaper>& w2) {
+                return w1->getName() < w2->getName();
+            }
+        );
+    }
+
+    void clear() {
+        wallpapers.clear();
+    }
 
     [[nodiscard]]
-    static int count();
-
-    static void deleteWallpaper(const Wallpaper& wallpaper);
-
-    static void deleteWallpaper(const QString& wallpaperId);
-
-    static bool applyWallpaper(const Wallpaper& wallpaper);
-
-    static bool applyWallpaper(const QString& wallpaperId);
+    int count() const;
 
     [[nodiscard]]
-    static QJsonArray toJson();
+    std::vector<uptr<Wallpaper>>::const_iterator begin() const;
+
+    [[nodiscard]]
+    std::vector<uptr<Wallpaper>>::const_iterator end() const;
 
 private:
-    static QVector<Wallpaper> wallpapers;
+    std::vector<uptr<Wallpaper>> wallpapers;
 };
