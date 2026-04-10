@@ -4,6 +4,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQml.Models
 
 ApplicationWindow {
     id: mainWindow
@@ -47,13 +48,40 @@ ApplicationWindow {
                 id: searchBar
                 placeholderText: "Search"
                 Layout.fillWidth: true
+
+                onTextChanged: proxy.invalidate()
             }
+        }
+
+        SortFilterProxyModel {
+            id: proxy
+            model: Wallpapers
+
+            filters: [
+                FunctionFilter {
+                    component WallpaperData: QtObject {
+                        property string wallpaperName
+                        property var wallpaperTags
+                    }
+
+                    function filter(data: WallpaperData): bool {
+                        if(!searchBar.text) {
+                            return true
+                        }
+
+                        const filterText = searchBar.text.toLowerCase()
+                        return data.wallpaperName.toLowerCase().includes(filterText) ||
+                            data.wallpaperTags.some(tag => tag.toLowerCase().includes(filterText))
+                    }
+                }
+            ]
         }
 
         WallpaperFlow {
             id: wallpaperFlow
             Layout.fillWidth: true
             Layout.fillHeight: true
+            model: proxy
         }
 
         StatusBar {

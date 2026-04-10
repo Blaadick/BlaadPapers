@@ -9,7 +9,13 @@ extern "C" {
 
 #include <QSize>
 
-inline QSize getVideoResolution(const QString& filePath) {
+struct VideoData {
+    QSize resolution = QSize();
+    int frameRate = 0;
+};
+
+inline VideoData getVideoData(const QString& filePath) {
+    VideoData data;
     AVFormatContext* fmt = nullptr;
     AVDictionary* options = nullptr;
     av_dict_set(&options, "probesize", "32", 0);
@@ -17,22 +23,22 @@ inline QSize getVideoResolution(const QString& filePath) {
 
     if(avformat_open_input(&fmt, filePath.toStdString().c_str(), nullptr, &options) < 0) {
         av_dict_free(&options);
-        return {};
+        return data;
     }
 
     av_dict_free(&options);
 
-    for(int i = 0; i < fmt->nb_streams; ++i) {
-        const AVStream* stream = fmt->streams[i];
-
-        if(stream->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-            const QSize resolution(stream->codecpar->width, stream->codecpar->height);
-
-            avformat_close_input(&fmt);
-            return resolution;
-        }
+    const AVStream* stream;
+    if(const int streamIndex = av_find_best_stream(fmt, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0); streamIndex < 0) {
+        av_dict_free(&options);
+        return data;
+    } else {
+        stream = fmt->streams[streamIndex];
     }
 
+    data.resolution = QSize(stream->codecpar->width, stream->codecpar->height);
+    data.frameRate = static_cast<int>(av_q2d(stream->avg_frame_rate));
+
     avformat_close_input(&fmt);
-    return {};
+    return data;
 }

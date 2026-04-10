@@ -19,7 +19,7 @@ VideoWallpaper::VideoWallpaper(
     this->filePath = std::move(filePath);
     this->name = std::move(name);
     this->resolution = resolution;
-    this->frameRate = 0;
+    this->frameRate = frameRate;
     this->source = std::move(source);
     this->tags = std::move(tags);
 }
