@@ -3,6 +3,7 @@
 
 #include "WallpaperLoader.hpp"
 
+#include <QDirIterator>
 #include <QImageReader>
 #include <QJsonArray>
 #include <QPainter>
@@ -15,6 +16,8 @@ void WallpaperLoader::loadWallpapers() {
     jpegUnifier();
 
     for(const QString& wallpaperDirPath : Config::getWallpaperDirPaths()) {
+        util::createDirIfNotExists(wallpaperDirPath + "/.index");
+
         QDirIterator pictureIterator(wallpaperDirPath, util::getFileMask(util::supportedPictureFormats), QDir::Files);
         while(pictureIterator.hasNext()) {
             pictureIterator.next();
@@ -112,8 +115,9 @@ uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const QFileInfo& fi
 }
 
 uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const QFileInfo& fileInfo, const QJsonObject& data) {
-    QVector<QString> tags;
+    auto [resolution, frameRate] = getVideoData(fileInfo.absoluteFilePath());
 
+    QVector<QString> tags;
     for(auto tag : data["tags"].toArray()) {
         tags.append(tag.toString());
     }
@@ -122,8 +126,8 @@ uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const QFileInfo& fileIn
         fileInfo.completeBaseName(),
         fileInfo.absoluteFilePath(),
         data.value("name").toString(),
-        getVideoResolution(fileInfo.absoluteFilePath()),
-        0,
+        resolution,
+        frameRate,
         data.value("source").toString(),
         tags
     );

@@ -3,9 +3,8 @@
 
 #pragma once
 
-#include <QDirIterator>
-#include <QFile>
 #include <QString>
+#include <QVector>
 
 namespace util {
     inline const QVector<QString> supportedPictureFormats = {"png", "apng", "jpeg", "webp"};

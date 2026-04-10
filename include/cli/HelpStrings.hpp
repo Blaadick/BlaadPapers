@@ -57,7 +57,6 @@ inline std::string_view listHelpMessage = R"#(Usage:
     blaadpapers -L[sub_options]
 
 Sub options:
-    t  ->  Outputs list of unique tags instead wallpapers
     j  ->  Outputs command result in JSON format)#";
 
 inline std::string_view countHelpMessage = R"#(Usage:
