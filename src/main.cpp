@@ -27,7 +27,7 @@ extern "C" {
 
 int main(int argc, char** argv) {
     QGuiApplication app(argc, argv);
-    QGuiApplication::setApplicationName(QString(PROJECT_NAME).toLower());
+    QGuiApplication::setApplicationName("blaadpapers");
     QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
     QGuiApplication::setApplicationVersion(PROJECT_VERSION);
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);

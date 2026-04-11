@@ -30,13 +30,39 @@ void Wallpapers::add(uptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
-void Wallpapers::remove(const QString& id) {
-    std::erase_if(
+bool Wallpapers::apply(const QString& id) const {
+    for(const auto& wallpaper : wallpapers) {
+        if(wallpaper->getId() == id) {
+            return wallpaper->apply();
+        }
+    }
+
+    return false;
+}
+
+bool Wallpapers::remove(const QString& id) {
+    for(const auto& wallpaper : wallpapers) {
+        if(wallpaper->getId() == id) {
+            wallpaper->remove();
+            std::erase(wallpapers, wallpaper);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Wallpapers::sortByName() {
+    std::ranges::sort(
         wallpapers,
-        [id](const uptr<Wallpaper>& wallpaper) {
-            return wallpaper->getId() == id;
+        [](const uptr<Wallpaper>& w1, const uptr<Wallpaper>& w2) {
+            return w1->getName() < w2->getName();
         }
     );
+}
+
+void Wallpapers::clear() {
+    wallpapers.clear();
 }
 
 int Wallpapers::count() const {

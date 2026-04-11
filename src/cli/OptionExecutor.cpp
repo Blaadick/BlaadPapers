@@ -91,8 +91,8 @@ void applyOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    if(Wallpapers::inst().get(arguments[0])->apply()) {
-        std::println("Wallpaper \"{}\" set", arguments[0]);
+    if(Wallpapers::inst().apply(arguments[0])) {
+        std::println("Wallpaper \"{}\" applied", arguments[0]);
     } else {
         std::println(stderr, "Wallpaper \"{}\" not found", arguments[0]);
     }
@@ -100,11 +100,11 @@ void applyOption(const set<char>&, const vector<char*>& arguments) {
 
 void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
     if(Wallpapers::inst().count() < 1) {
-        std::println("No Wallpapers");
+        std::println(stderr, "No Wallpapers");
         return;
     }
 
-    const Wallpaper* wallpaperToSet;
+    const Wallpaper* wallpaperToApply;
 
     if(subOptions.contains('f')) {
         QVector<QString> includeTags;
@@ -147,21 +147,21 @@ void randomOption(const set<char>& subOptions, const vector<char*>& arguments) {
         }
 
         if(filteredWallpapers.empty()) {
-            std::println("No wallpapers found");
+            std::println(stderr, "No wallpapers found");
             return;
         }
 
         const auto randomIndex = QRandomGenerator::global()->bounded(filteredWallpapers.size());
-        wallpaperToSet = filteredWallpapers[randomIndex];
+        wallpaperToApply = filteredWallpapers[randomIndex];
     } else {
         const auto randomIndex = QRandomGenerator::global()->bounded(Wallpapers::inst().count());
-        wallpaperToSet = Wallpapers::inst().get(randomIndex);
+        wallpaperToApply = Wallpapers::inst().get(randomIndex);
     }
 
-    if(wallpaperToSet->apply()) {
-        std::println("Wallpaper \"{}\" set", wallpaperToSet->getId().toStdString());
+    if(wallpaperToApply->apply()) {
+        std::println("Wallpaper \"{}\" applied", wallpaperToApply->getId().toStdString());
     } else {
-        std::println(stderr, "Wallpaper \"{}\" not found", wallpaperToSet->getId().toStdString());
+        std::println(stderr, "Wallpaper \"{}\" not found", wallpaperToApply->getId().toStdString());
     }
 }
 
@@ -171,8 +171,11 @@ void deleteOption(const set<char>&, const vector<char*>& arguments) {
         return;
     }
 
-    // Wallpapers::deleteWallpaper(arguments[0]);
-    std::println("Wallpaper \"{}\" deleted", arguments[0]);
+    if(Wallpapers::inst().remove(arguments[0])) {
+        std::println("Wallpaper \"{}\" deleted", arguments[0]);
+    } else {
+        std::println(stderr, "Wallpaper \"{}\" not found", arguments[0]);
+    }
 }
 
 void infoOption(const set<char>& subOptions, const vector<char*>& arguments) {

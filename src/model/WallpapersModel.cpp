@@ -5,7 +5,6 @@
 
 #include <QImage>
 #include <QtConcurrent>
-
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "model/StatusModel.hpp"
@@ -29,11 +28,11 @@ namespace {
                 );
 
                 if(!preview.save(previewPath, "WEBP", 100)) {
-                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    util::logWarn("Unable to save preview file \"{}\"", previewPath.toStdString());
                     util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
                 } else {
                     util::logInfo(
-                        "Preview of {} for {} saved",
+                        "Preview of \"{}\" saved for {}",
                         wallpaper->getId().toStdString(),
                         util::toString(screen->size() * screen->devicePixelRatio()).toStdString()
                     );
@@ -59,11 +58,11 @@ namespace {
                 ffmpeg.waitForFinished(-1);
 
                 if(ffmpeg.exitCode() != 0) {
-                    util::logError("Unable to save preview file \"{}\"", previewPath.toStdString());
+                    util::logWarn("Unable to save preview file \"{}\"", previewPath.toStdString());
                     util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
                 } else {
                     util::logInfo(
-                        "Preview of {} for {} saved",
+                        "Preview of \"{}\" saved for {}",
                         wallpaper->getId().toStdString(),
                         util::toString(screen->size() * screen->devicePixelRatio()).toStdString()
                     );
@@ -93,9 +92,12 @@ void WallpapersModel::load() {
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [=] {
-            if(Wallpapers::inst().get(wallpaperId)->apply()) {
-                util::logInfo("Wallpaper \"{}\" set", wallpaperId.toStdString());
-                util::sendStatus("Wallpaper \"{}\" set", wallpaperId.toStdString());
+            if(Wallpapers::inst().apply(wallpaperId)) {
+                util::logInfo("Wallpaper \"{}\" applied", wallpaperId.toStdString());
+                util::sendStatus("Wallpaper \"{}\" applied", wallpaperId.toStdString());
+            } else {
+                util::logInfo("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
+                util::sendStatus("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
             }
         }
     );
@@ -105,9 +107,13 @@ void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [=] {
             //TODO Fix model updating and fast deleting crash
-            Wallpapers::inst().remove(wallpaperId);
-            util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
-            util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+            if(Wallpapers::inst().remove(wallpaperId)) {
+                util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+                util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+            } else {
+                util::logWarn("Failed to delete wallpaper \"{}\"", wallpaperId.toStdString());
+                util::sendStatus("Failed to delete wallpaper \"{}\"", wallpaperId.toStdString());
+            }
         }
     );
 }
