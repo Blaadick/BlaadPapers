@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <QDirIterator>
 #include "Config.hpp"
 #include "util/Loggers.hpp"
 #include "util/PathUtils.hpp"
@@ -75,6 +76,25 @@ public:
         #endif
 
         return true;
+    }
+
+    void remove() const {
+        QFile(filePath).remove();
+
+        for(const auto& path : Config::getWallpaperDirPaths()) {
+            QFile(path + "/.index/" + id + ".json").remove();
+        }
+
+        QDirIterator dirIterator(
+            util::getPreviewsPath(),
+            {id + ".webp"},
+            QDir::Files,
+            QDirIterator::Subdirectories
+        );
+        while(dirIterator.hasNext()) {
+            dirIterator.next();
+            QFile(dirIterator.filePath()).remove();
+        }
     }
 
     [[nodiscard]]

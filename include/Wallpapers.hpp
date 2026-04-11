@@ -18,20 +18,13 @@ public:
 
     void add(uptr<Wallpaper> wallpaper);
 
-    void remove(const QString& id);
+    bool apply(const QString& id) const;
 
-    void sortByName() {
-        std::ranges::sort(
-            wallpapers,
-            [](const uptr<Wallpaper>& w1, const uptr<Wallpaper>& w2) {
-                return w1->getName() < w2->getName();
-            }
-        );
-    }
+    bool remove(const QString& id);
 
-    void clear() {
-        wallpapers.clear();
-    }
+    void sortByName();
+
+    void clear();
 
     [[nodiscard]]
     int count() const;

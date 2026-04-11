@@ -10,18 +10,24 @@
 #include "util/ToString.hpp"
 
 namespace util {
-    inline void createDirIfNotExists(const QString& path) {
+    inline bool createDirIfNotExists(const QString& path) {
         if(const QDir dir(path); !dir.exists()) {
             if(!dir.mkpath(path)) {
-                logError("Can't create directory \"{}\"", path.toStdString());
+                logWarn("Can't create directory \"{}\"", path.toStdString());
+                return false;
             }
         }
+
+        return true;
     }
 
-    inline void open(QFile& file, const QFile::OpenMode& flags) {
+    inline bool open(QFile& file, const QFile::OpenMode& flags) {
         if(!file.open(flags)) {
-            logError("Can't open file \"{}\"", file.filesystemFileName().string());
+            logWarn("Can't open file \"{}\"", file.filesystemFileName().string());
+            return false;
         }
+
+        return true;
     }
 
     inline QString getPreviewsPath() {

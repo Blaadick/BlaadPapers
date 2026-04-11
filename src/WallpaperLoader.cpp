@@ -16,9 +16,16 @@ void WallpaperLoader::loadWallpapers() {
     jpegUnifier();
 
     for(const QString& wallpaperDirPath : Config::getWallpaperDirPaths()) {
-        util::createDirIfNotExists(wallpaperDirPath + "/.index");
+        if(!util::createDirIfNotExists(wallpaperDirPath + "/.index")) {
+            continue;
+        }
 
-        QDirIterator pictureIterator(wallpaperDirPath, util::getFileMask(util::supportedPictureFormats), QDir::Files);
+        QDirIterator pictureIterator(
+            wallpaperDirPath,
+            util::getFileMask(util::supportedPictureFormats),
+            QDir::Files,
+            QDirIterator::Subdirectories
+        );
         while(pictureIterator.hasNext()) {
             pictureIterator.next();
 
@@ -34,7 +41,12 @@ void WallpaperLoader::loadWallpapers() {
             );
         }
 
-        QDirIterator videoIterator(wallpaperDirPath, util::getFileMask(util::supportedVideoFormats), QDir::Files);
+        QDirIterator videoIterator(
+            wallpaperDirPath,
+            util::getFileMask(util::supportedVideoFormats),
+            QDir::Files,
+            QDirIterator::Subdirectories
+        );
         while(videoIterator.hasNext()) {
             videoIterator.next();
 
