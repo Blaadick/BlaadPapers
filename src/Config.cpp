@@ -57,7 +57,7 @@ QVector<QString> Config::getBadTags() {
 QVector<QString> Config::getWallpaperDirPaths() {
     QVector<QString> paths;
 
-    for(auto value : getValue("wallpapers_paths").toArray()) {
+    for(auto value : getValue("wallpaper_paths").toArray()) {
         auto str = value.toString();
         if(str.endsWith('/')) {
             str.chop(1);

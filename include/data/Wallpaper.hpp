@@ -40,9 +40,11 @@ public:
     bool isBad() const;
 
     bool apply() const {
-        //TODO Implement own renderer
-
         #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+        if(qgetenv("XDG_CURRENT_DESKTOP") == "KDE") {
+            return false;
+        }
+
         const int sock = socket(AF_UNIX, SOCK_STREAM, 0);
         sockaddr_un sockAddr(AF_UNIX, "/tmp/blaadpapers-mpvpaper.sock");
 
@@ -73,9 +75,15 @@ public:
                 filePath
             ).toStdString().c_str()
         );
-        #endif
 
         return true;
+
+        #elif defined(Q_OS_WINDOWS)
+
+        util::logWarn("WINDOWS STILL NOT IMPLEMENTED");
+        return false;
+
+        #endif
     }
 
     void remove() const {
