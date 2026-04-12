@@ -96,7 +96,7 @@ void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
                 util::logInfo("Wallpaper \"{}\" applied", wallpaperId.toStdString());
                 util::sendStatus("Wallpaper \"{}\" applied", wallpaperId.toStdString());
             } else {
-                util::logInfo("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
+                util::logWarn("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
                 util::sendStatus("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
             }
         }
