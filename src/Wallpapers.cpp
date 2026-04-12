@@ -41,15 +41,22 @@ bool Wallpapers::apply(const QString& id) const {
 }
 
 bool Wallpapers::remove(const QString& id) {
-    for(const auto& wallpaper : wallpapers) {
-        if(wallpaper->getId() == id) {
-            wallpaper->remove();
-            std::erase(wallpapers, wallpaper);
-            return true;
+    const auto it = std::ranges::find_if(
+        wallpapers,
+        [=](const auto& wallpaper) {
+            return wallpaper->getId() == id;
         }
+    );
+
+    if(it == wallpapers.end()) {
+        return false;
     }
 
-    return false;
+    const auto wallpaper = std::move(*it);
+    wallpapers.erase(it);
+
+    wallpaper->remove();
+    return true;
 }
 
 void Wallpapers::sortByName() {
