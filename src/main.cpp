@@ -17,7 +17,6 @@ extern "C" {
 #include <QSvgRenderer>
 #include <QThreadPool>
 #include "Config.hpp"
-#include "Wallpapers.hpp"
 #include "cli/OptionExecutor.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
