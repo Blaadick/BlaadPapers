@@ -20,7 +20,7 @@ Keep in mind that the application is being developed and tested on and for Linux
 
 <div align="center">
     <picture>
-        <img src="https://imgur.com/Hn5z0EO.png" alt="Main Screen" width="100%"/>
+        <img src="https://github.com/user-attachments/assets/66883352-e1d0-4389-9909-21a9c4b0dea9" alt="Main Screen" width="100%"/>
     </picture>
     <p><i>Main Screen</i></p>
 </div>
