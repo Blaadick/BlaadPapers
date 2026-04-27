@@ -71,14 +71,14 @@ Item {
 
         Action {
             text: "Edit"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
+            icon.source: "qrc:/BlaadPapers/resource/icon/edit.svg"
         }
 
         MenuSeparator {}
 
         Action {
             text: "Delete"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
+            icon.source: "qrc:/BlaadPapers/resource/icon/delete.svg"
             onTriggered: Wallpapers.deleteWallpaper(preview.wid)
         }
     }

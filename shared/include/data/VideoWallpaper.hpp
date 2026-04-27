@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "data/Wallpaper.hpp"
+#include "Wallpaper.hpp"
 
 class VideoWallpaper : public Wallpaper {
 public:

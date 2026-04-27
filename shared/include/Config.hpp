@@ -4,6 +4,8 @@
 #pragma once
 
 #include <QJsonObject>
+#include <QString>
+#include <QVector>
 
 class Config {
 public:

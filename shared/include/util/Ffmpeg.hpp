@@ -14,6 +14,10 @@ struct VideoData {
     int frameRate = 0;
 };
 
+struct PictureData {
+    QSize resolution = QSize();
+};
+
 inline VideoData getVideoData(const QString& filePath) {
     VideoData data;
     AVFormatContext* fmt = nullptr;
@@ -38,6 +42,37 @@ inline VideoData getVideoData(const QString& filePath) {
 
     data.resolution = QSize(stream->codecpar->width, stream->codecpar->height);
     data.frameRate = static_cast<int>(av_q2d(stream->avg_frame_rate));
+
+    avformat_close_input(&fmt);
+    return data;
+}
+
+inline PictureData getPictureData(const QString& filePath) {
+    PictureData data;
+    AVFormatContext* fmt = nullptr;
+
+    if(avformat_open_input(&fmt, filePath.toStdString().c_str(), nullptr, nullptr) < 0) {
+        return data;
+    }
+
+    if(avformat_find_stream_info(fmt, nullptr) < 0) {
+        avformat_close_input(&fmt);
+        return data;
+    }
+
+    for(unsigned i = 0; i < fmt->nb_streams; ++i) {
+        const AVStream* stream = fmt->streams[i];
+        const AVCodecParameters* codec = stream->codecpar;
+
+        if(codec->codec_type == AVMEDIA_TYPE_VIDEO) {
+            int w = codec->width;
+            int h = codec->height;
+            data.resolution = {w, h};
+
+            avformat_close_input(&fmt);
+            break;
+        }
+    }
 
     avformat_close_input(&fmt);
     return data;

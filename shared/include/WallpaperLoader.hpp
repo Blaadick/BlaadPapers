@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <QFileInfo>
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
 #include "util/Pointers.hpp"

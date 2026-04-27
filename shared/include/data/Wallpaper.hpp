@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "Config.hpp"
-#include "util/Loggers.hpp"
-#include "util/PathUtils.hpp"
+#include <QJsonObject>
+#include <QSize>
+#include <QVector>
 
 class Wallpaper {
 public:

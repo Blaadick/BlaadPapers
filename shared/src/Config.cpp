@@ -4,9 +4,6 @@
 #include "Config.hpp"
 
 #include <QJsonArray>
-#include <QStandardPaths>
-
-#include "data/Wallpaper.hpp"
 #include "util/PathUtils.hpp"
 
 void Config::load() {

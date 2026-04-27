@@ -17,7 +17,7 @@ ApplicationWindow {
 
         Action {
             text: "Open Config"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
+            icon.source: "qrc:/BlaadPapers/resource/icon/edit.svg"
             onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
         }
 
@@ -36,7 +36,7 @@ ApplicationWindow {
 
         RowLayout {
             ToolButton {
-                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
+                icon.source: "qrc:/BlaadPapers/resource/icon/menu.svg"
 
                 onClicked: {
                     const pos = parent.mapToGlobal(0, parent.height + 10)

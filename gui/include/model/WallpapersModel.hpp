@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QVariant>
 
 class WallpapersModel : public QAbstractListModel {
     Q_OBJECT

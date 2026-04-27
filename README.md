@@ -42,10 +42,10 @@ cmake --build cmake-build-release --parallel
 ```
 
 ### Windows
-Expected after adding major features and implementing own wallpaper rendering.
+Expected after adding major features and implementing custom wallpaper rendering.
 
 ## Usage
-Before use, run `blaadpapers -S`. You can add some [mvp arguments](https://mpv.io/manual/master/#command-interface) like `blaadpapers -S "no-interpolation hwdec=vaapi"`.
+Before use, run `blaadpapers -S`. You can add some [mpv arguments](https://mpv.io/manual/master/#command-interface) like `blaadpapers -S "no-interpolation hwdec=vaapi"`.
 
 After that, you can run GUI with `blaadpapers`, or use CLI with `blaadpapers -H`.
 

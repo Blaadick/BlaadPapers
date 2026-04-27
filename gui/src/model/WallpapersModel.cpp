@@ -8,10 +8,11 @@
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "model/StatusModel.hpp"
+#include "util/ExtraPathUtils.hpp"
 #include "util/Loggers.hpp"
-#include "util/PathUtils.hpp"
 
 namespace {
+    //TODO Move to PreviewManager
     void createAndSavePreview(const uptr<Wallpaper>& wallpaper) {
         for(const auto screen : QGuiApplication::screens()) {
             const auto previewPath = util::getPreviewsPath(screen) + '/' + wallpaper->getId() + ".webp";

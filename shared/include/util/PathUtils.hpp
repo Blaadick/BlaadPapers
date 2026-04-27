@@ -4,10 +4,8 @@
 #pragma once
 
 #include <QDir>
-#include <QScreen>
 #include <QStandardPaths>
 #include "util/Loggers.hpp"
-#include "util/ToString.hpp"
 
 namespace util {
     inline bool createDirIfNotExists(const QString& path) {
@@ -30,16 +28,13 @@ namespace util {
         return true;
     }
 
-    inline QString getPreviewsPath() {
-        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview";
-    }
-
-    inline QString getPreviewsPath(const QScreen* screen) {
-        return getPreviewsPath() + '/' + toString(screen->size() * screen->devicePixelRatio());
-    }
-
     inline QString getDataPath() {
         return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    }
+
+    //TODO Move this shit to gui
+    inline QString getPreviewsPath() {
+        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview";
     }
 
     inline QString getCurrentWallpaperDataPath() {

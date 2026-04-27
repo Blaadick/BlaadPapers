@@ -6,7 +6,10 @@
 #include <QDirIterator>
 #include <qprocess.h>
 
+#include "Config.hpp"
 #include "data/PictureWallpaper.hpp"
+#include "util/Loggers.hpp"
+#include "util/PathUtils.hpp"
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #include "unistd.h"
@@ -14,6 +17,7 @@
 #include "sys/un.h"
 #endif
 
+//TODO Refactor
 bool Wallpaper::apply() const {
     #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     if(qgetenv("XDG_CURRENT_DESKTOP") == "KDE") {
@@ -69,6 +73,7 @@ bool Wallpaper::apply() const {
     #endif
 }
 
+//TODO Refactor
 void Wallpaper::remove() const {
     QFile(filePath).remove();
 
@@ -76,6 +81,7 @@ void Wallpaper::remove() const {
         QFile(path + "/.index/" + id + ".json").remove();
     }
 
+    //TODO Move this shit to gui
     QDirIterator dirIterator(
         util::getPreviewsPath(),
         {id + ".webp"},
