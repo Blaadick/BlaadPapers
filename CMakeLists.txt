@@ -2,42 +2,13 @@ cmake_minimum_required(VERSION 4.3)
 
 project(BlaadPapers
     DESCRIPTION "Fast & clean wallpaper manager"
-    VERSION 0.3.0
+    VERSION 0.3.1
     LANGUAGES CXX
 )
 
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(PkgConfig REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS Concurrent QuickControls2 Svg ShaderTools)
-pkg_check_modules(FFmpeg REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
-
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS src/*.cpp)
-file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS include/*.hpp)
-file(GLOB_RECURSE QMLS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS qml/*.qml)
-file(GLOB_RECURSE SHADERS RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS shader/*)
-file(GLOB_RECURSE RESOURCES RELATIVE ${CMAKE_SOURCE_DIR} CONFIGURE_DEPENDS resource/*.svg)
-
-qt_standard_project_setup(REQUIRES 6.11)
-qt_add_executable(blaadpapers ${SOURCES} ${HEADERS})
-
-qt_add_qml_module(blaadpapers
-    URI ${PROJECT_NAME}
-    VERSION 1.0
-    QML_FILES ${QMLS}
-    RESOURCES ${RESOURCES}
-)
-
-qt_add_shaders(blaadpapers
-    PREFIX "/"
-    FILES ${SHADERS}
-)
-
-target_link_libraries(blaadpapers PRIVATE Qt6::Concurrent Qt6::QuickControls2 Qt6::Svg PkgConfig::FFmpeg)
-target_include_directories(blaadpapers PRIVATE include)
-target_compile_definitions(blaadpapers PRIVATE
-    PROJECT_NAME="${PROJECT_NAME}"
-    PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION}"
-    PROJECT_VERSION="${PROJECT_VERSION}"
-)
+add_subdirectory(cli)
+add_subdirectory(gui)
+add_subdirectory(shared)

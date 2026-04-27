@@ -4,12 +4,12 @@
 #include "WallpaperLoader.hpp"
 
 #include <QDirIterator>
-#include <QImageReader>
 #include <QJsonArray>
-#include <QPainter>
+#include "Config.hpp"
 #include "Wallpapers.hpp"
 #include "util/Ffmpeg.hpp"
 #include "util/FormatUtils.hpp"
+#include "util/PathUtils.hpp"
 
 void WallpaperLoader::loadWallpapers() {
     Wallpapers::inst().clear();
@@ -109,7 +109,7 @@ QJsonObject WallpaperLoader::readWallpaperData(const QString& filePath, const QS
 }
 
 uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const QFileInfo& fileInfo, const QJsonObject& data) {
-    const QImageReader imageReader(fileInfo.absoluteFilePath());
+    auto [resolution] = getPictureData(fileInfo.absoluteFilePath());
     QVector<QString> tags;
 
     for(auto tag : data["tags"].toArray()) {
@@ -120,7 +120,7 @@ uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const QFileInfo& fi
         fileInfo.completeBaseName(),
         fileInfo.absoluteFilePath(),
         data.value("name").toString(),
-        imageReader.size(),
+        resolution,
         data.value("source").toString(),
         tags
     );

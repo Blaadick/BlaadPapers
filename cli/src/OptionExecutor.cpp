@@ -1,15 +1,17 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "cli/OptionExecutor.hpp"
+#include "OptionExecutor.hpp"
 
 #include <fcntl.h>
+#include <iostream>
+#include <print>
+#include <QFile>
 #include <QJsonArray>
 #include <QRandomGenerator>
 #include <spawn.h>
+#include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
-#include "cli/HelpStrings.hpp"
-#include "model/WallpapersModel.hpp"
 #include "util/Loggers.hpp"
 #include "util/PathUtils.hpp"
 
@@ -229,7 +231,7 @@ void countOption(const set<char>& subOptions, const vector<char*>&) {
     }
 }
 
-void OptionExecutor::execute(const int argc, char** argv) {
+void OptionExecutor::execute(int argc, char** argv) {
     const auto& option = argv[1][1];
     set<char> subOptions;
 
