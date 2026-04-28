@@ -4,6 +4,8 @@
 #include "data/VideoWallpaper.hpp"
 
 #include <QJsonArray>
+#include <QJsonObject>
+#include <QString>
 #include "util/ToString.hpp"
 
 VideoWallpaper::VideoWallpaper(
@@ -39,7 +41,7 @@ QJsonObject VideoWallpaper::toJson() const {
         {"id", id},
         {"path", filePath},
         {"name", name},
-        {"resolution", util::toString(resolution)},
+        {"resolution", QString::fromStdString(util::toString(resolution))},
         {"frame_rate", frameRate},
         {"source", source},
         {"tags", wallpaperTags},

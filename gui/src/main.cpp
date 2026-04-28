@@ -1,11 +1,8 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-extern "C" {
-    #include <libavutil/log.h>
-}
-
 #include <QFileSystemWatcher>
+#include <qguiapplication.h>
 #include <QPainter>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -13,11 +10,12 @@ extern "C" {
 #include <QQuickWindow>
 #include <QSvgRenderer>
 #include <QThreadPool>
-#include <util/ExtraPathUtils.hpp>
+#include <util/PathUtilsExtra.hpp>
 #include "Config.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
+#include "util/Loggers.hpp"
 
 int main(int argc, char** argv) {
     QGuiApplication app(argc, argv);
@@ -26,7 +24,6 @@ int main(int argc, char** argv) {
     QGuiApplication::setApplicationVersion(PROJECT_VERSION);
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
-    av_log_set_level(AV_LOG_ERROR);
 
     Config::load();
     util::createDirIfNotExists(util::getDataPath());

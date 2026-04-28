@@ -5,24 +5,7 @@
 
 #include <chrono>
 #include <format>
-#include <iostream>
 #include <print>
-#include <QJsonDocument>
-#include <QString>
-
-namespace std {
-    inline void println(const QString& str) {
-        std::cout << str.toStdString() << '\n';
-    }
-
-    inline void println(const QJsonDocument& json) {
-        std::cout << json.toJson(QJsonDocument::Compact).toStdString() << '\n';
-    }
-
-    inline void println(const int number) {
-        std::cout << number << '\n';
-    }
-}
 
 namespace util {
     using namespace std::chrono;

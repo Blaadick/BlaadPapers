@@ -3,6 +3,7 @@
 
 #include "WallpaperLoader.hpp"
 
+#include <iostream>
 #include <QDirIterator>
 #include <QJsonArray>
 #include "Config.hpp"
@@ -10,10 +11,13 @@
 #include "util/Ffmpeg.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/PathUtils.hpp"
+#include "util/Vips.hpp"
 
 void WallpaperLoader::loadWallpapers() {
     Wallpapers::inst().clear();
     jpegUnifier();
+
+    vips_init("");
 
     for(const QString& wallpaperDirPath : Config::getWallpaperDirPaths()) {
         if(!util::createDirIfNotExists(wallpaperDirPath + "/.index")) {
@@ -64,6 +68,8 @@ void WallpaperLoader::loadWallpapers() {
 
         Wallpapers::inst().sortByName();
     }
+
+    vips_shutdown();
 }
 
 QJsonObject WallpaperLoader::readWallpaperData(const QString& filePath, const QString& wallpaperId) {
@@ -108,8 +114,9 @@ QJsonObject WallpaperLoader::readWallpaperData(const QString& filePath, const QS
     return wallpaperData;
 }
 
+// TODO Move to std fs
 uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const QFileInfo& fileInfo, const QJsonObject& data) {
-    auto [resolution] = getPictureData(fileInfo.absoluteFilePath());
+    auto [width, height] = getPictureResolutionData(std::filesystem::path(fileInfo.filePath().toStdString()));
     QVector<QString> tags;
 
     for(auto tag : data["tags"].toArray()) {
@@ -120,14 +127,15 @@ uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const QFileInfo& fi
         fileInfo.completeBaseName(),
         fileInfo.absoluteFilePath(),
         data.value("name").toString(),
-        resolution,
+        QSize(width, height),
         data.value("source").toString(),
         tags
     );
 }
 
+// TODO Move to std fs
 uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const QFileInfo& fileInfo, const QJsonObject& data) {
-    auto [resolution, frameRate] = getVideoData(fileInfo.absoluteFilePath());
+    auto [resolution, frameRate] = getVideoData(std::filesystem::path(fileInfo.filePath().toStdString()));
 
     QVector<QString> tags;
     for(auto tag : data["tags"].toArray()) {
@@ -138,7 +146,7 @@ uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const QFileInfo& fileIn
         fileInfo.completeBaseName(),
         fileInfo.absoluteFilePath(),
         data.value("name").toString(),
-        resolution,
+        QSize(resolution.width, resolution.height),
         frameRate,
         data.value("source").toString(),
         tags

@@ -33,7 +33,7 @@ QJsonObject PictureWallpaper::toJson() const {
         {"id", id},
         {"path", filePath},
         {"name", name},
-        {"resolution", util::toString(resolution)},
+        {"resolution", QString::fromStdString(util::toString(resolution))},
         {"source", source},
         {"tags", wallpaperTags},
         {"type", "Picture"}

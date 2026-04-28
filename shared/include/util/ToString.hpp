@@ -4,10 +4,9 @@
 #pragma once
 
 #include <QSize>
-#include <QString>
 
 namespace util {
-    inline QString toString(const QSize& size) {
-        return QString::number(size.width()) + 'x' + QString::number(size.height());
+    inline std::string toString(const QSize& size) {
+        return std::format("{}x{}", size.width(), size.height());
     }
 }

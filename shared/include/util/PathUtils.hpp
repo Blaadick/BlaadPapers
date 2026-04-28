@@ -5,13 +5,13 @@
 
 #include <QDir>
 #include <QStandardPaths>
-#include "util/Loggers.hpp"
 
 namespace util {
     inline bool createDirIfNotExists(const QString& path) {
         if(const QDir dir(path); !dir.exists()) {
             if(!dir.mkpath(path)) {
-                logWarn("Can't create directory \"{}\"", path.toStdString());
+                //TODO REMOVE
+                // logWarn("Can't create directory \"{}\"", path.toStdString());
                 return false;
             }
         }
@@ -21,7 +21,8 @@ namespace util {
 
     inline bool open(QFile& file, const QFile::OpenMode& flags) {
         if(!file.open(flags)) {
-            logWarn("Can't open file \"{}\"", file.filesystemFileName().string());
+            //TODO REMOVE
+            // logWarn("Can't open file \"{}\"", file.filesystemFileName().string());
             return false;
         }
 
