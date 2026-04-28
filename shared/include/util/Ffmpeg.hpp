@@ -7,25 +7,21 @@ extern "C" {
     #include <libavformat/avformat.h>
 }
 
-#include <QSize>
+#include <data/Size.hpp>
 
 struct VideoData {
-    QSize resolution = QSize();
+    Size resolution = {};
     int frameRate = 0;
 };
 
-struct PictureData {
-    QSize resolution = QSize();
-};
-
-inline VideoData getVideoData(const QString& filePath) {
+inline VideoData getVideoData(const std::filesystem::path& filePath) {
     VideoData data;
     AVFormatContext* fmt = nullptr;
     AVDictionary* options = nullptr;
     av_dict_set(&options, "probesize", "32", 0);
     av_dict_set(&options, "analyzeduration", "0", 0);
 
-    if(avformat_open_input(&fmt, filePath.toStdString().c_str(), nullptr, &options) < 0) {
+    if(avformat_open_input(&fmt, filePath.c_str(), nullptr, &options) < 0) {
         av_dict_free(&options);
         return data;
     }
@@ -40,39 +36,8 @@ inline VideoData getVideoData(const QString& filePath) {
         stream = fmt->streams[streamIndex];
     }
 
-    data.resolution = QSize(stream->codecpar->width, stream->codecpar->height);
+    data.resolution = Size(stream->codecpar->width, stream->codecpar->height);
     data.frameRate = static_cast<int>(av_q2d(stream->avg_frame_rate));
-
-    avformat_close_input(&fmt);
-    return data;
-}
-
-inline PictureData getPictureData(const QString& filePath) {
-    PictureData data;
-    AVFormatContext* fmt = nullptr;
-
-    if(avformat_open_input(&fmt, filePath.toStdString().c_str(), nullptr, nullptr) < 0) {
-        return data;
-    }
-
-    if(avformat_find_stream_info(fmt, nullptr) < 0) {
-        avformat_close_input(&fmt);
-        return data;
-    }
-
-    for(unsigned i = 0; i < fmt->nb_streams; ++i) {
-        const AVStream* stream = fmt->streams[i];
-        const AVCodecParameters* codec = stream->codecpar;
-
-        if(codec->codec_type == AVMEDIA_TYPE_VIDEO) {
-            int w = codec->width;
-            int h = codec->height;
-            data.resolution = {w, h};
-
-            avformat_close_input(&fmt);
-            break;
-        }
-    }
 
     avformat_close_input(&fmt);
     return data;

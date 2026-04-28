@@ -5,10 +5,10 @@
 
 #include <QScreen>
 #include "util/PathUtils.hpp"
-#include "util/ToString.hpp"
+#include "util/ToStringExtra.hpp"
 
 namespace util {
     inline QString getPreviewsPath(const QScreen* screen) {
-        return getPreviewsPath() + '/' + toString(screen->size() * screen->devicePixelRatio());
+        return getPreviewsPath() + '/' + QString::fromStdString(toString(screen));
     }
 }

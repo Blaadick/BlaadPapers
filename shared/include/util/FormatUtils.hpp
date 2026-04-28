@@ -6,6 +6,7 @@
 #include <QString>
 
 namespace util {
+    // TODO To std maps, move to std fs
     inline const QVector<QString> supportedPictureFormats = {"png", "apng", "jpeg", "webp"};
     inline const QVector<QString> supportedVideoFormats = {"mp4", "webm"};
     inline const QVector<QString> supportedFormats = supportedPictureFormats + supportedVideoFormats;

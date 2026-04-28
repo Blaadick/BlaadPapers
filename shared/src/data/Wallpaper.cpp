@@ -8,7 +8,7 @@
 
 #include "Config.hpp"
 #include "data/PictureWallpaper.hpp"
-#include "util/Loggers.hpp"
+#include "util/Prints.hpp"
 #include "util/PathUtils.hpp"
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
@@ -28,7 +28,8 @@ bool Wallpaper::apply() const {
             return true;
         }
 
-        util::logWarn("Non-picture wallpapers not yet working on KDE");
+        //TODO REMOVE
+        // util::logWarn("Non-picture wallpapers not yet working on KDE");
         return false;
     }
 
@@ -36,14 +37,16 @@ bool Wallpaper::apply() const {
     sockaddr_un sockAddr(AF_UNIX, "/tmp/blaadpapers-mpvpaper.sock");
 
     if(connect(sock, reinterpret_cast<sockaddr*>(&sockAddr), sizeof(sockAddr)) < 0) {
-        util::logError("Can't connect to mpvpaper socket");
+        //TODO REMOVE
+        // util::logError("Can't connect to mpvpaper socket");
         close(sock);
         return false;
     }
 
     const auto command = QString("{\"command\":[\"loadfile\", \"%1\"]}\n").arg(filePath).toStdString();
     if(write(sock, command.c_str(), command.size()) < 0) {
-        util::logError("Can't write data to mpvpaper socket");
+        //TODO REMOVE
+        // util::logError("Can't write data to mpvpaper socket");
         close(sock);
         return false;
     }

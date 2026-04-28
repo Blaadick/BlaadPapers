@@ -12,7 +12,7 @@
 #include <spawn.h>
 #include "HelpStrings.hpp"
 #include "Wallpapers.hpp"
-#include "util/Loggers.hpp"
+#include "util/Prints.hpp"
 #include "util/PathUtils.hpp"
 
 using namespace std;
@@ -232,6 +232,11 @@ void countOption(const set<char>& subOptions, const vector<char*>&) {
 }
 
 void OptionExecutor::execute(int argc, char** argv) {
+    if(argc < 2) {
+        cout << mainHelpMessage << endl;
+        return;
+    }
+
     const auto& option = argv[1][1];
     set<char> subOptions;
 
