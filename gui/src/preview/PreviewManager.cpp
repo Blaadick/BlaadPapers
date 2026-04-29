@@ -11,22 +11,31 @@
 #include "util/Loggers.hpp"
 #include "util/PathUtilsExtra.hpp"
 
+namespace fs = std::filesystem;
+
+Size getScreenAspectRatio(const QScreen* screen) {
+    const int screenGdc = std::gcd(screen->size().width(), screen->size().height());
+    return Size(
+        screen->size().width() / screenGdc,
+        screen->size().height() / screenGdc
+    );
+}
+
 void PreviewManager::createAndSavePreview(const uptr<Wallpaper>& wallpaper) {
     for(const auto screen : QGuiApplication::screens()) {
-        const auto previewPath = util::getPreviewsPath(screen) + '/' + wallpaper->getId() + ".webp";
-        const auto screenAspectRatio = screen->size() / std::gcd(screen->size().width(), screen->size().height());
-        const auto previewSize = screenAspectRatio * 20 * screen->devicePixelRatio();
+        const auto previewPath = util::previewsDirPath(screen).append(wallpaper->getId() + ".webp");
+        const auto previewSize = getScreenAspectRatio(screen) * 20 * screen->devicePixelRatio();
 
-        if(std::filesystem::exists(previewPath.toStdString())) {
+        if(!fs::exists(previewPath.parent_path()) || fs::exists(previewPath)) {
             continue;
         }
 
-        const bool isSaved = generators[typeid(wallpaper)]->createAndSavePreview(wallpaper, previewSize, previewPath, screen);
+        const auto isSaved = generators[typeid(*wallpaper)]->createAndSavePreview(wallpaper, previewSize, previewPath);
         if(isSaved) {
-            util::logInfo("Preview of \"{}\" saved for {}", wallpaper->getId().toStdString(), util::toString(screen));
+            util::logInfo("Preview of \"{}\" saved for {}", wallpaper->getId(), util::toString(screen));
         } else {
-            util::logWarn("Unable to save preview file \"{}\"", previewPath.toStdString());
-            util::sendStatus("Unable to save preview file \"{}\"", previewPath.toStdString());
+            util::logWarn("Unable to save preview file \"{}\"", previewPath.c_str());
+            util::sendStatus("Unable to save preview file \"{}\"", previewPath.c_str());
         }
     }
 }

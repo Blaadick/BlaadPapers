@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <QFileInfo>
+#include <filesystem>
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
 #include "util/Pointers.hpp"
@@ -13,11 +13,11 @@ public:
     static void loadWallpapers();
 
 private:
-    static QJsonObject readWallpaperData(const QString& filePath, const QString& wallpaperId);
+    static nlohmann::json readWallpaperData(const std::filesystem::path& wallpaperDataPath);
 
-    static uptr<PictureWallpaper> loadPictureWallpaper(const QFileInfo& fileInfo, const QJsonObject& data);
+    static uptr<PictureWallpaper> loadPictureWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data);
 
-    static uptr<VideoWallpaper> loadVideoWallpaper(const QFileInfo& fileInfo, const QJsonObject& data);
+    static uptr<VideoWallpaper> loadVideoWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data);
 
     /**
     * We are not in DOS time! I turn it off if it is too annoying.

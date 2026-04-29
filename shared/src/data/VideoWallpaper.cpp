@@ -3,24 +3,19 @@
 
 #include "data/VideoWallpaper.hpp"
 
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QString>
-#include "util/ToString.hpp"
-
 VideoWallpaper::VideoWallpaper(
-    QString id,
-    QString filePath,
-    QString name,
-    const QSize resolution,
+    std::string id,
+    std::string filePath,
+    std::string name,
+    Size resolution,
     const int frameRate,
-    QString source,
-    QVector<QString> tags
+    std::string source,
+    std::vector<std::string> tags
 ) {
     this->id = std::move(id);
     this->filePath = std::move(filePath);
     this->name = std::move(name);
-    this->resolution = resolution;
+    this->resolution = std::move(resolution);
     this->frameRate = frameRate;
     this->source = std::move(source);
     this->tags = std::move(tags);
@@ -30,44 +25,36 @@ int VideoWallpaper::getFrameRate() const {
     return frameRate;
 }
 
-QJsonObject VideoWallpaper::toJson() const {
-    QJsonArray wallpaperTags;
-
-    for(const auto& tag : tags) {
-        wallpaperTags.append(tag);
-    }
-
-    return QJsonObject{
+nlohmann::json VideoWallpaper::toJson() const {
+    return {
         {"id", id},
         {"path", filePath},
         {"name", name},
-        {"resolution", QString::fromStdString(util::toString(resolution))},
+        {"resolution", resolution.toString()},
         {"frame_rate", frameRate},
         {"source", source},
-        {"tags", wallpaperTags},
+        {"tags", tags},
         {"type", "Video"}
     };
 }
 
-QString VideoWallpaper::toString() const {
-    return QString(
-            "%1\n"
-            "    Id: %2\n"
-            "    Path: %3\n"
-            "    Resolution: %4\n"
-            "    FrameRate: %5\n"
-            "    Source: %6\n"
-            "    Tags: %7\n"
-            "    Type: %8\n"
-        )
-        .arg(
-            name,
-            id,
-            filePath,
-            util::toString(resolution),
-            std::to_string(frameRate),
-            source,
-            tags.join(", "),
-            "Video"
-        );
+std::string VideoWallpaper::toString() const {
+    return std::format(
+        "{}\n"
+        "    Id: {}\n"
+        "    Path: {}\n"
+        "    Resolution: {}\n"
+        "    FrameRate: {}\n"
+        "    Source: {}\n"
+        "    Tags: {}\n"
+        "    Type: {}\n",
+        name,
+        id,
+        filePath.native(),
+        resolution.toString(),
+        frameRate,
+        source,
+        tags,
+        "Video"
+    );
 }

@@ -14,13 +14,13 @@ public:
     Wallpaper* get(int index) const;
 
     [[nodiscard]]
-    Wallpaper* get(const QString& id) const;
+    Wallpaper* get(const std::string& id) const;
 
     void add(uptr<Wallpaper> wallpaper);
 
-    bool apply(const QString& id) const;
+    bool apply(const std::string& id) const;
 
-    bool remove(const QString& id);
+    bool remove(const std::string& id);
 
     void sortByName();
 

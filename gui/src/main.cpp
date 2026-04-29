@@ -1,6 +1,8 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
+#include <filesystem>
+#include <QFile>
 #include <QFileSystemWatcher>
 #include <qguiapplication.h>
 #include <QPainter>
@@ -12,10 +14,14 @@
 #include <QThreadPool>
 #include <util/PathUtilsExtra.hpp>
 #include "Config.hpp"
+#include "PostSetScript.hpp"
+#include "WallpaperLoader.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
 #include "util/Loggers.hpp"
+
+namespace fs = std::filesystem;
 
 int main(int argc, char** argv) {
     QGuiApplication app(argc, argv);
@@ -26,9 +32,17 @@ int main(int argc, char** argv) {
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
 
     Config::load();
-    util::createDirIfNotExists(util::getDataPath());
+    PostSetScript::createIfNotExists();
 
-    if(!QFile::exists(util::getDefaultWallpaperPath())) {
+    if(!util::createDirIfNotExists(util::localDataDirPath())) {
+        util::logWarn("Can't create directory \"{}\"", util::localDataDirPath().c_str());
+    }
+
+    if(!util::createDirIfNotExists(util::cacheDirPath())) {
+        util::logWarn("Failed to create directory \"{}\"", util::cacheDirPath().c_str());
+    }
+
+    if(!QFile::exists(util::defaultWallpaperPath())) {
         // TODO Swap to ffmpeg api. Render for highest monitor resolution
         QSvgRenderer renderer(QString(":/qt/qml/BlaadPapers/resource/default-wallpaper.svg"));
         QImage defaultWallpaperImage(renderer.defaultSize(), QImage::Format_ARGB32);
@@ -37,37 +51,14 @@ int main(int argc, char** argv) {
         QPainter painter(&defaultWallpaperImage);
         renderer.render(&painter);
 
-        defaultWallpaperImage.save(util::getDefaultWallpaperPath());
+        defaultWallpaperImage.save(util::defaultWallpaperPath().c_str());
     }
 
     WallpapersModel::inst().load();
 
-    //TODO Redo watchers
-    QFileSystemWatcher wallpapersWatcher;
-    wallpapersWatcher.addPaths(Config::getWallpaperDirPaths());
-    QObject::connect(
-        &wallpapersWatcher,
-        &QFileSystemWatcher::directoryChanged,
-        [] {
-            WallpapersModel::inst().load();
-        }
-    );
+    util::logInfo("{}", WallpapersModel::inst().rowCount());
 
-    QFileSystemWatcher configWatcher;
-    configWatcher.addPath(Config::getConfigFilePath());
-    QObject::connect(
-        &configWatcher,
-        &QFileSystemWatcher::fileChanged,
-        [] {
-            Config::load();
-            WallpapersModel::inst().load();
-
-            util::logInfo("Config reloaded");
-            util::sendStatus("Config reloaded");
-        }
-    );
-
-    #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    #ifdef __linux__
     if(!qEnvironmentVariableIsSet("QT_QUICK_CONTROLS_STYLE")) {
         QQuickStyle::setStyle("BStyle");
     }

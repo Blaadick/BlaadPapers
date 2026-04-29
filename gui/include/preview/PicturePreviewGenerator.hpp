@@ -7,5 +7,5 @@
 
 class PicturePreviewGenerator : public PreviewGenerator {
 public:
-    bool createAndSavePreview(const uptr<Wallpaper>& wallpaper, QSize previewSize, const QString& previewPath, const QScreen* screen) override;
+    bool createAndSavePreview(const uptr<Wallpaper>& wallpaper, const Size& previewSize, const std::filesystem::path& previewPath) override;
 };

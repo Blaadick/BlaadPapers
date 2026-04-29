@@ -3,19 +3,10 @@
 
 #pragma once
 
-#include <QString>
+#include <string>
+#include <unordered_set>
 
 namespace util {
-    // TODO To std maps, move to std fs
-    inline const QVector<QString> supportedPictureFormats = {"png", "apng", "jpeg", "webp"};
-    inline const QVector<QString> supportedVideoFormats = {"mp4", "webm"};
-    inline const QVector<QString> supportedFormats = supportedPictureFormats + supportedVideoFormats;
-
-    inline QVector<QString> getFileMask(QVector<QString> vector) {
-        for(auto& item : vector) {
-            item.prepend("*.");
-        }
-
-        return vector;
-    }
+    inline const std::pmr::unordered_set<std::string> supportedPictureFormats = {".png", ".apng", ".jpeg", ".webp"};
+    inline const std::pmr::unordered_set<std::string> supportedVideoFormats = {".mp4", ".webm"};
 }

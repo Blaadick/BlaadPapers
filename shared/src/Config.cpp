@@ -3,93 +3,64 @@
 
 #include "Config.hpp"
 
-#include <QJsonArray>
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
 #include "util/PathUtils.hpp"
 
+namespace fs = std::filesystem;
+
 void Config::load() {
-    defaultData = {
-        {"bad_tags", QJsonArray{"Sensitive", "Questionable", "Explicit"}},
-        {"wallpaper_paths", QJsonArray{QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/Wallpapers"}},
-        {"status_bar_visible", true}
+    nlohmann::json defaultConfigData = {
+        {"bad_tags", {"Sensitive", "Questionable", "Explicit"}},
+        {"wallpaper_paths", {util::picturesDirPath().append("Wallpapers")}},
+        {"status_bar_visible", false}
     };
+    nlohmann::json configData;
 
-    util::createDirIfNotExists(getConfigPath());
+    if(!fs::exists(util::configDirPath())) {
+        fs::create_directory(util::configDirPath());
+    }
 
-    if(QFile configFile(getConfigFilePath()); configFile.exists()) {
-        util::open(configFile, QIODeviceBase::ReadOnly);
-        data = QJsonDocument::fromJson(configFile.readAll()).object();
-        configFile.close();
+    if(fs::exists(configPath())) {
+        std::ifstream configFile(configPath());
+        configData = nlohmann::json::parse(configFile);
+
+        if(configData.is_discarded()) {
+            configData = defaultConfigData;
+            std::cout << "Failed to parse config, fallback to default";
+        }
     } else {
-        util::open(configFile, QIODeviceBase::WriteOnly);
-        configFile.write(QJsonDocument(defaultData).toJson());
-        data = defaultData;
-        configFile.close();
+        std::ofstream configFile(configPath());
+        configFile << defaultConfigData;
+        configData = defaultConfigData;
     }
 
-    if(QFile postSetScriptFile(getPostSetScriptFilePath()); !postSetScriptFile.exists()) {
-        util::open(postSetScriptFile, QIODeviceBase::WriteOnly);
-        postSetScriptFile.write("#!/bin/bash\n\nwallpaperName=\"$1\"\nwallpaperFilePath=\"$2\"\n");
-        postSetScriptFile.close();
-    }
+    badTags = configData["bad_tags"];
+    wallpaperDirPaths = configData["wallpaper_paths"];
+    isStatusBarVisible = configData["status_bar_visible"];
 }
 
-QString Config::getConfigFilePath() {
-    return getConfigPath() + "/config.json";
-}
-
-QString Config::getPostSetScriptFilePath() {
-    return getConfigPath() + "/post_set.sh";
-}
-
-QVector<QString> Config::getBadTags() {
-    QVector<QString> badTags;
-
-    for(auto tag : getValue("bad_tags").toArray()) {
-        badTags.append(tag.toString());
-    }
-
+std::vector<std::string> Config::getBadTags() {
     return badTags;
 }
 
-QVector<QString> Config::getWallpaperDirPaths() {
-    QVector<QString> paths;
-
-    for(auto value : getValue("wallpaper_paths").toArray()) {
-        auto str = value.toString();
-        if(str.endsWith('/')) {
-            str.chop(1);
-        }
-
-        paths.append(str);
-    }
-
-    return paths;
+std::vector<fs::path> Config::getWallpaperDirPaths() {
+    return wallpaperDirPaths;
 }
 
 bool Config::getStatusBarVisible() {
-    return getValue("status_bar_visible").toBool();
+    return isStatusBarVisible;
 }
 
-void Config::setStatusBarVisible(const bool isVisible) {
-    setValue("status_bar_visible", isVisible);
+void Config::setStatusBarVisible(const bool newVisibility) {
+    isStatusBarVisible = newVisibility;
 }
 
-QJsonObject Config::defaultData;
-QJsonObject Config::data;
-
-QString Config::getConfigPath() {
-    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+std::filesystem::path Config::configPath() {
+    return util::configDirPath().append("config.json");
 }
 
-QJsonValueRef Config::getValue(const QString& key) {
-    return data[key].isNull() ? defaultData[key] : data[key];
-}
-
-void Config::setValue(const QString& key, const QJsonValue& value) {
-    data[key] = value;
-
-    QFile configFile(getConfigFilePath());
-    util::open(configFile, QIODeviceBase::WriteOnly);
-    configFile.write(QJsonDocument(data).toJson());
-    configFile.close();
-}
+std::vector<std::string> Config::badTags;
+std::vector<fs::path> Config::wallpaperDirPaths;
+bool Config::isStatusBarVisible;

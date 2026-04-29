@@ -8,23 +8,23 @@
 class VideoWallpaper : public Wallpaper {
 public:
     VideoWallpaper(
-        QString id,
-        QString filePath,
-        QString name,
-        QSize resolution,
+        std::string id,
+        std::string filePath,
+        std::string name,
+        Size resolution,
         int frameRate,
-        QString source,
-        QVector<QString> tags
+        std::string source,
+        std::vector<std::string> tags
     );
 
     [[nodiscard]]
     int getFrameRate() const;
 
     [[nodiscard]]
-    QJsonObject toJson() const override;
+    nlohmann::json toJson() const override;
 
     [[nodiscard]]
-    QString toString() const override;
+    std::string toString() const override;
 
 protected:
     int frameRate;

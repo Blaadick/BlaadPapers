@@ -34,11 +34,11 @@ private:
 };
 
 namespace util {
-    inline void sendStatus(const QString& newStatus) {
+    inline void sendStatus(const std::string& newStatus) {
         if(StatusModel::inst().getStatusText() == newStatus) {
             StatusModel::inst().increaseRepeatCount();
         } else {
-            StatusModel::inst().setStatusText(newStatus);
+            StatusModel::inst().setStatusText(QString::fromStdString(newStatus));
             StatusModel::inst().resetRepeatCount();
         }
     }
@@ -46,6 +46,6 @@ namespace util {
     template<typename... T>
     void sendStatus(std::format_string<T...> fmt, T&&... args) {
         auto formated = std::format(fmt, std::forward<T>(args)...);
-        sendStatus(QString::fromStdString(formated));
+        sendStatus(formated);
     }
 }

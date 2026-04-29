@@ -3,33 +3,30 @@
 
 #include "data/Wallpaper.hpp"
 
-#include <QDirIterator>
-#include <qprocess.h>
-
+#include <format>
+#include <fstream>
 #include "Config.hpp"
+#include "PostSetScript.hpp"
 #include "data/PictureWallpaper.hpp"
-#include "util/Prints.hpp"
 #include "util/PathUtils.hpp"
-
-#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+#ifdef __linux__
 #include "unistd.h"
 #include "sys/socket.h"
 #include "sys/un.h"
 #endif
 
-//TODO Refactor
+namespace fs = std::filesystem;
+namespace rng = std::ranges;
+
+// TODO Move away, add loging
 bool Wallpaper::apply() const {
-    #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-    if(qgetenv("XDG_CURRENT_DESKTOP") == "KDE") {
+    #ifdef __linux__
+    if(getenv("XDG_CURRENT_DESKTOP") == "KDE") {
         if(dynamic_cast<const PictureWallpaper*>(this)) {
-            QProcess plasmaSeter;
-            plasmaSeter.start("plasma-apply-wallpaperimage", {filePath});
-            plasmaSeter.waitForFinished(-1);
+            system(std::format("plasma-apply-wallpaperimage {}", filePath.c_str()).c_str());
             return true;
         }
 
-        //TODO REMOVE
-        // util::logWarn("Non-picture wallpapers not yet working on KDE");
         return false;
     }
 
@@ -37,95 +34,61 @@ bool Wallpaper::apply() const {
     sockaddr_un sockAddr(AF_UNIX, "/tmp/blaadpapers-mpvpaper.sock");
 
     if(connect(sock, reinterpret_cast<sockaddr*>(&sockAddr), sizeof(sockAddr)) < 0) {
-        //TODO REMOVE
-        // util::logError("Can't connect to mpvpaper socket");
         close(sock);
         return false;
     }
 
-    const auto command = QString("{\"command\":[\"loadfile\", \"%1\"]}\n").arg(filePath).toStdString();
+    const auto command = nlohmann::json(
+        {
+            {"command", {"loadfile", filePath}}
+        }
+    ).dump().append("\n");
+
     if(write(sock, command.c_str(), command.size()) < 0) {
-        //TODO REMOVE
-        // util::logError("Can't write data to mpvpaper socket");
         close(sock);
         return false;
     }
 
     close(sock);
 
-    QFile file(util::getCurrentWallpaperDataPath());
-    util::open(file, QIODeviceBase::WriteOnly);
-    file.write(id.toStdString().c_str());
-    file.close();
+    std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
+    currentWallpaperIdFile << id;
 
-    system(
-        QString(R"(bash "%1" "%2" "%3")").arg(
-            Config::getPostSetScriptFilePath(),
-            name,
-            filePath
-        ).toStdString().c_str()
-    );
+    PostSetScript::execute(*this);
 
     return true;
-
-    #elif defined(Q_OS_WINDOWS)
-
-    util::logWarn("WINDOWS STILL NOT IMPLEMENTED");
-    return false;
-
     #endif
 }
 
-//TODO Refactor
-void Wallpaper::remove() const {
-    QFile(filePath).remove();
-
-    for(const auto& path : Config::getWallpaperDirPaths()) {
-        QFile(path + "/.index/" + id + ".json").remove();
-    }
-
-    //TODO Move this shit to gui
-    QDirIterator dirIterator(
-        util::getPreviewsPath(),
-        {id + ".webp"},
-        QDir::Files,
-        QDirIterator::Subdirectories
-    );
-    while(dirIterator.hasNext()) {
-        dirIterator.next();
-        QFile(dirIterator.filePath()).remove();
-    }
-}
-
-const QString& Wallpaper::getId() const {
+const std::string& Wallpaper::getId() const {
     return id;
 }
 
-const QString& Wallpaper::getFilePath() const {
+const fs::path& Wallpaper::getFilePath() const {
     return filePath;
 }
 
-const QString& Wallpaper::getName() const {
+const std::string& Wallpaper::getName() const {
     return name;
 }
 
-const QSize& Wallpaper::getResolution() const {
+const Size& Wallpaper::getResolution() const {
     return resolution;
 }
 
-const QString& Wallpaper::getSource() const {
+const std::string& Wallpaper::getSource() const {
     return source;
 }
 
-const QVector<QString>& Wallpaper::getTags() const {
+const std::vector<std::string>& Wallpaper::getTags() const {
     return tags;
 }
 
 bool Wallpaper::isBad() const {
-    return std::ranges::any_of(
+    return rng::any_of(
         Config::getBadTags(),
-        [this](const QString& tag) {
-            return tags.contains(tag);
+        [this](const std::string& tag) {
+            return rng::contains(tags, tag);
         }
     );
 }

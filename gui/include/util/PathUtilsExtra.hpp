@@ -3,12 +3,11 @@
 
 #pragma once
 
-#include <QScreen>
 #include "util/PathUtils.hpp"
-#include "util/ToStringExtra.hpp"
+#include "util/ToString.hpp"
 
 namespace util {
-    inline QString getPreviewsPath(const QScreen* screen) {
-        return getPreviewsPath() + '/' + QString::fromStdString(toString(screen));
+    inline std::filesystem::path previewsDirPath(const QScreen* screen) {
+        return previewsDirPath().append(toString(screen));
     }
 }
