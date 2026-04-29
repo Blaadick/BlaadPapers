@@ -3,15 +3,16 @@
 
 #pragma once
 
-#include <QDir>
-#include <QStandardPaths>
+#include <filesystem>
+#include <string>
 
 namespace util {
-    inline bool createDirIfNotExists(const QString& path) {
-        if(const QDir dir(path); !dir.exists()) {
-            if(!dir.mkpath(path)) {
-                //TODO REMOVE
-                // logWarn("Can't create directory \"{}\"", path.toStdString());
+    /**
+     * Returns false on error. If directory already exists, or was successfully created, returns true.
+     */
+    inline bool createDirIfNotExists(const std::filesystem::path& path) {
+        if(!std::filesystem::exists(path)) {
+            if(!std::filesystem::create_directory(path)) {
                 return false;
             }
         }
@@ -19,30 +20,51 @@ namespace util {
         return true;
     }
 
-    inline bool open(QFile& file, const QFile::OpenMode& flags) {
-        if(!file.open(flags)) {
-            //TODO REMOVE
-            // logWarn("Can't open file \"{}\"", file.filesystemFileName().string());
-            return false;
-        }
-
-        return true;
+    inline std::filesystem::path cacheDirPath() {
+        #ifdef __linux__
+        std::filesystem::path homeDir = getenv("HOME");
+        return homeDir.append(".cache/blaadpapers");
+        #endif
     }
 
-    inline QString getDataPath() {
-        return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    inline std::filesystem::path configDirPath() {
+        #ifdef __linux__
+        std::filesystem::path homeDir = getenv("HOME");
+        return homeDir.append(".config/blaadpapers");
+        #endif
+    }
+
+    inline std::filesystem::path localDataDirPath() {
+        #ifdef __linux__
+        std::filesystem::path homeDir = getenv("HOME");
+        return homeDir.append(".local/share/blaadpapers");
+        #endif
+    }
+
+    inline std::filesystem::path picturesDirPath() {
+        #ifdef __linux__
+        std::filesystem::path homeDir = getenv("HOME");
+        return homeDir.append("Pictures");
+        #endif
+    }
+
+    inline std::filesystem::path videosDirPath() {
+        #ifdef __linux__
+        std::filesystem::path homeDir = getenv("HOME");
+        return homeDir.append("Videos");
+        #endif
     }
 
     //TODO Move this shit to gui
-    inline QString getPreviewsPath() {
-        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/preview";
+    inline std::filesystem::path previewsDirPath() {
+        return cacheDirPath().append("preview");
     }
 
-    inline QString getCurrentWallpaperDataPath() {
-        return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/current-wallpaper";
+    inline std::filesystem::path currentWallpaperIdPath() {
+        return localDataDirPath().append("current-wallpaper");
     }
 
-    inline QString getDefaultWallpaperPath() {
-        return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/default-wallpaper.png";
+    inline std::filesystem::path defaultWallpaperPath() {
+        return localDataDirPath().append("default-wallpaper.png");
     }
 }

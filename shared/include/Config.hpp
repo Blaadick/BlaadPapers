@@ -3,40 +3,30 @@
 
 #pragma once
 
-#include <QJsonObject>
-#include <QString>
-#include <QVector>
+#include <filesystem>
+#include <string>
+#include <vector>
+#include <bits/fs_path.h>
 
 class Config {
 public:
     static void load();
 
     [[nodiscard]]
-    static QString getConfigFilePath();
+    static std::vector<std::string> getBadTags();
 
     [[nodiscard]]
-    static QString getPostSetScriptFilePath();
-
-    [[nodiscard]]
-    static QVector<QString> getBadTags();
-
-    [[nodiscard]]
-    static QVector<QString> getWallpaperDirPaths();
+    static std::vector<std::filesystem::path> getWallpaperDirPaths();
 
     [[nodiscard]]
     static bool getStatusBarVisible();
 
-    static void setStatusBarVisible(bool isVisible);
+    static void setStatusBarVisible(bool newVisibility);
+
+    static std::filesystem::path configPath();
 
 private:
-    static QJsonObject defaultData;
-    static QJsonObject data;
-
-    [[nodiscard]]
-    inline static QString getConfigPath();
-
-    [[nodiscard]]
-    inline static QJsonValueRef getValue(const QString& key);
-
-    inline static void setValue(const QString& key, const QJsonValue& value);
+    static std::vector<std::string> badTags;
+    static std::vector<std::filesystem::path> wallpaperDirPaths;
+    static bool isStatusBarVisible;
 };

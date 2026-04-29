@@ -9,5 +9,13 @@ struct Size {
     int width = -1;
     int height = -1;
 
-    std::string toString();
+    std::string toString() const;
+
+    Size operator*(const Size& right) const;
+
+    Size operator/(const Size& right) const;
+
+    Size operator*(const int& right) const;
+
+    Size operator/(const int& right) const;
 };

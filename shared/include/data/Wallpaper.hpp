@@ -3,53 +3,52 @@
 
 #pragma once
 
-#include <QJsonObject>
-#include <QSize>
-#include <QVector>
+#include <string>
+#include <vector>
+#include <nlohmann/json.hpp>
+#include "data/Size.hpp"
 
 class Wallpaper {
 public:
     virtual ~Wallpaper() = default;
 
     [[nodiscard]]
-    const QString& getId() const;
+    const std::string& getId() const;
 
     [[nodiscard]]
-    const QString& getFilePath() const;
+    const std::filesystem::path& getFilePath() const;
 
     [[nodiscard]]
-    const QString& getName() const;
+    const std::string& getName() const;
 
     [[nodiscard]]
-    const QSize& getResolution() const;
+    const Size& getResolution() const;
 
     [[nodiscard]]
-    const QString& getSource() const;
+    const std::string& getSource() const;
 
     [[nodiscard]]
-    const QVector<QString>& getTags() const;
+    const std::vector<std::string>& getTags() const;
 
     [[nodiscard]]
     bool isBad() const;
 
     bool apply() const;
 
-    void remove() const;
+    [[nodiscard]]
+    virtual nlohmann::json toJson() const = 0;
 
     [[nodiscard]]
-    virtual QJsonObject toJson() const = 0;
-
-    [[nodiscard]]
-    virtual QString toString() const = 0;
+    virtual std::string toString() const = 0;
 
     [[nodiscard]]
     bool operator==(const Wallpaper& other) const;
 
 protected:
-    QString id;
-    QString filePath;
-    QString name;
-    QSize resolution;
-    QString source;
-    QVector<QString> tags;
+    std::string id;
+    std::filesystem::path filePath;
+    std::string name;
+    Size resolution;
+    std::string source;
+    std::vector<std::string> tags;
 };

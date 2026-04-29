@@ -3,6 +3,11 @@
 
 #include "Wallpapers.hpp"
 
+#include "Config.hpp"
+#include "util/PathUtils.hpp"
+
+namespace fs = std::filesystem;
+
 Wallpapers& Wallpapers::inst() {
     static Wallpapers inst;
     return inst;
@@ -16,7 +21,7 @@ Wallpaper* Wallpapers::get(const int index) const {
     return wallpapers[index].get();
 }
 
-Wallpaper* Wallpapers::get(const QString& id) const {
+Wallpaper* Wallpapers::get(const std::string& id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper.get();
@@ -30,7 +35,7 @@ void Wallpapers::add(uptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
-bool Wallpapers::apply(const QString& id) const {
+bool Wallpapers::apply(const std::string& id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper->apply();
@@ -40,7 +45,7 @@ bool Wallpapers::apply(const QString& id) const {
     return false;
 }
 
-bool Wallpapers::remove(const QString& id) {
+bool Wallpapers::remove(const std::string& id) {
     const auto it = std::ranges::find_if(
         wallpapers,
         [=](const auto& wallpaper) {
@@ -55,7 +60,16 @@ bool Wallpapers::remove(const QString& id) {
     const auto wallpaper = std::move(*it);
     wallpapers.erase(it);
 
-    wallpaper->remove();
+    fs::remove(wallpaper->getFilePath());
+    fs::remove(wallpaper->getFilePath().root_directory().append(".index/" + wallpaper->getId() + ".json"));
+
+    //TODO Idk, it shouldn't be here. Mb move it
+    for(const auto& entry : fs::recursive_directory_iterator(util::previewsDirPath())) {
+        if(entry.path().stem() == wallpaper->getId()) {
+            fs::remove(entry.path());
+        }
+    }
+
     return true;
 }
 

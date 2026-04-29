@@ -8,17 +8,17 @@
 class PictureWallpaper : public Wallpaper {
 public:
     PictureWallpaper(
-        QString id,
-        QString filePath,
-        QString name,
-        QSize resolution,
-        QString source,
-        QVector<QString> tags
+        std::string id,
+        std::string filePath,
+        std::string name,
+        Size resolution,
+        std::string source,
+        std::vector<std::string> tags
     );
 
     [[nodiscard]]
-    QJsonObject toJson() const override;
+    nlohmann::json toJson() const override;
 
     [[nodiscard]]
-    QString toString() const override;
+    std::string toString() const override;
 };

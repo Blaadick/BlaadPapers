@@ -12,6 +12,8 @@
 #include "util/Loggers.hpp"
 #include "util/PathUtilsExtra.hpp"
 
+namespace fs = std::filesystem;
+
 WallpapersModel& WallpapersModel::inst() {
     static WallpapersModel instance;
     return instance;
@@ -22,8 +24,14 @@ void WallpapersModel::load() {
     WallpaperLoader::loadWallpapers();
     endResetModel();
 
+    if(!util::createDirIfNotExists(util::previewsDirPath())) {
+        util::logWarn("Failed to create directory \"{}\"", util::previewsDirPath().c_str());
+    }
+
     for(const auto screen : QGuiApplication::screens()) {
-        util::createDirIfNotExists(util::getPreviewsPath(screen));
+        if(!util::createDirIfNotExists(util::previewsDirPath(screen))) {
+            util::logWarn("Failed to create directory \"{}\"", util::previewsDirPath(screen).c_str());
+        }
     }
 
     QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreview);
@@ -32,7 +40,7 @@ void WallpapersModel::load() {
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [=] {
-            if(Wallpapers::inst().apply(wallpaperId)) {
+            if(Wallpapers::inst().apply(wallpaperId.toStdString())) {
                 util::logInfo("Wallpaper \"{}\" applied", wallpaperId.toStdString());
                 util::sendStatus("Wallpaper \"{}\" applied", wallpaperId.toStdString());
             } else {
@@ -47,7 +55,7 @@ void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [=] {
             //TODO Fix model updating and fast deleting crash
-            if(Wallpapers::inst().remove(wallpaperId)) {
+            if(Wallpapers::inst().remove(wallpaperId.toStdString())) {
                 util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
                 util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
             } else {
@@ -65,12 +73,18 @@ int WallpapersModel::rowCount(const QModelIndex& parent) const {
 QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     const Wallpaper* wallpaper = Wallpapers::inst().get(index.row());
 
+    QStringList qstringTags;
+    qstringTags.reserve(wallpaper->getTags().size());
+    for(const auto& tag : wallpaper->getTags()) {
+        qstringTags.append(QString::fromStdString(tag));
+    }
+
     switch(role) {
-        case IdRole: return wallpaper->getId();
-        case NameRole: return wallpaper->getName();
-        case ResolutionRole: return QString::fromStdString(util::toString(wallpaper->getResolution()));
-        case SourceRole: return wallpaper->getSource();
-        case TagsRole: return wallpaper->getTags();
+        case IdRole: return QString::fromStdString(wallpaper->getId());
+        case NameRole: return QString::fromStdString(wallpaper->getName());
+        case ResolutionRole: return QString::fromStdString(wallpaper->getResolution().toString());
+        case SourceRole: return QString::fromStdString(wallpaper->getSource());
+        case TagsRole: return qstringTags;
         case IsBadRole: return wallpaper->isBad();
         default: return {};
     }

@@ -3,15 +3,16 @@
 
 #include "WallpaperLoader.hpp"
 
+#include <fstream>
 #include <iostream>
-#include <QDirIterator>
-#include <QJsonArray>
+#include <print>
 #include "Config.hpp"
 #include "Wallpapers.hpp"
 #include "util/Ffmpeg.hpp"
 #include "util/FormatUtils.hpp"
-#include "util/PathUtils.hpp"
 #include "util/Vips.hpp"
+
+namespace fs = std::filesystem;
 
 void WallpaperLoader::loadWallpapers() {
     Wallpapers::inst().clear();
@@ -19,51 +20,42 @@ void WallpaperLoader::loadWallpapers() {
 
     vips_init("");
 
-    for(const QString& wallpaperDirPath : Config::getWallpaperDirPaths()) {
-        if(!util::createDirIfNotExists(wallpaperDirPath + "/.index")) {
-            continue;
+    for(const auto& wallpaperDirPath : Config::getWallpaperDirPaths()) {
+        const auto wallpaperDataDirPath = wallpaperDirPath / ".index";
+
+        if(!fs::exists(wallpaperDirPath)) {
+            if(!fs::create_directory(wallpaperDirPath)) {
+                std::println(stderr, "Cant create directory \"{}\"", wallpaperDirPath.c_str());
+                continue;
+            }
         }
 
-        QDirIterator pictureIterator(
-            wallpaperDirPath,
-            util::getFileMask(util::supportedPictureFormats),
-            QDir::Files,
-            QDirIterator::Subdirectories
-        );
-        while(pictureIterator.hasNext()) {
-            pictureIterator.next();
-
-            const auto wallpaperId = pictureIterator.fileInfo().completeBaseName();
-
-            Wallpapers::inst().add(
-                std::move(
-                    loadPictureWallpaper(
-                        pictureIterator.fileInfo(),
-                        readWallpaperData(wallpaperDirPath + "/.index/" + wallpaperId + ".json", wallpaperId)
-                    )
-                )
-            );
+        if(!fs::exists(wallpaperDataDirPath)) {
+            if(!fs::create_directory(wallpaperDataDirPath)) {
+                std::println(stderr, "Cant create directory \"{}\"", wallpaperDataDirPath.c_str());
+                continue;
+            }
         }
 
-        QDirIterator videoIterator(
-            wallpaperDirPath,
-            util::getFileMask(util::supportedVideoFormats),
-            QDir::Files,
-            QDirIterator::Subdirectories
-        );
-        while(videoIterator.hasNext()) {
-            videoIterator.next();
+        for(const auto& entry : fs::recursive_directory_iterator(wallpaperDirPath)) {
+            if(!entry.is_regular_file()) {
+                continue;
+            }
 
-            const auto wallpaperId = videoIterator.fileInfo().completeBaseName();
+            const auto wallpaperId = entry.path().stem().string();
+            const auto wallpaperDataPath = wallpaperDataDirPath / (wallpaperId + ".json");
 
-            Wallpapers::inst().add(
-                std::move(
-                    loadVideoWallpaper(
-                        videoIterator.fileInfo(),
-                        readWallpaperData(wallpaperDirPath + "/.index/" + wallpaperId + ".json", wallpaperId)
-                    )
-                )
-            );
+            if(util::supportedPictureFormats.contains(entry.path().extension())) {
+                Wallpapers::inst().add(
+                    std::move(loadPictureWallpaper(entry.path(), readWallpaperData(wallpaperDataPath)))
+                );
+            }
+
+            if(util::supportedVideoFormats.contains(entry.path().extension())) {
+                Wallpapers::inst().add(
+                    std::move(loadVideoWallpaper(entry.path(), readWallpaperData(wallpaperDataPath)))
+                );
+            }
         }
 
         Wallpapers::inst().sortByName();
@@ -72,99 +64,93 @@ void WallpaperLoader::loadWallpapers() {
     vips_shutdown();
 }
 
-QJsonObject WallpaperLoader::readWallpaperData(const QString& filePath, const QString& wallpaperId) {
-    const QJsonObject defaultWallpaperData{{"name", wallpaperId}, {"source", ""}, {"tags", QJsonArray{"General"}}};
-    QJsonObject wallpaperData;
+// TODO Split it away
+nlohmann::json WallpaperLoader::readWallpaperData(const std::filesystem::path& wallpaperDataPath) {
+    nlohmann::json defaultWallpaperData = {
+        {"name", wallpaperDataPath.stem()},
+        {"source", ""},
+        {"tags", {"General"}}
+    };
+    nlohmann::json wallpaperData;
+    bool isWallpaperDataFull;
 
-    if(QFile dataFile(filePath); dataFile.exists()) {
-        util::open(dataFile, QIODeviceBase::ReadOnly);
-        wallpaperData = QJsonDocument::fromJson(dataFile.readAll()).object();
-        dataFile.close();
+    if(fs::exists(wallpaperDataPath)) {
+        isWallpaperDataFull = true;
 
-        auto isFull = true;
+        std::ifstream wallpaperDataFile(wallpaperDataPath);
+        wallpaperData = nlohmann::json::parse(wallpaperDataFile);
 
-        if(wallpaperData["name"].isNull()) {
-            wallpaperData["name"] = defaultWallpaperData["name"];
-            isFull = false;
-        }
+        if(wallpaperData.is_discarded()) {
+            isWallpaperDataFull = false;
+        } else {
+            if(wallpaperData["name"].is_null()) {
+                wallpaperData["name"] = defaultWallpaperData["name"];
+                isWallpaperDataFull = false;
+            }
 
-        if(wallpaperData["source"].isNull()) {
-            wallpaperData["source"] = defaultWallpaperData["source"];
-            isFull = false;
-        }
+            if(wallpaperData["source"].is_null()) {
+                wallpaperData["source"] = defaultWallpaperData["source"];
+                isWallpaperDataFull = false;
+            }
 
-        if(wallpaperData["tags"].isNull()) {
-            wallpaperData["tags"] = defaultWallpaperData["tags"];
-            isFull = false;
-        }
-
-        if(!isFull) {
-            util::open(dataFile, QIODeviceBase::WriteOnly);
-            dataFile.write(QJsonDocument(wallpaperData).toJson());
-            dataFile.close();
+            if(wallpaperData["tags"].is_null()) {
+                wallpaperData["tags"] = defaultWallpaperData["tags"];
+                isWallpaperDataFull = false;
+            }
         }
     } else {
-        util::open(dataFile, QIODeviceBase::WriteOnly);
-        dataFile.write(QJsonDocument(defaultWallpaperData).toJson());
-        dataFile.close();
-
+        isWallpaperDataFull = false;
         wallpaperData = defaultWallpaperData;
+    }
+
+    if(!isWallpaperDataFull) {
+        std::ofstream wallpaperDataFile(wallpaperDataPath);
+        wallpaperDataFile << wallpaperData.dump(4);
     }
 
     return wallpaperData;
 }
 
 // TODO Move to std fs
-uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const QFileInfo& fileInfo, const QJsonObject& data) {
-    auto [width, height] = getPictureResolutionData(std::filesystem::path(fileInfo.filePath().toStdString()));
-    QVector<QString> tags;
-
-    for(auto tag : data["tags"].toArray()) {
-        tags.append(tag.toString());
-    }
-
+uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data) {
     return std::make_unique<PictureWallpaper>(
-        fileInfo.completeBaseName(),
-        fileInfo.absoluteFilePath(),
-        data.value("name").toString(),
-        QSize(width, height),
-        data.value("source").toString(),
-        tags
+        filePath.stem(),
+        filePath,
+        data["name"],
+        getPictureResolutionData(filePath),
+        data["source"],
+        data["tags"]
     );
 }
 
 // TODO Move to std fs
-uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const QFileInfo& fileInfo, const QJsonObject& data) {
-    auto [resolution, frameRate] = getVideoData(std::filesystem::path(fileInfo.filePath().toStdString()));
-
-    QVector<QString> tags;
-    for(auto tag : data["tags"].toArray()) {
-        tags.append(tag.toString());
-    }
+uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data) {
+    auto [resolution, frameRate] = getVideoData(filePath);
 
     return std::make_unique<VideoWallpaper>(
-        fileInfo.completeBaseName(),
-        fileInfo.absoluteFilePath(),
-        data.value("name").toString(),
-        QSize(resolution.width, resolution.height),
+        filePath.stem(),
+        filePath,
+        data["name"],
+        resolution,
         frameRate,
-        data.value("source").toString(),
-        tags
+        data["source"],
+        data["tags"]
     );
 }
 
 void WallpaperLoader::jpegUnifier() {
+    const std::pmr::unordered_set<std::string> wrongVariants = {".jpg", ".JPG", ".jpe", ".jif", ".jfi", ".jfif"};
+
     for(const auto& wallpaperDirPath : Config::getWallpaperDirPaths()) {
-        QDirIterator dirIterator(wallpaperDirPath, {"*.jpg", "*.jpe", "*.JPG"}, QDir::Files);
+        for(const auto& entry : fs::recursive_directory_iterator(wallpaperDirPath)) {
+            if(!entry.path().has_extension() || !wrongVariants.contains(entry.path().extension())) {
+                continue;
+            }
 
-        while(dirIterator.hasNext()) {
-            auto filePath = dirIterator.next();
-            auto newFilePath = filePath;
+            auto newPath = entry.path();
+            newPath.replace_extension(".jpeg");
 
-            newFilePath.chop(3);
-            newFilePath.append("jpeg");
-
-            QFile::rename(filePath, newFilePath);
+            fs::rename(entry.path(), newPath);
         }
     }
 }

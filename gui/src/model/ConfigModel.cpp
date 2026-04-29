@@ -11,7 +11,7 @@ ConfigModel& ConfigModel::inst() {
 }
 
 QString ConfigModel::getConfigFilePath() {
-    return Config::getConfigFilePath();
+    return QString::fromStdString(Config::configPath());
 }
 
 bool ConfigModel::getStatusBarVisible() {

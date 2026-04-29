@@ -3,60 +3,49 @@
 
 #include "data/PictureWallpaper.hpp"
 
-#include <QJsonArray>
-#include "util/ToString.hpp"
-
 PictureWallpaper::PictureWallpaper(
-    QString id,
-    QString filePath,
-    QString name,
-    const QSize resolution,
-    QString source,
-    QVector<QString> tags
+    std::string id,
+    std::string filePath,
+    std::string name,
+    Size resolution,
+    std::string source,
+    std::vector<std::string> tags
 ) {
     this->id = std::move(id);
     this->filePath = std::move(filePath);
     this->name = std::move(name);
-    this->resolution = resolution;
+    this->resolution = std::move(resolution);
     this->source = std::move(source);
     this->tags = std::move(tags);
 }
 
-QJsonObject PictureWallpaper::toJson() const {
-    QJsonArray wallpaperTags;
-
-    for(const auto& tag : tags) {
-        wallpaperTags.append(tag);
-    }
-
-    return QJsonObject{
+nlohmann::json PictureWallpaper::toJson() const {
+    return {
         {"id", id},
         {"path", filePath},
         {"name", name},
-        {"resolution", QString::fromStdString(util::toString(resolution))},
+        {"resolution", resolution.toString()},
         {"source", source},
-        {"tags", wallpaperTags},
+        {"tags", tags},
         {"type", "Picture"}
     };
 }
 
-QString PictureWallpaper::toString() const {
-    return QString(
-            "%1\n"
-            "    Id: %2\n"
-            "    Path: %3\n"
-            "    Resolution: %4\n"
-            "    Source: %5\n"
-            "    Tags: %6\n"
-            "    Type: %7\n"
-        )
-        .arg(
-            name,
-            id,
-            filePath,
-            util::toString(resolution),
-            source,
-            tags.join(", "),
-            "Picture"
-        );
+std::string PictureWallpaper::toString() const {
+    return std::format(
+        "{}\n"
+        "    Id: {}\n"
+        "    Path: {}\n"
+        "    Resolution: {}\n"
+        "    Source: {}\n"
+        "    Tags: {}\n"
+        "    Type: {}\n",
+        name,
+        id,
+        filePath.native(),
+        resolution.toString(),
+        source,
+        tags,
+        "Picture"
+    );
 }
