@@ -4,7 +4,7 @@ file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
 find_package(nlohmann_json REQUIRED CONFIG)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(FFmpeg REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
-pkg_check_modules(VIPS REQUIRED vips)
+pkg_check_modules(VIPS REQUIRED vips-cpp)
 
 add_library(shared STATIC ${SOURCES} ${HEADERS})
 target_include_directories(shared PUBLIC include ${VIPS_INCLUDE_DIRS})

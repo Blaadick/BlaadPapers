@@ -10,6 +10,9 @@
 
 class WallpaperLoader {
 public:
+    /**
+     * Vips should be initialized before run!
+     */
     static void loadWallpapers();
 
 private:

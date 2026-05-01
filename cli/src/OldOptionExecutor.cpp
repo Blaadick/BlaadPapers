@@ -1,7 +1,7 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "OptionExecutor.hpp"
+#include "OldOptionExecutor.hpp"
 
 #include <fcntl.h>
 #include <fstream>
@@ -9,7 +9,9 @@
 #include <print>
 #include <random>
 #include <spawn.h>
-#include "HelpStrings.hpp"
+
+#include "DefaultWallpaper.hpp"
+#include "OldHelpStrings.hpp"
 #include "Wallpapers.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Prints.hpp"
@@ -47,7 +49,7 @@ void startDaemonOption(const std::unordered_set<char>&, const std::vector<char*>
         mpvArgs += arguments[0];
     }
 
-    auto currentWallpaperPath = util::defaultWallpaperPath();
+    auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperPath();
 
     if(!fs::exists(util::currentWallpaperIdPath())) {
         std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
@@ -238,7 +240,7 @@ void countOption(const std::unordered_set<char>& subOptions, const std::vector<c
     }
 }
 
-void OptionExecutor::execute(int argc, char** argv) {
+void OldOptionExecutor::execute(int argc, char** argv) {
     if(argc < 2) {
         std::println(mainHelpMessage);
         return;
@@ -262,7 +264,7 @@ void OptionExecutor::execute(int argc, char** argv) {
         return;
     }
 
-    for(auto i = 2; i < strlen(argv[1]); i++) {
+    for(int i = 2; i < strlen(argv[1]); i++) {
         switch(argv[1][i]) {
             case 'h': {
                 std::println(options[option].helpMessage);
@@ -288,7 +290,7 @@ void OptionExecutor::execute(int argc, char** argv) {
     options[option].func(subOptions, arguments);
 }
 
-std::unordered_map<char, Option> OptionExecutor::options = {
+std::unordered_map<char, OldOption> OldOptionExecutor::options = {
     {'h', {helpOption, {}, "Ha ha!"}}, // Because it's familiar
     {'H', {helpOption, {}, "WTF bro? You really need help with it?"}},
     {'V', {versionOption, {'j'}, versionHelpMessage}},

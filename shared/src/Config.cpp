@@ -18,9 +18,7 @@ void Config::load() {
     };
     nlohmann::json configData;
 
-    if(!fs::exists(util::configDirPath())) {
-        fs::create_directory(util::configDirPath());
-    }
+    util::createDirIfNotExists(util::configDirPath());
 
     if(fs::exists(configPath())) {
         std::ifstream configFile(configPath());
@@ -32,13 +30,13 @@ void Config::load() {
         }
     } else {
         std::ofstream configFile(configPath());
-        configFile << defaultConfigData;
+        configFile << defaultConfigData.dump(4);
         configData = defaultConfigData;
     }
 
-    badTags = configData["bad_tags"];
-    wallpaperDirPaths = configData["wallpaper_paths"];
-    isStatusBarVisible = configData["status_bar_visible"];
+    badTags = configData["bad_tags"].is_null() ? defaultConfigData["bad_tags"] : configData["bad_tags"];
+    wallpaperDirPaths = configData["wallpaper_paths"].is_null() ? defaultConfigData["wallpaper_paths"] : configData["wallpaper_paths"];
+    isStatusBarVisible = configData["status_bar_visible"].is_null() ? defaultConfigData["status_bar_visible"] : configData["status_bar_visible"];
 }
 
 std::vector<std::string> Config::getBadTags() {
@@ -55,6 +53,7 @@ bool Config::getStatusBarVisible() {
 
 void Config::setStatusBarVisible(const bool newVisibility) {
     isStatusBarVisible = newVisibility;
+    updateConfig("status_bar_visible", isStatusBarVisible);
 }
 
 std::filesystem::path Config::configPath() {
@@ -64,3 +63,20 @@ std::filesystem::path Config::configPath() {
 std::vector<std::string> Config::badTags;
 std::vector<fs::path> Config::wallpaperDirPaths;
 bool Config::isStatusBarVisible;
+
+template<typename T>
+void Config::updateConfig(const std::string& name, const T& value) {
+    nlohmann::json configData;
+
+    {
+        std::ifstream configFile(configPath());
+        configFile >> configData;
+    }
+
+    configData[name] = value;
+
+    {
+        std::ofstream configFile(configPath());
+        configFile << configData.dump(4).append("\n");
+    }
+}

@@ -22,7 +22,11 @@ Size getScreenAspectRatio(const QScreen* screen) {
 }
 
 void PreviewManager::createAndSavePreview(const uptr<Wallpaper>& wallpaper) {
-    for(const auto screen : QGuiApplication::screens()) {
+    if(!util::createDirIfNotExists(util::cacheDirPath())) {
+        util::logWarn("Failed to create directory \"{}\"", util::cacheDirPath().c_str());
+    }
+
+    for(const QScreen* screen : QGuiApplication::screens()) {
         const auto previewPath = util::previewsDirPath(screen).append(wallpaper->getId() + ".webp");
         const auto previewSize = getScreenAspectRatio(screen) * 20 * screen->devicePixelRatio();
 

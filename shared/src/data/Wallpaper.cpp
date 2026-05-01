@@ -51,8 +51,10 @@ bool Wallpaper::apply() const {
 
     close(sock);
 
-    std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
-    currentWallpaperIdFile << id;
+    if(util::createDirIfNotExists(util::localDataDirPath())) {
+        std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
+        currentWallpaperIdFile << id;
+    }
 
     PostSetScript::execute(*this);
 

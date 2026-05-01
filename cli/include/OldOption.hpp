@@ -7,7 +7,7 @@
 #include <string_view>
 #include <unordered_set>
 
-struct Option {
+struct OldOption {
     std::function<void(const std::unordered_set<char>&, const std::vector<char*>&)> func;
     std::unordered_set<char> allowableSubOptions;
     std::string_view helpMessage;

@@ -7,14 +7,14 @@ PictureWallpaper::PictureWallpaper(
     std::string id,
     std::string filePath,
     std::string name,
-    Size resolution,
+    const Size resolution,
     std::string source,
     std::vector<std::string> tags
 ) {
     this->id = std::move(id);
     this->filePath = std::move(filePath);
     this->name = std::move(name);
-    this->resolution = std::move(resolution);
+    this->resolution = resolution;
     this->source = std::move(source);
     this->tags = std::move(tags);
 }

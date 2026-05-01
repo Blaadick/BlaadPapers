@@ -7,19 +7,6 @@
 #include <string>
 
 namespace util {
-    /**
-     * Returns false on error. If directory already exists, or was successfully created, returns true.
-     */
-    inline bool createDirIfNotExists(const std::filesystem::path& path) {
-        if(!std::filesystem::exists(path)) {
-            if(!std::filesystem::create_directory(path)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     inline std::filesystem::path cacheDirPath() {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");
@@ -64,7 +51,16 @@ namespace util {
         return localDataDirPath().append("current-wallpaper");
     }
 
-    inline std::filesystem::path defaultWallpaperPath() {
-        return localDataDirPath().append("default-wallpaper.png");
+    /**
+     * Returns false on error. If directory already exists, or was successfully created, returns true.
+     */
+    inline bool createDirIfNotExists(const std::filesystem::path& path) {
+        if(!std::filesystem::exists(path)) {
+            if(!std::filesystem::create_directory(path)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

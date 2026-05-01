@@ -10,6 +10,7 @@
 #include "Wallpapers.hpp"
 #include "util/Ffmpeg.hpp"
 #include "util/FormatUtils.hpp"
+#include "util/PathUtils.hpp"
 #include "util/Vips.hpp"
 
 namespace fs = std::filesystem;
@@ -18,23 +19,17 @@ void WallpaperLoader::loadWallpapers() {
     Wallpapers::inst().clear();
     jpegUnifier();
 
-    vips_init("");
-
     for(const auto& wallpaperDirPath : Config::getWallpaperDirPaths()) {
         const auto wallpaperDataDirPath = wallpaperDirPath / ".index";
 
-        if(!fs::exists(wallpaperDirPath)) {
-            if(!fs::create_directory(wallpaperDirPath)) {
-                std::println(stderr, "Cant create directory \"{}\"", wallpaperDirPath.c_str());
-                continue;
-            }
+        if(!util::createDirIfNotExists(wallpaperDirPath)) {
+            std::println(stderr, "Cant create directory \"{}\"", wallpaperDirPath.c_str());
+            continue;
         }
 
-        if(!fs::exists(wallpaperDataDirPath)) {
-            if(!fs::create_directory(wallpaperDataDirPath)) {
-                std::println(stderr, "Cant create directory \"{}\"", wallpaperDataDirPath.c_str());
-                continue;
-            }
+        if(!util::createDirIfNotExists(wallpaperDataDirPath)) {
+            std::println(stderr, "Cant create directory \"{}\"", wallpaperDataDirPath.c_str());
+            continue;
         }
 
         for(const auto& entry : fs::recursive_directory_iterator(wallpaperDirPath)) {
@@ -60,8 +55,6 @@ void WallpaperLoader::loadWallpapers() {
 
         Wallpapers::inst().sortByName();
     }
-
-    vips_shutdown();
 }
 
 // TODO Split it away

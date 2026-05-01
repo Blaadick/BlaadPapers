@@ -28,7 +28,7 @@ void WallpapersModel::load() {
         util::logWarn("Failed to create directory \"{}\"", util::previewsDirPath().c_str());
     }
 
-    for(const auto screen : QGuiApplication::screens()) {
+    for(const QScreen* screen : QGuiApplication::screens()) {
         if(!util::createDirIfNotExists(util::previewsDirPath(screen))) {
             util::logWarn("Failed to create directory \"{}\"", util::previewsDirPath(screen).c_str());
         }

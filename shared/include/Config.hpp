@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <string>
 #include <vector>
-#include <bits/fs_path.h>
 
 class Config {
 public:
@@ -29,4 +28,7 @@ private:
     static std::vector<std::string> badTags;
     static std::vector<std::filesystem::path> wallpaperDirPaths;
     static bool isStatusBarVisible;
+
+    template<typename T>
+    static void updateConfig(const std::string& name, const T& value);
 };
