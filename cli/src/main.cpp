@@ -12,7 +12,8 @@
 namespace fs = std::filesystem;
 
 int main(int argc, char** argv) {
-    vips_init("blaadpaperscli");
+    vips_init(argv[0]);
+    vips_cache_set_max(0);
 
     Config::load();
     PostSetScript::createIfNotExists();

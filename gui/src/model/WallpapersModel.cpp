@@ -3,15 +3,12 @@
 
 #include "model/WallpapersModel.hpp"
 
-#include <QImage>
-#include <QScreen>
 #include <QtConcurrent>
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "model/StatusModel.hpp"
 #include "preview/PreviewManager.hpp"
 #include "util/Loggers.hpp"
-#include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -64,10 +61,10 @@ int WallpapersModel::rowCount(const QModelIndex& parent) const {
 QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     const Wallpaper* wallpaper = Wallpapers::inst().get(index.row());
 
-    QStringList qstringTags;
-    qstringTags.reserve(wallpaper->getTags().size());
+    QStringList qStringTags;
+    qStringTags.reserve(wallpaper->getTags().size());
     for(const auto& tag : wallpaper->getTags()) {
-        qstringTags.append(QString::fromStdString(tag));
+        qStringTags.append(QString::fromStdString(tag));
     }
 
     switch(role) {
@@ -76,7 +73,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
         case RootDirRole: return QString::fromStdString(wallpaper->getFilePath().parent_path());
         case ResolutionRole: return QString::fromStdString(wallpaper->getResolution().toString());
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
-        case TagsRole: return qstringTags;
+        case TagsRole: return qStringTags;
         case IsBadRole: return wallpaper->isBad();
         default: return {};
     }

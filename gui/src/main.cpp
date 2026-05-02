@@ -22,7 +22,8 @@ int main(int argc, char** argv) {
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
 
-    vips_init("blaadpapers");
+    vips_init(argv[0]);
+    vips_cache_set_max(0);
 
     Config::load();
     PostSetScript::createIfNotExists();
