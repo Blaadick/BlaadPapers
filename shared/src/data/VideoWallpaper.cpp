@@ -3,9 +3,12 @@
 
 #include "data/VideoWallpaper.hpp"
 
+const std::unordered_set<std::string> VideoWallpaper::supportedFormats = {".mp4", ".webm"};
+
 VideoWallpaper::VideoWallpaper(
     std::string id,
-    std::string filePath,
+    std::filesystem::path filePath,
+    std::filesystem::path dirPath,
     std::string name,
     const Size resolution,
     const int frameRate,
@@ -14,6 +17,7 @@ VideoWallpaper::VideoWallpaper(
 ) {
     this->id = std::move(id);
     this->filePath = std::move(filePath);
+    this->dirPath = std::move(dirPath);
     this->name = std::move(name);
     this->resolution = resolution;
     this->frameRate = frameRate;

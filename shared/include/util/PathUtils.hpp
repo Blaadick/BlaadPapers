@@ -28,23 +28,11 @@ namespace util {
         #endif
     }
 
-    inline std::filesystem::path picturesDirPath() {
+    inline std::filesystem::path documentsDirPath() {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");
-        return homeDir.append("Pictures");
+        return homeDir.append("Documents");
         #endif
-    }
-
-    inline std::filesystem::path videosDirPath() {
-        #ifdef __linux__
-        std::filesystem::path homeDir = getenv("HOME");
-        return homeDir.append("Videos");
-        #endif
-    }
-
-    //TODO Move this shit to gui
-    inline std::filesystem::path previewsDirPath() {
-        return cacheDirPath().append("preview");
     }
 
     inline std::filesystem::path currentWallpaperIdPath() {

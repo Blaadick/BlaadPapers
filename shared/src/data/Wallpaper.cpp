@@ -70,6 +70,10 @@ const fs::path& Wallpaper::getFilePath() const {
     return filePath;
 }
 
+const fs::path& Wallpaper::getDirPath() const {
+    return dirPath;
+}
+
 const std::string& Wallpaper::getName() const {
     return name;
 }

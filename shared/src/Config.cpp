@@ -13,7 +13,7 @@ namespace fs = std::filesystem;
 void Config::load() {
     nlohmann::json defaultConfigData = {
         {"bad_tags", {"Sensitive", "Questionable", "Explicit"}},
-        {"wallpaper_paths", {util::picturesDirPath().append("Wallpapers")}},
+        {"wallpaper_paths", {util::documentsDirPath().append("Wallpapers")}},
         {"status_bar_visible", false}
     };
     nlohmann::json configData;

@@ -19,6 +19,9 @@ public:
     const std::filesystem::path& getFilePath() const;
 
     [[nodiscard]]
+    const std::filesystem::path& getDirPath() const;
+
+    [[nodiscard]]
     const std::string& getName() const;
 
     [[nodiscard]]
@@ -47,6 +50,7 @@ public:
 protected:
     std::string id;
     std::filesystem::path filePath;
+    std::filesystem::path dirPath;
     std::string name;
     Size resolution;
     std::string source;

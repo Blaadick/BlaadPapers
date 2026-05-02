@@ -18,6 +18,7 @@ Item {
 
     property string wid
     property string name
+    property string rootDir
     property string resolution
     property string source
     property var tags
@@ -28,7 +29,7 @@ Item {
     AnimatedImage {
         anchors.fill: parent
         visible: censor.opacity < 1
-        source: `${StandardPaths.writableLocation(StandardPaths.CacheLocation)}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}/${preview.wid}.webp`
+        source: `file://${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
     }

@@ -37,6 +37,7 @@ Flickable {
                     anchors.fill: parent
                     wid: wallpaperId
                     name: wallpaperName
+                    rootDir: wallpaperRootDir
                     resolution: wallpaperResolution
                     source: wallpaperSource
                     tags: wallpaperTags

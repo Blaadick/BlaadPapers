@@ -4,13 +4,14 @@
 #include "model/WallpapersModel.hpp"
 
 #include <QImage>
+#include <QScreen>
 #include <QtConcurrent>
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "model/StatusModel.hpp"
 #include "preview/PreviewManager.hpp"
 #include "util/Loggers.hpp"
-#include "util/PathUtilsExtra.hpp"
+#include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -23,16 +24,6 @@ void WallpapersModel::load() {
     beginResetModel();
     WallpaperLoader::loadWallpapers();
     endResetModel();
-
-    if(!util::createDirIfNotExists(util::previewsDirPath())) {
-        util::logWarn("Failed to create directory \"{}\"", util::previewsDirPath().c_str());
-    }
-
-    for(const QScreen* screen : QGuiApplication::screens()) {
-        if(!util::createDirIfNotExists(util::previewsDirPath(screen))) {
-            util::logWarn("Failed to create directory \"{}\"", util::previewsDirPath(screen).c_str());
-        }
-    }
 
     QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreview);
 }
@@ -82,6 +73,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     switch(role) {
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
+        case RootDirRole: return QString::fromStdString(wallpaper->getFilePath().parent_path());
         case ResolutionRole: return QString::fromStdString(wallpaper->getResolution().toString());
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qstringTags;
@@ -94,6 +86,7 @@ QHash<int, QByteArray> WallpapersModel::roleNames() const {
     return {
         {IdRole, "wallpaperId"},
         {NameRole, "wallpaperName"},
+        {RootDirRole, "wallpaperRootDir"},
         {ResolutionRole, "wallpaperResolution"},
         {SourceRole, "wallpaperSource"},
         {TagsRole, "wallpaperTags"},

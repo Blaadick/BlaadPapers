@@ -18,9 +18,17 @@ public:
 private:
     static nlohmann::json readWallpaperData(const std::filesystem::path& wallpaperDataPath);
 
-    static uptr<PictureWallpaper> loadPictureWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data);
+    static uptr<PictureWallpaper> loadPictureWallpaper(
+        const std::string& wallpaperId,
+        const std::filesystem::path& filePath,
+        const nlohmann::json& data
+    );
 
-    static uptr<VideoWallpaper> loadVideoWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data);
+    static uptr<VideoWallpaper> loadVideoWallpaper(
+        const std::string& wallpaperId,
+        const std::filesystem::path& filePath,
+        const nlohmann::json& data
+    );
 
     /**
     * We are not in DOS time! I turn it off if it is too annoying.

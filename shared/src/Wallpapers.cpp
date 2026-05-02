@@ -60,16 +60,7 @@ bool Wallpapers::remove(const std::string& id) {
     const auto wallpaper = std::move(*it);
     wallpapers.erase(it);
 
-    fs::remove(wallpaper->getFilePath());
-    fs::remove(wallpaper->getFilePath().root_directory().append(".index/" + wallpaper->getId() + ".json"));
-
-    //TODO Idk, it shouldn't be here. Mb move it
-    for(const auto& entry : fs::recursive_directory_iterator(util::previewsDirPath())) {
-        if(entry.path().stem() == wallpaper->getId()) {
-            fs::remove(entry.path());
-        }
-    }
-
+    fs::remove_all(wallpaper->getDirPath());
     return true;
 }
 

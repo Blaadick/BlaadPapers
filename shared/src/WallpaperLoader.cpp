@@ -9,7 +9,6 @@
 #include "Config.hpp"
 #include "Wallpapers.hpp"
 #include "util/Ffmpeg.hpp"
-#include "util/FormatUtils.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Vips.hpp"
 
@@ -19,42 +18,52 @@ void WallpaperLoader::loadWallpapers() {
     Wallpapers::inst().clear();
     jpegUnifier();
 
-    for(const auto& wallpaperDirPath : Config::getWallpaperDirPaths()) {
-        const auto wallpaperDataDirPath = wallpaperDirPath / ".index";
-
-        if(!util::createDirIfNotExists(wallpaperDirPath)) {
-            std::println(stderr, "Cant create directory \"{}\"", wallpaperDirPath.c_str());
+    for(const auto& wallpapersDirPath : Config::getWallpaperDirPaths()) {
+        if(!util::createDirIfNotExists(wallpapersDirPath)) {
+            std::println(stderr, "Failed to create directory \"{}\"", wallpapersDirPath.c_str());
             continue;
         }
 
-        if(!util::createDirIfNotExists(wallpaperDataDirPath)) {
-            std::println(stderr, "Cant create directory \"{}\"", wallpaperDataDirPath.c_str());
-            continue;
-        }
-
-        for(const auto& entry : fs::recursive_directory_iterator(wallpaperDirPath)) {
-            if(!entry.is_regular_file()) {
+        for(const auto& wallpapersDirEntry : fs::directory_iterator(wallpapersDirPath)) {
+            if(!wallpapersDirEntry.is_directory()) {
                 continue;
             }
 
-            const auto wallpaperId = entry.path().stem().string();
-            const auto wallpaperDataPath = wallpaperDataDirPath / (wallpaperId + ".json");
+            for(const auto& wallpaperDirEntry : fs::directory_iterator(wallpapersDirEntry.path())) {
+                if(wallpaperDirEntry.path().stem() != "wallpaper") {
+                    continue;
+                }
 
-            if(util::supportedPictureFormats.contains(entry.path().extension())) {
-                Wallpapers::inst().add(
-                    std::move(loadPictureWallpaper(entry.path(), readWallpaperData(wallpaperDataPath)))
-                );
-            }
+                if(PictureWallpaper::supportedFormats.contains(wallpaperDirEntry.path().extension())) {
+                    Wallpapers::inst().add(
+                        std::move(
+                            loadPictureWallpaper(
+                                wallpapersDirEntry.path().stem(),
+                                wallpaperDirEntry.path(),
+                                readWallpaperData(wallpapersDirEntry.path() / "data.json")
+                            )
+                        )
+                    );
+                    break;
+                }
 
-            if(util::supportedVideoFormats.contains(entry.path().extension())) {
-                Wallpapers::inst().add(
-                    std::move(loadVideoWallpaper(entry.path(), readWallpaperData(wallpaperDataPath)))
-                );
+                if(VideoWallpaper::supportedFormats.contains(wallpaperDirEntry.path().extension())) {
+                    Wallpapers::inst().add(
+                        std::move(
+                            loadVideoWallpaper(
+                                wallpapersDirEntry.path().stem(),
+                                wallpaperDirEntry.path(),
+                                readWallpaperData(wallpapersDirEntry.path() / "data.json")
+                            )
+                        )
+                    );
+                    break;
+                }
             }
         }
-
-        Wallpapers::inst().sortByName();
     }
+
+    Wallpapers::inst().sortByName();
 }
 
 // TODO Split it away
@@ -104,11 +113,15 @@ nlohmann::json WallpaperLoader::readWallpaperData(const std::filesystem::path& w
     return wallpaperData;
 }
 
-// TODO Move to std fs
-uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data) {
+uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(
+    const std::string& wallpaperId,
+    const std::filesystem::path& filePath,
+    const nlohmann::json& data
+) {
     return std::make_unique<PictureWallpaper>(
-        filePath.stem(),
+        wallpaperId,
         filePath,
+        filePath.parent_path(),
         data["name"],
         getPictureResolutionData(filePath),
         data["source"],
@@ -116,13 +129,17 @@ uptr<PictureWallpaper> WallpaperLoader::loadPictureWallpaper(const std::filesyst
     );
 }
 
-// TODO Move to std fs
-uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(const std::filesystem::path& filePath, const nlohmann::json& data) {
+uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(
+    const std::string& wallpaperId,
+    const std::filesystem::path& filePath,
+    const nlohmann::json& data
+) {
     auto [resolution, frameRate] = getVideoData(filePath);
 
     return std::make_unique<VideoWallpaper>(
-        filePath.stem(),
+        wallpaperId,
         filePath,
+        filePath.parent_path(),
         data["name"],
         resolution,
         frameRate,

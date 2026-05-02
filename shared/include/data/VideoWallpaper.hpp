@@ -3,13 +3,17 @@
 
 #pragma once
 
+#include <unordered_set>
 #include "Wallpaper.hpp"
 
 class VideoWallpaper : public Wallpaper {
 public:
+    static const std::unordered_set<std::string> supportedFormats;
+
     VideoWallpaper(
         std::string id,
-        std::string filePath,
+        std::filesystem::path filePath,
+        std::filesystem::path dirPath,
         std::string name,
         Size resolution,
         int frameRate,
