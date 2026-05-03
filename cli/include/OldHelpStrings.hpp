@@ -6,13 +6,13 @@
 #include <string_view>
 
 inline std::string_view mainHelpMessage = R"#(Usage:
-    blaadpapers
     blaadpapers -<option>[sub_options]
 
 Options:
     H  ->  Shows this help
     V  ->  Shows program version
     S  ->  Starts the renderer daemon
+    U  ->  Adds wallpaper(s) to the first wallpapers folder
     A  ->  Sets the wallpaper
     R  ->  Sets the random wallpaper
     D  ->  Deletes the wallpaper
@@ -32,6 +32,9 @@ Sub options:
 
 inline std::string_view startDaemonHelpMessage = R"#(Usage:
     blaadpapers -S [mpv_args])#";
+
+inline std::string_view addWallpaperHelpMessage = R"#(Usage:
+    blaadpapers -U [file_or_directory_path]...)#";
 
 inline std::string_view applyHelpMessage = R"#(Usage:
     blaadpapers -A[sub_options] <wallpaper_id>)#";

@@ -9,9 +9,12 @@
 #include <print>
 #include <random>
 #include <spawn.h>
+#include <unistd.h>
 
+#include "Config.hpp"
 #include "DefaultWallpaper.hpp"
 #include "OldHelpStrings.hpp"
+#include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Prints.hpp"
@@ -85,6 +88,21 @@ void startDaemonOption(const std::unordered_set<char>&, const std::vector<char*>
     pid_t pid;
     posix_spawn(&pid, "/usr/bin/mpvpaper", &actions, nullptr, args, environ);
     posix_spawn_file_actions_destroy(&actions);
+}
+
+void addWallpaperOption(const std::unordered_set<char>&, const std::vector<char*>& arguments) {
+    if(arguments.empty()) {
+        std::println(stderr, "One or more wallpaper file paths expected");
+        return;
+    }
+
+    std::vector<fs::path> wallpapersToAddPaths;
+    for(const auto rawWallpaperFilePath : arguments) {
+        wallpapersToAddPaths.emplace_back(rawWallpaperFilePath);
+    }
+
+    WallpaperLoader::addWallpapers(wallpapersToAddPaths, Config::getWallpaperDirPaths()[0]);
+    Wallpapers::inst().sortByName();
 }
 
 void applyOption(const std::unordered_set<char>&, const std::vector<char*>& arguments) {
@@ -295,6 +313,7 @@ std::unordered_map<char, OldOption> OldOptionExecutor::options = {
     {'H', {helpOption, {}, "WTF bro? You really need help with it?"}},
     {'V', {versionOption, {'j'}, versionHelpMessage}},
     {'S', {startDaemonOption, {}, startDaemonHelpMessage}},
+    {'U', {addWallpaperOption, {}, addWallpaperHelpMessage}},
     {'A', {applyOption, {}, applyHelpMessage}},
     {'R', {randomOption, {'f'}, randomHelpMessage}},
     {'D', {deleteOption, {}, deleteHelpMessage}},

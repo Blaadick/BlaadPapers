@@ -71,6 +71,12 @@ Item {
         }
 
         Action {
+            text: "Open Folder"
+            icon.source: "qrc:/BlaadPapers/resource/icon/folder_open.svg"
+            onTriggered: Qt.openUrlExternally(`file://${preview.rootDir}`)
+        }
+
+        Action {
             text: "Edit"
             icon.source: "qrc:/BlaadPapers/resource/icon/edit.svg"
         }

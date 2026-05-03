@@ -15,6 +15,16 @@ public:
      */
     static void loadWallpapers();
 
+    static bool addWallpaper(
+        const std::filesystem::path& wallpaperFilePath,
+        const std::filesystem::path& destinationFolderPath
+    );
+
+    static void addWallpapers(
+        const std::vector<std::filesystem::path>& paths,
+        const std::filesystem::path& destinationFolderPath
+    );
+
 private:
     static nlohmann::json readWallpaperData(const std::filesystem::path& wallpaperDataPath);
 

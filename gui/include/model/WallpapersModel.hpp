@@ -23,7 +23,13 @@ public:
 
     static WallpapersModel& inst();
 
-    void load();
+    void loadWallpapers();
+
+    void addWallpapers(const QStringList& paths, const QString& destinationDirPath);
+
+    Q_INVOKABLE void addWallpapers();
+
+    Q_INVOKABLE void addWallpapers(const QStringList& paths);
 
     Q_INVOKABLE void applyWallpaper(const QString& wallpaperId) const;
 

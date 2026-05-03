@@ -16,8 +16,14 @@ ApplicationWindow {
         id: contextMenu
 
         Action {
+            text: "Add wallpapers"
+            icon.source: "qrc:/BlaadPapers/resource/icon/add.svg"
+            onTriggered: Wallpapers.addWallpapers()
+        }
+
+        Action {
             text: "Open Config"
-            icon.source: "qrc:/BlaadPapers/resource/icon/edit.svg"
+            icon.source: "qrc:/BlaadPapers/resource/icon/file_open.svg"
             onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
         }
 
@@ -89,5 +95,22 @@ ApplicationWindow {
             Layout.fillWidth: true
             visible: Config.statusBarVisible
         }
+    }
+
+    DropArea {
+        id: dropArea
+        anchors.fill: parent
+
+        onDropped: function(drop) {
+            Wallpapers.addWallpapers(drop.urls.map(url => url.toString().substring(7)))
+        }
+    }
+
+    Rectangle {
+        id: dropAreaVisualization
+        anchors.fill: parent
+        visible: dropArea.containsDrag
+        color: "#ffffff"
+        opacity: 0.2
     }
 }

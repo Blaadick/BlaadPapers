@@ -3,7 +3,10 @@
 
 #include "model/WallpapersModel.hpp"
 
-#include <QtConcurrent>
+#include <QtConcurrentMap>
+#include <QThreadPool>
+#include <QFileDialog>
+#include "Config.hpp"
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "model/StatusModel.hpp"
@@ -17,17 +20,72 @@ WallpapersModel& WallpapersModel::inst() {
     return instance;
 }
 
-void WallpapersModel::load() {
+void WallpapersModel::loadWallpapers() {
     beginResetModel();
     WallpaperLoader::loadWallpapers();
+    Wallpapers::inst().sortByName();
     endResetModel();
 
     QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreview);
 }
 
+void WallpapersModel::addWallpapers(const QStringList& paths, const QString& destinationDirPath) {
+    std::vector<fs::path> stdPaths;
+    for(const auto& qStringPath : paths) {
+        stdPaths.emplace_back(qStringPath.toStdString());
+    }
+
+    beginResetModel();
+    WallpaperLoader::addWallpapers(stdPaths, destinationDirPath.toStdString());
+    Wallpapers::inst().sortByName();
+    endResetModel();
+
+    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreview);
+}
+
+void WallpapersModel::addWallpapers() {
+    QString supportedPictureFormatsString;
+    for(const auto& format : PictureWallpaper::supportedFormats) {
+        supportedPictureFormatsString += '*' + format + ' ';
+    }
+
+    QString supportedVideoFormatsString;
+    for(const auto& format : VideoWallpaper::supportedFormats) {
+        supportedVideoFormatsString += '*' + format + ' ';
+    }
+
+    QFileDialog fileSelector;
+    fileSelector.setFileMode(QFileDialog::ExistingFiles);
+    fileSelector.setNameFilters({
+        "Any Supported (" + supportedPictureFormatsString + supportedVideoFormatsString + ')',
+        "Picture (" + supportedPictureFormatsString + ')',
+        "Video (" + supportedVideoFormatsString + ')'
+    });
+
+    if(!fileSelector.exec()) {
+        util::logWarn("Failed to take files from file dialog");
+        return;
+    }
+
+    const auto selectedFiles = fileSelector.selectedFiles();
+    QThreadPool::globalInstance()->start(
+        [this, selectedFiles] {
+            addWallpapers(selectedFiles, QString::fromStdString(Config::getWallpaperDirPaths()[0]));
+        }
+    );
+}
+
+void WallpapersModel::addWallpapers(const QStringList& paths) {
+    QThreadPool::globalInstance()->start(
+        [this, paths] {
+            addWallpapers(paths, QString::fromStdString(Config::getWallpaperDirPaths()[0]));
+        }
+    );
+}
+
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
-        [=] {
+        [wallpaperId] {
             if(Wallpapers::inst().apply(wallpaperId.toStdString())) {
                 util::logInfo("Wallpaper \"{}\" applied", wallpaperId.toStdString());
                 util::sendStatus("Wallpaper \"{}\" applied", wallpaperId.toStdString());
@@ -41,8 +99,7 @@ void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
 
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
-        [=] {
-            //TODO Fix model updating and fast deleting crash
+        [wallpaperId] {
             if(Wallpapers::inst().remove(wallpaperId.toStdString())) {
                 util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
                 util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());

@@ -7,9 +7,7 @@
 #include "OldOptionExecutor.hpp"
 #include "PostSetScript.hpp"
 #include "WallpaperLoader.hpp"
-#include "argument/Argument.hpp"
-
-namespace fs = std::filesystem;
+#include "Wallpapers.hpp"
 
 int main(int argc, char** argv) {
     vips_init(argv[0]);
@@ -20,9 +18,9 @@ int main(int argc, char** argv) {
     DefaultWallpaper::createIfNotExists();
 
     WallpaperLoader::loadWallpapers();
-    OldOptionExecutor::execute(argc, argv);
+    Wallpapers::inst().sortByName();
 
-    Argument<int> wallpaperId("dawd", true);
+    OldOptionExecutor::execute(argc, argv);
 
     vips_shutdown();
 }

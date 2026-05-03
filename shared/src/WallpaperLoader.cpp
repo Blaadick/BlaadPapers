@@ -62,14 +62,105 @@ void WallpaperLoader::loadWallpapers() {
             }
         }
     }
+}
 
-    Wallpapers::inst().sortByName();
+bool WallpaperLoader::addWallpaper(
+    const fs::path& wallpaperFilePath,
+    const fs::path& destinationFolderPath
+) {
+    bool isPicture = false;
+    if(PictureWallpaper::supportedFormats.contains(wallpaperFilePath.extension())) {
+        isPicture = true;
+    }
+
+    bool isVideo = false;
+    if(VideoWallpaper::supportedFormats.contains(wallpaperFilePath.extension())) {
+        isVideo = true;
+    }
+
+    if(!isVideo && !isPicture) {
+        std::println(stderr, "\"{}\" files are not supported", wallpaperFilePath.extension().c_str());
+        return false;
+    }
+
+    const auto wallpaperRootPath = destinationFolderPath / wallpaperFilePath.stem();
+    if(fs::exists(wallpaperRootPath)) {
+        std::println(stderr, "Wallpaper with id \"{}\" already exists", wallpaperFilePath.stem().c_str());
+        return false;
+    }
+
+    if(!fs::create_directory(wallpaperRootPath)) {
+        std::println(stderr, "Failed to create directory \"{}\"", wallpaperRootPath.c_str());
+        return false;
+    }
+
+    const auto newWallpaperFilePath = wallpaperRootPath / ("wallpaper" + wallpaperFilePath.extension().string());
+    if(!fs::copy_file(wallpaperFilePath, newWallpaperFilePath)) {
+        fs::remove_all(wallpaperRootPath);
+        return false;
+    }
+
+    if(isPicture) {
+        Wallpapers::inst().add(
+            std::move(
+                loadPictureWallpaper(
+                    wallpaperFilePath.stem(),
+                    newWallpaperFilePath,
+                    readWallpaperData(wallpaperRootPath / "data.json")
+                )
+            )
+        );
+        return true;
+    }
+
+    if(isVideo) {
+        Wallpapers::inst().add(
+            std::move(
+                loadVideoWallpaper(
+                    wallpaperFilePath.stem(),
+                    newWallpaperFilePath,
+                    readWallpaperData(wallpaperRootPath / "data.json")
+                )
+            )
+        );
+        return true;
+    }
+
+    return false;
+}
+
+// TODO Refactor
+void WallpaperLoader::addWallpapers(
+    const std::vector<fs::path>& paths,
+    const fs::path& destinationFolderPath
+) {
+    for(const auto& path : paths) {
+        if(fs::is_directory(path)) {
+            for(const auto& dirEntry : fs::directory_iterator(path)) {
+                if(!dirEntry.is_regular_file()) {
+                    continue;
+                }
+
+                if(!addWallpaper(dirEntry.path(), destinationFolderPath)) {
+                    std::println(stderr, "Failed to add wallpaper from file \"{}\"", dirEntry.path().c_str());
+                }
+            }
+
+            continue;
+        }
+
+        if(fs::is_regular_file(path)) {
+            if(!addWallpaper(path, destinationFolderPath)) {
+                std::println(stderr, "Failed to add wallpaper from file \"{}\"", path.c_str());
+            }
+        }
+    }
 }
 
 // TODO Split it away
 nlohmann::json WallpaperLoader::readWallpaperData(const std::filesystem::path& wallpaperDataPath) {
     nlohmann::json defaultWallpaperData = {
-        {"name", wallpaperDataPath.stem()},
+        {"name", wallpaperDataPath.parent_path().stem()},
         {"source", ""},
         {"tags", {"General"}}
     };
@@ -151,8 +242,13 @@ uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(
 void WallpaperLoader::jpegUnifier() {
     const std::pmr::unordered_set<std::string> wrongVariants = {".jpg", ".JPG", ".jpe", ".jif", ".jfi", ".jfif"};
 
-    for(const auto& wallpaperDirPath : Config::getWallpaperDirPaths()) {
-        for(const auto& entry : fs::recursive_directory_iterator(wallpaperDirPath)) {
+    for(const auto& wallpapersDirPath : Config::getWallpaperDirPaths()) {
+        if(!util::createDirIfNotExists(wallpapersDirPath)) {
+            std::println(stderr, "Failed to create directory \"{}\"", wallpapersDirPath.c_str());
+            continue;
+        }
+
+        for(const auto& entry : fs::recursive_directory_iterator(wallpapersDirPath)) {
             if(!entry.path().has_extension() || !wrongVariants.contains(entry.path().extension())) {
                 continue;
             }
