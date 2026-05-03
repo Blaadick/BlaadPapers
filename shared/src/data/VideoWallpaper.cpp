@@ -3,7 +3,11 @@
 
 #include "data/VideoWallpaper.hpp"
 
-const std::unordered_set<std::string> VideoWallpaper::supportedFormats = {".mp4", ".webm"};
+const std::unordered_set<std::string> VideoWallpaper::supportedFormats = {
+    ".mp4",
+    ".webm",
+    ".heis"
+};
 
 VideoWallpaper::VideoWallpaper(
     std::string id,
@@ -32,7 +36,7 @@ int VideoWallpaper::getFrameRate() const {
 nlohmann::json VideoWallpaper::toJson() const {
     return {
         {"id", id},
-        {"path", filePath},
+        {"file_path", filePath},
         {"name", name},
         {"resolution", resolution.toString()},
         {"frame_rate", frameRate},
@@ -45,15 +49,15 @@ nlohmann::json VideoWallpaper::toJson() const {
 std::string VideoWallpaper::toString() const {
     return std::format(
         "{}\n"
-        "    Id: {}\n"
-        "    Path: {}\n"
+        "    Name: {}\n"
+        "    FilePath: {}\n"
         "    Resolution: {}\n"
         "    FrameRate: {}\n"
         "    Source: {}\n"
         "    Tags: {}\n"
         "    Type: {}\n",
-        name,
         id,
+        name,
         filePath.native(),
         resolution.toString(),
         frameRate,

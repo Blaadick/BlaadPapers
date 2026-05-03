@@ -27,6 +27,9 @@ public:
 
     void addWallpapers(const QStringList& paths, const QString& destinationDirPath);
 
+    /**
+     * Launches file dialog
+     */
     Q_INVOKABLE void addWallpapers();
 
     Q_INVOKABLE void addWallpapers(const QStringList& paths);
@@ -34,6 +37,8 @@ public:
     Q_INVOKABLE void applyWallpaper(const QString& wallpaperId) const;
 
     Q_INVOKABLE void deleteWallpaper(const QString& wallpaperId) const;
+
+    Q_INVOKABLE void refreshWallpapers();
 
     Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 

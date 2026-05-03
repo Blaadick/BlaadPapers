@@ -3,7 +3,15 @@
 
 #include "data/PictureWallpaper.hpp"
 
-const std::unordered_set<std::string> PictureWallpaper::supportedFormats = {".png", ".apng", ".jpeg", ".webp"};
+const std::unordered_set<std::string> PictureWallpaper::supportedFormats = {
+    ".png",
+    ".apng",
+    ".jpeg",
+    ".webp",
+    ".avif",
+    ".tiff",
+    ".heic"
+};
 
 PictureWallpaper::PictureWallpaper(
     std::string id,
@@ -26,7 +34,7 @@ PictureWallpaper::PictureWallpaper(
 nlohmann::json PictureWallpaper::toJson() const {
     return {
         {"id", id},
-        {"path", filePath},
+        {"file_path", filePath},
         {"name", name},
         {"resolution", resolution.toString()},
         {"source", source},
@@ -38,14 +46,14 @@ nlohmann::json PictureWallpaper::toJson() const {
 std::string PictureWallpaper::toString() const {
     return std::format(
         "{}\n"
-        "    Id: {}\n"
-        "    Path: {}\n"
+        "    Name: {}\n"
+        "    FilePath: {}\n"
         "    Resolution: {}\n"
         "    Source: {}\n"
         "    Tags: {}\n"
         "    Type: {}\n",
-        name,
         id,
+        name,
         filePath.native(),
         resolution.toString(),
         source,

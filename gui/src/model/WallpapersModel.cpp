@@ -107,6 +107,10 @@ void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     );
 }
 
+void WallpapersModel::refreshWallpapers() {
+    loadWallpapers();
+}
+
 int WallpapersModel::rowCount(const QModelIndex& parent) const {
     return Wallpapers::inst().count();
 }

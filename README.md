@@ -32,7 +32,7 @@ yay -S blaadpapers
 ```
 
 ### Manual
-Install [BStyle](https://github.com/Blaadick/BStyle), `Qt6 Base`, `Qt6 Declarative`, `Qt6 Svg`, `Qt6 ShaderTools` and `FFmpeg`. Then run it:
+Install `Qt6 Base`, `Qt6 Declarative`, `Qt6 Svg`, [`libvips`](https://github.com/libvips/libvips), [`FFmpeg`](https://ffmpeg.org/), [`nlohman-json`](https://github.com/nlohmann/json) and [`BStyle`](https://github.com/Blaadick/BStyle). Then run it:
 
 ```bash
 git clone https://github.com/Blaadick/BlaadPapers.git
@@ -45,9 +45,9 @@ cmake --build cmake-build-release --parallel
 Expected after adding major features and implementing custom wallpaper rendering.
 
 ## Usage
-Before use, run `blaadpapers -S`. You can add some [mpv arguments](https://mpv.io/manual/master/#command-interface) like `blaadpapers -S "no-interpolation hwdec=vaapi"`.
+Before use, run `blaadpaperscli -S`. You can add some [mpv arguments](https://mpv.io/manual/master/#command-interface) like `blaadpaperscli -S "no-interpolation hwdec=vaapi"`.
 
-After that, you can run GUI with `blaadpapers`, or use CLI with `blaadpapers -H`.
+After that, you can run GUI with `blaadpapers`, or use CLI with `blaadpaperscli`.
 
 ## License
 Code is licensed under GPL-3.0-only.

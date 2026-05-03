@@ -12,6 +12,13 @@ ApplicationWindow {
     minimumHeight: searchBar.height + 157 + (statusBar.visible ? statusBar.height : 0) + 10 * 4
     visible: true
 
+    Shortcut {
+        sequence: "F5"
+        onActivated: {
+            Wallpapers.refreshWallpapers()
+        }
+    }
+
     Menu {
         id: contextMenu
 

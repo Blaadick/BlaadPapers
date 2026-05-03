@@ -16,7 +16,7 @@ namespace fs = std::filesystem;
 
 void WallpaperLoader::loadWallpapers() {
     Wallpapers::inst().clear();
-    jpegUnifier();
+    formatUnifier();
 
     for(const auto& wallpapersDirPath : Config::getWallpaperDirPaths()) {
         if(!util::createDirIfNotExists(wallpapersDirPath)) {
@@ -239,8 +239,11 @@ uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(
     );
 }
 
-void WallpaperLoader::jpegUnifier() {
-    const std::pmr::unordered_set<std::string> wrongVariants = {".jpg", ".JPG", ".jpe", ".jif", ".jfi", ".jfif"};
+void WallpaperLoader::formatUnifier() {
+    const std::pmr::unordered_set<std::string> wrongJpegVariants = {".jpg", ".JPG", ".jpe", ".jif", ".jfi", ".jfif"};
+    const std::pmr::unordered_set<std::string> wrongTiffVariants = {".tif"};
+    const std::pmr::unordered_set<std::string> wrongHeicVariants = {".heif", ".hif", ".avic"};
+    const std::pmr::unordered_set<std::string> wrongHeicsVariants = {".heifs", ".avcs"};
 
     for(const auto& wallpapersDirPath : Config::getWallpaperDirPaths()) {
         if(!util::createDirIfNotExists(wallpapersDirPath)) {
@@ -249,14 +252,35 @@ void WallpaperLoader::jpegUnifier() {
         }
 
         for(const auto& entry : fs::recursive_directory_iterator(wallpapersDirPath)) {
-            if(!entry.path().has_extension() || !wrongVariants.contains(entry.path().extension())) {
+            if(!entry.path().has_extension()) {
                 continue;
             }
 
             auto newPath = entry.path();
-            newPath.replace_extension(".jpeg");
 
-            fs::rename(entry.path(), newPath);
+            if(wrongJpegVariants.contains(entry.path().extension())) {
+                newPath.replace_extension(".jpeg");
+                fs::rename(entry.path(), newPath);
+                continue;
+            }
+
+            if(wrongTiffVariants.contains(entry.path().extension())) {
+                newPath.replace_extension(".tiff");
+                fs::rename(entry.path(), newPath);
+                continue;
+            }
+
+            if(wrongHeicVariants.contains(entry.path().extension())) {
+                newPath.replace_extension(".heic");
+                fs::rename(entry.path(), newPath);
+                continue;
+            }
+
+            if(wrongHeicsVariants.contains(entry.path().extension())) {
+                newPath.replace_extension(".heics");
+                fs::rename(entry.path(), newPath);
+                continue;
+            }
         }
     }
 }

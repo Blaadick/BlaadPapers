@@ -43,5 +43,5 @@ private:
     /**
     * We are not in DOS time! I turn it off if it is too annoying.
     */
-    static void jpegUnifier();
+    static void formatUnifier();
 };
