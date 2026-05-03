@@ -14,11 +14,9 @@ qt_add_qml_module(blaadpapers
     VERSION 1.0
     QML_FILES ${QMLS}
     RESOURCES ${RESOURCES}
-    RESOURCE_PREFIX "/"
 )
 
 qt_add_shaders(blaadpapers
-    PREFIX "/"
     FILES ${SHADERS}
 )
 

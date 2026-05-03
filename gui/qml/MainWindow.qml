@@ -17,13 +17,13 @@ ApplicationWindow {
 
         Action {
             text: "Add wallpapers"
-            icon.source: "qrc:/BlaadPapers/resource/icon/add.svg"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
             onTriggered: Wallpapers.addWallpapers()
         }
 
         Action {
             text: "Open Config"
-            icon.source: "qrc:/BlaadPapers/resource/icon/file_open.svg"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/file_open.svg"
             onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
         }
 
@@ -42,7 +42,7 @@ ApplicationWindow {
 
         RowLayout {
             ToolButton {
-                icon.source: "qrc:/BlaadPapers/resource/icon/menu.svg"
+                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
 
                 onClicked: {
                     const pos = parent.mapToGlobal(0, parent.height + 10)

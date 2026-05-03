@@ -11,8 +11,8 @@ function needs_wallpaper
 end
 
 function get_wallpapers
-    blaadpapers -Lj | jq -r '.[] | "\(.id)\t\(.name)"'
+    blaadpaperscli -Lj | jq -r '.[] | "\(.id)\t\(.name)"'
 end
 
-complete -c blaadpapers -f
-complete -c blaadpapers -n "needs_wallpaper" -a "(get_wallpapers)"
+complete -c blaadpaperscli -f
+complete -c blaadpaperscli -n "needs_wallpaper" -a "(get_wallpapers)"

@@ -67,26 +67,26 @@ Item {
 
         Action {
             text: "Apply"
-            icon.source: "qrc:/BlaadPapers/resource/icon/apply.svg"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/apply.svg"
             onTriggered: Wallpapers.applyWallpaper(preview.wid)
         }
 
         Action {
             text: "Open Folder"
-            icon.source: "qrc:/BlaadPapers/resource/icon/folder_open.svg"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/folder_open.svg"
             onTriggered: Qt.openUrlExternally(`file://${preview.rootDir}`)
         }
 
         Action {
             text: "Edit (WIP)"
-            icon.source: "qrc:/BlaadPapers/resource/icon/edit.svg"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
         }
 
         MenuSeparator {}
 
         Action {
             text: "Delete"
-            icon.source: "qrc:/BlaadPapers/resource/icon/delete.svg"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
             onTriggered: Wallpapers.deleteWallpaper(preview.wid)
         }
     }
