@@ -12,6 +12,7 @@
 #include "model/StatusModel.hpp"
 #include "preview/PreviewManager.hpp"
 #include "util/Loggers.hpp"
+#include "util/FormatUtils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -44,23 +45,18 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
 }
 
 void WallpapersModel::addWallpapers() {
-    QString supportedPictureFormatsString;
-    for(const auto& format : PictureWallpaper::supportedFormats) {
-        supportedPictureFormatsString += '*' + format + ' ';
-    }
-
-    QString supportedVideoFormatsString;
-    for(const auto& format : VideoWallpaper::supportedFormats) {
-        supportedVideoFormatsString += '*' + format + ' ';
-    }
+    const auto supportedPictureFormatsString = util::getFormatString(PictureWallpaper::supportedFormats);
+    const auto supportedVideoFormatsString = util::getFormatString(VideoWallpaper::supportedFormats);
 
     QFileDialog fileSelector;
     fileSelector.setFileMode(QFileDialog::ExistingFiles);
-    fileSelector.setNameFilters({
-        "Any Supported (" + supportedPictureFormatsString + supportedVideoFormatsString + ')',
-        "Picture (" + supportedPictureFormatsString + ')',
-        "Video (" + supportedVideoFormatsString + ')'
-    });
+    fileSelector.setNameFilters(
+        {
+            "Any Supported (" + supportedPictureFormatsString + ' ' + supportedVideoFormatsString + ')',
+            "Picture (" + supportedPictureFormatsString + ')',
+            "Video (" + supportedVideoFormatsString + ')'
+        }
+    );
 
     if(!fileSelector.exec()) {
         util::logWarn("Failed to take files from file dialog");

@@ -67,6 +67,7 @@ Item {
 
         Action {
             text: "Apply"
+            icon.source: "qrc:/BlaadPapers/resource/icon/apply.svg"
             onTriggered: Wallpapers.applyWallpaper(preview.wid)
         }
 
@@ -77,7 +78,7 @@ Item {
         }
 
         Action {
-            text: "Edit"
+            text: "Edit (WIP)"
             icon.source: "qrc:/BlaadPapers/resource/icon/edit.svg"
         }
 

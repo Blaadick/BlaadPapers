@@ -14,7 +14,7 @@ bool PicturePreviewGenerator::createAndSavePreview(
 ) {
     VImage preview = VImage::new_from_file(
         wallpaper->getFilePath().c_str(),
-        VImage::option()->set("access", "sequential")->set("fail", true)
+        VImage::option()->set("access", "sequential")
     );
 
     const int shrinkSize = std::max(
