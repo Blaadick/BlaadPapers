@@ -19,10 +19,7 @@ bool PicturePreviewGenerator::createAndSavePreview(
 
     const int shrinkSize = std::max(
         1,
-        std::min(
-            preview.width() / targetSize.width,
-            preview.height() / targetSize.height
-        )
+        std::min(preview.width() / targetSize.width, preview.height() / targetSize.height)
     );
     preview = preview.shrink(shrinkSize, shrinkSize);
 

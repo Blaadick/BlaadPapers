@@ -27,7 +27,7 @@ void WallpapersModel::loadWallpapers() {
     Wallpapers::inst().sortByName();
     endResetModel();
 
-    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreview);
+    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreviews);
 }
 
 void WallpapersModel::addWallpapers(const QStringList& paths, const QString& destinationDirPath) {
@@ -41,7 +41,7 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
     Wallpapers::inst().sortByName();
     endResetModel();
 
-    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreview);
+    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreviews);
 }
 
 void WallpapersModel::addWallpapers() {

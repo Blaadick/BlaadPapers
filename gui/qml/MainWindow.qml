@@ -83,8 +83,8 @@ ApplicationWindow {
                         }
 
                         const filterText = searchBar.text.toLowerCase()
-                        return data.wallpaperName.toLowerCase().includes(filterText) ||
-                            data.wallpaperTags.some(tag => tag.toLowerCase().includes(filterText))
+                        return data.wallpaperName.toLowerCase().includes(filterText)
+                            || data.wallpaperTags.some(tag => tag.toLowerCase().includes(filterText))
                     }
                 }
             ]

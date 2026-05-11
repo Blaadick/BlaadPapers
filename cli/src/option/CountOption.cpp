@@ -3,8 +3,8 @@
 
 #include "option/CountOption.hpp"
 
-CountOption::CountOption() : Option("count", 'C', {}, "Shows the wallpapers count") {}
+CountOption::CountOption() : Option("count", "Shows the wallpapers count") {}
 
-int CountOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int CountOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }

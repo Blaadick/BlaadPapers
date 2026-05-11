@@ -10,5 +10,5 @@ public:
     InfoOption();
 
     [[nodiscard]]
-    int execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) override;
+    int execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) override;
 };

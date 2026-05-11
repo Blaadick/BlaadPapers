@@ -5,17 +5,11 @@
 
 Option::Option(
     const std::string& name,
-    const std::optional<char>& shortName,
-    const std::unordered_set<sptr<SubOption>>& availableSubOptions,
     const std::string& helpMessage
-) : name(name), shortName(shortName), availableSubOptions(availableSubOptions), helpMessage(helpMessage) {}
+) : name(name), helpMessage(helpMessage) {}
 
 const std::string& Option::getName() const {
     return name;
-}
-
-const std::optional<char>& Option::getShortName() const {
-    return shortName;
 }
 
 const std::string& Option::getHelpString() const {

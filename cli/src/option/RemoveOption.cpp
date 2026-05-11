@@ -3,8 +3,8 @@
 
 #include "option/RemoveOption.hpp"
 
-RemoveOption::RemoveOption() : Option("remove", 'R', {}, "Removes the wallpaper") {}
+RemoveOption::RemoveOption() : Option("remove", "Removes the wallpaper") {}
 
-int RemoveOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int RemoveOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }

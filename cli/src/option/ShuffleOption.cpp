@@ -3,8 +3,8 @@
 
 #include "option/ShuffleOption.hpp"
 
-ShuffleOption::ShuffleOption() : Option("shuffle", 'S', {}, "Sets the random wallpaper") {}
+ShuffleOption::ShuffleOption() : Option("shuffle", "Sets the random wallpaper") {}
 
-int ShuffleOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int ShuffleOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }

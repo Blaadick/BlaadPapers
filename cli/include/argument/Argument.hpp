@@ -3,14 +3,12 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
+#include <vector>
 
-template<typename T>
 struct Argument {
     const std::string name;
-    const bool isNecessary = true;
-
-    T parse(const char* rawArgument) const {
-        return {};
-    }
+    const std::optional<char> shortName;
+    const std::vector<std::string> parameters;
 };

@@ -11,4 +11,4 @@ Keywords=wallpaper
 
 [Desktop Action Daemon]
 Name=Run Renderer Daemon
-Exec=blaadpapers -S
+Exec=blaadpaperscli -S

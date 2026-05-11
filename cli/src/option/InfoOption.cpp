@@ -3,8 +3,8 @@
 
 #include "option/InfoOption.hpp"
 
-InfoOption::InfoOption() : Option("info", 'I', {}, "Shows wallpaper information") {}
+InfoOption::InfoOption() : Option("info", "Shows wallpaper information") {}
 
-int InfoOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int InfoOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }

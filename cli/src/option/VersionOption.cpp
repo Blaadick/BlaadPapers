@@ -3,8 +3,8 @@
 
 #include "option/VersionOption.hpp"
 
-VersionOption::VersionOption() : Option("version", 'V', {}, "Shows program version") {}
+VersionOption::VersionOption() : Option("version", "Shows program version") {}
 
-int VersionOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int VersionOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }

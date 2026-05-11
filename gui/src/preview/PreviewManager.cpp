@@ -22,7 +22,7 @@ Size getScreenAspectRatio(const QScreen* screen) {
     );
 }
 
-void PreviewManager::createAndSavePreview(const uptr<Wallpaper>& wallpaper) {
+void PreviewManager::createAndSavePreviews(const uptr<Wallpaper>& wallpaper) {
     const auto previewsDirPath = wallpaper->getDirPath() / "preview";
 
     if(!util::createDirIfNotExists(previewsDirPath)) {

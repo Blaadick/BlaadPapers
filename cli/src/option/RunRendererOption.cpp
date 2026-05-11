@@ -3,8 +3,8 @@
 
 #include "option/RunRendererOption.hpp"
 
-RunRendererOption::RunRendererOption() : Option("run-renderer", std::nullopt, {}, "Runs the renderer daemon") {}
+RunRendererOption::RunRendererOption() : Option("run-renderer", "Runs the renderer daemon") {}
 
-int RunRendererOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int RunRendererOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }

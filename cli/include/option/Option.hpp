@@ -7,15 +7,13 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include "suboption/SubOption.hpp"
+#include "argument/Argument.hpp"
 #include "util/Pointers.hpp"
 
 class Option {
 public:
     Option(
         const std::string& name,
-        const std::optional<char>& shortName,
-        const std::unordered_set<sptr<SubOption>>& availableSubOptions,
         const std::string& helpMessage
     );
 
@@ -25,17 +23,12 @@ public:
     const std::string& getName() const;
 
     [[nodiscard]]
-    const std::optional<char>& getShortName() const;
-
-    [[nodiscard]]
     const std::string& getHelpString() const;
 
     [[nodiscard]]
-    virtual int execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) = 0;
+    virtual int execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) = 0;
 
 protected:
     const std::string name;
-    const std::optional<char> shortName;
-    const std::unordered_set<sptr<SubOption>> availableSubOptions;
     const std::string helpMessage;
 };

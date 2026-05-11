@@ -3,8 +3,8 @@
 
 #include "option/ApplyOption.hpp"
 
-ApplyOption::ApplyOption() : Option("apply", 'A', {}, "Sets the wallpaper") {}
+ApplyOption::ApplyOption() : Option("apply", "Sets the wallpaper") {}
 
-int ApplyOption::execute(const std::vector<std::string>& arguments, const std::unordered_set<sptr<SubOption>>& subOptions) {
+int ApplyOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
     return 0;
 }
