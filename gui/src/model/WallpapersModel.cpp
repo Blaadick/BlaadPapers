@@ -3,31 +3,34 @@
 
 #include "model/WallpapersModel.hpp"
 
+#include <QFileDialog>
 #include <QtConcurrentMap>
 #include <QThreadPool>
-#include <QFileDialog>
 #include "Config.hpp"
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "model/StatusModel.hpp"
 #include "preview/PreviewManager.hpp"
-#include "util/Loggers.hpp"
 #include "util/FormatUtils.hpp"
+#include "util/Loggers.hpp"
+#include "util/WallpaperUtils.hpp"
 
 namespace fs = std::filesystem;
 
-WallpapersModel& WallpapersModel::inst() {
-    static WallpapersModel instance;
-    return instance;
-}
+WallpapersModel::WallpapersModel(
+    sptr<WallpaperLoader> wallpaperLoader,
+    sptr<Wallpapers> wallpapers,
+    sptr<Config> config,
+    sptr<util::Logger> logger
+) : wallpaperLoader(wallpaperLoader), wallpapers(wallpapers), config(config), logger(logger) {}
 
 void WallpapersModel::loadWallpapers() {
     beginResetModel();
-    WallpaperLoader::loadWallpapers();
-    Wallpapers::inst().sortByName();
+    wallpaperLoader->loadWallpapers();
+    wallpapers->sortByName();
     endResetModel();
 
-    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreviews);
+    QtConcurrent::map(*wallpapers, PreviewManager::createAndSavePreviews);
 }
 
 void WallpapersModel::addWallpapers(const QStringList& paths, const QString& destinationDirPath) {
@@ -37,16 +40,16 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
     }
 
     beginResetModel();
-    WallpaperLoader::addWallpapers(stdPaths, destinationDirPath.toStdString());
-    Wallpapers::inst().sortByName();
+    wallpaperLoader->addWallpapers(stdPaths, destinationDirPath.toStdString());
+    wallpapers->sortByName();
     endResetModel();
 
-    QtConcurrent::map(Wallpapers::inst(), PreviewManager::createAndSavePreviews);
+    QtConcurrent::map(*wallpapers, PreviewManager::createAndSavePreviews);
 }
 
 void WallpapersModel::addWallpapers() {
-    const auto supportedPictureFormatsString = util::getFormatString(PictureWallpaper::supportedFormats);
-    const auto supportedVideoFormatsString = util::getFormatString(VideoWallpaper::supportedFormats);
+    const auto supportedPictureFormatsString = util::getFormatString(util::supportedPictureFormats);
+    const auto supportedVideoFormatsString = util::getFormatString(util::supportedVideoFormats);
 
     QFileDialog fileSelector;
     fileSelector.setFileMode(QFileDialog::ExistingFiles);
@@ -59,14 +62,14 @@ void WallpapersModel::addWallpapers() {
     );
 
     if(!fileSelector.exec()) {
-        util::logWarn("Failed to take files from file dialog");
+        logger->logWarning("Failed to take files from file dialog");
         return;
     }
 
     const auto selectedFiles = fileSelector.selectedFiles();
     QThreadPool::globalInstance()->start(
         [this, selectedFiles] {
-            addWallpapers(selectedFiles, QString::fromStdString(Config::getWallpaperDirPaths()[0]));
+            addWallpapers(selectedFiles, QString::fromStdString(config->getWallpaperDirPaths()[0]));
         }
     );
 }
@@ -74,20 +77,18 @@ void WallpapersModel::addWallpapers() {
 void WallpapersModel::addWallpapers(const QStringList& paths) {
     QThreadPool::globalInstance()->start(
         [this, paths] {
-            addWallpapers(paths, QString::fromStdString(Config::getWallpaperDirPaths()[0]));
+            addWallpapers(paths, QString::fromStdString(config->getWallpaperDirPaths()[0]));
         }
     );
 }
 
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
-        [wallpaperId] {
-            if(Wallpapers::inst().apply(wallpaperId.toStdString())) {
-                util::logInfo("Wallpaper \"{}\" applied", wallpaperId.toStdString());
-                util::sendStatus("Wallpaper \"{}\" applied", wallpaperId.toStdString());
+        [this, wallpaperId] {
+            if(wallpapers->apply(wallpaperId.toStdString())) {
+                logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" applied");
             } else {
                 util::logWarn("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
-                util::sendStatus("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
             }
         }
     );
@@ -95,13 +96,11 @@ void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
 
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
-        [wallpaperId] {
-            if(Wallpapers::inst().remove(wallpaperId.toStdString())) {
-                util::logInfo("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
-                util::sendStatus("Wallpaper \"{}\" deleted", wallpaperId.toStdString());
+        [this, wallpaperId] {
+            if(wallpapers->remove(wallpaperId.toStdString())) {
+                logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" deleted");
             } else {
-                util::logWarn("Failed to delete wallpaper \"{}\"", wallpaperId.toStdString());
-                util::sendStatus("Failed to delete wallpaper \"{}\"", wallpaperId.toStdString());
+                logger->logWarning("Failed to delete wallpaper \"" + wallpaperId.toStdString() + "\"");
             }
         }
     );
@@ -112,11 +111,11 @@ void WallpapersModel::refreshWallpapers() {
 }
 
 int WallpapersModel::rowCount(const QModelIndex& parent) const {
-    return Wallpapers::inst().count();
+    return wallpapers->count();
 }
 
 QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
-    const Wallpaper* wallpaper = Wallpapers::inst().get(index.row());
+    const Wallpaper* wallpaper = wallpapers->get(index.row());
 
     QStringList qStringTags;
     qStringTags.reserve(wallpaper->getTags().size());
@@ -131,7 +130,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
         case ResolutionRole: return QString::fromStdString(wallpaper->getResolution().toString());
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;
-        case IsBadRole: return wallpaper->isBad();
+        case IsBadRole: return config->isWallpaperBad(*wallpaper);
         default: return {};
     }
 }

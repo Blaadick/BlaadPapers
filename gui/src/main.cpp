@@ -12,6 +12,7 @@
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
 #include "WallpaperLoader.hpp"
+#include "logger/GuiLogger.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
@@ -27,10 +28,21 @@ int main(int argc, char** argv) {
     vips_init(argv[0]);
     vips_cache_set_max(0);
 
-    Config::load();
-    PostSetScript::createIfNotExists();
     DefaultWallpaper::createIfNotExists();
-    WallpapersModel::inst().loadWallpapers();
+    PostSetScript::createIfNotExists();
+
+    auto statusModel = std::make_shared<StatusModel>();
+    auto logger = std::make_shared<util::GuiLogger>(statusModel);
+    auto config = std::make_shared<Config>(logger);
+    config->load();
+
+    auto wallpapers = std::make_shared<Wallpapers>();
+    auto wallpaperLoader = std::make_shared<WallpaperLoader>(wallpapers, config, logger);
+
+    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, logger);
+    wallpapersModel->loadWallpapers();
+
+    auto configModel = std::make_shared<ConfigModel>(config);
 
     #ifdef __linux__
     if(!getenv("QT_QUICK_CONTROLS_STYLE")) {
@@ -39,9 +51,9 @@ int main(int argc, char** argv) {
     #endif
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("Wallpapers", &WallpapersModel::inst());
-    engine.rootContext()->setContextProperty("Config", &ConfigModel::inst());
-    engine.rootContext()->setContextProperty("Status", &StatusModel::inst());
+    engine.rootContext()->setContextProperty("Wallpapers", &*wallpapersModel);
+    engine.rootContext()->setContextProperty("Config", &*configModel);
+    engine.rootContext()->setContextProperty("Status", &*statusModel);
     engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
     QObject::connect(

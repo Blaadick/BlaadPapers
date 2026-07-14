@@ -5,22 +5,24 @@
 
 #include <fstream>
 #include <iostream>
-#include <print>
 #include "Config.hpp"
 #include "Wallpapers.hpp"
 #include "util/Ffmpeg.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Vips.hpp"
+#include "util/WallpaperUtils.hpp"
 
 namespace fs = std::filesystem;
 
+WallpaperLoader::WallpaperLoader(sptr<Wallpapers> wallpapers, sptr<Config> config, sptr<util::Logger> logger) : wallpapers(wallpapers), config(config), logger(logger) {}
+
 void WallpaperLoader::loadWallpapers() {
-    Wallpapers::inst().clear();
+    wallpapers->clear();
     formatUnifier();
 
-    for(const auto& wallpapersDirPath : Config::getWallpaperDirPaths()) {
+    for(const auto& wallpapersDirPath : config->getWallpaperDirPaths()) {
         if(!util::createDirIfNotExists(wallpapersDirPath)) {
-            std::println(stderr, "Failed to create directory \"{}\"", wallpapersDirPath.c_str());
+            logger->logError("Failed to create directory \"" + wallpapersDirPath.string() + "\"");
             continue;
         }
 
@@ -34,8 +36,8 @@ void WallpaperLoader::loadWallpapers() {
                     continue;
                 }
 
-                if(PictureWallpaper::supportedFormats.contains(wallpaperDirEntry.path().extension())) {
-                    Wallpapers::inst().add(
+                if(util::isSupportedPicture(wallpaperDirEntry.path())) {
+                    wallpapers->add(
                         std::move(
                             loadPictureWallpaper(
                                 wallpapersDirEntry.path().stem(),
@@ -47,8 +49,8 @@ void WallpaperLoader::loadWallpapers() {
                     break;
                 }
 
-                if(VideoWallpaper::supportedFormats.contains(wallpaperDirEntry.path().extension())) {
-                    Wallpapers::inst().add(
+                if(util::isSupportedVideo(wallpaperDirEntry.path())) {
+                    wallpapers->add(
                         std::move(
                             loadVideoWallpaper(
                                 wallpapersDirEntry.path().stem(),
@@ -68,43 +70,38 @@ bool WallpaperLoader::addWallpaper(
     const fs::path& wallpaperFilePath,
     const fs::path& destinationFolderPath
 ) {
-    bool isPicture = false;
-    if(PictureWallpaper::supportedFormats.contains(wallpaperFilePath.extension())) {
-        isPicture = true;
-    }
+    const auto wallpaperId = wallpaperFilePath.stem().string();
+    const auto wallpaperRootPath = destinationFolderPath / wallpaperId;
+    const auto isPicture = util::isSupportedPicture(wallpaperFilePath);
+    const auto isVideo = util::isSupportedVideo(wallpaperFilePath);
 
-    bool isVideo = false;
-    if(VideoWallpaper::supportedFormats.contains(wallpaperFilePath.extension())) {
-        isVideo = true;
-    }
-
-    if(!isVideo && !isPicture) {
-        std::println(stderr, "\"{}\" files are not supported", wallpaperFilePath.extension().c_str());
+    if(!isPicture && !isVideo) {
+        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: \"" + wallpaperFilePath.extension().string() + "\" files are not supported");
         return false;
     }
 
-    const auto wallpaperRootPath = destinationFolderPath / wallpaperFilePath.stem();
     if(fs::exists(wallpaperRootPath)) {
-        std::println(stderr, "Wallpaper with id \"{}\" already exists", wallpaperFilePath.stem().c_str());
+        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: Wallpaper with same id already exists");
         return false;
     }
 
     if(!fs::create_directory(wallpaperRootPath)) {
-        std::println(stderr, "Failed to create directory \"{}\"", wallpaperRootPath.c_str());
+        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: Failed to create directory \"" + wallpaperRootPath.string() + "\"");
         return false;
     }
 
     const auto newWallpaperFilePath = wallpaperRootPath / ("wallpaper" + wallpaperFilePath.extension().string());
     if(!fs::copy_file(wallpaperFilePath, newWallpaperFilePath)) {
+        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: Failed to copy wallpaper to \"" + newWallpaperFilePath.string() + "\"");
         fs::remove_all(wallpaperRootPath);
         return false;
     }
 
     if(isPicture) {
-        Wallpapers::inst().add(
+        wallpapers->add(
             std::move(
                 loadPictureWallpaper(
-                    wallpaperFilePath.stem(),
+                    wallpaperId,
                     newWallpaperFilePath,
                     readWallpaperData(wallpaperRootPath / "data.json")
                 )
@@ -114,10 +111,10 @@ bool WallpaperLoader::addWallpaper(
     }
 
     if(isVideo) {
-        Wallpapers::inst().add(
+        wallpapers->add(
             std::move(
                 loadVideoWallpaper(
-                    wallpaperFilePath.stem(),
+                    wallpaperId,
                     newWallpaperFilePath,
                     readWallpaperData(wallpaperRootPath / "data.json")
                 )
@@ -141,18 +138,14 @@ void WallpaperLoader::addWallpapers(
                     continue;
                 }
 
-                if(!addWallpaper(dirEntry.path(), destinationFolderPath)) {
-                    std::println(stderr, "Failed to add wallpaper from file \"{}\"", dirEntry.path().c_str());
-                }
+                addWallpaper(dirEntry.path(), destinationFolderPath);
             }
 
             continue;
         }
 
         if(fs::is_regular_file(path)) {
-            if(!addWallpaper(path, destinationFolderPath)) {
-                std::println(stderr, "Failed to add wallpaper from file \"{}\"", path.c_str());
-            }
+            addWallpaper(path, destinationFolderPath);
         }
     }
 }
@@ -245,9 +238,9 @@ void WallpaperLoader::formatUnifier() {
     const std::pmr::unordered_set<std::string> wrongHeicVariants = {".heif", ".hif", ".avic"};
     const std::pmr::unordered_set<std::string> wrongHeicsVariants = {".heifs", ".avcs"};
 
-    for(const auto& wallpapersDirPath : Config::getWallpaperDirPaths()) {
+    for(const auto& wallpapersDirPath : config->getWallpaperDirPaths()) {
         if(!util::createDirIfNotExists(wallpapersDirPath)) {
-            std::println(stderr, "Failed to create directory \"{}\"", wallpapersDirPath.c_str());
+            logger->logError("Failed to create directory \"" + wallpapersDirPath.string() + "\"");
             continue;
         }
 

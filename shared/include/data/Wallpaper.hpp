@@ -33,9 +33,6 @@ public:
     [[nodiscard]]
     const std::vector<std::string>& getTags() const;
 
-    [[nodiscard]]
-    bool isBad() const;
-
     bool apply() const;
 
     [[nodiscard]]

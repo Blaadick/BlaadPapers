@@ -4,23 +4,31 @@
 #include <vips/vips8>
 #include "Config.hpp"
 #include "DefaultWallpaper.hpp"
-#include "OldOptionExecutor.hpp"
+#include "OptionExecutor.hpp"
 #include "PostSetScript.hpp"
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
+#include "logger/CliLogger.hpp"
 
-int main(int argc, char** argv) {
+int main(const int argc, const char** argv) {
     vips_init(argv[0]);
     vips_cache_set_max(0);
 
-    Config::load();
-    PostSetScript::createIfNotExists();
     DefaultWallpaper::createIfNotExists();
+    PostSetScript::createIfNotExists();
 
-    WallpaperLoader::loadWallpapers();
-    Wallpapers::inst().sortByName();
+    auto logger = std::make_shared<util::CliLogger>();
+    auto config = std::make_shared<Config>(logger);
+    config->load();
 
-    OldOptionExecutor::execute(argc, argv);
+    auto wallpapers = std::make_shared<Wallpapers>();
+    auto wallpaperLoader = std::make_shared<WallpaperLoader>(wallpapers, config, logger);
+    wallpaperLoader->loadWallpapers();
+    wallpapers->sortByName();
+
+    auto optionExecutor = std::make_shared<OptionExecutor>(wallpaperLoader, wallpapers, logger);
+    const auto returnVal = optionExecutor->execute(argc, argv);
 
     vips_shutdown();
+    return returnVal;
 }

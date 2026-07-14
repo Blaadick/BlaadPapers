@@ -7,28 +7,36 @@
 #include <string>
 #include <vector>
 
+#include "data/Wallpaper.hpp"
+#include "logger/Logger.hpp"
+#include "util/Pointers.hpp"
+
 class Config {
 public:
-    static void load();
+    explicit Config(sptr<util::Logger> logger);
+
+    void load();
 
     [[nodiscard]]
-    static std::vector<std::string> getBadTags();
+    std::vector<std::string> getBadTags();
 
     [[nodiscard]]
-    static std::vector<std::filesystem::path> getWallpaperDirPaths();
+    std::vector<std::filesystem::path> getWallpaperDirPaths();
 
     [[nodiscard]]
-    static bool getStatusBarVisible();
+    bool getStatusBarVisible() const;
 
-    static void setStatusBarVisible(bool newVisibility);
+    void setStatusBarVisible(bool newVisibility);
 
-    static std::filesystem::path configPath();
+    bool isWallpaperBad(const Wallpaper& wallpaper);
 
 private:
-    static std::vector<std::string> badTags;
-    static std::vector<std::filesystem::path> wallpaperDirPaths;
-    static bool isStatusBarVisible;
+    sptr<util::Logger> logger;
+
+    std::vector<std::string> badTags = {};
+    std::vector<std::filesystem::path> wallpaperDirPaths = {};
+    bool isStatusBarVisible = false;
 
     template<typename T>
-    static void updateConfig(const std::string& name, const T& value);
+    void updateConfig(const std::string& name, const T& value);
 };

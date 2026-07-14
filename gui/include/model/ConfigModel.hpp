@@ -5,13 +5,15 @@
 
 #include <QObject>
 
+#include "Config.hpp"
+
 class ConfigModel : public QObject {
-    Q_OBJECT
-    Q_PROPERTY(QString configFilePath READ getConfigFilePath)
+    Q_OBJECT Q_PROPERTY(QString configFilePath READ getConfigFilePath)
+
     Q_PROPERTY(bool statusBarVisible READ getStatusBarVisible WRITE setStatusBarVisible NOTIFY statusBarVisibleChanged)
 
 public:
-    static ConfigModel& inst();
+    explicit ConfigModel(sptr<Config> config);
 
     QString getConfigFilePath();
 
@@ -19,6 +21,11 @@ public:
 
     void setStatusBarVisible(bool isVisible);
 
-signals:
+private:
+    sptr<Config> config;
+
+    signals :
+
+
     void statusBarVisibleChanged();
 };

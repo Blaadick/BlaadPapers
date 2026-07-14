@@ -3,32 +3,16 @@
 
 #pragma once
 
-#include <optional>
 #include <string>
-#include <unordered_set>
 #include <vector>
-#include "argument/Argument.hpp"
-#include "util/Pointers.hpp"
 
 class Option {
 public:
-    Option(
-        const std::string& name,
-        const std::string& helpMessage
-    );
-
     virtual ~Option() = default;
 
     [[nodiscard]]
-    const std::string& getName() const;
+    virtual std::string getHelpMessage() const = 0;
 
     [[nodiscard]]
-    const std::string& getHelpString() const;
-
-    [[nodiscard]]
-    virtual int execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) = 0;
-
-protected:
-    const std::string name;
-    const std::string helpMessage;
+    virtual int execute(const std::vector<std::string>& arguments) = 0;
 };

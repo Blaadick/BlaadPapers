@@ -4,37 +4,46 @@
 #pragma once
 
 #include <filesystem>
+
+#include "Config.hpp"
+#include "Wallpapers.hpp"
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
 #include "util/Pointers.hpp"
 
 class WallpaperLoader {
 public:
+    WallpaperLoader(sptr<Wallpapers> wallpapers, sptr<Config> config, sptr<util::Logger> logger);
+
     /**
      * Vips should be initialized before run!
      */
-    static void loadWallpapers();
+    void loadWallpapers();
 
-    static bool addWallpaper(
+    bool addWallpaper(
         const std::filesystem::path& wallpaperFilePath,
         const std::filesystem::path& destinationFolderPath
     );
 
-    static void addWallpapers(
+    void addWallpapers(
         const std::vector<std::filesystem::path>& paths,
         const std::filesystem::path& destinationFolderPath
     );
 
 private:
-    static nlohmann::json readWallpaperData(const std::filesystem::path& wallpaperDataPath);
+    sptr<Wallpapers> wallpapers;
+    sptr<Config> config;
+    sptr<util::Logger> logger;
 
-    static uptr<PictureWallpaper> loadPictureWallpaper(
+    nlohmann::json readWallpaperData(const std::filesystem::path& wallpaperDataPath);
+
+    uptr<PictureWallpaper> loadPictureWallpaper(
         const std::string& wallpaperId,
         const std::filesystem::path& filePath,
         const nlohmann::json& data
     );
 
-    static uptr<VideoWallpaper> loadVideoWallpaper(
+    uptr<VideoWallpaper> loadVideoWallpaper(
         const std::string& wallpaperId,
         const std::filesystem::path& filePath,
         const nlohmann::json& data
@@ -43,5 +52,5 @@ private:
     /**
     * We are not in DOS time! I turn it off if it is too annoying.
     */
-    static void formatUnifier();
+    void formatUnifier();
 };

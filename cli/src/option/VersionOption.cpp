@@ -3,8 +3,15 @@
 
 #include "option/VersionOption.hpp"
 
-VersionOption::VersionOption() : Option("version", "Shows program version") {}
+#include <print>
 
-int VersionOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
+VersionOption::VersionOption(sptr<util::Logger> logger) : Option(), logger(logger) {}
+
+std::string VersionOption::getHelpMessage() const {
+    return "version help";
+}
+
+int VersionOption::execute(const std::vector<std::string>& arguments) {
+    logger->logInfo(std::format("{} {}\n{}", PROJECT_NAME, PROJECT_VERSION, PROJECT_DESCRIPTION));
     return 0;
 }

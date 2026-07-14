@@ -3,12 +3,20 @@
 
 #pragma once
 
+#include "logger/Logger.hpp"
 #include "option/Option.hpp"
+#include "util/Pointers.hpp"
 
-class VersionOption : public Option {
+class VersionOption final : public Option {
 public:
-    VersionOption();
+    VersionOption(sptr<util::Logger> logger);
 
     [[nodiscard]]
-    int execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) override;
+    std::string getHelpMessage() const override;
+
+    [[nodiscard]]
+    int execute(const std::vector<std::string>& arguments) override;
+
+private:
+    sptr<util::Logger> logger;
 };

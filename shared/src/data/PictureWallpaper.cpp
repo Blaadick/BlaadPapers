@@ -3,16 +3,6 @@
 
 #include "data/PictureWallpaper.hpp"
 
-const std::unordered_set<std::string> PictureWallpaper::supportedFormats = {
-    ".png",
-    ".apng",
-    ".jpeg",
-    ".webp",
-    ".avif",
-    ".tiff",
-    ".heic"
-};
-
 PictureWallpaper::PictureWallpaper(
     std::string id,
     std::filesystem::path filePath,

@@ -3,8 +3,13 @@
 
 #include "option/CountOption.hpp"
 
-CountOption::CountOption() : Option("count", "Shows the wallpapers count") {}
+CountOption::CountOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
 
-int CountOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
+std::string CountOption::getHelpMessage() const {
+    return "count help";
+}
+
+int CountOption::execute(const std::vector<std::string>& arguments) {
+    logger->logInfo(std::to_string(wallpapers->count()));
     return 0;
 }

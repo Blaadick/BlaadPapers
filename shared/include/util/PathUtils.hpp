@@ -21,6 +21,10 @@ namespace util {
         #endif
     }
 
+    inline std::filesystem::path configFilePath() {
+        return configDirPath().append("config.json");
+    }
+
     inline std::filesystem::path localDataDirPath() {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");

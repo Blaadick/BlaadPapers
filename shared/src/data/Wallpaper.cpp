@@ -90,15 +90,6 @@ const std::vector<std::string>& Wallpaper::getTags() const {
     return tags;
 }
 
-bool Wallpaper::isBad() const {
-    return rng::any_of(
-        Config::getBadTags(),
-        [this](const std::string& tag) {
-            return rng::contains(tags, tag);
-        }
-    );
-}
-
 bool Wallpaper::operator==(const Wallpaper& other) const {
     return id == other.getId();
 }

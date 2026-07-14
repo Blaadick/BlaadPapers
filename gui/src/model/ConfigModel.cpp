@@ -4,21 +4,20 @@
 #include "model/ConfigModel.hpp"
 
 #include "Config.hpp"
+#include "util/FormatUtils.hpp"
+#include "util/PathUtils.hpp"
 
-ConfigModel& ConfigModel::inst() {
-    static ConfigModel instance;
-    return instance;
-}
+ConfigModel::ConfigModel(sptr<Config> config) : config(config) {}
 
 QString ConfigModel::getConfigFilePath() {
-    return QString::fromStdString(Config::configPath());
+    return QString::fromStdString(util::configFilePath());
 }
 
 bool ConfigModel::getStatusBarVisible() {
-    return Config::getStatusBarVisible();
+    return config->getStatusBarVisible();
 }
 
 void ConfigModel::setStatusBarVisible(const bool isVisible) {
-    Config::setStatusBarVisible(isVisible);
+    config->setStatusBarVisible(isVisible);
     emit statusBarVisibleChanged();
 }

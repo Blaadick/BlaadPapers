@@ -3,8 +3,13 @@
 
 #include "option/HelpOption.hpp"
 
-HelpOption::HelpOption() : Option("help", "Shows this help") {}
+HelpOption::HelpOption(sptr<util::Logger> logger) : Option(), logger(logger) {}
 
-int HelpOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
+std::string HelpOption::getHelpMessage() const {
+    return "help help";
+}
+
+int HelpOption::execute(const std::vector<std::string>& arguments) {
+    logger->logInfo("Some general help message");
     return 0;
 }

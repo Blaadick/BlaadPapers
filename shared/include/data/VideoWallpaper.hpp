@@ -8,8 +8,6 @@
 
 class VideoWallpaper : public Wallpaper {
 public:
-    static const std::unordered_set<std::string> supportedFormats;
-
     VideoWallpaper(
         std::string id,
         std::filesystem::path filePath,

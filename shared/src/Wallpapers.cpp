@@ -4,14 +4,8 @@
 #include "Wallpapers.hpp"
 
 #include "Config.hpp"
-#include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;
-
-Wallpapers& Wallpapers::inst() {
-    static Wallpapers inst;
-    return inst;
-}
 
 Wallpaper* Wallpapers::get(const int index) const {
     if(index >= wallpapers.size()) {
@@ -48,7 +42,7 @@ bool Wallpapers::apply(const std::string& id) const {
 bool Wallpapers::remove(const std::string& id) {
     const auto it = std::ranges::find_if(
         wallpapers,
-        [=](const auto& wallpaper) {
+        [&id](const auto& wallpaper) {
             return wallpaper->getId() == id;
         }
     );

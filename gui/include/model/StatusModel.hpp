@@ -6,46 +6,33 @@
 #include <QObject>
 
 class StatusModel : public QObject {
-    Q_OBJECT
-    Q_PROPERTY(QString statusText READ getStatusText NOTIFY statusTextChanged)
-    Q_PROPERTY(int repeatCount READ getRepeatCount NOTIFY repeatCountChanged)
+    Q_OBJECT Q_PROPERTY(QString statusText READ getStatusText NOTIFY statusTextChanged)
+
+    Q_PROPERTY(int sendCount READ getSendCount NOTIFY sendCountChanged)
 
 public:
-    static StatusModel& inst();
+    StatusModel();
 
     const QString& getStatusText() const;
 
     void setStatusText(const QString& str);
 
-    int getRepeatCount() const;
+    int getSendCount() const;
 
-    void increaseRepeatCount();
+    void increaseSendCount();
 
-    void resetRepeatCount();
+    void resetSendCount();
 
-signals :
+    void sendStatus(const std::string& newStatus);
+
+    signals  :
+
+
     void statusTextChanged();
 
-    void repeatCountChanged();
+    void sendCountChanged();
 
 private:
     QString statusText;
-    int repeatCount = 1;
+    int sendCount = 1;
 };
-
-namespace util {
-    inline void sendStatus(const std::string& newStatus) {
-        if(StatusModel::inst().getStatusText() == newStatus) {
-            StatusModel::inst().increaseRepeatCount();
-        } else {
-            StatusModel::inst().setStatusText(QString::fromStdString(newStatus));
-            StatusModel::inst().resetRepeatCount();
-        }
-    }
-
-    template<typename... T>
-    void sendStatus(std::format_string<T...> fmt, T&&... args) {
-        auto formated = std::format(fmt, std::forward<T>(args)...);
-        sendStatus(formated);
-    }
-}

@@ -8,8 +8,6 @@
 
 class Wallpapers {
 public:
-    static Wallpapers& inst();
-
     [[nodiscard]]
     Wallpaper* get(int index) const;
 

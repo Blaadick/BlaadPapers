@@ -1,0 +1,31 @@
+// Copyright (C) 2026 Blaadick
+// SPDX-License-Identifier: GPL-3.0-only
+
+#include "logger/GuiLogger.hpp"
+
+#include <chrono>
+#include <print>
+
+using namespace std::chrono;
+
+namespace util {
+    GuiLogger::GuiLogger(sptr<StatusModel> statusModel) : statusModel(statusModel) {}
+
+    void GuiLogger::logInfo(const std::string& message) {
+        auto currentTime = floor<seconds>(system_clock::now());
+        std::println("[\033[94m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+        statusModel->sendStatus(message);
+    }
+
+    void GuiLogger::logWarning(const std::string& message) {
+        auto currentTime = floor<seconds>(system_clock::now());
+        std::println(stderr, "[\033[93m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+        statusModel->sendStatus(message);
+    }
+
+    void GuiLogger::logError(const std::string& message) {
+        auto currentTime = floor<seconds>(system_clock::now());
+        std::println(stderr, "[\033[91m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+        statusModel->sendStatus(message);
+    }
+}

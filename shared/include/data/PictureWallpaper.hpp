@@ -8,8 +8,6 @@
 
 class PictureWallpaper : public Wallpaper {
 public:
-    static const std::unordered_set<std::string> supportedFormats;
-
     PictureWallpaper(
         std::string id,
         std::filesystem::path filePath,

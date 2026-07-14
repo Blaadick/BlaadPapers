@@ -3,8 +3,24 @@
 
 #include "option/InfoOption.hpp"
 
-InfoOption::InfoOption() : Option("info", "Shows wallpaper information") {}
+InfoOption::InfoOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
 
-int InfoOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
+std::string InfoOption::getHelpMessage() const {
+    return "info help";
+}
+
+int InfoOption::execute(const std::vector<std::string>& arguments) {
+    if(arguments.empty()) {
+        logger->logError("Wallpaper id expected");
+        return 1;
+    }
+
+    const auto wallpaper = wallpapers->get(arguments[0]);
+    if(!wallpaper) {
+        logger->logError("Wallpaper \"" + arguments[0] + "\" not found");
+        return 1;
+    }
+
+    logger->logInfo(wallpaper->toString());
     return 0;
 }

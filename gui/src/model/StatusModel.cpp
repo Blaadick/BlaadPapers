@@ -3,10 +3,7 @@
 
 #include "model/StatusModel.hpp"
 
-StatusModel& StatusModel::inst() {
-    static StatusModel instance;
-    return instance;
-}
+StatusModel::StatusModel() = default;
 
 const QString& StatusModel::getStatusText() const {
     return statusText;
@@ -17,16 +14,25 @@ void StatusModel::setStatusText(const QString& str) {
     emit statusTextChanged();
 }
 
-int StatusModel::getRepeatCount() const {
-    return repeatCount;
+int StatusModel::getSendCount() const {
+    return sendCount;
 }
 
-void StatusModel::increaseRepeatCount() {
-    repeatCount += 1;
-    emit repeatCountChanged();
+void StatusModel::increaseSendCount() {
+    sendCount += 1;
+    emit sendCountChanged();
 }
 
-void StatusModel::resetRepeatCount() {
-    repeatCount = 1;
-    emit repeatCountChanged();
+void StatusModel::resetSendCount() {
+    sendCount = 1;
+    emit sendCountChanged();
+}
+
+void StatusModel::sendStatus(const std::string& newStatus) {
+    if(statusText == newStatus) {
+        increaseSendCount();
+    } else {
+        setStatusText(QString::fromStdString(newStatus));
+        resetSendCount();
+    }
 }

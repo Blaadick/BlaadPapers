@@ -3,12 +3,6 @@
 
 #include "data/VideoWallpaper.hpp"
 
-const std::unordered_set<std::string> VideoWallpaper::supportedFormats = {
-    ".mp4",
-    ".webm",
-    ".heis"
-};
-
 VideoWallpaper::VideoWallpaper(
     std::string id,
     std::filesystem::path filePath,

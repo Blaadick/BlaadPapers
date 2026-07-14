@@ -3,8 +3,23 @@
 
 #include "option/ListOption.hpp"
 
-ListOption::ListOption() : Option("list", "Shows list of all available wallpapers") {}
+ListOption::ListOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
 
-int ListOption::execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) {
+std::string ListOption::getHelpMessage() const {
+    return "list help";
+}
+
+int ListOption::execute(const std::vector<std::string>& arguments) {
+    if(wallpapers->count() == 0) {
+        logger->logInfo("No wallpapers");
+        return 0;
+    }
+
+    std::string output;
+    for(const auto& wallpaper : *wallpapers) {
+        output += wallpaper->toString() + '\n';
+    }
+
+    logger->logInfo(output.erase(output.size() - 2));
     return 0;
 }

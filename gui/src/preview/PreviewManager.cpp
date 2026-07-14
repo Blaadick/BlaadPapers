@@ -43,7 +43,6 @@ void PreviewManager::createAndSavePreviews(const uptr<Wallpaper>& wallpaper) {
             util::logInfo("Preview of \"{}\" saved for {}", wallpaper->getId(), util::toString(screen));
         } else {
             util::logWarn("Unable to save preview file \"{}\"", previewFilePath.c_str());
-            util::sendStatus("Unable to save preview file \"{}\"", previewFilePath.c_str());
         }
     }
 }

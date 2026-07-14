@@ -4,11 +4,13 @@
 #include "Config.hpp"
 
 #include <fstream>
-#include <iostream>
 #include <nlohmann/json.hpp>
 #include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;
+namespace rng = std::ranges;
+
+Config::Config(sptr<util::Logger> logger): logger(logger) {}
 
 void Config::load() {
     nlohmann::json defaultConfigData = {
@@ -20,16 +22,16 @@ void Config::load() {
 
     util::createDirIfNotExists(util::configDirPath());
 
-    if(fs::exists(configPath())) {
-        std::ifstream configFile(configPath());
+    if(fs::exists(util::configFilePath())) {
+        std::ifstream configFile(util::configFilePath());
         configData = nlohmann::json::parse(configFile);
 
         if(configData.is_discarded()) {
             configData = defaultConfigData;
-            std::cout << "Failed to parse config, fallback to default";
+            logger->logWarning("Failed to parse config, fallback to default");
         }
     } else {
-        std::ofstream configFile(configPath());
+        std::ofstream configFile(util::configFilePath());
         configFile << defaultConfigData.dump(4);
         configData = defaultConfigData;
     }
@@ -47,7 +49,7 @@ std::vector<fs::path> Config::getWallpaperDirPaths() {
     return wallpaperDirPaths;
 }
 
-bool Config::getStatusBarVisible() {
+bool Config::getStatusBarVisible() const {
     return isStatusBarVisible;
 }
 
@@ -56,27 +58,28 @@ void Config::setStatusBarVisible(const bool newVisibility) {
     updateConfig("status_bar_visible", isStatusBarVisible);
 }
 
-std::filesystem::path Config::configPath() {
-    return util::configDirPath().append("config.json");
+bool Config::isWallpaperBad(const Wallpaper& wallpaper) {
+    return rng::any_of(
+        badTags,
+        [&wallpaper](const std::string& tag) {
+            return rng::contains(wallpaper.getTags(), tag);
+        }
+    );
 }
-
-std::vector<std::string> Config::badTags;
-std::vector<fs::path> Config::wallpaperDirPaths;
-bool Config::isStatusBarVisible;
 
 template<typename T>
 void Config::updateConfig(const std::string& name, const T& value) {
     nlohmann::json configData;
 
     {
-        std::ifstream configFile(configPath());
+        std::ifstream configFile(util::configFilePath());
         configFile >> configData;
     }
 
     configData[name] = value;
 
     {
-        std::ofstream configFile(configPath());
+        std::ofstream configFile(util::configFilePath());
         configFile << configData.dump(4).append("\n");
     }
 }

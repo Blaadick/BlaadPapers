@@ -5,6 +5,9 @@
 
 #include <QAbstractListModel>
 #include <QVariant>
+#include "WallpaperLoader.hpp"
+#include "Wallpapers.hpp"
+#include "logger/Logger.hpp"
 
 class WallpapersModel : public QAbstractListModel {
     Q_OBJECT
@@ -21,7 +24,12 @@ public:
         IsBadRole
     };
 
-    static WallpapersModel& inst();
+    WallpapersModel(
+        sptr<WallpaperLoader> wallpaperLoader,
+        sptr<Wallpapers> wallpapers,
+        sptr<Config> config,
+        sptr<util::Logger> logger
+    );
 
     void loadWallpapers();
 
@@ -45,4 +53,10 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
     QHash<int, QByteArray> roleNames() const override;
+
+private:
+    sptr<WallpaperLoader> wallpaperLoader;
+    sptr<Wallpapers> wallpapers;
+    sptr<Config> config;
+    sptr<util::Logger> logger;
 };

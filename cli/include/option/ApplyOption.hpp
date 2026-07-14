@@ -3,12 +3,21 @@
 
 #pragma once
 
+#include "Wallpapers.hpp"
+#include "logger/Logger.hpp"
 #include "option/Option.hpp"
 
-class ApplyOption : public Option {
+class ApplyOption final : public Option {
 public:
-    ApplyOption();
+    ApplyOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
 
     [[nodiscard]]
-    int execute(const std::unordered_set<sptr<Argument>>& arguments, const std::vector<std::string>& parameters) override;
+    std::string getHelpMessage() const override;
+
+    [[nodiscard]]
+    int execute(const std::vector<std::string>& arguments) override;
+
+private:
+    sptr<Wallpapers> wallpapers;
+    sptr<util::Logger> logger;
 };

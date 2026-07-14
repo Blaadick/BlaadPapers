@@ -17,7 +17,7 @@ Item {
 
         Label {
             id: info
-            text: `${Status.statusText}${Status.repeatCount > 1 ? ` x${Status.repeatCount}` : ''}`
+            text: `${Status.statusText}${Status.sendCount > 1 ? ` x${Status.sendCount}` : ''}`
         }
     }
 }
