@@ -3,13 +3,14 @@
 
 #pragma once
 
+#include "WallpaperLoader.hpp"
+#include "Wallpapers.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
-#include "util/Pointers.hpp"
 
-class HelpOption final : public Option {
+class AddOption final : public Option {
 public:
-    explicit HelpOption(sptr<util::Logger> logger);
+    AddOption(sptr<WallpaperLoader> wallpaperLoader, sptr<Config> config, sptr<util::Logger> logger);
 
     [[nodiscard]]
     std::string getHelpMessage() const override;
@@ -18,5 +19,7 @@ public:
     int execute(const std::vector<std::string>& arguments) override;
 
 private:
+    sptr<WallpaperLoader> wallpaperLoader;
+    sptr<Config> config;
     sptr<util::Logger> logger;
 };

@@ -10,7 +10,7 @@
 namespace fs = std::filesystem;
 namespace rng = std::ranges;
 
-Config::Config(sptr<util::Logger> logger): logger(logger) {}
+Config::Config(sptr<util::Logger> logger): logger(std::move(logger)) {}
 
 void Config::load() {
     nlohmann::json defaultConfigData = {

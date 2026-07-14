@@ -5,11 +5,11 @@
 
 #include "PreviewGenerator.hpp"
 
-class PicturePreviewGenerator : public PreviewGenerator {
+class PicturePreviewGenerator final : public PreviewGenerator {
 public:
     bool createAndSavePreview(
-        const uptr<Wallpaper>& wallpaper,
+        const Wallpaper& wallpaper,
         const Size& targetSize,
         const std::filesystem::path& targetPath
-    ) override;
+    ) const override;
 };

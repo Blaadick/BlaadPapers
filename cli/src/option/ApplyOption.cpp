@@ -3,7 +3,10 @@
 
 #include "option/ApplyOption.hpp"
 
-ApplyOption::ApplyOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
+ApplyOption::ApplyOption(
+    sptr<Wallpapers> wallpapers,
+    sptr<util::Logger> logger
+) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::string ApplyOption::getHelpMessage() const {
     return "apply help";
@@ -11,7 +14,7 @@ std::string ApplyOption::getHelpMessage() const {
 
 int ApplyOption::execute(const std::vector<std::string>& arguments) {
     if(arguments.empty()) {
-        logger->logError("Wallpaper id expected");
+        logger->logWarning("Wallpaper id expected");
         return 1;
     }
 
@@ -21,5 +24,5 @@ int ApplyOption::execute(const std::vector<std::string>& arguments) {
     }
 
     logger->logError("Wallpaper \"" + arguments[0] + "\" not found");
-    return 1;
+    return 2;
 }

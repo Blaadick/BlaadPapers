@@ -1,19 +1,19 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "preview/PicturePreviewGenerator.hpp"
+#include "preview/generator/PicturePreviewGenerator.hpp"
 
 #include <vips/vips8>
 
 using namespace vips;
 
 bool PicturePreviewGenerator::createAndSavePreview(
-    const uptr<Wallpaper>& wallpaper,
+    const Wallpaper& wallpaper,
     const Size& targetSize,
     const std::filesystem::path& targetPath
-) {
+) const {
     VImage preview = VImage::new_from_file(
-        wallpaper->getFilePath().c_str(),
+        wallpaper.getFilePath().c_str(),
         VImage::option()->set("access", "sequential")
     );
 

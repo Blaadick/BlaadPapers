@@ -8,6 +8,7 @@
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "logger/Logger.hpp"
+#include "preview/PreviewManager.hpp"
 
 class WallpapersModel : public QAbstractListModel {
     Q_OBJECT
@@ -28,6 +29,7 @@ public:
         sptr<WallpaperLoader> wallpaperLoader,
         sptr<Wallpapers> wallpapers,
         sptr<Config> config,
+        sptr<PreviewManager> previewManager,
         sptr<util::Logger> logger
     );
 
@@ -58,5 +60,6 @@ private:
     sptr<WallpaperLoader> wallpaperLoader;
     sptr<Wallpapers> wallpapers;
     sptr<Config> config;
+    sptr<PreviewManager> previewManager;
     sptr<util::Logger> logger;
 };

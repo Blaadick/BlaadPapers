@@ -3,7 +3,10 @@
 
 #include "option/CountOption.hpp"
 
-CountOption::CountOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
+CountOption::CountOption(
+    sptr<Wallpapers> wallpapers,
+    sptr<util::Logger> logger
+) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::string CountOption::getHelpMessage() const {
     return "count help";

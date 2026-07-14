@@ -16,6 +16,8 @@
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
+#include "preview/generator/PicturePreviewGenerator.hpp"
+#include "preview/generator/VideoPreviewGenerator.hpp"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
@@ -39,10 +41,13 @@ int main(int argc, char** argv) {
     auto wallpapers = std::make_shared<Wallpapers>();
     auto wallpaperLoader = std::make_shared<WallpaperLoader>(wallpapers, config, logger);
 
-    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, logger);
-    wallpapersModel->loadWallpapers();
+    auto previewManager = std::make_shared<PreviewManager>(logger);
+    previewManager->addGenerator(typeid(PictureWallpaper), std::make_unique<PicturePreviewGenerator>());
+    previewManager->addGenerator(typeid(VideoWallpaper), std::make_unique<VideoPreviewGenerator>());
 
     auto configModel = std::make_shared<ConfigModel>(config);
+    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, previewManager, logger);
+    wallpapersModel->loadWallpapers();
 
     #ifdef __linux__
     if(!getenv("QT_QUICK_CONTROLS_STYLE")) {
@@ -51,9 +56,9 @@ int main(int argc, char** argv) {
     #endif
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("Wallpapers", &*wallpapersModel);
-    engine.rootContext()->setContextProperty("Config", &*configModel);
     engine.rootContext()->setContextProperty("Status", &*statusModel);
+    engine.rootContext()->setContextProperty("Config", &*configModel);
+    engine.rootContext()->setContextProperty("Wallpapers", &*wallpapersModel);
     engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
     QObject::connect(

@@ -3,7 +3,10 @@
 
 #include "option/RemoveOption.hpp"
 
-RemoveOption::RemoveOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
+RemoveOption::RemoveOption(
+    sptr<Wallpapers> wallpapers,
+    sptr<util::Logger> logger
+) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::string RemoveOption::getHelpMessage() const {
     return "remove help";
@@ -11,7 +14,7 @@ std::string RemoveOption::getHelpMessage() const {
 
 int RemoveOption::execute(const std::vector<std::string>& arguments) {
     if(arguments.empty()) {
-        logger->logError("Wallpaper id expected");
+        logger->logWarning("Wallpaper id expected");
         return 1;
     }
 
@@ -21,5 +24,5 @@ int RemoveOption::execute(const std::vector<std::string>& arguments) {
     }
 
     logger->logError("Wallpaper \"" + arguments[0] + "\" not found");
-    return 1;
+    return 2;
 }

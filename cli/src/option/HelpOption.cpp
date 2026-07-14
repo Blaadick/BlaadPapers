@@ -3,7 +3,7 @@
 
 #include "option/HelpOption.hpp"
 
-HelpOption::HelpOption(sptr<util::Logger> logger) : Option(), logger(logger) {}
+HelpOption::HelpOption(sptr<util::Logger> logger) : Option(), logger(std::move(logger)) {}
 
 std::string HelpOption::getHelpMessage() const {
     return "help help";

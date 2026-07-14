@@ -5,7 +5,7 @@
 
 #include <print>
 
-VersionOption::VersionOption(sptr<util::Logger> logger) : Option(), logger(logger) {}
+VersionOption::VersionOption(sptr<util::Logger> logger) : Option(), logger(std::move(logger)) {}
 
 std::string VersionOption::getHelpMessage() const {
     return "version help";

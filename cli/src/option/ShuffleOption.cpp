@@ -8,7 +8,10 @@
 
 namespace rng = std::ranges;
 
-ShuffleOption::ShuffleOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
+ShuffleOption::ShuffleOption(
+    sptr<Wallpapers> wallpapers,
+    sptr<util::Logger> logger
+) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::string ShuffleOption::getHelpMessage() const {
     return "shuffle help";
@@ -32,7 +35,7 @@ int ShuffleOption::execute(const std::vector<std::string>& arguments) {
             const auto excludeTagsData = nlohmann::json::parse(arguments[0]);
             if(excludeTagsData.is_discarded()) {
                 logger->logError("Failed to parse exclude tags");
-                return 1;
+                return 2;
             }
 
             includeTags = excludeTagsData;
@@ -42,7 +45,7 @@ int ShuffleOption::execute(const std::vector<std::string>& arguments) {
             const auto includeTagsData = nlohmann::json::parse(arguments[1]);
             if(includeTagsData.is_discarded()) {
                 logger->logError("Failed to parse include tags");
-                return 1;
+                return 2;
             }
 
             includeTags = includeTagsData;
@@ -86,5 +89,5 @@ int ShuffleOption::execute(const std::vector<std::string>& arguments) {
     }
 
     logger->logError("Wallpaper \"" + wallpaperToApply->getId() + "\" not found");
-    return 1;
+    return 2;
 }

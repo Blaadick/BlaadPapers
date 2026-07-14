@@ -9,7 +9,7 @@
 
 class VersionOption final : public Option {
 public:
-    VersionOption(sptr<util::Logger> logger);
+    explicit VersionOption(sptr<util::Logger> logger);
 
     [[nodiscard]]
     std::string getHelpMessage() const override;

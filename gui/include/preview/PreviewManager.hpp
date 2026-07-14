@@ -5,13 +5,19 @@
 
 #include <typeindex>
 #include "data/Wallpaper.hpp"
-#include "preview/PreviewGenerator.hpp"
+#include "generator/PreviewGenerator.hpp"
+#include "logger/Logger.hpp"
 #include "util/Pointers.hpp"
 
 class PreviewManager {
 public:
-    static void createAndSavePreviews(const uptr<Wallpaper>& wallpaper);
+    explicit PreviewManager(sptr<util::Logger> logger);
+
+    void createAndSavePreviews(const Wallpaper& wallpaper) const;
+
+    void addGenerator(std::type_index typeId, uptr<PreviewGenerator> generator);
 
 private:
-    static std::unordered_map<std::type_index, sptr<PreviewGenerator>> generators;
+    std::unordered_map<std::type_index, uptr<PreviewGenerator>> generators;
+    sptr<util::Logger> logger;
 };

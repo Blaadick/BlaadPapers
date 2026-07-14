@@ -3,7 +3,10 @@
 
 #include "option/ListOption.hpp"
 
-ListOption::ListOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
+ListOption::ListOption(
+    sptr<Wallpapers> wallpapers,
+    sptr<util::Logger> logger
+) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::string ListOption::getHelpMessage() const {
     return "list help";

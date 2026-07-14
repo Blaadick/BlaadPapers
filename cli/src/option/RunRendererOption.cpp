@@ -13,7 +13,10 @@
 
 namespace fs = std::filesystem;
 
-RunRendererOption::RunRendererOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger) : Option(), wallpapers(wallpapers), logger(logger) {}
+RunRendererOption::RunRendererOption(
+    sptr<Wallpapers> wallpapers,
+    sptr<util::Logger> logger
+) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::string RunRendererOption::getHelpMessage() const {
     return "run-renderer help";

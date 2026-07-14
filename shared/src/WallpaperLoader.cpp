@@ -14,7 +14,11 @@
 
 namespace fs = std::filesystem;
 
-WallpaperLoader::WallpaperLoader(sptr<Wallpapers> wallpapers, sptr<Config> config, sptr<util::Logger> logger) : wallpapers(wallpapers), config(config), logger(logger) {}
+WallpaperLoader::WallpaperLoader(
+    sptr<Wallpapers> wallpapers,
+    sptr<Config> config,
+    sptr<util::Logger> logger
+) : wallpapers(std::move(wallpapers)), config(std::move(config)), logger(std::move(logger)) {}
 
 void WallpaperLoader::loadWallpapers() {
     wallpapers->clear();
@@ -64,6 +68,8 @@ void WallpaperLoader::loadWallpapers() {
             }
         }
     }
+
+    logger->logInfo("Loaded " + std::to_string(wallpapers->count()) + " wallpapers");
 }
 
 bool WallpaperLoader::addWallpaper(

@@ -9,10 +9,7 @@
 #include "Config.hpp"
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
-#include "model/StatusModel.hpp"
-#include "preview/PreviewManager.hpp"
 #include "util/FormatUtils.hpp"
-#include "util/Loggers.hpp"
 #include "util/WallpaperUtils.hpp"
 
 namespace fs = std::filesystem;
@@ -21,8 +18,9 @@ WallpapersModel::WallpapersModel(
     sptr<WallpaperLoader> wallpaperLoader,
     sptr<Wallpapers> wallpapers,
     sptr<Config> config,
+    sptr<PreviewManager> previewManager,
     sptr<util::Logger> logger
-) : wallpaperLoader(wallpaperLoader), wallpapers(wallpapers), config(config), logger(logger) {}
+) : wallpaperLoader(std::move(wallpaperLoader)), wallpapers(std::move(wallpapers)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
 
 void WallpapersModel::loadWallpapers() {
     beginResetModel();
@@ -30,7 +28,12 @@ void WallpapersModel::loadWallpapers() {
     wallpapers->sortByName();
     endResetModel();
 
-    QtConcurrent::map(*wallpapers, PreviewManager::createAndSavePreviews);
+    QtConcurrent::map(
+        *wallpapers,
+        [this](const uptr<Wallpaper>& wallpaper) {
+            previewManager->createAndSavePreviews(*wallpaper);
+        }
+    );
 }
 
 void WallpapersModel::addWallpapers(const QStringList& paths, const QString& destinationDirPath) {
@@ -44,7 +47,12 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
     wallpapers->sortByName();
     endResetModel();
 
-    QtConcurrent::map(*wallpapers, PreviewManager::createAndSavePreviews);
+    QtConcurrent::map(
+        *wallpapers,
+        [this](const uptr<Wallpaper>& wallpaper) {
+            previewManager->createAndSavePreviews(*wallpaper);
+        }
+    );
 }
 
 void WallpapersModel::addWallpapers() {
@@ -62,7 +70,6 @@ void WallpapersModel::addWallpapers() {
     );
 
     if(!fileSelector.exec()) {
-        logger->logWarning("Failed to take files from file dialog");
         return;
     }
 
@@ -88,7 +95,7 @@ void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
             if(wallpapers->apply(wallpaperId.toStdString())) {
                 logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" applied");
             } else {
-                util::logWarn("Failed to apply wallpaper \"{}\"", wallpaperId.toStdString());
+                logger->logWarning("Failed to apply wallpaper \"" + wallpaperId.toStdString() + "\"");
             }
         }
     );

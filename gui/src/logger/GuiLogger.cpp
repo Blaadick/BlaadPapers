@@ -9,7 +9,7 @@
 using namespace std::chrono;
 
 namespace util {
-    GuiLogger::GuiLogger(sptr<StatusModel> statusModel) : statusModel(statusModel) {}
+    GuiLogger::GuiLogger(sptr<StatusModel> statusModel) : statusModel(std::move(statusModel)) {}
 
     void GuiLogger::logInfo(const std::string& message) {
         auto currentTime = floor<seconds>(system_clock::now());

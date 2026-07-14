@@ -5,10 +5,6 @@
 
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
-#include "model/StatusModel.hpp"
-#include "preview/PicturePreviewGenerator.hpp"
-#include "preview/VideoPreviewGenerator.hpp"
-#include "util/Loggers.hpp"
 #include "util/PathUtils.hpp"
 #include "util/ToString.hpp"
 
@@ -22,11 +18,13 @@ Size getScreenAspectRatio(const QScreen* screen) {
     );
 }
 
-void PreviewManager::createAndSavePreviews(const uptr<Wallpaper>& wallpaper) {
-    const auto previewsDirPath = wallpaper->getDirPath() / "preview";
+PreviewManager::PreviewManager(sptr<util::Logger> logger) : logger(std::move(logger)) {}
+
+void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
+    const auto previewsDirPath = wallpaper.getDirPath() / "preview";
 
     if(!util::createDirIfNotExists(previewsDirPath)) {
-        util::logWarn("Failed to create directory \"{}\"", previewsDirPath.c_str());
+        logger->logWarning("Failed to create directory \"" + previewsDirPath.string() + "\"");
         return;
     }
 
@@ -38,17 +36,21 @@ void PreviewManager::createAndSavePreviews(const uptr<Wallpaper>& wallpaper) {
             continue;
         }
 
-        const auto isSaved = generators[typeid(*wallpaper)]->createAndSavePreview(wallpaper, previewSize, previewFilePath);
+        const auto it = generators.find(typeid(wallpaper));
+        if(it == generators.end()) {
+            logger->logError("No preview generator found for wallpaper \"" + wallpaper.getId() + '\"');
+            return;
+        }
+
+        const auto isSaved = it->second->createAndSavePreview(wallpaper, previewSize, previewFilePath);
         if(isSaved) {
-            util::logInfo("Preview of \"{}\" saved for {}", wallpaper->getId(), util::toString(screen));
+            logger->logInfo("Preview of \"" + wallpaper.getId() + "\" saved for " + util::toString(screen));
         } else {
-            util::logWarn("Unable to save preview file \"{}\"", previewFilePath.c_str());
+            logger->logWarning("Unable to save preview file \"" + previewFilePath.string() + "\"");
         }
     }
 }
 
-//TODO check shared. Maybe use unique or ptr
-std::unordered_map<std::type_index, sptr<PreviewGenerator>> PreviewManager::generators = {
-    {typeid(PictureWallpaper), std::make_shared<PicturePreviewGenerator>()},
-    {typeid(VideoWallpaper), std::make_shared<VideoPreviewGenerator>()}
-};
+void PreviewManager::addGenerator(std::type_index typeId, uptr<PreviewGenerator> generator) {
+    generators.emplace(typeId, std::move(generator));
+}
