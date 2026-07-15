@@ -68,8 +68,6 @@ void WallpaperLoader::loadWallpapers() {
             }
         }
     }
-
-    logger->logInfo("Loaded " + std::to_string(wallpapers->count()) + " wallpapers");
 }
 
 bool WallpaperLoader::addWallpaper(

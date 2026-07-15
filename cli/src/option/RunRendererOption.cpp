@@ -22,7 +22,7 @@ std::string RunRendererOption::getHelpMessage() const {
     return "run-renderer help";
 }
 
-int RunRendererOption::execute(const std::vector<std::string>& arguments) {
+int RunRendererOption::execute(const std::vector<std::string_view>& arguments) {
     if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
         logger->logWarning("Mpvpaper is already running");
         return 1;

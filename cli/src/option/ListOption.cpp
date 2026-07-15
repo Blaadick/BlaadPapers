@@ -12,7 +12,7 @@ std::string ListOption::getHelpMessage() const {
     return "list help";
 }
 
-int ListOption::execute(const std::vector<std::string>& arguments) {
+int ListOption::execute(const std::vector<std::string_view>& arguments) {
     if(wallpapers->count() == 0) {
         logger->logInfo("No wallpapers");
         return 0;

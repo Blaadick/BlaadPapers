@@ -15,7 +15,7 @@ std::string AddOption::getHelpMessage() const {
     return "Add help";
 }
 
-int AddOption::execute(const std::vector<std::string>& arguments) {
+int AddOption::execute(const std::vector<std::string_view>& arguments) {
     if(arguments.empty()) {
         logger->logWarning("One or more wallpaper file paths expected");
         return 1;

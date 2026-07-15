@@ -8,11 +8,11 @@
 #include "PostSetScript.hpp"
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
+#include "deeplink_handler/ApplyHandler.hpp"
 #include "logger/CliLogger.hpp"
 #include "option/AddOption.hpp"
 #include "option/ApplyOption.hpp"
 #include "option/CountOption.hpp"
-#include "option/HelpOption.hpp"
 #include "option/InfoOption.hpp"
 #include "option/ListOption.hpp"
 #include "option/RemoveOption.hpp"
@@ -20,7 +20,7 @@
 #include "option/ShuffleOption.hpp"
 #include "option/VersionOption.hpp"
 
-int main(int argc, char** argv) {
+int main(const int argc, const char** argv) {
     vips_init(argv[0]);
     vips_cache_set_max(0);
 
@@ -40,13 +40,14 @@ int main(int argc, char** argv) {
     optionExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, config, logger));
     optionExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpapers, logger));
     optionExecutor->addOption("count", std::make_unique<CountOption>(wallpapers, logger));
-    optionExecutor->addOption("help", std::make_unique<HelpOption>(logger));
     optionExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger));
     optionExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger));
     optionExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger));
     optionExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpapers, logger));
     optionExecutor->addOption("shuffle", std::make_unique<ShuffleOption>(wallpapers, logger));
     optionExecutor->addOption("version", std::make_unique<VersionOption>(logger));
+
+    optionExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpapers, logger));
 
     const auto returnVal = optionExecutor->execute(argc, argv);
 

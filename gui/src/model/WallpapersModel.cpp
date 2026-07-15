@@ -28,6 +28,8 @@ void WallpapersModel::loadWallpapers() {
     wallpapers->sortByName();
     endResetModel();
 
+    logger->logInfo("Loaded " + std::to_string(wallpapers->count()) + " wallpapers");
+
     QtConcurrent::map(
         *wallpapers,
         [this](const uptr<Wallpaper>& wallpaper) {

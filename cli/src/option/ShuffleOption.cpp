@@ -17,7 +17,7 @@ std::string ShuffleOption::getHelpMessage() const {
     return "shuffle help";
 }
 
-int ShuffleOption::execute(const std::vector<std::string>& arguments) {
+int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
     if(wallpapers->count() < 1) {
         logger->logInfo("No Wallpapers");
         return 0;
@@ -26,20 +26,17 @@ int ShuffleOption::execute(const std::vector<std::string>& arguments) {
     std::mt19937 rng(std::random_device{}());
     const Wallpaper* wallpaperToApply;
 
-    if(arguments.size() >= 1) {
-        std::vector<std::string> includeTags;
-        std::vector<std::string> excludeTags;
+    if(!arguments.empty()) {
         std::vector<const Wallpaper*> filteredWallpapers;
 
-        if(arguments.size() >= 1) {
-            const auto excludeTagsData = nlohmann::json::parse(arguments[0]);
-            if(excludeTagsData.is_discarded()) {
-                logger->logError("Failed to parse exclude tags");
-                return 2;
-            }
-
-            includeTags = excludeTagsData;
+        const auto excludeTagsData = nlohmann::json::parse(arguments[0]);
+        if(excludeTagsData.is_discarded()) {
+            logger->logError("Failed to parse exclude tags");
+            return 2;
         }
+
+        std::vector<std::string> excludeTags = excludeTagsData;
+        std::vector<std::string> includeTags;
 
         if(arguments.size() >= 2) {
             const auto includeTagsData = nlohmann::json::parse(arguments[1]);

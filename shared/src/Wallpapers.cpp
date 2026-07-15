@@ -15,7 +15,7 @@ Wallpaper* Wallpapers::get(const int index) const {
     return wallpapers[index].get();
 }
 
-Wallpaper* Wallpapers::get(const std::string& id) const {
+Wallpaper* Wallpapers::get(const std::string_view& id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper.get();
@@ -29,7 +29,7 @@ void Wallpapers::add(uptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
-bool Wallpapers::apply(const std::string& id) const {
+bool Wallpapers::apply(const std::string_view& id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper->apply();
@@ -39,7 +39,7 @@ bool Wallpapers::apply(const std::string& id) const {
     return false;
 }
 
-bool Wallpapers::remove(const std::string& id) {
+bool Wallpapers::remove(const std::string_view& id) {
     const auto it = std::ranges::find_if(
         wallpapers,
         [&id](const auto& wallpaper) {

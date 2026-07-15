@@ -12,17 +12,17 @@ std::string RemoveOption::getHelpMessage() const {
     return "remove help";
 }
 
-int RemoveOption::execute(const std::vector<std::string>& arguments) {
+int RemoveOption::execute(const std::vector<std::string_view>& arguments) {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;
     }
 
     if(wallpapers->remove(arguments[0])) {
-        logger->logInfo("Wallpaper \"" + arguments[0] + "\" deleted");
+        logger->logInfo(std::format("Wallpaper \"{}\" deleted", arguments[0]));
         return 0;
     }
 
-    logger->logError("Wallpaper \"" + arguments[0] + "\" not found");
+    logger->logError(std::format("Wallpaper \"{}\" not found", arguments[0]));
     return 2;
 }

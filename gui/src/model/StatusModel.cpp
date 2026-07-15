@@ -28,11 +28,11 @@ void StatusModel::resetSendCount() {
     emit sendCountChanged();
 }
 
-void StatusModel::sendStatus(const std::string& newStatus) {
+void StatusModel::sendStatus(const std::string_view newStatus) {
     if(statusText == newStatus) {
         increaseSendCount();
     } else {
-        setStatusText(QString::fromStdString(newStatus));
+        setStatusText(QString::fromStdString(newStatus.data()));
         resetSendCount();
     }
 }

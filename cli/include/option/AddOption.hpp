@@ -16,7 +16,7 @@ public:
     std::string getHelpMessage() const override;
 
     [[nodiscard]]
-    int execute(const std::vector<std::string>& arguments) override;
+    int execute(const std::vector<std::string_view>& arguments) override;
 
 private:
     sptr<WallpaperLoader> wallpaperLoader;

@@ -68,7 +68,7 @@ bool Config::isWallpaperBad(const Wallpaper& wallpaper) {
 }
 
 template<typename T>
-void Config::updateConfig(const std::string& name, const T& value) {
+void Config::updateConfig(const std::string& settingName, const T& value) {
     nlohmann::json configData;
 
     {
@@ -76,7 +76,7 @@ void Config::updateConfig(const std::string& name, const T& value) {
         configFile >> configData;
     }
 
-    configData[name] = value;
+    configData[settingName] = value;
 
     {
         std::ofstream configFile(util::configFilePath());

@@ -38,5 +38,5 @@ private:
     bool isStatusBarVisible = false;
 
     template<typename T>
-    void updateConfig(const std::string& name, const T& value);
+    void updateConfig(const std::string& settingName, const T& value);
 };

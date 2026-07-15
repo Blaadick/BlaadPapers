@@ -12,7 +12,7 @@ std::string InfoOption::getHelpMessage() const {
     return "info help";
 }
 
-int InfoOption::execute(const std::vector<std::string>& arguments) {
+int InfoOption::execute(const std::vector<std::string_view>& arguments) {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;
@@ -20,7 +20,7 @@ int InfoOption::execute(const std::vector<std::string>& arguments) {
 
     const auto wallpaper = wallpapers->get(arguments[0]);
     if(!wallpaper) {
-        logger->logError("Wallpaper \"" + arguments[0] + "\" not found");
+        logger->logError(std::format("Wallpaper \"{}\" not found", arguments[0]));
         return 2;
     }
 

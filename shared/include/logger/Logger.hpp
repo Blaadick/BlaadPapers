@@ -10,10 +10,10 @@ namespace util {
     public:
         virtual ~Logger() = default;
 
-        virtual void logInfo(const std::string& message) = 0;
+        virtual void logInfo(std::string_view message) = 0;
 
-        virtual void logWarning(const std::string& message) = 0;
+        virtual void logWarning(std::string_view message) = 0;
 
-        virtual void logError(const std::string& message) = 0;
+        virtual void logError(std::string_view message) = 0;
     };
 }

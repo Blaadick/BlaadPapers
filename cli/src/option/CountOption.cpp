@@ -12,7 +12,7 @@ std::string CountOption::getHelpMessage() const {
     return "count help";
 }
 
-int CountOption::execute(const std::vector<std::string>& arguments) {
+int CountOption::execute(const std::vector<std::string_view>& arguments) {
     logger->logInfo(std::to_string(wallpapers->count()));
     return 0;
 }

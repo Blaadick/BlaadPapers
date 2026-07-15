@@ -23,7 +23,7 @@ public:
 
     void resetSendCount();
 
-    void sendStatus(const std::string& newStatus);
+    void sendStatus(std::string_view newStatus);
 
     signals  :
 

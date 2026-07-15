@@ -14,5 +14,5 @@ public:
     virtual std::string getHelpMessage() const = 0;
 
     [[nodiscard]]
-    virtual int execute(const std::vector<std::string>& arguments) = 0;
+    virtual int execute(const std::vector<std::string_view>& arguments) = 0;
 };

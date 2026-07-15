@@ -12,13 +12,13 @@ public:
     Wallpaper* get(int index) const;
 
     [[nodiscard]]
-    Wallpaper* get(const std::string& id) const;
+    Wallpaper* get(const std::string_view& id) const;
 
     void add(uptr<Wallpaper> wallpaper);
 
-    bool apply(const std::string& id) const;
+    bool apply(const std::string_view& id) const;
 
-    bool remove(const std::string& id);
+    bool remove(const std::string_view& id);
 
     void sortByName();
 
