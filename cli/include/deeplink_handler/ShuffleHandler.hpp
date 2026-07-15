@@ -7,9 +7,9 @@
 #include "Wallpapers.hpp"
 #include "logger/Logger.hpp"
 
-class ApplyHandler final : public DeeplinkHandler {
+class ShuffleHandler final : public DeeplinkHandler {
 public:
-    ApplyHandler(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
+    ShuffleHandler(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
 
     int handle(const Url& url) const override;
 

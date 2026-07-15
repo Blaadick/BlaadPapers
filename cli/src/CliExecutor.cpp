@@ -1,21 +1,21 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "OptionExecutor.hpp"
+#include "CliExecutor.hpp"
 
 #include "data/Url.hpp"
 
-OptionExecutor::OptionExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
+CliExecutor::CliExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
-void OptionExecutor::addOption(const std::string& name, uptr<Option> option) {
+void CliExecutor::addOption(const std::string& name, uptr<Option> option) {
     options.emplace(name, std::move(option));
 }
 
-void OptionExecutor::addHandler(const std::string& domain, uptr<DeeplinkHandler> handler) {
+void CliExecutor::addHandler(const std::string& domain, uptr<DeeplinkHandler> handler) {
     deeplinkHandlers.emplace(domain, std::move(handler));
 }
 
-int OptionExecutor::execute(const int argc, const char** argv) const {
+int CliExecutor::execute(const int argc, const char** argv) const {
     if(argc < 2) {
         logger->logWarning("Option or link expected");
         return 0;

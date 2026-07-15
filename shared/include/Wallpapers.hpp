@@ -14,6 +14,11 @@ public:
     [[nodiscard]]
     Wallpaper* get(const std::string_view& id) const;
 
+    Wallpaper* shuffle(
+        std::optional<std::vector<std::string>> includeTags = std::nullopt,
+        std::optional<std::vector<std::string>> excludeTags = std::nullopt
+    ) const;
+
     void add(uptr<Wallpaper> wallpaper);
 
     bool apply(const std::string_view& id) const;

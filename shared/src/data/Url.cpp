@@ -3,7 +3,6 @@
 
 #include "data/Url.hpp"
 
-#include <iostream>
 #include <ranges>
 
 std::optional<Url> Url::parse(const std::string_view string) {

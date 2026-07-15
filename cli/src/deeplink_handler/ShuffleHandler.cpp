@@ -1,33 +1,30 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "option/ShuffleOption.hpp"
+#include "deeplink_handler/ShuffleHandler.hpp"
 
-#include <random>
-#include "data/Wallpaper.hpp"
-
-namespace rng = std::ranges;
-
-ShuffleOption::ShuffleOption(
+ShuffleHandler::ShuffleHandler(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
-std::string ShuffleOption::getHelpMessage() const {
-    return "shuffle help";
-}
-
-int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
+int ShuffleHandler::handle(const Url& url) const {
     if(wallpapers->count() < 1) {
         logger->logInfo("No Wallpapers");
         return 0;
     }
 
+    if(!url.path.empty() || !url.fragment.empty()) {
+        logger->logWarning("Unexpected something other than shuffle queries");
+        return 1;
+    }
+
     std::vector<std::string> includeTags;
     std::vector<std::string> excludeTags;
 
-    if(arguments.size() >= 1) {
-        const auto includeTagsData = nlohmann::json::parse(arguments[0]);
+    const auto includeIt = url.queries.find("include");
+    if(includeIt != url.queries.end()) {
+        const auto includeTagsData = nlohmann::json::parse(includeIt->second);
         if(includeTagsData.is_discarded()) {
             logger->logError("Failed to parse include tags");
             return 2;
@@ -36,8 +33,11 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
         includeTags = includeTagsData;
     }
 
-    if(arguments.size() >= 2) {
-        const auto excludeTagsData = nlohmann::json::parse(arguments[1]);
+    const auto excludeIt = url.queries.find("exclude");
+    if(excludeIt != url.queries.end()) {
+        std::vector<const Wallpaper*> filteredWallpapers;
+
+        const auto excludeTagsData = nlohmann::json::parse(excludeIt->second);
         if(excludeTagsData.is_discarded()) {
             logger->logError("Failed to parse exclude tags");
             return 2;

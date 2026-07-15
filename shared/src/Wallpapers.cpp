@@ -3,9 +3,11 @@
 
 #include "Wallpapers.hpp"
 
+#include <random>
 #include "Config.hpp"
 
 namespace fs = std::filesystem;
+namespace rng = std::ranges;
 
 Wallpaper* Wallpapers::get(const int index) const {
     if(index >= wallpapers.size()) {
@@ -20,6 +22,55 @@ Wallpaper* Wallpapers::get(const std::string_view& id) const {
         if(wallpaper->getId() == id) {
             return wallpaper.get();
         }
+    }
+
+    return nullptr;
+}
+
+Wallpaper* Wallpapers::shuffle(
+    std::optional<std::vector<std::string>> includeTags,
+    std::optional<std::vector<std::string>> excludeTags
+) const {
+    if(wallpapers.size() == 0) {
+        return nullptr;
+    }
+
+    std::mt19937 rnd(std::random_device{}());
+    std::vector<Wallpaper*> filteredWallpapers;
+
+    for(const auto& wallpaper : wallpapers) {
+        filteredWallpapers.emplace_back(wallpaper.get());
+    }
+
+    if(includeTags.has_value()) {
+        const auto notContainsIncludeTags = [&includeTags](Wallpaper* wallpaper) {
+            return rng::none_of(
+                *includeTags,
+                [&wallpaper](const std::string& tag) {
+                    return rng::contains(wallpaper->getTags(), tag);
+                }
+            );
+        };
+
+        std::erase_if(filteredWallpapers, notContainsIncludeTags);
+    }
+
+    if(excludeTags.has_value()) {
+        const auto containsExcludeTags = [&excludeTags](Wallpaper* wallpaper) {
+            return rng::any_of(
+                *excludeTags,
+                [&wallpaper](const std::string& tag) {
+                    return rng::contains(wallpaper->getTags(), tag);
+                }
+            );
+        };
+
+        std::erase_if(filteredWallpapers, containsExcludeTags);
+    }
+
+    if(!filteredWallpapers.empty()) {
+        const auto randomIndex = std::uniform_int_distribution(0, static_cast<int>(filteredWallpapers.size() - 1))(rnd);
+        return filteredWallpapers[randomIndex];
     }
 
     return nullptr;

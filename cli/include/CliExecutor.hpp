@@ -10,9 +10,9 @@
 #include "option/Option.hpp"
 #include "util/Pointers.hpp"
 
-class OptionExecutor {
+class CliExecutor {
 public:
-    explicit OptionExecutor(sptr<util::Logger> logger);
+    explicit CliExecutor(sptr<util::Logger> logger);
 
     void addOption(const std::string&, uptr<Option> option);
 
