@@ -6,11 +6,7 @@
 InfoOption::InfoOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string InfoOption::getHelpMessage() const {
-    return "info help";
-}
+) : Option("Shows wallpaper information"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int InfoOption::execute(const std::vector<std::string_view>& arguments) {
     if(arguments.empty()) {

@@ -11,10 +11,6 @@ class ShuffleOption final : public Option {
 public:
     ShuffleOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
 
-    [[nodiscard]]
-    std::string getHelpMessage() const override;
-
-    [[nodiscard]]
     int execute(const std::vector<std::string_view>& arguments) override;
 
 private:

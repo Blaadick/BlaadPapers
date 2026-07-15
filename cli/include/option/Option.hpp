@@ -8,11 +8,15 @@
 
 class Option {
 public:
+    explicit Option(std::string description);
+
     virtual ~Option() = default;
 
     [[nodiscard]]
-    virtual std::string getHelpMessage() const = 0;
+    const std::string& getDescription() const;
 
-    [[nodiscard]]
     virtual int execute(const std::vector<std::string_view>& arguments) = 0;
+
+private:
+    std::string description;
 };

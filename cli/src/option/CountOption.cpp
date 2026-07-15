@@ -6,11 +6,7 @@
 CountOption::CountOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string CountOption::getHelpMessage() const {
-    return "count help";
-}
+) : Option("Shows the wallpaper count"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int CountOption::execute(const std::vector<std::string_view>& arguments) {
     logger->logInfo(std::to_string(wallpapers->count()));

@@ -11,10 +11,6 @@ class InfoOption final : public Option {
 public:
     InfoOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
 
-    [[nodiscard]]
-    std::string getHelpMessage() const override;
-
-    [[nodiscard]]
     int execute(const std::vector<std::string_view>& arguments) override;
 
 private:

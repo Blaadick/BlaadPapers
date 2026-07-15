@@ -6,11 +6,7 @@
 RemoveOption::RemoveOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string RemoveOption::getHelpMessage() const {
-    return "remove help";
-}
+) : Option("Deletes the wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int RemoveOption::execute(const std::vector<std::string_view>& arguments) {
     if(arguments.empty()) {

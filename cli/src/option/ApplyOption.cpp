@@ -6,11 +6,7 @@
 ApplyOption::ApplyOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string ApplyOption::getHelpMessage() const {
-    return "apply help";
-}
+) : Option("Sets the wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int ApplyOption::execute(const std::vector<std::string_view>& arguments) {
     if(arguments.empty()) {

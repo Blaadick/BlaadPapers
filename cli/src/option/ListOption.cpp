@@ -6,11 +6,7 @@
 ListOption::ListOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string ListOption::getHelpMessage() const {
-    return "list help";
-}
+) : Option("Shows list of all available wallpapers"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int ListOption::execute(const std::vector<std::string_view>& arguments) {
     if(wallpapers->count() == 0) {

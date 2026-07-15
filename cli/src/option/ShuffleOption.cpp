@@ -11,11 +11,7 @@ namespace rng = std::ranges;
 ShuffleOption::ShuffleOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string ShuffleOption::getHelpMessage() const {
-    return "shuffle help";
-}
+) : Option("Sets the random wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
     if(wallpapers->count() == 0) {

@@ -3,6 +3,11 @@
 
 #include "CliExecutor.hpp"
 
+#include <algorithm>
+#include <cstring>
+#include <format>
+#include <ranges>
+
 #include "data/Url.hpp"
 
 CliExecutor::CliExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
@@ -41,6 +46,20 @@ int CliExecutor::execute(const int argc, const char** argv) const {
         }
 
         return it->second->handle(url.value());
+    }
+
+    if(std::strcmp(argv[1], "help") == 0) {
+        logger->logInfo("Supported options:");
+
+        int maxNameLength = std::ranges::max(
+            options | std::views::keys | std::views::transform(&std::string::length)
+        );
+
+        for(const auto& [name, option] : options) {
+            logger->logInfo(std::format("    {:<{}}  ->  {}", name, maxNameLength, option->getDescription()));
+        }
+
+        return 0;
     }
 
     const auto it = options.find(argv[1]);

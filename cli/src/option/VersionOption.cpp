@@ -5,11 +5,7 @@
 
 #include <format>
 
-VersionOption::VersionOption(sptr<util::Logger> logger) : Option(), logger(std::move(logger)) {}
-
-std::string VersionOption::getHelpMessage() const {
-    return "version help";
-}
+VersionOption::VersionOption(sptr<util::Logger> logger) : Option("Shows program version"), logger(std::move(logger)) {}
 
 int VersionOption::execute(const std::vector<std::string_view>& arguments) {
     logger->logInfo(std::format("{} {}\n{}", PROJECT_NAME, PROJECT_VERSION, PROJECT_DESCRIPTION));

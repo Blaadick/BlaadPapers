@@ -16,11 +16,7 @@ namespace fs = std::filesystem;
 RunRendererOption::RunRendererOption(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
-) : Option(), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
-
-std::string RunRendererOption::getHelpMessage() const {
-    return "run-renderer help";
-}
+) : Option("Starts the renderer daemon"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 int RunRendererOption::execute(const std::vector<std::string_view>& arguments) {
     if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
