@@ -25,9 +25,7 @@ public:
 
     void sendStatus(std::string_view newStatus);
 
-    signals  :
-
-
+signals:
     void statusTextChanged();
 
     void sendCountChanged();

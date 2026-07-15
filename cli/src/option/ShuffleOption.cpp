@@ -18,7 +18,7 @@ std::string ShuffleOption::getHelpMessage() const {
 }
 
 int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
-    if(wallpapers->count() < 1) {
+    if(wallpapers->count() == 0) {
         logger->logInfo("No Wallpapers");
         return 0;
     }
@@ -26,7 +26,7 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
     std::vector<std::string> includeTags;
     std::vector<std::string> excludeTags;
 
-    if(arguments.size() >= 1) {
+    if(!arguments.empty()) {
         const auto includeTagsData = nlohmann::json::parse(arguments[0]);
         if(includeTagsData.is_discarded()) {
             logger->logError("Failed to parse include tags");

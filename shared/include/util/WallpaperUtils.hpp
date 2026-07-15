@@ -10,11 +10,12 @@ namespace util {
     const std::unordered_set<std::string> supportedPictureFormats = {
         ".png",
         ".apng",
-        ".jpeg",
+        ".jpeg", ".jpg",
         ".webp",
+        ".bmp",
         ".avif",
-        ".tiff",
-        ".heic"
+        ".tiff", ".tif",
+        ".heic", ".heif"
     };
 
     const std::unordered_set<std::string> supportedVideoFormats = {

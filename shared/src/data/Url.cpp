@@ -54,7 +54,7 @@ std::optional<Url> Url::parse(const std::string_view string) {
 
 bool Url::isUrl(const std::string_view string) {
     const auto dividerPos = string.find("://");
-    return dividerPos != std::string_view::npos && dividerPos != string.size() - 3;
+    return dividerPos != std::string_view::npos && dividerPos != 0 && dividerPos != string.size() - 3;
 }
 
 std::string Url::toString() const {

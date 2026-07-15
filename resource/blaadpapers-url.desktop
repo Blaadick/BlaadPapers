@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=BlaadPapers
+Icon=blaadpapers
+Type=Application
+Exec=/usr/bin/blaadpaperscli %u
+MimeType=x-scheme-handler/blaadpapers;
+NoDisplay=true

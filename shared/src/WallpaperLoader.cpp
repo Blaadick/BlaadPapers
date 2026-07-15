@@ -22,7 +22,6 @@ WallpaperLoader::WallpaperLoader(
 
 void WallpaperLoader::loadWallpapers() {
     wallpapers->clear();
-    formatUnifier();
 
     for(const auto& wallpapersDirPath : config->getWallpaperDirPaths()) {
         if(!util::createDirIfNotExists(wallpapersDirPath)) {
@@ -42,12 +41,10 @@ void WallpaperLoader::loadWallpapers() {
 
                 if(util::isSupportedPicture(wallpaperDirEntry.path())) {
                     wallpapers->add(
-                        std::move(
-                            loadPictureWallpaper(
-                                wallpapersDirEntry.path().stem(),
-                                wallpaperDirEntry.path(),
-                                readWallpaperData(wallpapersDirEntry.path() / "data.json")
-                            )
+                        loadPictureWallpaper(
+                            wallpapersDirEntry.path().stem(),
+                            wallpaperDirEntry.path(),
+                            readWallpaperData(wallpapersDirEntry.path() / "data.json")
                         )
                     );
                     break;
@@ -55,12 +52,10 @@ void WallpaperLoader::loadWallpapers() {
 
                 if(util::isSupportedVideo(wallpaperDirEntry.path())) {
                     wallpapers->add(
-                        std::move(
-                            loadVideoWallpaper(
-                                wallpapersDirEntry.path().stem(),
-                                wallpaperDirEntry.path(),
-                                readWallpaperData(wallpapersDirEntry.path() / "data.json")
-                            )
+                        loadVideoWallpaper(
+                            wallpapersDirEntry.path().stem(),
+                            wallpaperDirEntry.path(),
+                            readWallpaperData(wallpapersDirEntry.path() / "data.json")
                         )
                     );
                     break;
@@ -234,50 +229,4 @@ uptr<VideoWallpaper> WallpaperLoader::loadVideoWallpaper(
         data["source"],
         data["tags"]
     );
-}
-
-void WallpaperLoader::formatUnifier() {
-    const std::pmr::unordered_set<std::string> wrongJpegVariants = {".jpg", ".JPG", ".jpe", ".jif", ".jfi", ".jfif"};
-    const std::pmr::unordered_set<std::string> wrongTiffVariants = {".tif"};
-    const std::pmr::unordered_set<std::string> wrongHeicVariants = {".heif", ".hif", ".avic"};
-    const std::pmr::unordered_set<std::string> wrongHeicsVariants = {".heifs", ".avcs"};
-
-    for(const auto& wallpapersDirPath : config->getWallpaperDirPaths()) {
-        if(!util::createDirIfNotExists(wallpapersDirPath)) {
-            logger->logError("Failed to create directory \"" + wallpapersDirPath.string() + "\"");
-            continue;
-        }
-
-        for(const auto& entry : fs::recursive_directory_iterator(wallpapersDirPath)) {
-            if(!entry.path().has_extension()) {
-                continue;
-            }
-
-            auto newPath = entry.path();
-
-            if(wrongJpegVariants.contains(entry.path().extension())) {
-                newPath.replace_extension(".jpeg");
-                fs::rename(entry.path(), newPath);
-                continue;
-            }
-
-            if(wrongTiffVariants.contains(entry.path().extension())) {
-                newPath.replace_extension(".tiff");
-                fs::rename(entry.path(), newPath);
-                continue;
-            }
-
-            if(wrongHeicVariants.contains(entry.path().extension())) {
-                newPath.replace_extension(".heic");
-                fs::rename(entry.path(), newPath);
-                continue;
-            }
-
-            if(wrongHeicsVariants.contains(entry.path().extension())) {
-                newPath.replace_extension(".heics");
-                fs::rename(entry.path(), newPath);
-                continue;
-            }
-        }
-    }
 }

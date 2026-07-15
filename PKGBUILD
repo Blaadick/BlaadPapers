@@ -41,6 +41,7 @@ package() {
     install -Dm755 "cmake-build/cli/${pkgname}cli" "$pkgdir/usr/bin/${pkgname}cli"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     install -Dm644 "resource/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+    install -Dm644 "resource/$pkgname-url.desktop" "$pkgdir/usr/share/applications/$pkgname-url.desktop"
     install -Dm644 "resource/${pkgname}cli.fish" "$pkgdir/usr/share/fish/vendor_completions.d/${pkgname}cli.fish"
     install -Dm644 "resource/$pkgname.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
 

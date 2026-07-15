@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include <vips/vips8>
+#include "CliExecutor.hpp"
 #include "Config.hpp"
 #include "DefaultWallpaper.hpp"
-#include "CliExecutor.hpp"
 #include "PostSetScript.hpp"
 #include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
@@ -47,7 +47,6 @@ int main(const int argc, const char** argv) {
     cliExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpapers, logger));
     cliExecutor->addOption("shuffle", std::make_unique<ShuffleOption>(wallpapers, logger));
     cliExecutor->addOption("version", std::make_unique<VersionOption>(logger));
-
     cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpapers, logger));
     cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpapers, logger));
 

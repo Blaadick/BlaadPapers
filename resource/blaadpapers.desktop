@@ -4,11 +4,11 @@ GenericName=Wallpaper Manager
 Comment=Fast & clean wallpaper manager
 Icon=blaadpapers
 Type=Application
-Exec=blaadpapers
+Exec=/usr/bin/blaadpapers
 Categories=Graphics;Viewer;Qt
 Actions=Daemon
 Keywords=wallpaper
 
 [Desktop Action Daemon]
 Name=Run Renderer Daemon
-Exec=blaadpaperscli -S
+Exec=/usr/bin/blaadpaperscli run-renderer

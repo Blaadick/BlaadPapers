@@ -31,7 +31,7 @@ Wallpaper* Wallpapers::shuffle(
     std::optional<std::vector<std::string>> includeTags,
     std::optional<std::vector<std::string>> excludeTags
 ) const {
-    if(wallpapers.size() == 0) {
+    if(wallpapers.empty()) {
         return nullptr;
     }
 
@@ -44,7 +44,7 @@ Wallpaper* Wallpapers::shuffle(
 
     if(includeTags.has_value()) {
         const auto notContainsIncludeTags = [&includeTags](Wallpaper* wallpaper) {
-            return rng::none_of(
+            return !rng::all_of(
                 *includeTags,
                 [&wallpaper](const std::string& tag) {
                     return rng::contains(wallpaper->getTags(), tag);

@@ -8,13 +8,8 @@
 > [!NOTE]
 > The application is temporarily use [mpvpaper](https://github.com/GhostNaN/mpvpaper) as wallpaper renderer
 
-> [!WARNING]
-> Video wallpaper support is experimental
-
 ## Description
 Convenient wallpaper manager supporting both GUI and CLI usage. I will try to make it as fast and pleasing to the eye as possible.
-
-Keep in mind that the application is being developed and tested on and for Linux systems. I will try to keep it running on other platforms as well, but this is not a priority.
 
 ## Preview
 
@@ -32,7 +27,9 @@ yay -S blaadpapers
 ```
 
 ### Manual
-Install `Qt6 Base`, `Qt6 Declarative`, `Qt6 Svg`, [`libvips`](https://github.com/libvips/libvips), [`FFmpeg`](https://ffmpeg.org/), [`nlohman-json`](https://github.com/nlohmann/json) and [`BStyle`](https://github.com/Blaadick/BStyle). Then run it:
+Install `Qt6 Base`, `Qt6 Declarative`, `Qt6 Svg`, [`libvips`](https://github.com/libvips/libvips), [
+`FFmpeg`](https://ffmpeg.org/), [`nlohman-json`](https://github.com/nlohmann/json) and [
+`BStyle`](https://github.com/Blaadick/BStyle). Then run it:
 
 ```bash
 git clone https://github.com/Blaadick/BlaadPapers.git
@@ -42,12 +39,19 @@ cmake --build cmake-build-release --parallel
 ```
 
 ### Windows
-Expected after adding major features and implementing custom wallpaper rendering.
+Expected after adding major features and implementing custom wallpaper renderer.
 
 ## Usage
-Before use, run `blaadpaperscli -S`. You can add some [mpv arguments](https://mpv.io/manual/master/#command-interface) like `blaadpaperscli -S "no-interpolation hwdec=vaapi"`.
+Before use, run
+`blaadpaperscli run-renderer`. You can add some [mpv arguments](https://mpv.io/manual/master/#command-interface) like
+`blaadpaperscli run-renderer "no-interpolation hwdec=vaapi"`.
 
 After that, you can run GUI with `blaadpapers`, or use CLI with `blaadpaperscli`.
+
+Also, BlaadPapers supports deep linking, like this: [blaadpapers://shuffle?include=General](blaadpapers://shuffle?include=General).
+
+## Afterword
+Keep in mind that the application is being developed and tested on and for Linux systems. I will try to keep it running on other platforms as well, but this is not a priority.
 
 ## License
 Code is licensed under GPL-3.0-only.

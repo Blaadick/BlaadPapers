@@ -3,6 +3,8 @@
 
 #include "deeplink_handler/ShuffleHandler.hpp"
 
+#include <string_view>
+
 ShuffleHandler::ShuffleHandler(
     sptr<Wallpapers> wallpapers,
     sptr<util::Logger> logger
@@ -24,26 +26,16 @@ int ShuffleHandler::handle(const Url& url) const {
 
     const auto includeIt = url.queries.find("include");
     if(includeIt != url.queries.end()) {
-        const auto includeTagsData = nlohmann::json::parse(includeIt->second);
-        if(includeTagsData.is_discarded()) {
-            logger->logError("Failed to parse include tags");
-            return 2;
+        for(const auto& includeTag : includeIt->second | std::views::split(',')) {
+            includeTags.emplace_back(includeTag.begin(), includeTag.end());
         }
-
-        includeTags = includeTagsData;
     }
 
     const auto excludeIt = url.queries.find("exclude");
     if(excludeIt != url.queries.end()) {
-        std::vector<const Wallpaper*> filteredWallpapers;
-
-        const auto excludeTagsData = nlohmann::json::parse(excludeIt->second);
-        if(excludeTagsData.is_discarded()) {
-            logger->logError("Failed to parse exclude tags");
-            return 2;
+        for(const auto& includeTag : excludeIt->second | std::views::split(',')) {
+            excludeTags.emplace_back(includeTag.begin(), includeTag.end());
         }
-
-        excludeTags = excludeTagsData;
     }
 
     const auto wallpaperToApply = wallpapers->shuffle(

@@ -48,9 +48,4 @@ private:
         const std::filesystem::path& filePath,
         const nlohmann::json& data
     );
-
-    /**
-    * We are not in DOS time! I turn it off if it is too annoying.
-    */
-    void formatUnifier();
 };
