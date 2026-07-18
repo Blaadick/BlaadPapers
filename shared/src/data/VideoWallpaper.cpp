@@ -3,6 +3,8 @@
 
 #include "data/VideoWallpaper.hpp"
 
+#include <format>
+
 VideoWallpaper::VideoWallpaper(
     std::string id,
     std::filesystem::path filePath,
@@ -52,7 +54,7 @@ std::string VideoWallpaper::toString() const {
         "    Type: {}\n",
         id,
         name,
-        filePath.native(),
+        filePath.string(),
         resolution.toString(),
         frameRate,
         source,

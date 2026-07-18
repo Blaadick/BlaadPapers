@@ -78,7 +78,7 @@ void WallpapersModel::addWallpapers() {
     const auto selectedFiles = fileSelector.selectedFiles();
     QThreadPool::globalInstance()->start(
         [this, selectedFiles] {
-            addWallpapers(selectedFiles, QString::fromStdString(config->getWallpaperDirPaths()[0]));
+            addWallpapers(selectedFiles, QString::fromStdString(config->getWallpaperDirPaths()[0].string()));
         }
     );
 }
@@ -86,7 +86,7 @@ void WallpapersModel::addWallpapers() {
 void WallpapersModel::addWallpapers(const QStringList& paths) {
     QThreadPool::globalInstance()->start(
         [this, paths] {
-            addWallpapers(paths, QString::fromStdString(config->getWallpaperDirPaths()[0]));
+            addWallpapers(paths, QString::fromStdString(config->getWallpaperDirPaths()[0].string()));
         }
     );
 }
@@ -135,7 +135,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     switch(role) {
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
-        case RootDirRole: return QString::fromStdString(wallpaper->getFilePath().parent_path());
+        case RootDirRole: return QString::fromStdString(wallpaper->getFilePath().parent_path().string());
         case ResolutionRole: return QString::fromStdString(wallpaper->getResolution().toString());
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;

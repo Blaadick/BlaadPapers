@@ -3,10 +3,7 @@
 
 #include "option/RunRendererOption.hpp"
 
-#include <fcntl.h>
 #include <fstream>
-#include <spawn.h>
-#include <unistd.h>
 #include "DefaultWallpaper.hpp"
 #include "logger/Logger.hpp"
 #include "util/PathUtils.hpp"
@@ -19,8 +16,17 @@ RunRendererOption::RunRendererOption(
 ) : Option("Starts the renderer daemon"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> RunRendererOption::getUsageStrings() const {
-    return {"[mpv_args...]"};
+    return {
+        "[mpv_args...]",
+        "no-interpolation hwdec=vaapi"
+    };
 }
+
+#ifdef __linux__
+
+#include <fcntl.h>
+#include <spawn.h>
+#include <unistd.h>
 
 int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
@@ -56,7 +62,7 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
         const_cast<char*>("-o"),
         const_cast<char*>(mpvArgs.c_str()),
         const_cast<char*>("all"),
-        const_cast<char*>(currentWallpaperPath.c_str()),
+        const_cast<char*>(currentWallpaperPath.string().c_str()),
         nullptr
     };
 
@@ -73,3 +79,11 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
 
     return 0;
 }
+#endif
+
+#ifdef _WIN32
+int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+    logger->logError("Mpvpaper is not available on windows");
+    return 2;
+}
+#endif

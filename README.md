@@ -44,7 +44,7 @@ Expected after adding major features and implementing custom wallpaper renderer.
 ## Usage
 Before use, run
 `blaadpaperscli run-renderer`. You can add some [mpv arguments](https://mpv.io/manual/master/#command-interface) like
-`blaadpaperscli run-renderer "no-interpolation hwdec=vaapi"`.
+`blaadpaperscli run-renderer no-interpolation hwdec=vaapi`.
 
 After that, you can run GUI with `blaadpapers`, or use CLI with `blaadpaperscli`.
 

@@ -25,12 +25,12 @@ public:
 
     void sendStatus(std::string_view newStatus);
 
+private:
+    QString statusText;
+    int sendCount = 1;
+
 signals:
     void statusTextChanged();
 
     void sendCountChanged();
-
-private:
-    QString statusText;
-    int sendCount = 1;
 };

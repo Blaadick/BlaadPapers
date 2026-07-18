@@ -21,7 +21,7 @@ inline VideoData getVideoData(const std::filesystem::path& filePath) {
     av_dict_set(&options, "probesize", "32", 0);
     av_dict_set(&options, "analyzeduration", "0", 0);
 
-    if(avformat_open_input(&fmt, filePath.c_str(), nullptr, &options) < 0) {
+    if(avformat_open_input(&fmt, filePath.string().c_str(), nullptr, &options) < 0) {
         av_dict_free(&options);
         return data;
     }

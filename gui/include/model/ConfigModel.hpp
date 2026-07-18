@@ -24,6 +24,6 @@ public:
 private:
     sptr<Config> config;
 
-signals :
+signals:
     void statusBarVisibleChanged();
 };

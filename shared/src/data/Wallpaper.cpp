@@ -60,6 +60,10 @@ bool Wallpaper::apply() const {
 
     return true;
     #endif
+
+    #ifdef _WIN32
+    return false;
+    #endif
 }
 
 const std::string& Wallpaper::getId() const {

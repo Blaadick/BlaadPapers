@@ -42,7 +42,7 @@ void WallpaperLoader::loadWallpapers() {
                 if(util::isSupportedPicture(wallpaperDirEntry.path())) {
                     wallpapers->add(
                         loadPictureWallpaper(
-                            wallpapersDirEntry.path().stem(),
+                            wallpapersDirEntry.path().stem().string(),
                             wallpaperDirEntry.path(),
                             readWallpaperData(wallpapersDirEntry.path() / "data.json")
                         )
@@ -53,7 +53,7 @@ void WallpaperLoader::loadWallpapers() {
                 if(util::isSupportedVideo(wallpaperDirEntry.path())) {
                     wallpapers->add(
                         loadVideoWallpaper(
-                            wallpapersDirEntry.path().stem(),
+                            wallpapersDirEntry.path().stem().string(),
                             wallpaperDirEntry.path(),
                             readWallpaperData(wallpapersDirEntry.path() / "data.json")
                         )

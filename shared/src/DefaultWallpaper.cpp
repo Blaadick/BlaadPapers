@@ -291,7 +291,7 @@ void DefaultWallpaper::createIfNotExists() {
     const auto defaultWallpaper = VImage::new_from_buffer(default_wallpaper_svg, default_wallpaper_svg_len, "");
 
     defaultWallpaper.webpsave(
-        defaultWallpaperPath().c_str(),
+        defaultWallpaperPath().string().c_str(),
         VImage::option()->set("lossless", true)
     );
 }

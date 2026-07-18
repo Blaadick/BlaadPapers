@@ -4,7 +4,7 @@
 #include "logger/GuiLogger.hpp"
 
 #include <chrono>
-#include <print>
+#include <iostream>
 
 using namespace std::chrono;
 
@@ -13,19 +13,22 @@ namespace util {
 
     void GuiLogger::logInfo(const std::string_view message) const {
         auto currentTime = floor<seconds>(system_clock::now());
-        std::println("[\033[94m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+        std::cout << std::format("[\033[94m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+
         statusModel->sendStatus(message);
     }
 
     void GuiLogger::logWarning(const std::string_view message) const {
         auto currentTime = floor<seconds>(system_clock::now());
-        std::println(stderr, "[\033[93m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+        std::cerr << std::format("[\033[93m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+
         statusModel->sendStatus(message);
     }
 
     void GuiLogger::logError(const std::string_view message) const {
         auto currentTime = floor<seconds>(system_clock::now());
-        std::println(stderr, "[\033[91m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+        std::cerr << std::format("[\033[91m{:%H:%M:%S}\033[0m] {}", currentTime, message);
+
         statusModel->sendStatus(message);
     }
 }

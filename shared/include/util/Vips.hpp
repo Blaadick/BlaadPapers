@@ -11,7 +11,7 @@
 
 inline Size getPictureResolutionData(const std::filesystem::path& filePath) {
     Size resolution;
-    VipsImage* image = vips_image_new_from_file(filePath.c_str(), nullptr);
+    VipsImage* image = vips_image_new_from_file(filePath.string().c_str(), nullptr);
 
     if(!image) {
         return resolution;

@@ -3,8 +3,7 @@
 
 #pragma once
 
-#include "data/VideoWallpaper.hpp"
-#include "data/Wallpaper.hpp"
+#include <unordered_set>
 
 namespace util {
     const std::unordered_set<std::string> supportedPictureFormats = {
@@ -25,11 +24,11 @@ namespace util {
     };
 
     inline bool isSupportedPicture(const std::filesystem::path& path) {
-        return supportedPictureFormats.contains(path.extension());
+        return supportedPictureFormats.contains(path.extension().string());
     }
 
     inline bool isSupportedVideo(const std::filesystem::path& path) {
-        return supportedVideoFormats.contains(path.extension());
+        return supportedVideoFormats.contains(path.extension().string());
     }
 
     inline bool isSupported(const std::filesystem::path& path) {

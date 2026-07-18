@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <unordered_set>
 #include "Wallpaper.hpp"
 
 class PictureWallpaper : public Wallpaper {

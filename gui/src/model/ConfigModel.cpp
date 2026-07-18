@@ -10,7 +10,7 @@
 ConfigModel::ConfigModel(sptr<Config> config) : config(std::move(config)) {}
 
 QString ConfigModel::getConfigFilePath() {
-    return QString::fromStdString(util::configFilePath());
+    return QString::fromStdString(util::configFilePath().string());
 }
 
 bool ConfigModel::getStatusBarVisible() {

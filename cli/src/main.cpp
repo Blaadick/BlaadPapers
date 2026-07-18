@@ -39,15 +39,14 @@ int main(const int argc, const char** argv) {
     wallpapers->sortByName();
 
     auto jsonParameter = std::make_shared<Parameter>("json", 'j', "Outputs command result in JSON format");
-    auto testParameter = std::make_shared<Parameter>("test", std::nullopt, "Test");
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, config, logger));
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpapers, logger));
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpapers, logger));
     cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger), {jsonParameter});
-    cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger), {jsonParameter, testParameter});
-    cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger), {testParameter});
+    cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger), {jsonParameter});
+    cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger));
     cliExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpapers, logger));
     cliExecutor->addOption("shuffle", std::make_unique<ShuffleOption>(wallpapers, logger));
     cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpapers));

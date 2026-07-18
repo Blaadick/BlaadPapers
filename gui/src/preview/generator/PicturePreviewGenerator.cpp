@@ -13,7 +13,7 @@ bool PicturePreviewGenerator::createAndSavePreview(
     const std::filesystem::path& targetPath
 ) const {
     VImage preview = VImage::new_from_file(
-        wallpaper.getFilePath().c_str(),
+        wallpaper.getFilePath().string().c_str(),
         VImage::option()->set("access", "sequential")
     );
 
@@ -37,7 +37,7 @@ bool PicturePreviewGenerator::createAndSavePreview(
     );
 
     preview.write_to_file(
-        targetPath.c_str(),
+        targetPath.string().c_str(),
         VImage::option()->set("Q", 100)->set("effort", 6)->set("strip", true)->set("smart_subsample", true)
     );
     return true;

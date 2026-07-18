@@ -3,6 +3,8 @@
 
 #include "data/PictureWallpaper.hpp"
 
+#include <format>
+
 PictureWallpaper::PictureWallpaper(
     std::string id,
     std::filesystem::path filePath,
@@ -44,7 +46,7 @@ std::string PictureWallpaper::toString() const {
         "    Type: {}\n",
         id,
         name,
-        filePath.native(),
+        filePath.string(),
         resolution.toString(),
         source,
         tags,
