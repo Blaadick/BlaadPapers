@@ -18,15 +18,20 @@ RunRendererOption::RunRendererOption(
     sptr<util::Logger> logger
 ) : Option("Starts the renderer daemon"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
-int RunRendererOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> RunRendererOption::getUsageStrings() const {
+    return {"[mpv_args...]"};
+}
+
+int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
         logger->logWarning("Mpvpaper is already running");
         return 1;
     }
 
     std::string mpvArgs = "input-ipc-server=/tmp/blaadpapers-mpvpaper.sock loop-file=inf no-audio panscan=1.0 ";
-    if(!arguments.empty()) {
-        mpvArgs += arguments[0];
+    for(const auto& argument : arguments) {
+        mpvArgs += argument;
+        mpvArgs += ' ';
     }
 
     auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperPath();

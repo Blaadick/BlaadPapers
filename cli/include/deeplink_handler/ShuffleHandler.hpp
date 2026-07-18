@@ -5,15 +5,13 @@
 
 #include "DeeplinkHandler.hpp"
 #include "Wallpapers.hpp"
-#include "logger/Logger.hpp"
 
 class ShuffleHandler final : public DeeplinkHandler {
 public:
-    ShuffleHandler(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
+    explicit ShuffleHandler(sptr<Wallpapers> wallpapers);
 
     int handle(const Url& url) const override;
 
 private:
     sptr<Wallpapers> wallpapers;
-    sptr<util::Logger> logger;
 };

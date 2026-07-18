@@ -11,7 +11,11 @@ AddOption::AddOption(
     sptr<util::Logger> logger
 ) : Option("Adds wallpaper(s) to the first wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), logger(std::move(logger)) {}
 
-int AddOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> AddOption::getUsageStrings() const {
+    return {"<file/folder_path...>"};
+}
+
+int AddOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(arguments.empty()) {
         logger->logWarning("One or more wallpaper file paths expected");
         return 1;

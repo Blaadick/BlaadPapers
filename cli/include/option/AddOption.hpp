@@ -4,7 +4,6 @@
 #pragma once
 
 #include "WallpaperLoader.hpp"
-#include "Wallpapers.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
 
@@ -12,7 +11,13 @@ class AddOption final : public Option {
 public:
     AddOption(sptr<WallpaperLoader> wallpaperLoader, sptr<Config> config, sptr<util::Logger> logger);
 
-    int execute(const std::vector<std::string_view>& arguments) override;
+    [[nodiscard]]
+    std::vector<std::string_view> getUsageStrings() const override;
+
+    int execute(
+        const std::vector<std::string_view>& arguments,
+        const std::unordered_set<sptr<Parameter>>& parameters
+    ) override;
 
 private:
     sptr<WallpaperLoader> wallpaperLoader;

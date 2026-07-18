@@ -5,15 +5,13 @@
 
 #include "DeeplinkHandler.hpp"
 #include "Wallpapers.hpp"
-#include "logger/Logger.hpp"
 
 class ApplyHandler final : public DeeplinkHandler {
 public:
-    ApplyHandler(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
+    explicit ApplyHandler(sptr<Wallpapers> wallpapers);
 
     int handle(const Url& url) const override;
 
 private:
     sptr<Wallpapers> wallpapers;
-    sptr<util::Logger> logger;
 };

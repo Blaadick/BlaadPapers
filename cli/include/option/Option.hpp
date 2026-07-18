@@ -4,7 +4,10 @@
 #pragma once
 
 #include <string>
+#include <unordered_set>
 #include <vector>
+#include "parameter/Parameter.hpp"
+#include "util/Pointers.hpp"
 
 class Option {
 public:
@@ -15,8 +18,31 @@ public:
     [[nodiscard]]
     const std::string& getDescription() const;
 
-    virtual int execute(const std::vector<std::string_view>& arguments) = 0;
+    [[nodiscard]]
+    const std::unordered_set<sptr<Parameter>>& getParameters() const;
+
+    /**
+     * Do not use this yourself. Use CliExecutor::addOption instead.
+     */
+    void setParameters(std::unordered_set<sptr<Parameter>> parameters);
+
+    /**
+     * Don't forget to update after change option expected arguments.
+     *
+     * Argument variants:
+     * - <name> - Necessary argument
+     * - [name] - optional argument
+     * - [name...] - optional arguments
+     */
+    [[nodiscard]]
+    virtual std::vector<std::string_view> getUsageStrings() const = 0;
+
+    virtual int execute(
+        const std::vector<std::string_view>& arguments,
+        const std::unordered_set<sptr<Parameter>>& parameters
+    ) = 0;
 
 private:
     std::string description;
+    std::unordered_set<sptr<Parameter>> parameters;
 };

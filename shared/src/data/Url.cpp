@@ -13,7 +13,7 @@ std::optional<Url> Url::parse(const std::string_view string) {
     std::string fragment;
 
     const auto dividerPos = string.find("://");
-    if(dividerPos == std::string_view::npos || dividerPos == string.size() - 3) {
+    if(isUrl(string)) {
         return std::nullopt;
     }
 

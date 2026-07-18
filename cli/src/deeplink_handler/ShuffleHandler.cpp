@@ -3,21 +3,14 @@
 
 #include "deeplink_handler/ShuffleHandler.hpp"
 
-#include <string_view>
-
-ShuffleHandler::ShuffleHandler(
-    sptr<Wallpapers> wallpapers,
-    sptr<util::Logger> logger
-) : wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+ShuffleHandler::ShuffleHandler(sptr<Wallpapers> wallpapers) : wallpapers(std::move(wallpapers)) {}
 
 int ShuffleHandler::handle(const Url& url) const {
     if(wallpapers->count() < 1) {
-        logger->logInfo("No Wallpapers");
         return 0;
     }
 
-    if(!url.path.empty() || !url.fragment.empty()) {
-        logger->logWarning("Unexpected something other than shuffle queries");
+    if(!url.path.empty()) {
         return 1;
     }
 
@@ -44,15 +37,12 @@ int ShuffleHandler::handle(const Url& url) const {
     );
 
     if(!wallpaperToApply) {
-        logger->logWarning("No wallpapers found");
         return 1;
     }
 
     if(wallpapers->apply(wallpaperToApply->getId())) {
-        logger->logInfo("Wallpaper \"" + wallpaperToApply->getId() + "\" applied");
         return 0;
     }
 
-    logger->logError("Wallpaper \"" + wallpaperToApply->getId() + "\" not found");
-    return 2;
+    return 1;
 }

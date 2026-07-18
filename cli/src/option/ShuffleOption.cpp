@@ -13,7 +13,14 @@ ShuffleOption::ShuffleOption(
     sptr<util::Logger> logger
 ) : Option("Sets the random wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
-int ShuffleOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> ShuffleOption::getUsageStrings() const {
+    return {
+        "[include_tags] [exclude_tags]",
+        R"('["General", "Nature"]' '["Explicit"]')"
+    };
+}
+
+int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(wallpapers->count() == 0) {
         logger->logInfo("No Wallpapers");
         return 0;

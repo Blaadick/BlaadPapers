@@ -12,11 +12,11 @@ namespace util {
     public:
         explicit GuiLogger(sptr<StatusModel> statusModel);
 
-        void logInfo(std::string_view message) override;
+        void logInfo(std::string_view message) const override;
 
-        void logWarning(std::string_view message) override;
+        void logWarning(std::string_view message) const override;
 
-        void logError(std::string_view message) override;
+        void logError(std::string_view message) const override;
 
     private:
         sptr<StatusModel> statusModel;

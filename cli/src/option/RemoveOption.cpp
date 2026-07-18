@@ -8,7 +8,11 @@ RemoveOption::RemoveOption(
     sptr<util::Logger> logger
 ) : Option("Deletes the wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
-int RemoveOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> RemoveOption::getUsageStrings() const {
+    return {"<wallpaper_id>"};
+}
+
+int RemoveOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;

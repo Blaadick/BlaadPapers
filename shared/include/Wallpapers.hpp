@@ -12,7 +12,7 @@ public:
     Wallpaper* get(int index) const;
 
     [[nodiscard]]
-    Wallpaper* get(const std::string_view& id) const;
+    Wallpaper* get(std::string_view id) const;
 
     Wallpaper* shuffle(
         std::optional<std::vector<std::string>> includeTags = std::nullopt,
@@ -21,9 +21,9 @@ public:
 
     void add(uptr<Wallpaper> wallpaper);
 
-    bool apply(const std::string_view& id) const;
+    bool apply(std::string_view id) const;
 
-    bool remove(const std::string_view& id);
+    bool remove(std::string_view id);
 
     void sortByName();
 

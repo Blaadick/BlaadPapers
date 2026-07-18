@@ -7,7 +7,11 @@
 
 VersionOption::VersionOption(sptr<util::Logger> logger) : Option("Shows program version"), logger(std::move(logger)) {}
 
-int VersionOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> VersionOption::getUsageStrings() const {
+    return {"[parameters...]"};
+}
+
+int VersionOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     logger->logInfo(std::format("{} {}\n{}", PROJECT_NAME, PROJECT_VERSION, PROJECT_DESCRIPTION));
     return 0;
 }

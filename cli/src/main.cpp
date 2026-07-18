@@ -20,6 +20,7 @@
 #include "option/RunRendererOption.hpp"
 #include "option/ShuffleOption.hpp"
 #include "option/VersionOption.hpp"
+#include "parameter/Parameter.hpp"
 
 int main(const int argc, const char** argv) {
     vips_init(argv[0]);
@@ -37,18 +38,20 @@ int main(const int argc, const char** argv) {
     wallpaperLoader->loadWallpapers();
     wallpapers->sortByName();
 
+    auto jsonParameter = std::make_shared<Parameter>("json", 'j', "Outputs command result in JSON format");
+    auto testParameter = std::make_shared<Parameter>("test", std::nullopt, "Test");
+
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, config, logger));
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpapers, logger));
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpapers, logger));
-    cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger));
-    cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger));
-    cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger));
+    cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger), {jsonParameter});
+    cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger), {jsonParameter, testParameter});
+    cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger), {testParameter});
     cliExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpapers, logger));
     cliExecutor->addOption("shuffle", std::make_unique<ShuffleOption>(wallpapers, logger));
-    cliExecutor->addOption("version", std::make_unique<VersionOption>(logger));
-    cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpapers, logger));
-    cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpapers, logger));
+    cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpapers));
+    cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpapers));
 
     const auto returnVal = cliExecutor->execute(argc, argv);
 

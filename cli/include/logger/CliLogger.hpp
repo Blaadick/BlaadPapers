@@ -8,10 +8,10 @@
 namespace util {
     class CliLogger final : public Logger {
     public:
-        void logInfo(std::string_view message) override;
+        void logInfo(std::string_view message) const override;
 
-        void logWarning(std::string_view message) override;
+        void logWarning(std::string_view message) const override;
 
-        void logError(std::string_view message) override;
+        void logError(std::string_view message) const override;
     };
 }

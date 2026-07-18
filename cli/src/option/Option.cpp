@@ -8,3 +8,11 @@ Option::Option(std::string description) : description(std::move(description)) {}
 const std::string& Option::getDescription() const {
     return description;
 }
+
+const std::unordered_set<sptr<Parameter>>& Option::getParameters() const {
+    return parameters;
+}
+
+void Option::setParameters(std::unordered_set<sptr<Parameter>> parameters) {
+    this->parameters = std::move(parameters);
+}

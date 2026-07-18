@@ -8,7 +8,11 @@ CountOption::CountOption(
     sptr<util::Logger> logger
 ) : Option("Shows the wallpaper count"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
-int CountOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> CountOption::getUsageStrings() const {
+    return {};
+}
+
+int CountOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     logger->logInfo(std::to_string(wallpapers->count()));
     return 0;
 }

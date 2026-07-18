@@ -8,7 +8,11 @@ InfoOption::InfoOption(
     sptr<util::Logger> logger
 ) : Option("Shows wallpaper information"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
-int InfoOption::execute(const std::vector<std::string_view>& arguments) {
+std::vector<std::string_view> InfoOption::getUsageStrings() const {
+    return {"<wallpaper_id> [parameters...]"};
+}
+
+int InfoOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;
