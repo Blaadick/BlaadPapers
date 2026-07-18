@@ -1,13 +1,11 @@
-# Maintainer: Blaadick <null>
-
 _repoowner="Blaadick"
 _reponame="BlaadPapers"
 
 pkgname="blaadpapers"
 pkgdesc="Fast & clean wallpaper manager"
 license=("GPL-3.0-only")
-pkgver="0.4.0"
-pkgrel=2
+pkgver="0.4.1"
+pkgrel=1
 arch=("any")
 depends=(
     "qt6-base"
