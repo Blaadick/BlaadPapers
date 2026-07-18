@@ -11,7 +11,7 @@ namespace util {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");
         return homeDir.append(".cache/blaadpapers");
-        #else _WIN32
+        #elif _WIN32
         std::filesystem::path localAppData = getenv("LOCALAPPDATA");
         return localAppData.append("blaadpapers").append("cache");
         #endif
@@ -21,7 +21,7 @@ namespace util {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");
         return homeDir.append(".config/blaadpapers");
-        #else _WIN32
+        #elif _WIN32
         std::filesystem::path appData = getenv("APPDATA");
         return appData.append("blaadpapers").append("config");
         #endif
@@ -35,7 +35,7 @@ namespace util {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");
         return homeDir.append(".local/share/blaadpapers");
-        #else _WIN32
+        #elif _WIN32
         std::filesystem::path localAppData = getenv("LOCALAPPDATA");
         return localAppData.append("blaadpapers");
         #endif
@@ -45,7 +45,7 @@ namespace util {
         #ifdef __linux__
         std::filesystem::path homeDir = getenv("HOME");
         return homeDir.append("Documents");
-        #else _WIN32
+        #elif _WIN32
         std::filesystem::path userProfile = getenv("USERPROFILE");
         return userProfile.append("Documents");
         #endif
