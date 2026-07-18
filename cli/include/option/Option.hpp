@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include "parameter/Parameter.hpp"
+#include "flag/Flag.hpp"
 #include "util/Pointers.hpp"
 
 class Option {
@@ -19,12 +19,12 @@ public:
     const std::string& getDescription() const;
 
     [[nodiscard]]
-    const std::unordered_set<sptr<Parameter>>& getParameters() const;
+    const std::unordered_set<sptr<Flag>>& getFlags() const;
 
     /**
      * Do not use this yourself. Use CliExecutor::addOption instead.
      */
-    void setParameters(std::unordered_set<sptr<Parameter>> parameters);
+    void setFlags(std::unordered_set<sptr<Flag>> flags);
 
     /**
      * Don't forget to update after change option expected arguments.
@@ -39,10 +39,10 @@ public:
 
     virtual int execute(
         const std::vector<std::string_view>& arguments,
-        const std::unordered_set<sptr<Parameter>>& parameters
+        const std::unordered_set<sptr<Flag>>& flags
     ) = 0;
 
 private:
     std::string description;
-    std::unordered_set<sptr<Parameter>> parameters;
+    std::unordered_set<sptr<Flag>> flags;
 };

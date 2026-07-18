@@ -10,6 +10,7 @@
 #include "Wallpapers.hpp"
 #include "deeplink_handler/ApplyHandler.hpp"
 #include "deeplink_handler/ShuffleHandler.hpp"
+#include "flag/Flags.hpp"
 #include "logger/CliLogger.hpp"
 #include "option/AddOption.hpp"
 #include "option/ApplyOption.hpp"
@@ -20,7 +21,6 @@
 #include "option/RunRendererOption.hpp"
 #include "option/ShuffleOption.hpp"
 #include "option/VersionOption.hpp"
-#include "parameter/Parameter.hpp"
 
 int main(const int argc, const char** argv) {
     vips_init(argv[0]);
@@ -38,17 +38,16 @@ int main(const int argc, const char** argv) {
     wallpaperLoader->loadWallpapers();
     wallpapers->sortByName();
 
-    auto jsonParameter = std::make_shared<Parameter>("json", 'j', "Outputs command result in JSON format");
-
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, config, logger));
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpapers, logger));
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpapers, logger));
-    cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger), {jsonParameter});
-    cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger), {jsonParameter});
+    cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger), {Flags::json});
+    cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger), {Flags::json});
     cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger));
     cliExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpapers, logger));
     cliExecutor->addOption("shuffle", std::make_unique<ShuffleOption>(wallpapers, logger));
+    cliExecutor->addOption("version", std::make_unique<VersionOption>(logger), {Flags::json});
     cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpapers));
     cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpapers));
 

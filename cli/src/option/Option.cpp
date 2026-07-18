@@ -9,10 +9,10 @@ const std::string& Option::getDescription() const {
     return description;
 }
 
-const std::unordered_set<sptr<Parameter>>& Option::getParameters() const {
-    return parameters;
+const std::unordered_set<sptr<Flag>>& Option::getFlags() const {
+    return flags;
 }
 
-void Option::setParameters(std::unordered_set<sptr<Parameter>> parameters) {
-    this->parameters = std::move(parameters);
+void Option::setFlags(std::unordered_set<sptr<Flag>> flags) {
+    this->flags = std::move(flags);
 }

@@ -20,7 +20,7 @@ std::vector<std::string_view> ShuffleOption::getUsageStrings() const {
     };
 }
 
-int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
     if(wallpapers->count() == 0) {
         logger->logInfo("No Wallpapers");
         return 0;

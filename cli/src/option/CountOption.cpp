@@ -12,7 +12,7 @@ std::vector<std::string_view> CountOption::getUsageStrings() const {
     return {};
 }
 
-int CountOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+int CountOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
     logger->logInfo(std::to_string(wallpapers->count()));
     return 0;
 }

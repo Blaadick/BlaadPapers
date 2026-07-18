@@ -9,11 +9,10 @@
 #include <ranges>
 #include <utility>
 #include "data/Url.hpp"
+#include "flag/Flags.hpp"
 
 static constexpr void printHelpMessage(
     const std::unordered_map<std::string, uptr<Option>>& options,
-    const Parameter& helpParam,
-    const Parameter& quietParam,
     const util::Logger& logger
 ) {
     logger.logInfo("Options:");
@@ -26,9 +25,9 @@ static constexpr void printHelpMessage(
         logger.logInfo(std::format("  {:<{}}  ->  {}", name, maxNameLength, option->getDescription()));
     }
 
-    logger.logInfo("\nParameters:");
-    logger.logInfo(std::format("  --{}  (-{})  ->  {}", helpParam.name, helpParam.shortName.value(), helpParam.description));
-    logger.logInfo(std::format("  --{} (-{})  ->  {}", quietParam.name, quietParam.shortName.value(), quietParam.description));
+    logger.logInfo("\nFlags:");
+    logger.logInfo(std::format("  --{}  (-{})  ->  {}", Flags::help->name, Flags::help->shortName.value(), Flags::help->description));
+    logger.logInfo(std::format("  --{} (-{})  ->  {}", Flags::quiet->name, Flags::quiet->shortName.value(), Flags::quiet->description));
 }
 
 static constexpr void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
@@ -42,34 +41,34 @@ static constexpr void printOptionHelpMessage(const Option& option, const std::st
         }
     }
 
-    if(!option.getParameters().empty()) {
-        logger.logInfo("\nParameters:");
+    if(!option.getFlags().empty()) {
+        logger.logInfo("\nFlags:");
 
-        const bool hasParameterWithShortName = std::ranges::any_of(
-            option.getParameters(),
-            [](const auto& param) {
-                return param->shortName.has_value();
+        const bool hasFlagWithShortName = std::ranges::any_of(
+            option.getFlags(),
+            [](const auto& flag) {
+                return flag->shortName.has_value();
             }
         );
 
         auto maxNameLength = std::ranges::max(
-            option.getParameters() | std::views::transform(
-                [](const auto& param) {
-                    return param->name.length();
+            option.getFlags() | std::views::transform(
+                [](const auto& flag) {
+                    return flag->name.length();
                 }
             )
         );
-        auto maxNameLengthWithShort = maxNameLength;
+        auto maxNameLengthWithoutShort = maxNameLength;
 
-        if(hasParameterWithShortName) {
-            maxNameLength += 5;
+        if(hasFlagWithShortName) {
+            maxNameLengthWithoutShort += 5;
         }
 
-        for(const auto& param : option.getParameters()) {
-            if(param->shortName.has_value()) {
-                logger.logInfo(std::format("  --{:<{}} (-{})  ->  {}", param->name, maxNameLengthWithShort, param->shortName.value(), param->description));
+        for(const auto& flag : option.getFlags()) {
+            if(flag->shortName.has_value()) {
+                logger.logInfo(std::format("  --{:<{}} (-{})  ->  {}", flag->name, maxNameLength, flag->shortName.value(), flag->description));
             } else {
-                logger.logInfo(std::format("  --{:<{}}  ->  {}", param->name, maxNameLength, param->description));
+                logger.logInfo(std::format("  --{:<{}}  ->  {}", flag->name, maxNameLengthWithoutShort, flag->description));
             }
         }
     }
@@ -81,10 +80,9 @@ void CliExecutor::addHandler(std::string domain, uptr<DeeplinkHandler> handler) 
     deeplinkHandlers.emplace(std::move(domain), std::move(handler));
 }
 
-void CliExecutor::addOption(std::string name, uptr<Option> option, std::unordered_set<sptr<Parameter>> parameters) {
-    option->setParameters(parameters);
+void CliExecutor::addOption(std::string name, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags) {
+    option->setFlags(flags);
     options.emplace(std::move(name), std::move(option));
-    allParameters.merge(parameters);
 }
 
 int CliExecutor::execute(const int argc, const char** argv) {
@@ -93,23 +91,18 @@ int CliExecutor::execute(const int argc, const char** argv) {
         return 1;
     }
 
-    const auto helpParam = std::make_shared<Parameter>("help", 'h', "Displays help page for option");
-    const auto quietParam = std::make_shared<Parameter>("quiet", 'q', "Suppress whole command output");
-    allParameters.emplace(helpParam);
-    allParameters.emplace(quietParam);
-
     std::vector<std::string_view> arguments(argv + 2, argv + argc);
-    std::unordered_set<sptr<Parameter>> parameters;
+    std::unordered_set<sptr<Flag>> flags;
 
     for(const auto& argument : arguments) {
-        if(Parameter::isShortParameter(argument)) {
-            for(auto parameter : allParameters) {
-                if(!parameter->shortName.has_value()) {
+        if(Flag::isShortFlag(argument)) {
+            for(auto flag : Flags::all) {
+                if(!flag->shortName.has_value()) {
                     continue;
                 }
 
-                if(argument[1] == parameter->shortName) {
-                    parameters.emplace(std::move(parameter));
+                if(argument[1] == flag->shortName) {
+                    flags.emplace(std::move(flag));
                     break;
                 }
             }
@@ -117,19 +110,19 @@ int CliExecutor::execute(const int argc, const char** argv) {
             continue;
         }
 
-        if(Parameter::isLongParameter(argument)) {
-            for(auto parameter : allParameters) {
-                if(argument.substr(2) == parameter->name) {
-                    parameters.emplace(std::move(parameter));
+        if(Flag::isLongFlag(argument)) {
+            for(auto flag : Flags::all) {
+                if(argument.substr(2) == flag->name) {
+                    flags.emplace(std::move(flag));
                     break;
                 }
             }
         }
     }
 
-    std::erase_if(arguments, Parameter::isParameter);
+    std::erase_if(arguments, Flag::isFlag);
 
-    if(parameters.contains(quietParam)) {
+    if(flags.contains(Flags::quiet)) {
         freopen("/dev/null/", "w", stdout);
         freopen("/dev/null/", "w", stderr);
     }
@@ -150,7 +143,7 @@ int CliExecutor::execute(const int argc, const char** argv) {
     }
 
     if(std::strcmp(argv[1], "help") == 0) {
-        printHelpMessage(options, *helpParam, *quietParam, *logger);
+        printHelpMessage(options, *logger);
         return 0;
     }
 
@@ -160,10 +153,10 @@ int CliExecutor::execute(const int argc, const char** argv) {
         return 1;
     }
 
-    if(parameters.contains(helpParam)) {
+    if(flags.contains(Flags::help)) {
         printOptionHelpMessage(*it->second, it->first, *logger);
         return 0;
     }
 
-    return it->second->execute(arguments, parameters);
+    return it->second->execute(arguments, flags);
 }

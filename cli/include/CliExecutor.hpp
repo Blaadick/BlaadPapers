@@ -8,7 +8,7 @@
 #include "deeplink_handler/DeeplinkHandler.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
-#include "parameter/Parameter.hpp"
+#include "flag/Flag.hpp"
 #include "util/Pointers.hpp"
 
 class CliExecutor {
@@ -17,13 +17,12 @@ public:
 
     void addHandler(std::string domain, uptr<DeeplinkHandler> handler);
 
-    void addOption(std::string, uptr<Option> option, std::unordered_set<sptr<Parameter>> parameters = {});
+    void addOption(std::string, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags = {});
 
     int execute(int argc, const char** argv);
 
 private:
     std::unordered_map<std::string, uptr<DeeplinkHandler>> deeplinkHandlers;
     std::unordered_map<std::string, uptr<Option>> options;
-    std::unordered_set<sptr<Parameter>> allParameters;
     sptr<util::Logger> logger;
 };

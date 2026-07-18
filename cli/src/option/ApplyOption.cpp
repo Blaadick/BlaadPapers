@@ -12,7 +12,7 @@ std::vector<std::string_view> ApplyOption::getUsageStrings() const {
     return {"<wallpaper_id>"};
 }
 
-int ApplyOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+int ApplyOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;

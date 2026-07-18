@@ -7,17 +7,17 @@
 #include <string>
 #include <string_view>
 
-struct Parameter {
+struct Flag {
     std::string name;
     std::optional<char> shortName;
     std::string description;
 
     [[nodiscard]]
-    static bool isShortParameter(std::string_view string);
+    static bool isShortFlag(std::string_view string);
 
     [[nodiscard]]
-    static bool isLongParameter(std::string_view string);
+    static bool isLongFlag(std::string_view string);
 
     [[nodiscard]]
-    static bool isParameter(std::string_view string);
+    static bool isFlag(std::string_view string);
 };

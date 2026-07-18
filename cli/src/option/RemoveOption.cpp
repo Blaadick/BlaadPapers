@@ -12,7 +12,7 @@ std::vector<std::string_view> RemoveOption::getUsageStrings() const {
     return {"<wallpaper_id>"};
 }
 
-int RemoveOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+int RemoveOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;

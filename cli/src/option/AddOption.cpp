@@ -15,7 +15,7 @@ std::vector<std::string_view> AddOption::getUsageStrings() const {
     return {"<file/folder_path...>"};
 }
 
-int AddOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+int AddOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
     if(arguments.empty()) {
         logger->logWarning("One or more wallpaper file paths expected");
         return 1;

@@ -22,13 +22,13 @@ std::vector<std::string_view> RunRendererOption::getUsageStrings() const {
     };
 }
 
-#ifdef __linux__
+int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
+    #ifdef __linux__
 
-#include <fcntl.h>
-#include <spawn.h>
-#include <unistd.h>
+    #include <fcntl.h>
+    #include <spawn.h>
+    #include <unistd.h>
 
-int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
     if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
         logger->logWarning("Mpvpaper is already running");
         return 1;
@@ -78,12 +78,9 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
     posix_spawn_file_actions_destroy(&actions);
 
     return 0;
-}
-#endif
 
-#ifdef _WIN32
-int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Parameter>>& parameters) {
+    #else _WIN32
     logger->logError("Mpvpaper is not available on windows");
     return 2;
+    #endif
 }
-#endif

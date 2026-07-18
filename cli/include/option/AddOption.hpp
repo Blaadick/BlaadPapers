@@ -16,7 +16,7 @@ public:
 
     int execute(
         const std::vector<std::string_view>& arguments,
-        const std::unordered_set<sptr<Parameter>>& parameters
+        const std::unordered_set<sptr<Flag>>& flags
     ) override;
 
 private:
