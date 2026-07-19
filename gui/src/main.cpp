@@ -13,6 +13,7 @@
 #include "PostSetScript.hpp"
 #include "WallpaperLoader.hpp"
 #include "logger/GuiLogger.hpp"
+#include "model/ClipboardModel.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
@@ -33,6 +34,7 @@ int main(int argc, char** argv) {
     DefaultWallpaper::createIfNotExists(false);
     PostSetScript::createIfNotExists();
 
+    auto clipboardModel = std::make_shared<ClipboardModel>();
     auto statusModel = std::make_shared<StatusModel>();
     auto logger = std::make_shared<util::GuiLogger>(statusModel);
     auto config = std::make_shared<Config>(logger);
@@ -56,9 +58,10 @@ int main(int argc, char** argv) {
     #endif
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("Status", &*statusModel);
-    engine.rootContext()->setContextProperty("Config", &*configModel);
     engine.rootContext()->setContextProperty("Wallpapers", &*wallpapersModel);
+    engine.rootContext()->setContextProperty("Config", &*configModel);
+    engine.rootContext()->setContextProperty("Status", &*statusModel);
+    engine.rootContext()->setContextProperty("Clipboard", &*clipboardModel);
     engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
     QObject::connect(

@@ -78,6 +78,12 @@ Item {
         }
 
         Action {
+            text: "Copy Deeplink"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/link.svg"
+            onTriggered: Clipboard.copyWallpaperDeeplink(preview.wid)
+        }
+
+        Action {
             text: "Edit (WIP)"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
         }
