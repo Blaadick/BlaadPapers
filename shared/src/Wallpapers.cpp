@@ -3,6 +3,7 @@
 
 #include "Wallpapers.hpp"
 
+#include <format>
 #include <fstream>
 #include <random>
 #include "Config.hpp"
@@ -103,9 +104,9 @@ bool Wallpapers::apply(const std::string_view id) const {
 
 bool Wallpapers::apply(const Wallpaper& wallpaper) const {
     #ifdef __linux__
-    if(getenv("XDG_CURRENT_DESKTOP") == "KDE") {
+    if(std::strcmp(getenv("XDG_CURRENT_DESKTOP"), "KDE") == 0) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
-            system(std::format("plasma-apply-wallpaperimage {}", wallpaper.getFilePath().c_str()).c_str());
+            system(std::format("plasma-apply-wallpaperimage \"{}\" > /dev/null 2>&1", wallpaper.getFilePath()).c_str());
             return true;
         }
 
