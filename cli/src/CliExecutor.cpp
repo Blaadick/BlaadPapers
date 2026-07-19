@@ -4,31 +4,11 @@
 #include "CliExecutor.hpp"
 
 #include <algorithm>
-#include <cstring>
 #include <format>
 #include <ranges>
 #include <utility>
 #include "data/Url.hpp"
 #include "flag/Flags.hpp"
-
-static constexpr void printHelpMessage(
-    const std::unordered_map<std::string, uptr<Option>>& options,
-    const util::Logger& logger
-) {
-    logger.logInfo("Options:");
-
-    auto maxNameLength = std::ranges::max(
-        options | std::views::keys | std::views::transform(&std::string::length)
-    );
-
-    for(const auto& [name, option] : options) {
-        logger.logInfo(std::format("  {:<{}}  ->  {}", name, maxNameLength, option->getDescription()));
-    }
-
-    logger.logInfo("\nFlags:");
-    logger.logInfo(std::format("  --{}  (-{})  ->  {}", Flags::help->name, Flags::help->shortName.value(), Flags::help->description));
-    logger.logInfo(std::format("  --{} (-{})  ->  {}", Flags::quiet->name, Flags::quiet->shortName.value(), Flags::quiet->description));
-}
 
 static constexpr void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
     logger.logInfo("Description:");
@@ -76,6 +56,10 @@ static constexpr void printOptionHelpMessage(const Option& option, const std::st
 
 CliExecutor::CliExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
+const std::unordered_map<std::string, uptr<Option>>& CliExecutor::getOptions() const {
+    return options;
+}
+
 void CliExecutor::addHandler(std::string domain, uptr<DeeplinkHandler> handler) {
     deeplinkHandlers.emplace(std::move(domain), std::move(handler));
 }
@@ -102,7 +86,7 @@ int CliExecutor::execute(const int argc, const char** argv) {
                 }
 
                 if(argument[1] == flag->shortName) {
-                    flags.emplace(std::move(flag));
+                    flags.emplace(flag);
                     break;
                 }
             }
@@ -113,7 +97,7 @@ int CliExecutor::execute(const int argc, const char** argv) {
         if(Flag::isLongFlag(argument)) {
             for(auto flag : Flags::all) {
                 if(argument.substr(2) == flag->name) {
-                    flags.emplace(std::move(flag));
+                    flags.emplace(flag);
                     break;
                 }
             }
@@ -140,11 +124,6 @@ int CliExecutor::execute(const int argc, const char** argv) {
         }
 
         return it->second->handle(url.value());
-    }
-
-    if(std::strcmp(argv[1], "help") == 0) {
-        printHelpMessage(options, *logger);
-        return 0;
     }
 
     const auto it = options.find(argv[1]);

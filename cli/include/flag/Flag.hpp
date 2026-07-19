@@ -4,8 +4,8 @@
 #pragma once
 
 #include <optional>
-#include <string>
 #include <string_view>
+#include <nlohmann/json.hpp>
 
 struct Flag {
     std::string name;
@@ -20,4 +20,7 @@ struct Flag {
 
     [[nodiscard]]
     static bool isFlag(std::string_view string);
+
+    [[nodiscard]]
+    nlohmann::json toJson() const;
 };

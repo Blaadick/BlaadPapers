@@ -37,10 +37,8 @@ public:
     [[nodiscard]]
     virtual std::vector<std::string_view> getUsageStrings() const = 0;
 
-    virtual int execute(
-        const std::vector<std::string_view>& arguments,
-        const std::unordered_set<sptr<Flag>>& flags
-    ) = 0;
+    [[nodiscard]]
+    virtual int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) = 0;
 
 private:
     std::string description;

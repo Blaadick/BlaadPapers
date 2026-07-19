@@ -9,7 +9,7 @@ CountOption::CountOption(
 ) : Option("Shows the wallpaper count"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> CountOption::getUsageStrings() const {
-    return {};
+    return {""};
 }
 
 int CountOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {

@@ -3,8 +3,6 @@
 
 #include "flag/Flag.hpp"
 
-#include <ranges>
-
 bool Flag::isShortFlag(const std::string_view string) {
     return string.starts_with('-') && string.length() == 2;
 }
@@ -15,4 +13,12 @@ bool Flag::isLongFlag(const std::string_view string) {
 
 bool Flag::isFlag(const std::string_view string) {
     return isShortFlag(string) || isLongFlag(string);
+}
+
+nlohmann::json Flag::toJson() const {
+    return {
+        {"name", name},
+        {"short_name", shortName.has_value() ? nlohmann::json(std::string(1, *shortName)) : nullptr},
+        {"description", description},
+    };
 }

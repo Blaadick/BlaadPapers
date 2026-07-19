@@ -15,6 +15,7 @@
 #include "option/AddOption.hpp"
 #include "option/ApplyOption.hpp"
 #include "option/CountOption.hpp"
+#include "option/HelpOption.hpp"
 #include "option/InfoOption.hpp"
 #include "option/ListOption.hpp"
 #include "option/RemoveOption.hpp"
@@ -42,6 +43,7 @@ int main(const int argc, const char** argv) {
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, config, logger));
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpapers, logger));
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpapers, logger));
+    cliExecutor->addOption("help", std::make_unique<HelpOption>(cliExecutor, logger), {Flags::json});
     cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpapers, logger), {Flags::json});
     cliExecutor->addOption("list", std::make_unique<ListOption>(wallpapers, logger), {Flags::json});
     cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpapers, logger));

@@ -3,13 +3,12 @@
 
 #pragma once
 
-#include "logger/Logger.hpp"
+#include "CliExecutor.hpp"
 #include "option/Option.hpp"
-#include "util/Pointers.hpp"
 
-class VersionOption final : public Option {
+class HelpOption final : public Option {
 public:
-    explicit VersionOption(sptr<util::Logger> logger);
+    HelpOption(wptr<CliExecutor> cliExecutor, sptr<util::Logger> logger);
 
     [[nodiscard]]
     std::vector<std::string_view> getUsageStrings() const override;
@@ -18,5 +17,6 @@ public:
     int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
 
 private:
+    wptr<CliExecutor> cliExecutor;
     sptr<util::Logger> logger;
 };

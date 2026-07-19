@@ -14,10 +14,8 @@ public:
     [[nodiscard]]
     std::vector<std::string_view> getUsageStrings() const override;
 
-    int execute(
-        const std::vector<std::string_view>& arguments,
-        const std::unordered_set<sptr<Flag>>& flags
-    ) override;
+    [[nodiscard]]
+    int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
 
 private:
     sptr<WallpaperLoader> wallpaperLoader;

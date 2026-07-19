@@ -6,14 +6,16 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "deeplink_handler/DeeplinkHandler.hpp"
+#include "flag/Flag.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
-#include "flag/Flag.hpp"
 #include "util/Pointers.hpp"
 
 class CliExecutor {
 public:
     explicit CliExecutor(sptr<util::Logger> logger);
+
+    const std::unordered_map<std::string, uptr<Option>>& getOptions() const;
 
     void addHandler(std::string domain, uptr<DeeplinkHandler> handler);
 
