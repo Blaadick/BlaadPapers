@@ -4,7 +4,7 @@ _reponame="BlaadPapers"
 pkgname="blaadpapers"
 pkgdesc="Fast & clean wallpaper manager"
 license=("GPL-3.0-only")
-pkgver="0.4.1"
+pkgver="0.4.2"
 pkgrel=1
 arch=("any")
 depends=(
@@ -22,13 +22,13 @@ makedepends=(
     "ninja"
 )
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$_repoowner/$_reponame/archive/refs/tags/v$pkgver.tar.gz")
-sha512sums=("SKIP")
+sha512sums=("8f732df60421855d55d3e83aa2d7e580f8d79800bd06e06f6e0fa83f147ec68810596c5fb687aebccdeee9ebc7abf2add9d1c94b5becf9c25b39e46e2c6f7724")
 url="https://github.com/$_repoowner/$_reponame"
 
 build() {
     cd "$_reponame-$pkgver"
 
-    cmake -B "cmake-build" -S . -DCMAKE_BUILD_TYPE=Release -G Ninja
+    cmake -B "cmake-build" -S . -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-w"
     cmake --build "cmake-build" --parallel
 }
 
