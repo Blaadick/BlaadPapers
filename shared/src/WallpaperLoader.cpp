@@ -23,43 +23,41 @@ WallpaperLoader::WallpaperLoader(
 void WallpaperLoader::loadWallpapers() {
     wallpapers->clear();
 
-    for(const auto& wallpapersDirPath : config->getWallpaperDirPaths()) {
-        if(!util::createDirIfNotExists(wallpapersDirPath)) {
-            logger->logError("Failed to create directory \"" + wallpapersDirPath.string() + "\"");
+    if(!util::createDirIfNotExists(config->getWallpapersDirPath())) {
+        logger->logError("Failed to create directory \"" + config->getWallpapersDirPath().string() + "\"");
+        return;
+    }
+
+    for(const auto& wallpapersDirEntry : fs::directory_iterator(config->getWallpapersDirPath())) {
+        if(!wallpapersDirEntry.is_directory()) {
             continue;
         }
 
-        for(const auto& wallpapersDirEntry : fs::directory_iterator(wallpapersDirPath)) {
-            if(!wallpapersDirEntry.is_directory()) {
+        for(const auto& wallpaperDirEntry : fs::directory_iterator(wallpapersDirEntry.path())) {
+            if(wallpaperDirEntry.path().stem() != "wallpaper") {
                 continue;
             }
 
-            for(const auto& wallpaperDirEntry : fs::directory_iterator(wallpapersDirEntry.path())) {
-                if(wallpaperDirEntry.path().stem() != "wallpaper") {
-                    continue;
-                }
+            if(util::isSupportedPicture(wallpaperDirEntry.path())) {
+                wallpapers->add(
+                    loadPictureWallpaper(
+                        wallpapersDirEntry.path().stem().string(),
+                        wallpaperDirEntry.path(),
+                        readWallpaperData(wallpapersDirEntry.path() / "data.json")
+                    )
+                );
+                break;
+            }
 
-                if(util::isSupportedPicture(wallpaperDirEntry.path())) {
-                    wallpapers->add(
-                        loadPictureWallpaper(
-                            wallpapersDirEntry.path().stem().string(),
-                            wallpaperDirEntry.path(),
-                            readWallpaperData(wallpapersDirEntry.path() / "data.json")
-                        )
-                    );
-                    break;
-                }
-
-                if(util::isSupportedVideo(wallpaperDirEntry.path())) {
-                    wallpapers->add(
-                        loadVideoWallpaper(
-                            wallpapersDirEntry.path().stem().string(),
-                            wallpaperDirEntry.path(),
-                            readWallpaperData(wallpapersDirEntry.path() / "data.json")
-                        )
-                    );
-                    break;
-                }
+            if(util::isSupportedVideo(wallpaperDirEntry.path())) {
+                wallpapers->add(
+                    loadVideoWallpaper(
+                        wallpapersDirEntry.path().stem().string(),
+                        wallpaperDirEntry.path(),
+                        readWallpaperData(wallpapersDirEntry.path() / "data.json")
+                    )
+                );
+                break;
             }
         }
     }

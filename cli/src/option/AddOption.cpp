@@ -26,6 +26,6 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
         wallpapersToAddPaths.emplace_back(rawWallpaperFilePath);
     }
 
-    wallpaperLoader->addWallpapers(wallpapersToAddPaths, config->getWallpaperDirPaths()[0]);
+    wallpaperLoader->addWallpapers(wallpapersToAddPaths, config->getWallpapersDirPath());
     return 0;
 }

@@ -15,7 +15,7 @@ Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 void Config::load() {
     nlohmann::json defaultConfigData = {
         {"bad_tags", {"Sensitive", "Questionable", "Explicit"}},
-        {"wallpaper_paths", {util::documentsDirPath().append("Wallpapers")}},
+        {"wallpapers_path", util::documentsDirPath().append("Wallpapers")},
         {"status_bar_visible", false}
     };
     nlohmann::json configData;
@@ -37,7 +37,7 @@ void Config::load() {
     }
 
     badTags = configData["bad_tags"].is_null() ? defaultConfigData["bad_tags"] : configData["bad_tags"];
-    wallpaperDirPaths = configData["wallpaper_paths"].is_null() ? defaultConfigData["wallpaper_paths"] : configData["wallpaper_paths"];
+    wallpapersDirPath = std::filesystem::path(configData["wallpapers_path"].is_null() ? defaultConfigData["wallpapers_path"] : configData["wallpapers_path"]);
     isStatusBarVisible = configData["status_bar_visible"].is_null() ? defaultConfigData["status_bar_visible"] : configData["status_bar_visible"];
 }
 
@@ -45,8 +45,8 @@ std::vector<std::string> Config::getBadTags() {
     return badTags;
 }
 
-std::vector<fs::path> Config::getWallpaperDirPaths() {
-    return wallpaperDirPaths;
+fs::path Config::getWallpapersDirPath() {
+    return wallpapersDirPath;
 }
 
 bool Config::getStatusBarVisible() const {

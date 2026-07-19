@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <string>
 #include <vector>
-
 #include "data/Wallpaper.hpp"
 #include "logger/Logger.hpp"
 #include "util/Pointers.hpp"
@@ -21,7 +20,7 @@ public:
     std::vector<std::string> getBadTags();
 
     [[nodiscard]]
-    std::vector<std::filesystem::path> getWallpaperDirPaths();
+    std::filesystem::path getWallpapersDirPath();
 
     [[nodiscard]]
     bool getStatusBarVisible() const;
@@ -33,8 +32,8 @@ public:
 private:
     sptr<util::Logger> logger;
 
-    std::vector<std::string> badTags = {};
-    std::vector<std::filesystem::path> wallpaperDirPaths = {};
+    std::vector<std::string> badTags;
+    std::filesystem::path wallpapersDirPath;
     bool isStatusBarVisible = false;
 
     template<typename T>

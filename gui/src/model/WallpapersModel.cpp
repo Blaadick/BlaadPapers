@@ -78,7 +78,7 @@ void WallpapersModel::addWallpapers() {
     const auto selectedFiles = fileSelector.selectedFiles();
     QThreadPool::globalInstance()->start(
         [this, selectedFiles] {
-            addWallpapers(selectedFiles, QString::fromStdString(config->getWallpaperDirPaths()[0].string()));
+            addWallpapers(selectedFiles, QString::fromStdString(config->getWallpapersDirPath().string()));
         }
     );
 }
@@ -86,7 +86,7 @@ void WallpapersModel::addWallpapers() {
 void WallpapersModel::addWallpapers(const QStringList& paths) {
     QThreadPool::globalInstance()->start(
         [this, paths] {
-            addWallpapers(paths, QString::fromStdString(config->getWallpaperDirPaths()[0].string()));
+            addWallpapers(paths, QString::fromStdString(config->getWallpapersDirPath().string()));
         }
     );
 }
