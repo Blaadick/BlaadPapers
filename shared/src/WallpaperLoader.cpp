@@ -4,12 +4,11 @@
 #include "WallpaperLoader.hpp"
 
 #include <fstream>
-#include <iostream>
 #include "Config.hpp"
 #include "Wallpapers.hpp"
 #include "util/Ffmpeg.hpp"
+#include "util/ImageUtils.hpp"
 #include "util/PathUtils.hpp"
-#include "util/Vips.hpp"
 #include "util/WallpaperUtils.hpp"
 
 namespace fs = std::filesystem;

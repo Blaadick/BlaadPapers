@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     vips_init(argv[0]);
     vips_cache_set_max(0);
 
-    DefaultWallpaper::createIfNotExists();
+    DefaultWallpaper::createIfNotExists(false);
     PostSetScript::createIfNotExists();
 
     auto statusModel = std::make_shared<StatusModel>();

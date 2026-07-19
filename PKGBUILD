@@ -14,6 +14,7 @@ depends=(
     "libvips"
     "ffmpeg"
     "nlohmann-json"
+    "imageinfo"
     "mpvpaper"
     "bstyle-qml-theme"
 )

@@ -2,10 +2,11 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
 file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS include/*.hpp)
 
 find_package(nlohmann_json REQUIRED CONFIG)
+find_package(imageinfo REQUIRED CONFIG)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(FFmpeg REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
 pkg_check_modules(VIPS REQUIRED vips-cpp)
 
 add_library(shared STATIC ${SOURCES} ${HEADERS})
 target_include_directories(shared PUBLIC include ${VIPS_INCLUDE_DIRS})
-target_link_libraries(shared PUBLIC nlohmann_json::nlohmann_json PkgConfig::FFmpeg ${VIPS_LIBRARIES})
+target_link_libraries(shared PUBLIC imageinfo::imageinfo nlohmann_json::nlohmann_json PkgConfig::FFmpeg ${VIPS_LIBRARIES})
