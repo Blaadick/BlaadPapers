@@ -12,10 +12,11 @@ std::optional<Url> Url::parse(const std::string_view string) {
     std::unordered_map<std::string, std::string> queries;
     std::string fragment;
 
-    const auto dividerPos = string.find("://");
-    if(isUrl(string)) {
+    if(!isUrl(string)) {
         return std::nullopt;
     }
+
+    const auto dividerPos = string.find("://");
 
     scheme = string.substr(0, dividerPos);
     auto other = string.substr(dividerPos + 3);

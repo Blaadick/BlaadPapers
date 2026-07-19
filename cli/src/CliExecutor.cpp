@@ -111,7 +111,7 @@ int CliExecutor::execute(const int argc, const char** argv) {
         freopen("/dev/null/", "w", stderr);
     }
 
-    if(const auto url = Url::parse(argv[1]); !url.has_value()) {
+    if(const auto url = Url::parse(argv[1]); url.has_value()) {
         if(url->scheme != "blaadpapers") {
             logger->logWarning("Only blaadpapers links supported");
             return 1;
