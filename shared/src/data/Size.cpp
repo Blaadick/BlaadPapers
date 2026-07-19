@@ -10,17 +10,17 @@ std::string Size::toString() const {
 }
 
 Size Size::operator*(const Size& right) const {
-    return {width * right.width, height * right.height};
+    return Size(width * right.width, height * right.height);
 }
 
 Size Size::operator/(const Size& right) const {
-    return {width / right.width, height / right.height};
+    return Size(width / right.width, height / right.height);
 }
 
 Size Size::operator*(const int& right) const {
-    return {width * right, height * right};
+    return Size(width * right, height * right);
 }
 
 Size Size::operator/(const int& right) const {
-    return {width / right, height / right};
+    return Size(width / right, height / right);
 }

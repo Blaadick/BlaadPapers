@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <string>
 #include <vector>
 #include <nlohmann/json.hpp>
@@ -32,8 +33,6 @@ public:
 
     [[nodiscard]]
     const std::vector<std::string>& getTags() const;
-
-    bool apply() const;
 
     [[nodiscard]]
     virtual nlohmann::json toJson() const = 0;

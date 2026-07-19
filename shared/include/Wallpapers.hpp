@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <optional>
 #include "data/Wallpaper.hpp"
 #include "util/Pointers.hpp"
 
@@ -14,6 +15,7 @@ public:
     [[nodiscard]]
     Wallpaper* get(std::string_view id) const;
 
+    [[nodiscard]]
     Wallpaper* shuffle(
         std::optional<std::vector<std::string>> includeTags = std::nullopt,
         std::optional<std::vector<std::string>> excludeTags = std::nullopt
@@ -22,6 +24,8 @@ public:
     void add(uptr<Wallpaper> wallpaper);
 
     bool apply(std::string_view id) const;
+
+    bool apply(const Wallpaper& wallpaper) const;
 
     bool remove(std::string_view id);
 

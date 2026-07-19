@@ -3,8 +3,19 @@
 
 #include "Wallpapers.hpp"
 
+#include <fstream>
 #include <random>
 #include "Config.hpp"
+#include "PostSetScript.hpp"
+#include "data/PictureWallpaper.hpp"
+#include "util/PathUtils.hpp"
+#ifdef __linux__
+#include "unistd.h"
+#include "sys/socket.h"
+#include "sys/un.h"
+#elif _WIN32
+#include <windows.h>
+#endif
 
 namespace fs = std::filesystem;
 namespace rng = std::ranges;
@@ -83,11 +94,58 @@ void Wallpapers::add(uptr<Wallpaper> wallpaper) {
 bool Wallpapers::apply(const std::string_view id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
-            return wallpaper->apply();
+            return apply(*wallpaper);
         }
     }
 
     return false;
+}
+
+bool Wallpapers::apply(const Wallpaper& wallpaper) const {
+    #ifdef __linux__
+    if(getenv("XDG_CURRENT_DESKTOP") == "KDE") {
+        if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
+            system(std::format("plasma-apply-wallpaperimage {}", wallpaper.getFilePath().c_str()).c_str());
+            return true;
+        }
+
+        return false;
+    }
+
+    const int sock = socket(AF_UNIX, SOCK_STREAM, 0);
+    sockaddr_un sockAddr(AF_UNIX, "/tmp/blaadpapers-mpvpaper.sock");
+
+    if(connect(sock, reinterpret_cast<sockaddr*>(&sockAddr), sizeof(sockAddr)) < 0) {
+        close(sock);
+        return false;
+    }
+
+    const auto command = nlohmann::json(
+        {
+            {"command", {"loadfile", wallpaper.getFilePath()}}
+        }
+    ).dump().append("\n");
+
+    if(write(sock, command.c_str(), command.size()) < 0) {
+        close(sock);
+        return false;
+    }
+
+    close(sock);
+
+    if(util::createDirIfNotExists(util::localDataDirPath())) {
+        std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
+        currentWallpaperIdFile << wallpaper.getId();
+    }
+
+    PostSetScript::execute(wallpaper);
+
+    return true;
+    #endif
+
+    #ifdef _WIN32
+    return false;
+    #endif
 }
 
 bool Wallpapers::remove(const std::string_view id) {
