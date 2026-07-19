@@ -41,7 +41,7 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
         mpvArgs += ' ';
     }
 
-    auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperPath();
+    auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperPath().string();
 
     if(!fs::exists(util::currentWallpaperIdPath())) {
         std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
@@ -53,7 +53,7 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
 
         const auto currentWallpaper = wallpapers->get(currentWallpaperId);
         if(currentWallpaper) {
-            currentWallpaperPath = currentWallpaper->getFilePath();
+            currentWallpaperPath = currentWallpaper->getFilePath().string();
         }
     }
 
@@ -63,7 +63,7 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
         const_cast<char*>("-o"),
         const_cast<char*>(mpvArgs.c_str()),
         const_cast<char*>("all"),
-        const_cast<char*>(currentWallpaperPath.string().c_str()),
+        const_cast<char*>(currentWallpaperPath.c_str()),
         nullptr
     };
 
