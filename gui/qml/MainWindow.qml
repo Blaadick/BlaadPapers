@@ -10,6 +10,8 @@ ApplicationWindow {
     id: mainWindow
     minimumWidth: 280 + 10 * 2
     minimumHeight: searchBar.height + 157 + (statusBar.visible ? statusBar.height : 0) + 10 * 4
+    width: Math.min(minimumWidth * 4, Screen.width)
+    height: Math.min(minimumHeight * 3, Screen.height)
     visible: true
 
     Shortcut {
