@@ -24,7 +24,7 @@ Flickable {
     WheelHandler {
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
         onWheel: (event) => {
-            const step = event.angleDelta.y / 120 * 180
+            const step = event.angleDelta.y / 120 * (flow.itemHeight + flow.spacing)
             const maxY = Math.max(0, flick.contentHeight - flick.height)
             flick.targetContentY = Math.min(maxY, Math.max(0, flick.targetContentY - step))
 
