@@ -5,11 +5,41 @@ import QtQuick
 import QtQuick.Controls
 
 Flickable {
+    id: flick
     contentHeight: flow.implicitHeight
     boundsBehavior: Flickable.StopAtBounds
     clip: true
 
     property alias model: flow.model
+    property real targetContentY: 0
+
+    NumberAnimation {
+        id: scrollAnim
+        target: flick
+        property: "contentY"
+        duration: 280
+        easing.type: Easing.OutCubic
+    }
+
+    WheelHandler {
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+        onWheel: (event) => {
+            const step = event.angleDelta.y / 120 * 180
+            const maxY = Math.max(0, flick.contentHeight - flick.height)
+            flick.targetContentY = Math.min(maxY, Math.max(0, flick.targetContentY - step))
+
+            scrollAnim.stop()
+            scrollAnim.from = flick.contentY
+            scrollAnim.to = flick.targetContentY
+            scrollAnim.start()
+        }
+    }
+
+    onContentYChanged: {
+        if(!scrollAnim.running) {
+            targetContentY = contentY
+        }
+    }
 
     ScrollBar.vertical: ScrollBar {
         policy: ScrollBar.AlwaysOn
@@ -17,7 +47,7 @@ Flickable {
 
     Flow {
         id: flow
-        width: parent.width
+        width: flick.width
         spacing: 10
 
         property alias model: repeater.model
