@@ -24,6 +24,14 @@ ApplicationWindow {
     Menu {
         id: contextMenu
 
+        property bool suppressReopen: false
+
+        onAboutToHide: {
+            if (menuButton.hovered) {
+                suppressReopen = true
+            }
+        }
+
         Action {
             text: "Add wallpapers"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
@@ -50,12 +58,19 @@ ApplicationWindow {
         spacing: 10
 
         RowLayout {
+            spacing: 10
+
             ToolButton {
+                id: menuButton
                 icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
 
                 onClicked: {
-                    const pos = parent.mapToGlobal(0, parent.height + 10)
-                    contextMenu.popup(pos)
+                    if (contextMenu.suppressReopen) {
+                        contextMenu.suppressReopen = false
+                    } else {
+                        const pos = menuButton.mapToGlobal(0, menuButton.height + 10)
+                        contextMenu.popup(pos)
+                    }
                 }
             }
 
