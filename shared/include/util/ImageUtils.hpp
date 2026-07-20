@@ -8,7 +8,7 @@
 #include "data/Size.hpp"
 
 inline Size getPictureResolutionData(const std::filesystem::path& filePath) {
-    const auto info = imageinfo::parse<imageinfo::FilePathReader>(filePath.c_str());
+    const auto info = imageinfo::parse<imageinfo::FilePathReader>(filePath.string().c_str());
     return Size(
         static_cast<int>(info.size().width),
         static_cast<int>(info.size().height)

@@ -145,7 +145,12 @@ bool Wallpapers::apply(const Wallpaper& wallpaper) const {
     #endif
 
     #ifdef _WIN32
-    return false;
+    return SystemParametersInfoW(
+        SPI_SETDESKWALLPAPER,
+        0,
+        (PVOID)wallpaper.getFilePath().c_str(),
+        SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
+    );
     #endif
 }
 
