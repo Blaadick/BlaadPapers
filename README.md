@@ -26,20 +26,25 @@ Convenient wallpaper manager supporting both GUI and CLI usage. I will try to ma
 yay -S blaadpapers
 ```
 
-### Manual
-Install `Qt6 Base`, `Qt6 Declarative`, `Qt6 Svg`, [`libvips`](https://github.com/libvips/libvips), [
-`FFmpeg`](https://ffmpeg.org/), [`nlohman-json`](https://github.com/nlohmann/json) and [
-`BStyle`](https://github.com/Blaadick/BStyle). Then run it:
+### Windows
+Expected after adding major features and implementing custom wallpaper renderer.
 
+### Manual
+Install deps: 
+- `Qt6` (Base, Declarative, Svg)
+- [`libvips`](https://github.com/libvips/libvips)
+- [`FFmpeg`](https://ffmpeg.org/)
+- [`nlohman-json`](https://github.com/nlohmann/json)
+- [`imageinfo`](https://github.com/xiaozhuai/imageinfo)
+- [`BStyle`](https://github.com/Blaadick/BStyle)
+
+Then run it:
 ```bash
-git clone https://github.com/Blaadick/BlaadPapers.git
+git clone https://github.com/Blaadick/BlaadPapers.git --depth=1
 cd BlaadPapers
 cmake -B cmake-build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build cmake-build-release --parallel
 ```
-
-### Windows
-Expected after adding major features and implementing custom wallpaper renderer.
 
 ## Usage
 Before use, run

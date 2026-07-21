@@ -9,7 +9,7 @@ AddOption::AddOption(
     sptr<WallpaperLoader> wallpaperLoader,
     sptr<Config> config,
     sptr<util::Logger> logger
-) : Option("Adds wallpaper(s) to the first wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), logger(std::move(logger)) {}
+) : Option("Adds wallpaper(s) to the wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> AddOption::getUsageStrings() const {
     return {"<file/folder_path...>"};
