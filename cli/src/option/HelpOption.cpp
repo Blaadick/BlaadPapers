@@ -5,48 +5,52 @@
 
 #include <algorithm>
 #include <ranges>
-#include <nlohmann/json.hpp>
 #include "flag/Flags.hpp"
 #include "util/WallpaperUtils.hpp"
 
 HelpOption::HelpOption(
-    wptr<CliExecutor> cliExecutor,
+    const std::unordered_map<std::string, uptr<Option>>& options,
     sptr<util::Logger> logger
-) : Option("Shows all program options and flags"), cliExecutor(std::move(cliExecutor)), logger(std::move(logger)) {}
+) : Option("Shows all program options and flags"), options(options), logger(std::move(logger)) {}
 
 std::vector<std::string_view> HelpOption::getUsageStrings() const {
     return {"[flags...]"};
 }
 
 int HelpOption::execute(const std::vector<std::string_view>&, const std::unordered_set<sptr<Flag>>& flags) {
-    const auto& options = cliExecutor.lock()->getOptions();
-
     if(flags.contains(Flags::json)) {
-        nlohmann::json output;
+        const auto doc = yyjson_mut_doc_new(nullptr);
+        const auto root = yyjson_mut_obj(doc);
 
+        const auto optionsData = yyjson_mut_arr(doc);
         for(const auto& [name, option] : options) {
-            nlohmann::json flagsJson;
-            flagsJson.emplace_back(Flags::help->toJson());
-            flagsJson.emplace_back(Flags::quiet->toJson());
+            const auto optionData = yyjson_mut_obj(doc);
+
+            const auto flagsData = yyjson_mut_arr(doc);
+            yyjson_mut_arr_add_flag(doc, flagsData, &*Flags::help);
+            yyjson_mut_arr_add_flag(doc, flagsData, &*Flags::quiet);
 
             for(const auto& flag : option->getFlags()) {
-                flagsJson.emplace_back(flag->toJson());
+                yyjson_mut_arr_add_flag(doc, flagsData, &*flag);
             }
 
-            output["options"].emplace_back(
-                nlohmann::json{
-                    {"name", name},
-                    {"flags", flagsJson},
-                    {"description", option->getDescription()},
-                }
-            );
-        }
+            yyjson_mut_obj_add_str(doc, optionData, "name", name.c_str());
+            yyjson_mut_obj_add_val(doc, optionData, "flags", flagsData);
+            yyjson_mut_obj_add_str(doc, optionData, "description", option->getDescription().c_str());
 
+            yyjson_mut_arr_add_val(optionsData, optionData);
+        }
+        yyjson_mut_obj_add_val(doc, root, "options", optionsData);
+
+        const auto supportedFormatsData = yyjson_mut_arr(doc);
         for(const auto& extension : std::views::concat(util::supportedPictureFormats, util::supportedVideoFormats)) {
-            output["supported_formats"].emplace_back(extension);
+            yyjson_mut_arr_add_str(doc, supportedFormatsData, extension.c_str());
         }
+        yyjson_mut_obj_add_val(doc, root, "supported_formats", supportedFormatsData);
 
-        logger->logInfo(output.dump());
+        yyjson_mut_doc_set_root(doc, root);
+
+        logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
     } else {
         logger->logInfo("Options:");
 

@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <unordered_set>
 
 namespace util {

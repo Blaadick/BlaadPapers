@@ -22,12 +22,17 @@ int ListOption::execute(const std::vector<std::string_view>&, const std::unorder
 
     std::string output;
     if(flags.contains(Flags::json)) {
-        nlohmann::json wallpapersData;
+        const auto doc = yyjson_mut_doc_new(nullptr);
+        const auto root = yyjson_mut_arr(doc);
+
         for(const auto& wallpaper : *wallpapers) {
-            // wallpapersData.emplace_back(wallpaper->toJson());
+            const auto wallpaperData = wallpaper->yyjson_mut_wallpaper_obj(doc);
+            yyjson_mut_arr_add_val(root, wallpaperData);
         }
 
-        output = wallpapersData.dump();
+        yyjson_mut_doc_set_root(doc, root);
+
+        output = yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr);
     } else {
         for(const auto& wallpaper : *wallpapers) {
             output += wallpaper->toString() + '\n';

@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <yyjson.h>
 #include "data/Size.hpp"
 
 class Wallpaper {
@@ -35,6 +36,9 @@ public:
 
     [[nodiscard]]
     virtual std::string toString() const = 0;
+
+    [[nodiscard]]
+    virtual yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const = 0;
 
 protected:
     std::string id;

@@ -24,6 +24,9 @@ public:
     [[nodiscard]]
     std::string toString() const override;
 
+    [[nodiscard]]
+    yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const override;
+
 protected:
     int frameRate;
 };

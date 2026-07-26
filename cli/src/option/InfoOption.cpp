@@ -27,7 +27,11 @@ int InfoOption::execute(const std::vector<std::string_view>& arguments, const st
     }
 
     if(flags.contains(Flags::json)) {
-        // logger->logInfo(wallpaper->toJson().dump());
+        const auto doc = yyjson_mut_doc_new(nullptr);
+        const auto root = wallpaper->yyjson_mut_wallpaper_obj(doc);
+        yyjson_mut_doc_set_root(doc, root);
+
+        logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
         return 0;
     }
 

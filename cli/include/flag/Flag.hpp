@@ -5,7 +5,7 @@
 
 #include <optional>
 #include <string_view>
-#include <nlohmann/json.hpp>
+#include <yyjson.h>
 
 struct Flag {
     std::string name;
@@ -20,7 +20,8 @@ struct Flag {
 
     [[nodiscard]]
     static bool isFlag(std::string_view string);
-
-    [[nodiscard]]
-    nlohmann::json toJson() const;
 };
+
+yyjson_mut_val* yyjson_mut_flag(yyjson_mut_doc* doc, const Flag* flag);
+
+bool yyjson_mut_arr_add_flag(yyjson_mut_doc* doc, yyjson_mut_val* arr, const Flag* flag);

@@ -9,7 +9,7 @@
 // TODO Change CliExecutor to map of options
 class HelpOption final : public Option {
 public:
-    HelpOption(wptr<CliExecutor> cliExecutor, sptr<util::Logger> logger);
+    HelpOption(const std::unordered_map<std::string, uptr<Option>>& options, sptr<util::Logger> logger);
 
     [[nodiscard]]
     std::vector<std::string_view> getUsageStrings() const override;
@@ -18,6 +18,6 @@ public:
     int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
 
 private:
-    wptr<CliExecutor> cliExecutor;
+    const std::unordered_map<std::string, uptr<Option>>& options;
     sptr<util::Logger> logger;
 };
