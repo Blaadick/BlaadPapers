@@ -50,8 +50,3 @@ void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
         }
     }
 }
-
-template<std::derived_from<Wallpaper> T>
-void PreviewManager::addGenerator(uptr<PreviewGenerator> generator) {
-    generators.emplace(typeid(T), std::move(generator));
-}

@@ -17,7 +17,9 @@ public:
     void createAndSavePreviews(const Wallpaper& wallpaper) const;
 
     template<std::derived_from<Wallpaper> T>
-    void addGenerator(uptr<PreviewGenerator> generator);
+    void addGenerator(uptr<PreviewGenerator> generator) {
+        generators.emplace(typeid(T), std::move(generator));
+    }
 
 private:
     std::unordered_map<std::type_index, uptr<PreviewGenerator>> generators;
