@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <string>
 #include <vector>
-#include <nlohmann/json.hpp>
 #include "data/Size.hpp"
 
 class Wallpaper {
@@ -35,13 +34,7 @@ public:
     const std::vector<std::string>& getTags() const;
 
     [[nodiscard]]
-    virtual nlohmann::json toJson() const = 0;
-
-    [[nodiscard]]
     virtual std::string toString() const = 0;
-
-    [[nodiscard]]
-    bool operator==(const Wallpaper& other) const;
 
 protected:
     std::string id;

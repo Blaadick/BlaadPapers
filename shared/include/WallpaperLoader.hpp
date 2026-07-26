@@ -4,7 +4,7 @@
 #pragma once
 
 #include <filesystem>
-
+#include <nlohmann/json.hpp>
 #include "Config.hpp"
 #include "Wallpapers.hpp"
 #include "data/PictureWallpaper.hpp"
@@ -15,9 +15,6 @@ class WallpaperLoader {
 public:
     WallpaperLoader(sptr<Wallpapers> wallpapers, sptr<Config> config, sptr<util::Logger> logger);
 
-    /**
-     * Vips should be initialized before run!
-     */
     void loadWallpapers();
 
     bool addWallpaper(

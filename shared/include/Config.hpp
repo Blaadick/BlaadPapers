@@ -8,6 +8,7 @@
 #include <vector>
 #include "data/Wallpaper.hpp"
 #include "logger/Logger.hpp"
+#include "util/PathUtils.hpp"
 #include "util/Pointers.hpp"
 
 class Config {
@@ -17,25 +18,25 @@ public:
     void load();
 
     [[nodiscard]]
-    std::vector<std::string> getBadTags();
+    std::vector<std::string> getBadTags() const;
 
     [[nodiscard]]
-    std::filesystem::path getWallpapersDirPath();
+    std::filesystem::path getWallpapersDirPath() const;
 
     [[nodiscard]]
     bool getStatusBarVisible() const;
 
     void setStatusBarVisible(bool newVisibility);
 
-    bool isWallpaperBad(const Wallpaper& wallpaper);
+    [[nodiscard]]
+    bool isWallpaperBad(const Wallpaper& wallpaper) const;
 
 private:
     sptr<util::Logger> logger;
 
-    std::vector<std::string> badTags;
-    std::filesystem::path wallpapersDirPath;
+    std::vector<std::string> badTags = {"Sensitive", "Questionable", "Explicit"};
+    std::filesystem::path wallpapersDirPath = util::documentsDirPath().append("Wallpapers");
     bool isStatusBarVisible = false;
 
-    template<typename T>
-    void updateConfig(const std::string& settingName, const T& value);
+    void saveConfig() const;
 };

@@ -23,18 +23,6 @@ PictureWallpaper::PictureWallpaper(
     this->tags = std::move(tags);
 }
 
-nlohmann::json PictureWallpaper::toJson() const {
-    return {
-        {"id", id},
-        {"file_path", filePath},
-        {"name", name},
-        {"resolution", resolution.toString()},
-        {"source", source},
-        {"tags", tags},
-        {"type", "Picture"}
-    };
-}
-
 std::string PictureWallpaper::toString() const {
     return std::format(
         "{}\n"

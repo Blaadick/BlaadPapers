@@ -4,6 +4,7 @@
 #pragma once
 
 #include <typeindex>
+#include <unordered_map>
 #include "data/Wallpaper.hpp"
 #include "generator/PreviewGenerator.hpp"
 #include "logger/Logger.hpp"

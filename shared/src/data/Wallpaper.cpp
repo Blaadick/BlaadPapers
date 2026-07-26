@@ -36,7 +36,3 @@ const std::string& Wallpaper::getSource() const {
 const std::vector<std::string>& Wallpaper::getTags() const {
     return tags;
 }
-
-bool Wallpaper::operator==(const Wallpaper& other) const {
-    return id == other.getId();
-}

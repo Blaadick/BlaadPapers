@@ -3,9 +3,12 @@
 
 #include "Wallpapers.hpp"
 
+#include <algorithm>
+#include <cstring>
 #include <format>
 #include <fstream>
 #include <random>
+#include <yyjson.h>
 #include "Config.hpp"
 #include "PostSetScript.hpp"
 #include "data/PictureWallpaper.hpp"
@@ -121,13 +124,18 @@ bool Wallpapers::apply(const Wallpaper& wallpaper) const {
         return false;
     }
 
-    const auto command = nlohmann::json(
-        {
-            {"command", {"loadfile", wallpaper.getFilePath()}}
-        }
-    ).dump().append("\n");
+    const auto doc = yyjson_mut_doc_new(nullptr);
+    const auto root = yyjson_mut_obj(doc);
+    yyjson_mut_doc_set_root(doc, root);
 
-    if(write(sock, command.c_str(), command.size()) < 0) {
+    const auto commandData = yyjson_mut_arr(doc);
+    yyjson_mut_arr_add_str(doc, commandData, "loadfile");
+    yyjson_mut_arr_add_str(doc, commandData, wallpaper.getFilePath().c_str());
+
+    yyjson_mut_obj_add_val(doc, root, "command", commandData);
+
+    const auto command = yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG | YYJSON_WRITE_NEWLINE_AT_END, nullptr);
+    if(write(sock, command, strlen(command)) < 0) {
         close(sock);
         return false;
     }
@@ -148,7 +156,7 @@ bool Wallpapers::apply(const Wallpaper& wallpaper) const {
     return SystemParametersInfoW(
         SPI_SETDESKWALLPAPER,
         0,
-        (PVOID)wallpaper.getFilePath().c_str(),
+        (PVOID) wallpaper.getFilePath().c_str(),
         SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
     );
     #endif

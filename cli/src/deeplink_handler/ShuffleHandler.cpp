@@ -3,6 +3,8 @@
 
 #include "deeplink_handler/ShuffleHandler.hpp"
 
+#include <ranges>
+
 ShuffleHandler::ShuffleHandler(sptr<Wallpapers> wallpapers) : wallpapers(std::move(wallpapers)) {}
 
 int ShuffleHandler::handle(const Url& url) const {

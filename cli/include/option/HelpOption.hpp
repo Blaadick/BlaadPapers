@@ -6,6 +6,7 @@
 #include "CliExecutor.hpp"
 #include "option/Option.hpp"
 
+// TODO Change CliExecutor to map of options
 class HelpOption final : public Option {
 public:
     HelpOption(wptr<CliExecutor> cliExecutor, sptr<util::Logger> logger);

@@ -27,7 +27,7 @@ int InfoOption::execute(const std::vector<std::string_view>& arguments, const st
     }
 
     if(flags.contains(Flags::json)) {
-        logger->logInfo(wallpaper->toJson().dump());
+        // logger->logInfo(wallpaper->toJson().dump());
         return 0;
     }
 

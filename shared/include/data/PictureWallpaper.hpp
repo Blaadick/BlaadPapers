@@ -18,8 +18,5 @@ public:
     );
 
     [[nodiscard]]
-    nlohmann::json toJson() const override;
-
-    [[nodiscard]]
     std::string toString() const override;
 };

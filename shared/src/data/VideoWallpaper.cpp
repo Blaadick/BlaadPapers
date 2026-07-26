@@ -29,19 +29,6 @@ int VideoWallpaper::getFrameRate() const {
     return frameRate;
 }
 
-nlohmann::json VideoWallpaper::toJson() const {
-    return {
-        {"id", id},
-        {"file_path", filePath},
-        {"name", name},
-        {"resolution", resolution.toString()},
-        {"frame_rate", frameRate},
-        {"source", source},
-        {"tags", tags},
-        {"type", "Video"}
-    };
-}
-
 std::string VideoWallpaper::toString() const {
     return std::format(
         "{}\n"

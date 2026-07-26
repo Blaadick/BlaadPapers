@@ -13,7 +13,7 @@ depends=(
     "qt6-svg"
     "libvips"
     "ffmpeg"
-    "nlohmann-json"
+    "yyjson"
     "mpvpaper"
     "bstyle-qml-theme"
 )
@@ -21,6 +21,7 @@ makedepends=(
     "cmake"
     "ninja"
 )
+provides=("blaadpapers", "blaadpaperscli")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$_repoowner/$_reponame/archive/refs/tags/v$pkgver.tar.gz")
 sha512sums=("b032c722281e2259c90cdfa59cb1a819aaf845b4651b7b0d87b513fdc68c147869b913ca6ecccfa31e8fd7e6d317afd1e0ee3de8406c08f3811d3922add72dcb")
 url="https://github.com/$_repoowner/$_reponame"

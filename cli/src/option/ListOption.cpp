@@ -24,7 +24,7 @@ int ListOption::execute(const std::vector<std::string_view>&, const std::unorder
     if(flags.contains(Flags::json)) {
         nlohmann::json wallpapersData;
         for(const auto& wallpaper : *wallpapers) {
-            wallpapersData.emplace_back(wallpaper->toJson());
+            // wallpapersData.emplace_back(wallpaper->toJson());
         }
 
         output = wallpapersData.dump();
