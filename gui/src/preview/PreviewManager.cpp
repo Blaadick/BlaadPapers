@@ -51,6 +51,7 @@ void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
     }
 }
 
-void PreviewManager::addGenerator(std::type_index typeId, uptr<PreviewGenerator> generator) {
-    generators.emplace(typeId, std::move(generator));
+template<std::derived_from<Wallpaper> T>
+void PreviewManager::addGenerator(uptr<PreviewGenerator> generator) {
+    generators.emplace(typeid(T), std::move(generator));
 }

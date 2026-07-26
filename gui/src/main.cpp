@@ -44,8 +44,8 @@ int main(int argc, char** argv) {
     auto wallpaperLoader = std::make_shared<WallpaperLoader>(wallpapers, config, logger);
 
     auto previewManager = std::make_shared<PreviewManager>(logger);
-    previewManager->addGenerator(typeid(PictureWallpaper), std::make_unique<PicturePreviewGenerator>());
-    previewManager->addGenerator(typeid(VideoWallpaper), std::make_unique<VideoPreviewGenerator>());
+    previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());
+    previewManager->addGenerator<VideoWallpaper>(std::make_unique<VideoPreviewGenerator>());
 
     auto configModel = std::make_shared<ConfigModel>(config);
     auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, previewManager, logger);
