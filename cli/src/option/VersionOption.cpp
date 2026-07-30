@@ -24,6 +24,7 @@ int VersionOption::execute(const std::vector<std::string_view>&, const std::unor
         yyjson_mut_doc_set_root(doc, root);
 
         logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
+        yyjson_mut_doc_free(doc);
     } else {
         logger->logInfo(std::format("{} {}\n{}", PROJECT_NAME, PROJECT_VERSION, PROJECT_DESCRIPTION));
     }

@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <ranges>
 #include "flag/Flags.hpp"
-#include "util/WallpaperUtils.hpp"
 
 HelpOption::HelpOption(
     const std::unordered_map<std::string, uptr<Option>>& options,
@@ -42,17 +41,21 @@ int HelpOption::execute(const std::vector<std::string_view>&, const std::unorder
         }
         yyjson_mut_obj_add_val(doc, root, "options", optionsData);
 
-        const auto supportedFormatsData = yyjson_mut_arr(doc);
-        for(const auto& extension : std::views::concat(util::supportedPictureFormats, util::supportedVideoFormats)) {
-            yyjson_mut_arr_add_str(doc, supportedFormatsData, extension.c_str());
-        }
-        yyjson_mut_obj_add_val(doc, root, "supported_formats", supportedFormatsData);
+        // const auto supportedFormatsData = yyjson_mut_arr(doc);
+        // for(const auto& extension : std::views::concat(util::supportedPictureFormats, util::supportedVideoFormats)) {
+        //     yyjson_mut_arr_add_str(doc, supportedFormatsData, extension.c_str());
+        // }
+        // yyjson_mut_obj_add_val(doc, root, "supported_formats", supportedFormatsData);
 
         yyjson_mut_doc_set_root(doc, root);
 
         logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
+        yyjson_mut_doc_free(doc);
     } else {
-        logger->logInfo("Options:");
+        logger->logInfo("Description:");
+        logger->logInfo(std::format("  {}", PROJECT_DESCRIPTION));
+
+        logger->logInfo("\nOptions:");
 
         auto maxNameLength = std::ranges::max(
             options | std::views::keys | std::views::transform(&std::string::length)

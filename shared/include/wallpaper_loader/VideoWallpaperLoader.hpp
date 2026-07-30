@@ -1,0 +1,16 @@
+// Copyright (C) 2026 Blaadick
+// SPDX-License-Identifier: GPL-3.0-only
+
+#pragma once
+
+#include "logger/Logger.hpp"
+#include "wallpaper_loader/WallpaperLoader.hpp"
+
+class VideoWallpaperLoader final : public WallpaperLoader {
+public:
+    explicit VideoWallpaperLoader(sptr<util::Logger> logger);
+
+    bool isSupported(const std::filesystem::path& wallpaperFilePath) const override;
+
+    uptr<Wallpaper> loadWallpaper(const std::filesystem::path& wallpaperFilePath) const override;
+};

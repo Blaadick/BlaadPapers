@@ -7,14 +7,11 @@
 #include <fstream>
 #include <yyjson.h>
 
-namespace fs = std::filesystem;
-namespace rng = std::ranges;
-
 Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
 void Config::load() {
     const auto configFilePath = util::configFilePath();
-    if(fs::exists(configFilePath)) {
+    if(std::filesystem::exists(configFilePath)) {
         yyjson_read_err readErr;
         const auto doc = yyjson_read_file(configFilePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
         if(!doc) {
@@ -62,7 +59,7 @@ std::vector<std::string> Config::getBadTags() const {
     return badTags;
 }
 
-fs::path Config::getWallpapersDirPath() const {
+std::filesystem::path Config::getWallpapersDirPath() const {
     return wallpapersDirPath;
 }
 
@@ -76,10 +73,10 @@ void Config::setStatusBarVisible(const bool newVisibility) {
 }
 
 bool Config::isWallpaperBad(const Wallpaper& wallpaper) const {
-    return rng::any_of(
+    return std::ranges::any_of(
         badTags,
         [&wallpaper](const std::string& tag) {
-            return rng::contains(wallpaper.getTags(), tag);
+            return std::ranges::contains(wallpaper.getTags(), tag);
         }
     );
 }

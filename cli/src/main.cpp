@@ -5,8 +5,9 @@
 #include "Config.hpp"
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
-#include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
+#include "data/PictureWallpaper.hpp"
+#include "data/VideoWallpaper.hpp"
 #include "deeplink_handler/ApplyHandler.hpp"
 #include "deeplink_handler/ShuffleHandler.hpp"
 #include "flag/Flags.hpp"
@@ -21,6 +22,9 @@
 #include "option/RunRendererOption.hpp"
 #include "option/ShuffleOption.hpp"
 #include "option/VersionOption.hpp"
+#include "wallpaper_loader/PictureWallpaperLoader.hpp"
+#include "wallpaper_loader/VideoWallpaperLoader.hpp"
+#include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 int main(const int argc, const char** argv) {
     DefaultWallpaper::createIfNotExists(true);
@@ -31,7 +35,10 @@ int main(const int argc, const char** argv) {
     config->load();
 
     auto wallpapers = std::make_shared<Wallpapers>();
-    auto wallpaperLoader = std::make_shared<WallpaperLoader>(wallpapers, config, logger);
+    auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpapers, config, logger);
+    wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(logger));
+    wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(logger));
+
     wallpaperLoader->loadWallpapers();
     wallpapers->sortByName();
 

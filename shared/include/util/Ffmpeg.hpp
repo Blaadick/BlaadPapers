@@ -7,15 +7,9 @@ extern "C" {
     #include <libavformat/avformat.h>
 }
 
-#include <data/Size.hpp>
+#include "data/VideoData.hpp"
 
-struct VideoData {
-    Size resolution = {};
-    int frameRate = 0;
-};
-
-inline VideoData getVideoData(const std::filesystem::path& filePath) {
-    VideoData data;
+inline std::optional<VideoData> getVideoData(const std::filesystem::path& filePath) {
     AVFormatContext* fmt = nullptr;
     AVDictionary* options = nullptr;
     av_dict_set(&options, "probesize", "32", 0);
@@ -23,21 +17,23 @@ inline VideoData getVideoData(const std::filesystem::path& filePath) {
 
     if(avformat_open_input(&fmt, filePath.string().c_str(), nullptr, &options) < 0) {
         av_dict_free(&options);
-        return data;
+        return std::nullopt;
     }
 
     av_dict_free(&options);
 
     const AVStream* stream;
     if(const int streamIndex = av_find_best_stream(fmt, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0); streamIndex < 0) {
-        av_dict_free(&options);
-        return data;
+        avformat_close_input(&fmt);
+        return std::nullopt;
     } else {
         stream = fmt->streams[streamIndex];
     }
 
-    data.resolution = Size(stream->codecpar->width, stream->codecpar->height);
-    data.frameRate = static_cast<int>(av_q2d(stream->avg_frame_rate));
+    auto data = VideoData(
+        Size(stream->codecpar->width, stream->codecpar->height),
+        static_cast<int>(av_q2d(stream->avg_frame_rate))
+    );
 
     avformat_close_input(&fmt);
     return data;

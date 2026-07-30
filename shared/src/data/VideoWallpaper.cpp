@@ -5,6 +5,8 @@
 
 #include <format>
 
+#include "util/StringUtils.hpp"
+
 VideoWallpaper::VideoWallpaper(
     std::string id,
     std::filesystem::path filePath,
@@ -45,7 +47,7 @@ std::string VideoWallpaper::toString() const {
         resolution.toString(),
         frameRate,
         source,
-        tags,
+        util::join(tags),
         "Video"
     );
 }

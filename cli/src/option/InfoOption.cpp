@@ -32,6 +32,7 @@ int InfoOption::execute(const std::vector<std::string_view>& arguments, const st
         yyjson_mut_doc_set_root(doc, root);
 
         logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
+        yyjson_mut_doc_free(doc);
         return 0;
     }
 

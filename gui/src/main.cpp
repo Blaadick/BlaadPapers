@@ -11,7 +11,9 @@
 #include "Config.hpp"
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
-#include "WallpaperLoader.hpp"
+#include "../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "data/PictureWallpaper.hpp"
+#include "data/VideoWallpaper.hpp"
 #include "logger/GuiLogger.hpp"
 #include "model/ClipboardModel.hpp"
 #include "model/ConfigModel.hpp"
@@ -41,7 +43,7 @@ int main(int argc, char** argv) {
     config->load();
 
     auto wallpapers = std::make_shared<Wallpapers>();
-    auto wallpaperLoader = std::make_shared<WallpaperLoader>(wallpapers, config, logger);
+    auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpapers, config, logger);
 
     auto previewManager = std::make_shared<PreviewManager>(logger);
     previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());

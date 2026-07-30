@@ -5,6 +5,8 @@
 
 #include <format>
 
+#include "util/StringUtils.hpp"
+
 PictureWallpaper::PictureWallpaper(
     std::string id,
     std::filesystem::path filePath,
@@ -37,7 +39,7 @@ std::string PictureWallpaper::toString() const {
         filePath.string(),
         resolution.toString(),
         source,
-        tags,
+        util::join(tags),
         "Picture"
     );
 }

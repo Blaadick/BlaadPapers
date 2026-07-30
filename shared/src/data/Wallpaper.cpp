@@ -3,21 +3,17 @@
 
 #include "data/Wallpaper.hpp"
 
-#include <fstream>
 #include "Config.hpp"
-
-namespace fs = std::filesystem;
-namespace rng = std::ranges;
 
 const std::string& Wallpaper::getId() const {
     return id;
 }
 
-const fs::path& Wallpaper::getFilePath() const {
+const std::filesystem::path& Wallpaper::getFilePath() const {
     return filePath;
 }
 
-const fs::path& Wallpaper::getDirPath() const {
+const std::filesystem::path& Wallpaper::getDirPath() const {
     return dirPath;
 }
 

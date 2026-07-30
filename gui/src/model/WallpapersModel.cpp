@@ -7,15 +7,14 @@
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include "Config.hpp"
-#include "WallpaperLoader.hpp"
 #include "Wallpapers.hpp"
 #include "util/FormatUtils.hpp"
-#include "util/WallpaperUtils.hpp"
+#include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 namespace fs = std::filesystem;
 
 WallpapersModel::WallpapersModel(
-    sptr<WallpaperLoader> wallpaperLoader,
+    sptr<WallpaperLoaderManager> wallpaperLoader,
     sptr<Wallpapers> wallpapers,
     sptr<Config> config,
     sptr<PreviewManager> previewManager,
@@ -58,18 +57,18 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
 }
 
 void WallpapersModel::addWallpapers() {
-    const auto supportedPictureFormatsString = util::getFormatString(util::supportedPictureFormats);
-    const auto supportedVideoFormatsString = util::getFormatString(util::supportedVideoFormats);
+    // const auto supportedPictureFormatsString = util::getFormatString(util::supportedPictureFormats);
+    // const auto supportedVideoFormatsString = util::getFormatString(util::supportedVideoFormats);
 
     QFileDialog fileSelector;
     fileSelector.setFileMode(QFileDialog::ExistingFiles);
-    fileSelector.setNameFilters(
-        {
-            "Any Supported (" + supportedPictureFormatsString + ' ' + supportedVideoFormatsString + ')',
-            "Picture (" + supportedPictureFormatsString + ')',
-            "Video (" + supportedVideoFormatsString + ')'
-        }
-    );
+    // fileSelector.setNameFilters(
+    //     {
+    //         "Any Supported (" + supportedPictureFormatsString + ' ' + supportedVideoFormatsString + ')',
+    //         "Picture (" + supportedPictureFormatsString + ')',
+    //         "Video (" + supportedVideoFormatsString + ')'
+    //     }
+    // );
 
     if(!fileSelector.exec()) {
         return;

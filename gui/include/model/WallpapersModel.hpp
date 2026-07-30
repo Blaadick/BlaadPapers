@@ -5,7 +5,7 @@
 
 #include <QAbstractListModel>
 #include <QVariant>
-#include "WallpaperLoader.hpp"
+#include "../../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
 #include "Wallpapers.hpp"
 #include "logger/Logger.hpp"
 #include "preview/PreviewManager.hpp"
@@ -26,7 +26,7 @@ public:
     };
 
     WallpapersModel(
-        sptr<WallpaperLoader> wallpaperLoader,
+        sptr<WallpaperLoaderManager> wallpaperLoader,
         sptr<Wallpapers> wallpapers,
         sptr<Config> config,
         sptr<PreviewManager> previewManager,
@@ -57,7 +57,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    sptr<WallpaperLoader> wallpaperLoader;
+    sptr<WallpaperLoaderManager> wallpaperLoader;
     sptr<Wallpapers> wallpapers;
     sptr<Config> config;
     sptr<PreviewManager> previewManager;

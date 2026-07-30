@@ -135,6 +135,8 @@ bool Wallpapers::apply(const Wallpaper& wallpaper) const {
     yyjson_mut_obj_add_val(doc, root, "command", commandData);
 
     const auto command = yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG | YYJSON_WRITE_NEWLINE_AT_END, nullptr);
+    yyjson_mut_doc_free(doc);
+
     if(write(sock, command, strlen(command)) < 0) {
         close(sock);
         return false;
@@ -204,4 +206,22 @@ std::vector<uptr<Wallpaper>>::const_iterator Wallpapers::begin() const {
 
 std::vector<uptr<Wallpaper>>::const_iterator Wallpapers::end() const {
     return wallpapers.end();
+}
+
+Wallpaper* Wallpapers::operator[](const int index) const {
+    if(index >= wallpapers.size()) {
+        return nullptr;
+    }
+
+    return wallpapers[index].get();
+}
+
+Wallpaper* Wallpapers::operator[](const std::string_view id) const {
+    for(const auto& wallpaper : wallpapers) {
+        if(wallpaper->getId() == id) {
+            return wallpaper.get();
+        }
+    }
+
+    return nullptr;
 }

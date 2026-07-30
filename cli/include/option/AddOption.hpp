@@ -3,13 +3,13 @@
 
 #pragma once
 
-#include "WallpaperLoader.hpp"
+#include "../../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
 
 class AddOption final : public Option {
 public:
-    AddOption(sptr<WallpaperLoader> wallpaperLoader, sptr<Config> config, sptr<util::Logger> logger);
+    AddOption(sptr<WallpaperLoaderManager> wallpaperLoader, sptr<Config> config, sptr<util::Logger> logger);
 
     [[nodiscard]]
     std::vector<std::string_view> getUsageStrings() const override;
@@ -18,7 +18,7 @@ public:
     int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
 
 private:
-    sptr<WallpaperLoader> wallpaperLoader;
+    sptr<WallpaperLoaderManager> wallpaperLoader;
     sptr<Config> config;
     sptr<util::Logger> logger;
 };

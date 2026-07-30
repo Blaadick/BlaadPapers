@@ -6,7 +6,7 @@
 namespace fs = std::filesystem;
 
 AddOption::AddOption(
-    sptr<WallpaperLoader> wallpaperLoader,
+    sptr<WallpaperLoaderManager> wallpaperLoader,
     sptr<Config> config,
     sptr<util::Logger> logger
 ) : Option("Adds wallpaper(s) to the wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), logger(std::move(logger)) {}

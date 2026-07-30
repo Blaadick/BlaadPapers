@@ -33,6 +33,7 @@ int ListOption::execute(const std::vector<std::string_view>&, const std::unorder
         yyjson_mut_doc_set_root(doc, root);
 
         output = yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr);
+        yyjson_mut_doc_free(doc);
     } else {
         for(const auto& wallpaper : *wallpapers) {
             output += wallpaper->toString() + '\n';

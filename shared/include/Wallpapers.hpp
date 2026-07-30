@@ -42,6 +42,12 @@ public:
     [[nodiscard]]
     std::vector<uptr<Wallpaper>>::const_iterator end() const;
 
+    [[nodiscard]]
+    Wallpaper* operator[](int index) const;
+
+    [[nodiscard]]
+    Wallpaper* operator[](std::string_view id) const;
+
 private:
     std::vector<uptr<Wallpaper>> wallpapers;
 };
