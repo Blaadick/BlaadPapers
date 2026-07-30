@@ -3,10 +3,22 @@
 
 #include "wallpaper_loader/WallpaperLoader.hpp"
 
+#include <algorithm>
 #include <string>
 #include <unordered_set>
 
-WallpaperLoader::WallpaperLoader(sptr<util::Logger> logger) : logger(std::move(logger)) {}
+WallpaperLoader::WallpaperLoader(
+    std::unordered_set<std::string_view> supportedFormats,
+    sptr<util::Logger> logger
+) : supportedFormats(std::move(supportedFormats)), logger(std::move(logger)) {}
+
+const std::unordered_set<std::string_view>& WallpaperLoader::getSupportedFormats() const {
+    return supportedFormats;
+}
+
+bool WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const {
+    return supportedFormats.contains(wallpaperFilePath.extension().string());
+}
 
 std::optional<WallpaperData> WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const {
     if(!std::filesystem::exists(wallpaperDataFilePath)) {

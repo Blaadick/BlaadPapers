@@ -42,7 +42,7 @@ void WallpaperLoaderManager::loadWallpapers() {
                     auto loadedWallpaper = wallpaperLoader->loadWallpaper(wallpaperDirEntry);
 
                     if(!loadedWallpaper) {
-                        logger->logError(std::format("Failed to load wallpaper \"{}\"", wallpaperDirEntry.path()));
+                        logger->logWarning(std::format("Failed to load wallpaper \"{}\"", wallpaperDirEntry.path()));
                         break;
                     }
 
@@ -53,71 +53,60 @@ void WallpaperLoaderManager::loadWallpapers() {
     }
 }
 
-bool WallpaperLoaderManager::addWallpaper(
-    const fs::path& wallpaperFilePath,
-    const fs::path& destinationFolderPath
-) {
-    const auto wallpaperId = wallpaperFilePath.stem().string();
-    const auto wallpaperRootPath = destinationFolderPath / wallpaperId;
-    // const auto isPicture = util::isSupportedPicture(wallpaperFilePath);
-    // const auto isVideo = util::isSupportedVideo(wallpaperFilePath);
+// TODO Refactor
+bool WallpaperLoaderManager::addWallpaper(const fs::path& filePath, const fs::path& destinationFolderPath) {
+    for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
+        if(!wallpaperLoader->isSupported(filePath)) {
+            continue;
+        }
 
-    // if(!isPicture && !isVideo) {
-    //     logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: \"" + wallpaperFilePath.extension().string() + "\" files are not supported");
-    //     return false;
-    // }
+        const auto wallpaperId = filePath.stem().string();
+        const auto wallpaperDirPath = destinationFolderPath / wallpaperId;
 
-    if(fs::exists(wallpaperRootPath)) {
-        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: Wallpaper with same id already exists");
-        return false;
+        if(fs::exists(wallpaperDirPath)) {
+            logger->logWarning(
+                std::format(
+                    R"(Failed to add "{}" wallpaper: Wallpaper with same id already exists)",
+                    wallpaperId
+                )
+            );
+
+            return false;
+        }
+
+        if(!fs::create_directory(wallpaperDirPath)) {
+            logger->logWarning(
+                std::format(
+                    R"(Failed to add "{}" wallpaper: Failed to create directory "{}")",
+                    wallpaperId,
+                    wallpaperDirPath.string()
+                )
+            );
+
+            return false;
+        }
+
+        const auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
+        if(!fs::copy_file(filePath, wallpaperFilePath)) {
+            logger->logWarning(
+                std::format(
+                    R"(Failed to add "{}" wallpaper: Failed to copy wallpaper to "{}")",
+                    wallpaperId,
+                    wallpaperFilePath.string()
+                )
+            );
+
+            fs::remove_all(wallpaperDirPath);
+            return false;
+        }
+
+        return true;
     }
-
-    if(!fs::create_directory(wallpaperRootPath)) {
-        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: Failed to create directory \"" + wallpaperRootPath.string() + "\"");
-        return false;
-    }
-
-    const auto newWallpaperFilePath = wallpaperRootPath / ("wallpaper" + wallpaperFilePath.extension().string());
-    if(!fs::copy_file(wallpaperFilePath, newWallpaperFilePath)) {
-        logger->logWarning("Failed to add \"" + wallpaperId + "\" wallpaper: Failed to copy wallpaper to \"" + newWallpaperFilePath.string() + "\"");
-        fs::remove_all(wallpaperRootPath);
-        return false;
-    }
-
-    // if(isPicture) {
-    //     wallpapers->add(
-    //         std::move(
-    //             loadPictureWallpaper(
-    //                 wallpaperId,
-    //                 newWallpaperFilePath,
-    //                 readWallpaperData(wallpaperRootPath / "data.json")
-    //             )
-    //         )
-    //     );
-    //     return true;
-    // }
-
-    // if(isVideo) {
-    //     wallpapers->add(
-    //         std::move(
-    //             loadVideoWallpaper(
-    //                 wallpaperId,
-    //                 newWallpaperFilePath,
-    //                 readWallpaperData(wallpaperRootPath / "data.json")
-    //             )
-    //         )
-    //     );
-    //     return true;
-    // }
 
     return false;
 }
 
-// TODO Refactor
-void WallpaperLoaderManager::addWallpapers(
-    const std::vector<fs::path>& paths,
-    const fs::path& destinationFolderPath
-) {
+void WallpaperLoaderManager::addWallpapers(const std::vector<fs::path>& paths, const fs::path& destinationFolderPath) {
     for(const auto& path : paths) {
         if(fs::is_directory(path)) {
             for(const auto& dirEntry : fs::directory_iterator(path)) {
@@ -137,84 +126,6 @@ void WallpaperLoaderManager::addWallpapers(
     }
 }
 
-// TODO Split it away
-// nlohmann::json WallpaperLoaderManager::readWallpaperData(const std::filesystem::path& wallpaperDataPath) {
-//     nlohmann::json defaultWallpaperData = {
-//         {"name", wallpaperDataPath.parent_path().stem()},
-//         {"source", ""},
-//         {"tags", {"General"}}
-//     };
-//     nlohmann::json wallpaperData;
-//     bool isWallpaperDataFull;
-//
-//     if(fs::exists(wallpaperDataPath)) {
-//         isWallpaperDataFull = true;
-//
-//         std::ifstream wallpaperDataFile(wallpaperDataPath);
-//         wallpaperData = nlohmann::json::parse(wallpaperDataFile);
-//
-//         if(wallpaperData.is_discarded()) {
-//             isWallpaperDataFull = false;
-//         } else {
-//             if(wallpaperData["name"].is_null()) {
-//                 wallpaperData["name"] = defaultWallpaperData["name"];
-//                 isWallpaperDataFull = false;
-//             }
-//
-//             if(wallpaperData["source"].is_null()) {
-//                 wallpaperData["source"] = defaultWallpaperData["source"];
-//                 isWallpaperDataFull = false;
-//             }
-//
-//             if(wallpaperData["tags"].is_null()) {
-//                 wallpaperData["tags"] = defaultWallpaperData["tags"];
-//                 isWallpaperDataFull = false;
-//             }
-//         }
-//     } else {
-//         isWallpaperDataFull = false;
-//         wallpaperData = defaultWallpaperData;
-//     }
-//
-//     if(!isWallpaperDataFull) {
-//         std::ofstream wallpaperDataFile(wallpaperDataPath);
-//         wallpaperDataFile << wallpaperData.dump(4);
-//     }
-//
-//     return wallpaperData;
-// }
-//
-// uptr<PictureWallpaper> WallpaperLoaderManager::loadPictureWallpaper(
-//     const std::string& wallpaperId,
-//     const std::filesystem::path& filePath,
-//     const nlohmann::json& data
-// ) {
-//     return std::make_unique<PictureWallpaper>(
-//         wallpaperId,
-//         filePath,
-//         filePath.parent_path(),
-//         data["name"],
-//         getPictureResolutionData(filePath),
-//         data["source"],
-//         data["tags"]
-//     );
-// }
-//
-// uptr<VideoWallpaper> WallpaperLoaderManager::loadVideoWallpaper(
-//     const std::string& wallpaperId,
-//     const std::filesystem::path& filePath,
-//     const nlohmann::json& data
-// ) {
-//     auto [resolution, frameRate] = getVideoData(filePath);
-//
-//     return std::make_unique<VideoWallpaper>(
-//         wallpaperId,
-//         filePath,
-//         filePath.parent_path(),
-//         data["name"],
-//         resolution,
-//         frameRate,
-//         data["source"],
-//         data["tags"]
-//     );
-// }
+const std::unordered_map<std::type_index, uptr<WallpaperLoader>>& WallpaperLoaderManager::getWallpaperLoaders() const {
+    return wallpaperLoaders;
+}

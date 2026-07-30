@@ -18,7 +18,7 @@ public:
     void loadWallpapers();
 
     bool addWallpaper(
-        const std::filesystem::path& wallpaperFilePath,
+        const std::filesystem::path& filePath,
         const std::filesystem::path& destinationFolderPath
     );
 
@@ -26,6 +26,8 @@ public:
         const std::vector<std::filesystem::path>& paths,
         const std::filesystem::path& destinationFolderPath
     );
+
+    const std::unordered_map<std::type_index, uptr<WallpaperLoader>>& getWallpaperLoaders() const;
 
     template<std::derived_from<Wallpaper> T>
     void addWallpaperLoader(uptr<WallpaperLoader> wallpaperLoader) {

@@ -10,7 +10,5 @@ class VideoWallpaperLoader final : public WallpaperLoader {
 public:
     explicit VideoWallpaperLoader(sptr<util::Logger> logger);
 
-    bool isSupported(const std::filesystem::path& wallpaperFilePath) const override;
-
     uptr<Wallpaper> loadWallpaper(const std::filesystem::path& wallpaperFilePath) const override;
 };

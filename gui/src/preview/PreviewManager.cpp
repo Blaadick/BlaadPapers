@@ -3,19 +3,17 @@
 
 #include "preview/PreviewManager.hpp"
 
-#include "data/PictureWallpaper.hpp"
-#include "data/VideoWallpaper.hpp"
 #include "util/PathUtils.hpp"
 #include "util/ToString.hpp"
 
-namespace fs = std::filesystem;
-
-Size getScreenAspectRatio(const QScreen* screen) {
-    const auto screenGdc = std::gcd(screen->size().width(), screen->size().height());
-    return Size(
-        screen->size().width() / screenGdc,
-        screen->size().height() / screenGdc
-    );
+namespace {
+    constexpr Size getScreenAspectRatio(const QScreen* screen) {
+        const auto screenGdc = std::gcd(screen->size().width(), screen->size().height());
+        return Size(
+            screen->size().width() / screenGdc,
+            screen->size().height() / screenGdc
+        );
+    }
 }
 
 PreviewManager::PreviewManager(sptr<util::Logger> logger) : logger(std::move(logger)) {}
@@ -32,7 +30,7 @@ void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
         const auto previewFilePath = previewsDirPath / (util::toString(screen) + ".webp");
         const auto previewSize = getScreenAspectRatio(screen) * 20 * static_cast<int>(screen->devicePixelRatio());
 
-        if(fs::exists(previewFilePath)) {
+        if(std::filesystem::exists(previewFilePath)) {
             continue;
         }
 

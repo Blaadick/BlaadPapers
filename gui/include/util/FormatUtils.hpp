@@ -7,9 +7,9 @@
 #include <unordered_set>
 
 namespace util {
-    inline QString getFormatString(const std::unordered_set<std::string>& formats) {
+    inline QString getFormatString(const std::unordered_set<std::string_view>& formats) {
         auto it = formats.begin();
-        QString formatsString = QString::fromStdString('*' + *it);
+        QString formatsString = QString("*%1").arg(*it);
 
         for(auto i = 1; i < formats.size(); ++i) {
             std::advance(it, 1);

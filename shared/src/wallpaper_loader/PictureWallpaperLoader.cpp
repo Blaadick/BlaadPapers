@@ -9,10 +9,8 @@
 
 namespace fs = std::filesystem;
 
-PictureWallpaperLoader::PictureWallpaperLoader(sptr<util::Logger> logger) : WallpaperLoader(std::move(logger)) {}
-
-bool PictureWallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const {
-    static constexpr std::array<std::string_view, 11> supportedFormats = {
+PictureWallpaperLoader::PictureWallpaperLoader(sptr<util::Logger> logger) : WallpaperLoader(
+    {
         ".png", ".apng",
         ".jpeg", ".jpg",
         ".webp",
@@ -20,10 +18,9 @@ bool PictureWallpaperLoader::isSupported(const std::filesystem::path& wallpaperF
         ".avif",
         ".tiff", ".tif",
         ".heic", ".heif"
-    };
-
-    return std::ranges::contains(supportedFormats, wallpaperFilePath.extension());
-}
+    },
+    std::move(logger)
+) {}
 
 uptr<Wallpaper> PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();

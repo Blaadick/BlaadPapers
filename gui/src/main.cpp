@@ -11,7 +11,6 @@
 #include "Config.hpp"
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
-#include "../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
 #include "logger/GuiLogger.hpp"
@@ -21,6 +20,9 @@
 #include "model/WallpapersModel.hpp"
 #include "preview/generator/PicturePreviewGenerator.hpp"
 #include "preview/generator/VideoPreviewGenerator.hpp"
+#include "wallpaper_loader/PictureWallpaperLoader.hpp"
+#include "wallpaper_loader/VideoWallpaperLoader.hpp"
+#include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
@@ -37,6 +39,7 @@ int main(int argc, char** argv) {
     PostSetScript::createIfNotExists();
 
     auto clipboardModel = std::make_shared<ClipboardModel>();
+
     auto statusModel = std::make_shared<StatusModel>();
     auto logger = std::make_shared<util::GuiLogger>(statusModel);
     auto config = std::make_shared<Config>(logger);
@@ -44,6 +47,8 @@ int main(int argc, char** argv) {
 
     auto wallpapers = std::make_shared<Wallpapers>();
     auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpapers, config, logger);
+    wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(logger));
+    wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(logger));
 
     auto previewManager = std::make_shared<PreviewManager>(logger);
     previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());
@@ -52,6 +57,7 @@ int main(int argc, char** argv) {
     auto configModel = std::make_shared<ConfigModel>(config);
     auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, previewManager, logger);
     wallpapersModel->loadWallpapers();
+    logger->logInfo("Loaded " + std::to_string(wallpapers->count()) + " wallpapers");
 
     #ifdef __linux__
     if(!getenv("QT_QUICK_CONTROLS_STYLE")) {

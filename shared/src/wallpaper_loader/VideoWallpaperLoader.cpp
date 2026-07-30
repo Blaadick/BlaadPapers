@@ -9,17 +9,14 @@
 
 namespace fs = std::filesystem;
 
-VideoWallpaperLoader::VideoWallpaperLoader(sptr<util::Logger> logger) : WallpaperLoader(std::move(logger)) {}
-
-bool VideoWallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const {
-    static constexpr std::array<std::string_view, 3> supportedFormats = {
+VideoWallpaperLoader::VideoWallpaperLoader(sptr<util::Logger> logger) : WallpaperLoader(
+    {
         ".mp4",
         ".webm",
         ".heis"
-    };
-
-    return std::ranges::contains(supportedFormats, wallpaperFilePath.extension());
-}
+    },
+    std::move(logger)
+) {}
 
 uptr<Wallpaper> VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();

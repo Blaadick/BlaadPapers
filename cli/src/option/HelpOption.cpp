@@ -9,8 +9,9 @@
 
 HelpOption::HelpOption(
     const std::unordered_map<std::string, uptr<Option>>& options,
+    sptr<WallpaperLoaderManager> wallpaperLoader,
     sptr<util::Logger> logger
-) : Option("Shows all program options and flags"), options(options), logger(std::move(logger)) {}
+) : Option("Shows all program options and flags"), options(options), wallpaperLoader(std::move(wallpaperLoader)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> HelpOption::getUsageStrings() const {
     return {"[flags...]"};
@@ -41,11 +42,13 @@ int HelpOption::execute(const std::vector<std::string_view>&, const std::unorder
         }
         yyjson_mut_obj_add_val(doc, root, "options", optionsData);
 
-        // const auto supportedFormatsData = yyjson_mut_arr(doc);
-        // for(const auto& extension : std::views::concat(util::supportedPictureFormats, util::supportedVideoFormats)) {
-        //     yyjson_mut_arr_add_str(doc, supportedFormatsData, extension.c_str());
-        // }
-        // yyjson_mut_obj_add_val(doc, root, "supported_formats", supportedFormatsData);
+        const auto supportedFormatsData = yyjson_mut_arr(doc);
+        for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
+            for(const auto& extension : loader->getSupportedFormats()) {
+                yyjson_mut_arr_add_str(doc, supportedFormatsData, extension.data());
+            }
+        }
+        yyjson_mut_obj_add_val(doc, root, "supported_formats", supportedFormatsData);
 
         yyjson_mut_doc_set_root(doc, root);
 

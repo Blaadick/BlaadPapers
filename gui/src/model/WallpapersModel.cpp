@@ -3,6 +3,7 @@
 
 #include "model/WallpapersModel.hpp"
 
+#include <iostream>
 #include <QFileDialog>
 #include <QtConcurrentMap>
 #include <QThreadPool>
@@ -27,8 +28,6 @@ void WallpapersModel::loadWallpapers() {
     wallpapers->sortByName();
     endResetModel();
 
-    logger->logInfo("Loaded " + std::to_string(wallpapers->count()) + " wallpapers");
-
     QtConcurrent::map(
         *wallpapers,
         [this](const uptr<Wallpaper>& wallpaper) {
@@ -43,32 +42,26 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
         stdPaths.emplace_back(qStringPath.toStdString());
     }
 
-    beginResetModel();
     wallpaperLoader->addWallpapers(stdPaths, destinationDirPath.toStdString());
-    wallpapers->sortByName();
-    endResetModel();
 
-    QtConcurrent::map(
-        *wallpapers,
-        [this](const uptr<Wallpaper>& wallpaper) {
-            previewManager->createAndSavePreviews(*wallpaper);
-        }
-    );
+    loadWallpapers();
 }
 
 void WallpapersModel::addWallpapers() {
-    // const auto supportedPictureFormatsString = util::getFormatString(util::supportedPictureFormats);
-    // const auto supportedVideoFormatsString = util::getFormatString(util::supportedVideoFormats);
+    std::unordered_set<std::string_view> allSupportedFormats;
+    for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
+        const auto loaderFormats = loader->getSupportedFormats();
+        allSupportedFormats.insert(loaderFormats.begin(), loaderFormats.end());
+    }
 
     QFileDialog fileSelector;
     fileSelector.setFileMode(QFileDialog::ExistingFiles);
-    // fileSelector.setNameFilters(
-    //     {
-    //         "Any Supported (" + supportedPictureFormatsString + ' ' + supportedVideoFormatsString + ')',
-    //         "Picture (" + supportedPictureFormatsString + ')',
-    //         "Video (" + supportedVideoFormatsString + ')'
-    //     }
-    // );
+    fileSelector.setNameFilters(
+        {
+            QString("Supported Files (%1)").arg(util::getFormatString(allSupportedFormats)),
+            QString("Any Files (*)")
+        }
+    );
 
     if(!fileSelector.exec()) {
         return;
