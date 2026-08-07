@@ -34,4 +34,8 @@ namespace util {
 
         return output;
     }
+
+    inline std::string toString(const Size& size) {
+        return std::format("{}", size);
+    }
 }

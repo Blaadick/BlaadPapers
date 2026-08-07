@@ -3,27 +3,30 @@
 
 #include "deeplink_handler/WallhavenHandler.hpp"
 
+#include <fstream>
 #include <iostream>
-
 #include "option/AddOption.hpp"
+#include "util/StringUtils.hpp"
 
 WallhavenHandler::WallhavenHandler(
     sptr<WallpaperLoaderManager> wallpaperLoader,
+    sptr<Config> config,
     sptr<HttpWorker> httpWorker
-) : wallpaperLoader(std::move(wallpaperLoader)), httpWorker(std::move(httpWorker)) {}
+) : wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), httpWorker(std::move(httpWorker)) {}
 
 int WallhavenHandler::handle(const Url& url) const {
     if(url.path.size() != 2 || url.path[0] != "w") {
         return 1;
     }
 
-    auto response = httpWorker->getString("https://wallhaven.cc/api/v1/w/" + url.path[1]);
-    if(!response.has_value()) {
-        std::cout << "Failed to get data";
+    auto requestUrl = "https://wallhaven.cc/api/v1/w/" + url.path[1];
+    auto wallhavenData = httpWorker->requestString(requestUrl);
+    if(!wallhavenData.has_value()) {
+        std::cout << "No wallpaper data";
         return 1;
     }
 
-    auto doc = yyjson_read(response->c_str(), response->size(), YYJSON_READ_NOFLAG);
+    auto doc = yyjson_read(wallhavenData->c_str(), wallhavenData->size(), YYJSON_READ_NOFLAG);
     if(!doc) {
         return 1;
     }
@@ -41,8 +44,10 @@ int WallhavenHandler::handle(const Url& url) const {
         return 1;
     }
 
+    std::string wallpaperId = "wallhaven-" + url.path[1];
     std::string wallpaperFileLink;
     std::string wallpaperSource;
+    Size wallpaperResolution;
 
     auto wallpaperData = yyjson_obj_get(root, "data");
     if(!yyjson_is_obj(wallpaperData)) {
@@ -63,7 +68,28 @@ int WallhavenHandler::handle(const Url& url) const {
         wallpaperSource = unsafe_yyjson_get_str(sourceData);
     }
 
-    std::cout << wallpaperFileLink << std::endl;
-    std::cout << wallpaperSource << std::endl;
+    auto widthData = yyjson_obj_get(wallpaperData, "dimension_x");
+    if(yyjson_is_int(widthData)) {
+        wallpaperResolution.width = unsafe_yyjson_get_int(widthData);
+    }
+
+    auto heightData = yyjson_obj_get(wallpaperData, "dimension_y");
+    if(yyjson_is_int(heightData)) {
+        wallpaperResolution.height = unsafe_yyjson_get_int(heightData);
+    }
+
+    yyjson_doc_free(doc);
+
+    auto wallhavenImage = httpWorker->requestBinary(wallpaperFileLink);
+    auto wallpaperFolder = config->getWallpapersDirPath() / wallpaperId;
+
+    std::filesystem::create_directory(wallpaperFolder);
+
+    std::ofstream wallpaperFile(wallpaperFolder / "wallpaper.jpeg", std::ios::binary);
+    wallpaperFile.write(
+        reinterpret_cast<const char*>(wallhavenImage->data()),
+        wallhavenImage->size()
+    );
+
     return 0;
 }

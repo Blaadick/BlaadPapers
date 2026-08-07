@@ -9,11 +9,12 @@
 
 class WallhavenHandler final : public DeeplinkHandler {
 public:
-    WallhavenHandler(sptr<WallpaperLoaderManager> wallpaperLoader, sptr<HttpWorker> httpWorker);
+    WallhavenHandler(sptr<WallpaperLoaderManager> wallpaperLoader, sptr<Config> config, sptr<HttpWorker> httpWorker);
 
     int handle(const Url& url) const override;
 
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;
+    sptr<Config> config;
     sptr<HttpWorker> httpWorker;
 };

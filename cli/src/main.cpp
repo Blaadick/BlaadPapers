@@ -59,7 +59,7 @@ int main(const int argc, const char** argv) {
     cliExecutor->addOption("version", std::make_unique<VersionOption>(logger), {Flags::json});
     cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpaperRepository));
     cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpaperRepository));
-    cliExecutor->addHandler("wallhaven.cc", std::make_unique<WallhavenHandler>(wallpaperLoader, httpWorker));
+    cliExecutor->addHandler("wallhaven.cc", std::make_unique<WallhavenHandler>(wallpaperLoader, config, httpWorker));
 
     return cliExecutor->execute(argc, argv);
 }

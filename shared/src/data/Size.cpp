@@ -3,26 +3,12 @@
 
 #include "data/Size.hpp"
 
-#include <format>
-
-std::string Size::toString() const {
-    return std::format("{}x{}", width, height);
+Size Size::operator*(const int& number) const {
+    return Size(width * number, height * number);
 }
 
-Size Size::operator*(const Size& right) const {
-    return Size(width * right.width, height * right.height);
-}
-
-Size Size::operator/(const Size& right) const {
-    return Size(width / right.width, height / right.height);
-}
-
-Size Size::operator*(const int& right) const {
-    return Size(width * right, height * right);
-}
-
-Size Size::operator/(const int& right) const {
-    return Size(width / right, height / right);
+std::ostream& operator<<(std::ostream& os, const Size& size) {
+    return os << std::format("{}x{}", size.width, size.height);
 }
 
 yyjson_mut_val* yyjson_mut_size(yyjson_mut_doc* doc, const Size* size) {

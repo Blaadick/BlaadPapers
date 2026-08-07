@@ -18,8 +18,3 @@ qt_add_qml_module(blaadpapers
 
 target_link_libraries(blaadpapers PRIVATE shared Qt6::QuickControls2 Qt6::Widgets Qt6::Concurrent Qt6::Svg)
 target_include_directories(blaadpapers PRIVATE include)
-target_compile_definitions(blaadpapers PRIVATE
-    PROJECT_NAME="${PROJECT_NAME}"
-    PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION}"
-    PROJECT_VERSION="${PROJECT_VERSION}"
-)

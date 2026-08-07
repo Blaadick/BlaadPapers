@@ -5,8 +5,3 @@ add_executable(blaadpaperscli ${SOURCES} ${HEADERS})
 
 target_link_libraries(blaadpaperscli PRIVATE shared)
 target_include_directories(blaadpaperscli PRIVATE include)
-target_compile_definitions(blaadpaperscli PRIVATE
-    PROJECT_NAME="${PROJECT_NAME}"
-    PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION}"
-    PROJECT_VERSION="${PROJECT_VERSION}"
-)

@@ -3,23 +3,27 @@
 
 #pragma once
 
-#include <string>
+#include <format>
 #include <yyjson.h>
 
 struct Size {
     int width = -1;
     int height = -1;
 
-    std::string toString() const;
-
-    Size operator*(const Size& right) const;
-
-    Size operator/(const Size& right) const;
-
-    Size operator*(const int& right) const;
-
-    Size operator/(const int& right) const;
+    Size operator*(const int& numberww) const;
 };
+
+template<>
+struct std::formatter<Size> : std::formatter<std::string> {
+    auto format(const Size& size, std::format_context& ctx) const {
+        return std::formatter<std::string>::format(
+            std::format("{}x{}", size.width, size.height),
+            ctx
+        );
+    }
+};
+
+std::ostream& operator<<(std::ostream& os, const Size& size);
 
 yyjson_mut_val* yyjson_mut_size(yyjson_mut_doc* doc, const Size* size);
 

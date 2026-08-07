@@ -10,6 +10,7 @@
 #include "Config.hpp"
 #include "WallpaperRepository.hpp"
 #include "util/FormatUtils.hpp"
+#include "util/StringUtils.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 namespace fs = std::filesystem;
@@ -20,16 +21,16 @@ WallpapersModel::WallpapersModel(
     sptr<Config> config,
     sptr<PreviewManager> previewManager,
     sptr<util::Logger> logger
-) : wallpaperLoader(std::move(wallpaperLoader)), wallpapers(std::move(wallpapers)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
+) : wallpaperLoader(std::move(wallpaperLoader)), wallpaperRepository(std::move(wallpaperRepository)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
 
 void WallpapersModel::loadWallpapers() {
     beginResetModel();
     wallpaperLoader->loadWallpapers();
-    wallpapers->sortByName();
+    wallpaperRepository->sortByName();
     endResetModel();
 
     QtConcurrent::map(
-        *wallpapers,
+        *wallpaperRepository,
         [this](const uptr<Wallpaper>& wallpaper) {
             previewManager->createAndSavePreviews(*wallpaper);
         }
@@ -86,7 +87,7 @@ void WallpapersModel::addWallpapers(const QStringList& paths) {
 void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
-            if(wallpapers->apply(wallpaperId.toStdString())) {
+            if(wallpaperRepository->apply(wallpaperId.toStdString())) {
                 logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" applied");
             } else {
                 logger->logWarning("Failed to apply wallpaper \"" + wallpaperId.toStdString() + "\"");
@@ -98,7 +99,7 @@ void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
-            if(wallpapers->remove(wallpaperId.toStdString())) {
+            if(wallpaperRepository->remove(wallpaperId.toStdString())) {
                 logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" deleted");
             } else {
                 logger->logWarning("Failed to delete wallpaper \"" + wallpaperId.toStdString() + "\"");
@@ -112,11 +113,11 @@ void WallpapersModel::refreshWallpapers() {
 }
 
 int WallpapersModel::rowCount(const QModelIndex& parent) const {
-    return wallpapers->count();
+    return wallpaperRepository->count();
 }
 
 QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
-    const Wallpaper* wallpaper = wallpapers->get(index.row());
+    const Wallpaper* wallpaper = wallpaperRepository->get(index.row());
 
     QStringList qStringTags;
     qStringTags.reserve(wallpaper->getTags().size());
@@ -128,7 +129,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
         case RootDirRole: return QString::fromStdString(wallpaper->getFilePath().parent_path().string());
-        case ResolutionRole: return QString::fromStdString(wallpaper->getResolution().toString());
+        case ResolutionRole: return QString::fromStdString(util::toString(wallpaper->getResolution()));
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;
         case IsBadRole: return config->isWallpaperBad(*wallpaper);

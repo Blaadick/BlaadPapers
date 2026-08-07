@@ -44,7 +44,7 @@ std::string VideoWallpaper::toString() const {
         id,
         name,
         filePath.string(),
-        resolution.toString(),
+        resolution,
         frameRate,
         source,
         util::join(tags),

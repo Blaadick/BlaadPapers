@@ -37,7 +37,7 @@ std::string PictureWallpaper::toString() const {
         id,
         name,
         filePath.string(),
-        resolution.toString(),
+        resolution,
         source,
         util::join(tags),
         "Picture"

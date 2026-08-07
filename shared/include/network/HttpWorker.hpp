@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 class HttpWorker {
 public:
@@ -12,5 +13,7 @@ public:
 
     ~HttpWorker();
 
-    std::optional<std::string> getString(std::string_view url) const;
+    std::optional<std::string> requestString(std::string_view url) const;
+
+    std::optional<std::vector<std::byte>> requestBinary(std::string_view url) const;
 };
