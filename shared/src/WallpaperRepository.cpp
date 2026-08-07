@@ -1,7 +1,7 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 
 #include <algorithm>
 #include <cstring>
@@ -24,7 +24,7 @@
 namespace fs = std::filesystem;
 namespace rng = std::ranges;
 
-Wallpaper* Wallpapers::get(const int index) const {
+Wallpaper* WallpaperRepository::get(const int index) const {
     if(index >= wallpapers.size()) {
         return nullptr;
     }
@@ -32,7 +32,7 @@ Wallpaper* Wallpapers::get(const int index) const {
     return wallpapers[index].get();
 }
 
-Wallpaper* Wallpapers::get(const std::string_view id) const {
+Wallpaper* WallpaperRepository::get(const std::string_view id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper.get();
@@ -42,7 +42,7 @@ Wallpaper* Wallpapers::get(const std::string_view id) const {
     return nullptr;
 }
 
-Wallpaper* Wallpapers::shuffle(
+Wallpaper* WallpaperRepository::shuffle(
     std::optional<std::vector<std::string>> includeTags,
     std::optional<std::vector<std::string>> excludeTags
 ) const {
@@ -91,11 +91,11 @@ Wallpaper* Wallpapers::shuffle(
     return nullptr;
 }
 
-void Wallpapers::add(uptr<Wallpaper> wallpaper) {
+void WallpaperRepository::add(uptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
-bool Wallpapers::apply(const std::string_view id) const {
+bool WallpaperRepository::apply(const std::string_view id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return apply(*wallpaper);
@@ -105,7 +105,7 @@ bool Wallpapers::apply(const std::string_view id) const {
     return false;
 }
 
-bool Wallpapers::apply(const Wallpaper& wallpaper) const {
+bool WallpaperRepository::apply(const Wallpaper& wallpaper) const {
     #ifdef __linux__
     if(std::strcmp(getenv("XDG_CURRENT_DESKTOP"), "KDE") == 0) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
@@ -164,7 +164,7 @@ bool Wallpapers::apply(const Wallpaper& wallpaper) const {
     #endif
 }
 
-bool Wallpapers::remove(const std::string_view id) {
+bool WallpaperRepository::remove(const std::string_view id) {
     const auto it = std::ranges::find_if(
         wallpapers,
         [&id](const auto& wallpaper) {
@@ -183,7 +183,7 @@ bool Wallpapers::remove(const std::string_view id) {
     return true;
 }
 
-void Wallpapers::sortByName() {
+void WallpaperRepository::sortByName() {
     std::ranges::sort(
         wallpapers,
         [](const uptr<Wallpaper>& w1, const uptr<Wallpaper>& w2) {
@@ -192,23 +192,23 @@ void Wallpapers::sortByName() {
     );
 }
 
-void Wallpapers::clear() {
+void WallpaperRepository::clear() {
     wallpapers.clear();
 }
 
-int Wallpapers::count() const {
+int WallpaperRepository::count() const {
     return static_cast<int>(wallpapers.size());
 }
 
-std::vector<uptr<Wallpaper>>::const_iterator Wallpapers::begin() const {
+std::vector<uptr<Wallpaper>>::const_iterator WallpaperRepository::begin() const {
     return wallpapers.begin();
 }
 
-std::vector<uptr<Wallpaper>>::const_iterator Wallpapers::end() const {
+std::vector<uptr<Wallpaper>>::const_iterator WallpaperRepository::end() const {
     return wallpapers.end();
 }
 
-Wallpaper* Wallpapers::operator[](const int index) const {
+Wallpaper* WallpaperRepository::operator[](const int index) const {
     if(index >= wallpapers.size()) {
         return nullptr;
     }
@@ -216,7 +216,7 @@ Wallpaper* Wallpapers::operator[](const int index) const {
     return wallpapers[index].get();
 }
 
-Wallpaper* Wallpapers::operator[](const std::string_view id) const {
+Wallpaper* WallpaperRepository::operator[](const std::string_view id) const {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper.get();

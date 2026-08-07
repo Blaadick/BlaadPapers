@@ -4,9 +4,9 @@
 #include "option/RemoveOption.hpp"
 
 RemoveOption::RemoveOption(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<util::Logger> logger
-) : Option("Deletes the wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : Option("Deletes the wallpaper"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> RemoveOption::getUsageStrings() const {
     return {"<wallpaper_id>"};
@@ -18,7 +18,7 @@ int RemoveOption::execute(const std::vector<std::string_view>& arguments, const 
         return 1;
     }
 
-    if(wallpapers->remove(arguments[0])) {
+    if(wallpaperRepository->remove(arguments[0])) {
         logger->logInfo(std::format("Wallpaper \"{}\" deleted", arguments[0]));
         return 0;
     }

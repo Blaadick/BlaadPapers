@@ -7,7 +7,7 @@
 #include "data/Wallpaper.hpp"
 #include "util/Pointers.hpp"
 
-class Wallpapers {
+class WallpaperRepository {
 public:
     [[nodiscard]]
     Wallpaper* get(int index) const;

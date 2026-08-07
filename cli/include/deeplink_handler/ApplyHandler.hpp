@@ -4,14 +4,14 @@
 #pragma once
 
 #include "DeeplinkHandler.hpp"
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 
 class ApplyHandler final : public DeeplinkHandler {
 public:
-    explicit ApplyHandler(sptr<Wallpapers> wallpapers);
+    explicit ApplyHandler(sptr<WallpaperRepository> wallpaperRepository);
 
     int handle(const Url& url) const override;
 
 private:
-    sptr<Wallpapers> wallpapers;
+    sptr<WallpaperRepository> wallpaperRepository;
 };

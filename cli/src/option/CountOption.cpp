@@ -4,15 +4,15 @@
 #include "option/CountOption.hpp"
 
 CountOption::CountOption(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<util::Logger> logger
-) : Option("Shows the wallpaper count"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : Option("Shows the wallpaper count"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> CountOption::getUsageStrings() const {
     return {""};
 }
 
 int CountOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
-    logger->logInfo(std::to_string(wallpapers->count()));
+    logger->logInfo(std::to_string(wallpaperRepository->count()));
     return 0;
 }

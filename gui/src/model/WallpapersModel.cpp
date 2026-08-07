@@ -8,7 +8,7 @@
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include "Config.hpp"
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 #include "util/FormatUtils.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
@@ -16,7 +16,7 @@ namespace fs = std::filesystem;
 
 WallpapersModel::WallpapersModel(
     sptr<WallpaperLoaderManager> wallpaperLoader,
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<Config> config,
     sptr<PreviewManager> previewManager,
     sptr<util::Logger> logger

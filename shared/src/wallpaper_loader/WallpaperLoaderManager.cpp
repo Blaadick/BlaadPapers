@@ -7,20 +7,20 @@
 #include <fstream>
 #include <ranges>
 #include "Config.hpp"
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 #include "util/ImageUtils.hpp"
 #include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;
 
 WallpaperLoaderManager::WallpaperLoaderManager(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<Config> config,
     sptr<util::Logger> logger
-) : wallpapers(std::move(wallpapers)), config(std::move(config)), logger(std::move(logger)) {}
+) : wallpaperRepository(std::move(wallpaperRepository)), config(std::move(config)), logger(std::move(logger)) {}
 
 void WallpaperLoaderManager::loadWallpapers() {
-    wallpapers->clear();
+    wallpaperRepository->clear();
 
     if(!util::createDirIfNotExists(config->getWallpapersDirPath())) {
         logger->logError("Failed to create directory \"" + config->getWallpapersDirPath().string() + "\"");
@@ -46,7 +46,7 @@ void WallpaperLoaderManager::loadWallpapers() {
                         break;
                     }
 
-                    wallpapers->add(std::move(loadedWallpaper));
+                    wallpaperRepository->add(std::move(loadedWallpaper));
                 }
             }
         }

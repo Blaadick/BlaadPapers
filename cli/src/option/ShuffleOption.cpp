@@ -9,9 +9,9 @@
 namespace rng = std::ranges;
 
 ShuffleOption::ShuffleOption(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<util::Logger> logger
-) : Option("Sets the random wallpaper"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : Option("Sets the random wallpaper"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> ShuffleOption::getUsageStrings() const {
     return {
@@ -21,7 +21,7 @@ std::vector<std::string_view> ShuffleOption::getUsageStrings() const {
 }
 
 int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
-    if(wallpapers->count() == 0) {
+    if(wallpaperRepository->count() == 0) {
         logger->logInfo("No Wallpapers");
         return 0;
     }
@@ -30,13 +30,13 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const
     std::vector<std::string> excludeTags;
 
     if(!arguments.empty()) {
-        const auto doc = yyjson_read(arguments[0].data(), arguments.size(), YYJSON_READ_NOFLAG);
+        auto doc = yyjson_read(arguments[0].data(), arguments[0].size(), YYJSON_READ_NOFLAG);
         if(!doc) {
             logger->logError("Failed to parse include tags");
             return 2;
         }
 
-        const auto root = yyjson_doc_get_root(doc);
+        auto root = yyjson_doc_get_root(doc);
         if(!yyjson_is_arr(root)) {
             logger->logError("Failed to parse include tags");
             yyjson_doc_free(doc);
@@ -53,13 +53,13 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const
     }
 
     if(arguments.size() >= 2) {
-        const auto doc = yyjson_read(arguments[1].data(), arguments.size(), YYJSON_READ_NOFLAG);
+        auto doc = yyjson_read(arguments[1].data(), arguments[1].size(), YYJSON_READ_NOFLAG);
         if(!doc) {
             logger->logError("Failed to parse exclude tags");
             return 2;
         }
 
-        const auto root = yyjson_doc_get_root(doc);
+        auto root = yyjson_doc_get_root(doc);
         if(!yyjson_is_arr(root)) {
             logger->logError("Failed to parse exclude tags");
             yyjson_doc_free(doc);
@@ -75,7 +75,7 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const
         }
     }
 
-    const auto wallpaperToApply = wallpapers->shuffle(
+    const auto wallpaperToApply = wallpaperRepository->shuffle(
         includeTags.empty() ? std::nullopt : std::optional(includeTags),
         excludeTags.empty() ? std::nullopt : std::optional(excludeTags)
     );
@@ -85,7 +85,7 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const
         return 1;
     }
 
-    if(wallpapers->apply(wallpaperToApply->getId())) {
+    if(wallpaperRepository->apply(wallpaperToApply->getId())) {
         logger->logInfo("Wallpaper \"" + wallpaperToApply->getId() + "\" applied");
         return 0;
     }

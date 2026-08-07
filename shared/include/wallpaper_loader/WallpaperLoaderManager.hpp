@@ -7,13 +7,13 @@
 #include <typeindex>
 #include <unordered_map>
 #include "Config.hpp"
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 #include "util/Pointers.hpp"
 #include "wallpaper_loader/WallpaperLoader.hpp"
 
 class WallpaperLoaderManager {
 public:
-    WallpaperLoaderManager(sptr<Wallpapers> wallpapers, sptr<Config> config, sptr<util::Logger> logger);
+    WallpaperLoaderManager(sptr<WallpaperRepository> wallpaperRepository, sptr<Config> config, sptr<util::Logger> logger);
 
     void loadWallpapers();
 
@@ -37,7 +37,7 @@ public:
 private:
     std::unordered_map<std::type_index, uptr<WallpaperLoader>> wallpaperLoaders;
 
-    sptr<Wallpapers> wallpapers;
+    sptr<WallpaperRepository> wallpaperRepository;
     sptr<Config> config;
     sptr<util::Logger> logger;
 };

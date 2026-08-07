@@ -3,7 +3,7 @@
 
 #include "deeplink_handler/ApplyHandler.hpp"
 
-ApplyHandler::ApplyHandler(sptr<Wallpapers> wallpapers) : wallpapers(std::move(wallpapers)) {}
+ApplyHandler::ApplyHandler(sptr<WallpaperRepository> wallpaperRepository) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
 int ApplyHandler::handle(const Url& url) const {
     if(url.path.empty()) {
@@ -14,7 +14,7 @@ int ApplyHandler::handle(const Url& url) const {
         return 1;
     }
 
-    if(wallpapers->apply(url.path[0])) {
+    if(wallpaperRepository->apply(url.path[0])) {
         return 0;
     }
 

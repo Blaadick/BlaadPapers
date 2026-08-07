@@ -6,9 +6,9 @@
 #include "flag/Flags.hpp"
 
 InfoOption::InfoOption(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<util::Logger> logger
-) : Option("Shows wallpaper information"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : Option("Shows wallpaper information"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> InfoOption::getUsageStrings() const {
     return {"<wallpaper_id> [flags...]"};
@@ -20,7 +20,7 @@ int InfoOption::execute(const std::vector<std::string_view>& arguments, const st
         return 1;
     }
 
-    const auto wallpaper = wallpapers->get(arguments[0]);
+    const auto wallpaper = wallpaperRepository->get(arguments[0]);
     if(!wallpaper) {
         logger->logError(std::format("Wallpaper \"{}\" not found", arguments[0]));
         return 2;

@@ -3,13 +3,13 @@
 
 #pragma once
 
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
 
 class ApplyOption final : public Option {
 public:
-    ApplyOption(sptr<Wallpapers> wallpapers, sptr<util::Logger> logger);
+    ApplyOption(sptr<WallpaperRepository> wallpaperRepository, sptr<util::Logger> logger);
 
     [[nodiscard]]
     std::vector<std::string_view> getUsageStrings() const override;
@@ -18,6 +18,6 @@ public:
     int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
 
 private:
-    sptr<Wallpapers> wallpapers;
+    sptr<WallpaperRepository> wallpaperRepository;
     sptr<util::Logger> logger;
 };

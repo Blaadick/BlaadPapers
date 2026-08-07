@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     auto config = std::make_shared<Config>(logger);
     config->load();
 
-    auto wallpapers = std::make_shared<Wallpapers>();
+    auto wallpapers = std::make_shared<WallpaperRepository>();
     auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpapers, config, logger);
     wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(logger));
     wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(logger));

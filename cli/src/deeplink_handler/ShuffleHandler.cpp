@@ -5,10 +5,10 @@
 
 #include <ranges>
 
-ShuffleHandler::ShuffleHandler(sptr<Wallpapers> wallpapers) : wallpapers(std::move(wallpapers)) {}
+ShuffleHandler::ShuffleHandler(sptr<WallpaperRepository> wallpaperRepository) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
 int ShuffleHandler::handle(const Url& url) const {
-    if(wallpapers->count() < 1) {
+    if(wallpaperRepository->count() < 1) {
         return 0;
     }
 
@@ -33,7 +33,7 @@ int ShuffleHandler::handle(const Url& url) const {
         }
     }
 
-    const auto wallpaperToApply = wallpapers->shuffle(
+    const auto wallpaperToApply = wallpaperRepository->shuffle(
         includeTags.empty() ? std::nullopt : std::optional(includeTags),
         excludeTags.empty() ? std::nullopt : std::optional(excludeTags)
     );
@@ -42,7 +42,7 @@ int ShuffleHandler::handle(const Url& url) const {
         return 1;
     }
 
-    if(wallpapers->apply(wallpaperToApply->getId())) {
+    if(wallpaperRepository->apply(wallpaperToApply->getId())) {
         return 0;
     }
 

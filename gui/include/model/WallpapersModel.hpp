@@ -6,7 +6,7 @@
 #include <QAbstractListModel>
 #include <QVariant>
 #include "../../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
-#include "Wallpapers.hpp"
+#include "WallpaperRepository.hpp"
 #include "logger/Logger.hpp"
 #include "preview/PreviewManager.hpp"
 
@@ -27,7 +27,7 @@ public:
 
     WallpapersModel(
         sptr<WallpaperLoaderManager> wallpaperLoader,
-        sptr<Wallpapers> wallpapers,
+        sptr<WallpaperRepository> wallpaperRepository,
         sptr<Config> config,
         sptr<PreviewManager> previewManager,
         sptr<util::Logger> logger
@@ -58,7 +58,7 @@ public:
 
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;
-    sptr<Wallpapers> wallpapers;
+    sptr<WallpaperRepository> wallpaperRepository;
     sptr<Config> config;
     sptr<PreviewManager> previewManager;
     sptr<util::Logger> logger;

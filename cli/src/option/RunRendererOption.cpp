@@ -17,9 +17,9 @@
 namespace fs = std::filesystem;
 
 RunRendererOption::RunRendererOption(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<util::Logger> logger
-) : Option("Starts the renderer daemon"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : Option("Starts the renderer daemon"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> RunRendererOption::getUsageStrings() const {
     return {
@@ -51,7 +51,7 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
         std::ifstream currentWallpaperIdFile(util::currentWallpaperIdPath());
         std::getline(currentWallpaperIdFile, currentWallpaperId);
 
-        const auto currentWallpaper = wallpapers->get(currentWallpaperId);
+        const auto currentWallpaper = wallpaperRepository->get(currentWallpaperId);
         if(currentWallpaper) {
             currentWallpaperPath = currentWallpaper->getFilePath().string();
         }

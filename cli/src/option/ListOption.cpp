@@ -6,16 +6,16 @@
 #include "flag/Flags.hpp"
 
 ListOption::ListOption(
-    sptr<Wallpapers> wallpapers,
+    sptr<WallpaperRepository> wallpaperRepository,
     sptr<util::Logger> logger
-) : Option("Shows list of all available wallpapers"), wallpapers(std::move(wallpapers)), logger(std::move(logger)) {}
+) : Option("Shows list of all available wallpapers"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> ListOption::getUsageStrings() const {
     return {"[flags...]"};
 }
 
 int ListOption::execute(const std::vector<std::string_view>&, const std::unordered_set<sptr<Flag>>& flags) {
-    if(wallpapers->count() == 0) {
+    if(wallpaperRepository->count() == 0) {
         logger->logInfo("No wallpapers");
         return 0;
     }
@@ -25,7 +25,7 @@ int ListOption::execute(const std::vector<std::string_view>&, const std::unorder
         const auto doc = yyjson_mut_doc_new(nullptr);
         const auto root = yyjson_mut_arr(doc);
 
-        for(const auto& wallpaper : *wallpapers) {
+        for(const auto& wallpaper : *wallpaperRepository) {
             const auto wallpaperData = wallpaper->yyjson_mut_wallpaper_obj(doc);
             yyjson_mut_arr_add_val(root, wallpaperData);
         }
@@ -35,7 +35,7 @@ int ListOption::execute(const std::vector<std::string_view>&, const std::unorder
         output = yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr);
         yyjson_mut_doc_free(doc);
     } else {
-        for(const auto& wallpaper : *wallpapers) {
+        for(const auto& wallpaper : *wallpaperRepository) {
             output += wallpaper->toString() + '\n';
         }
 
