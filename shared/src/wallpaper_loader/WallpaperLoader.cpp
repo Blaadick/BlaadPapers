@@ -57,8 +57,7 @@ std::optional<WallpaperData> WallpaperLoader::loadWallpaperData(const std::files
     if(yyjson_is_arr(wallpaperTagsData)) {
         size_t i, max;
         yyjson_val* item;
-        yyjson_arr_foreach(wallpaperTagsData, i, max, item)
-        {
+        yyjson_arr_foreach(wallpaperTagsData, i, max, item) {
             if(yyjson_is_str(item)) {
                 wallpaperData.tags.emplace_back(yyjson_get_str(item));
             }

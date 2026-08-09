@@ -6,7 +6,7 @@
 #include <format>
 #include <fstream>
 #include <ranges>
-#include "Config.hpp"
+#include "config/Config.hpp"
 #include "WallpaperRepository.hpp"
 #include "util/ImageUtils.hpp"
 #include "util/PathUtils.hpp"

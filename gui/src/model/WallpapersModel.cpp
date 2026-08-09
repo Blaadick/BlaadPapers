@@ -7,8 +7,8 @@
 #include <QFileDialog>
 #include <QtConcurrentMap>
 #include <QThreadPool>
-#include "Config.hpp"
 #include "WallpaperRepository.hpp"
+#include "config/Config.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/StringUtils.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"

@@ -5,10 +5,10 @@
 
 #include <QAbstractListModel>
 #include <QVariant>
-#include "../../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
 #include "WallpaperRepository.hpp"
 #include "logger/Logger.hpp"
 #include "preview/PreviewManager.hpp"
+#include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 class WallpapersModel : public QAbstractListModel {
     Q_OBJECT

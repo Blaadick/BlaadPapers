@@ -3,7 +3,7 @@
 
 #include "data/Wallpaper.hpp"
 
-#include "Config.hpp"
+#include "config/Config.hpp"
 
 const std::string& Wallpaper::getId() const {
     return id;

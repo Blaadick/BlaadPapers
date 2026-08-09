@@ -20,6 +20,10 @@ int WallhavenHandler::handle(const Url& url) const {
     }
 
     auto requestUrl = "https://wallhaven.cc/api/v1/w/" + url.path[1];
+    if(config->getWallhavenApiKey().has_value()) {
+        requestUrl += "?apikey=" + config->getWallhavenApiKey().value();
+    }
+
     auto wallhavenData = httpWorker->requestString(requestUrl);
     if(!wallhavenData.has_value()) {
         std::cout << "No wallpaper data";

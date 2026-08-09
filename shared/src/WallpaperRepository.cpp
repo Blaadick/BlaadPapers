@@ -9,8 +9,8 @@
 #include <fstream>
 #include <random>
 #include <yyjson.h>
-#include "Config.hpp"
 #include "PostSetScript.hpp"
+#include "config/Config.hpp"
 #include "data/PictureWallpaper.hpp"
 #include "util/PathUtils.hpp"
 #ifdef __linux__

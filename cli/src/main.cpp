@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "CliExecutor.hpp"
-#include "Config.hpp"
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
 #include "WallpaperRepository.hpp"
+#include "config/Config.hpp"
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
 #include "deeplink_handler/ApplyHandler.hpp"

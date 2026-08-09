@@ -8,9 +8,9 @@
 #include <QQuickWindow>
 #include <QThreadPool>
 #include <vips/vips8>
-#include "Config.hpp"
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
+#include "config/Config.hpp"
 #include "data/PictureWallpaper.hpp"
 #include "data/VideoWallpaper.hpp"
 #include "logger/GuiLogger.hpp"

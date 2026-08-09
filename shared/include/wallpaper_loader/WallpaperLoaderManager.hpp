@@ -6,8 +6,8 @@
 #include <filesystem>
 #include <typeindex>
 #include <unordered_map>
-#include "Config.hpp"
 #include "WallpaperRepository.hpp"
+#include "config/Config.hpp"
 #include "util/Pointers.hpp"
 #include "wallpaper_loader/WallpaperLoader.hpp"
 

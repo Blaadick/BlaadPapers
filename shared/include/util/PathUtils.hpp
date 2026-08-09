@@ -26,8 +26,16 @@ namespace util {
         #endif
     }
 
-    inline std::filesystem::path configFilePath() {
+    inline std::filesystem::path generalConfigFilePath() {
         return configDirPath().append("config.json");
+    }
+
+    inline std::filesystem::path guiConfigFilePath() {
+        return configDirPath().append("gui.json");
+    }
+
+    inline std::filesystem::path apiConfigFilePath() {
+        return configDirPath().append("api.json");
     }
 
     inline std::filesystem::path localDataDirPath() {

@@ -3,14 +3,14 @@
 
 #include "model/ConfigModel.hpp"
 
-#include "Config.hpp"
+#include "config/Config.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/PathUtils.hpp"
 
 ConfigModel::ConfigModel(sptr<Config> config) : config(std::move(config)) {}
 
 QString ConfigModel::getConfigFilePath() {
-    return QString::fromStdString(util::configFilePath().string());
+    return QString::fromStdString(util::generalConfigFilePath().string());
 }
 
 bool ConfigModel::getStatusBarVisible() {

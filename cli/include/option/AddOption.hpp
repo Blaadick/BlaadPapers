@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "../../../shared/include/wallpaper_loader/WallpaperLoaderManager.hpp"
 #include "logger/Logger.hpp"
 #include "option/Option.hpp"
+#include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 class AddOption final : public Option {
 public:

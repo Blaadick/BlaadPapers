@@ -4,8 +4,7 @@
 #pragma once
 
 #include <QObject>
-
-#include "Config.hpp"
+#include "config/Config.hpp"
 
 class ConfigModel : public QObject {
     Q_OBJECT
