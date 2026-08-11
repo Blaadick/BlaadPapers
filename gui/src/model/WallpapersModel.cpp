@@ -128,8 +128,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     switch(role) {
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
-        case RootDirRole: return QString::fromStdString(wallpaper->getFilePath().parent_path().string());
-        case ResolutionRole: return QString::fromStdString(util::toString(wallpaper->getResolution()));
+        case RootDirRole: return QString::fromStdString(wallpaper->getDirPath());
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;
         case IsBadRole: return config->isWallpaperBad(*wallpaper);
@@ -142,7 +141,6 @@ QHash<int, QByteArray> WallpapersModel::roleNames() const {
         {IdRole, "wallpaperId"},
         {NameRole, "wallpaperName"},
         {RootDirRole, "wallpaperRootDir"},
-        {ResolutionRole, "wallpaperResolution"},
         {SourceRole, "wallpaperSource"},
         {TagsRole, "wallpaperTags"},
         {IsBadRole, "isWallpaperBad"},

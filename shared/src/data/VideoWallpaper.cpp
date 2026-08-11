@@ -27,6 +27,10 @@ VideoWallpaper::VideoWallpaper(
     this->tags = std::move(tags);
 }
 
+const Size& VideoWallpaper::getResolution() const {
+    return resolution;
+}
+
 int VideoWallpaper::getFrameRate() const {
     return frameRate;
 }

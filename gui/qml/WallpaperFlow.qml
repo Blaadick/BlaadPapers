@@ -1,5 +1,7 @@
-// Copyright (C) 2025-2026 Blaadick
-// SPDX-License-Identifier: GPL-3.0-only
+/*
+ * Copyright (C) 2025-2026 Blaadick
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
 
 import QtQuick
 import QtQuick.Controls
@@ -68,7 +70,6 @@ Flickable {
                     wid: wallpaperId
                     name: wallpaperName
                     rootDir: wallpaperRootDir
-                    resolution: wallpaperResolution
                     source: wallpaperSource
                     tags: wallpaperTags
                     isBad: isWallpaperBad

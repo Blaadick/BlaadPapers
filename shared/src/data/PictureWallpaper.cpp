@@ -25,6 +25,10 @@ PictureWallpaper::PictureWallpaper(
     this->tags = std::move(tags);
 }
 
+const Size& PictureWallpaper::getResolution() const {
+    return resolution;
+}
+
 std::string PictureWallpaper::toString() const {
     return std::format(
         "{}\n"

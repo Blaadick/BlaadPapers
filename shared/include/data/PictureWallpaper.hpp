@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Wallpaper.hpp"
+#include "data/Size.hpp"
 
 class PictureWallpaper : public Wallpaper {
 public:
@@ -18,8 +19,14 @@ public:
     );
 
     [[nodiscard]]
+    const Size& getResolution() const;
+
+    [[nodiscard]]
     std::string toString() const override;
 
     [[nodiscard]]
     yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const override;
+
+private:
+    Size resolution;
 };

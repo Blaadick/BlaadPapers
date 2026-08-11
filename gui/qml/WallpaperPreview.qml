@@ -1,5 +1,7 @@
-// Copyright (C) 2025-2026 Blaadick
-// SPDX-License-Identifier: GPL-3.0-only
+/*
+ * Copyright (C) 2025-2026 Blaadick
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
 
 import QtCore
 import QtQuick
@@ -19,7 +21,6 @@ Item {
     property string wid
     property string name
     property string rootDir
-    property string resolution
     property string source
     property var tags
     property bool isBad
@@ -59,7 +60,7 @@ Item {
 
     ToolTip {
         id: tooltip
-        text: `${preview.name} (${preview.resolution})\n${preview.tags.join(", ")}${preview.source === "" ? "" : `\n${preview.source}`}`
+        text: `${preview.name}\n${preview.tags.join(", ")}${preview.source === "" ? "" : `\n${preview.source}`}`
     }
 
     Menu {

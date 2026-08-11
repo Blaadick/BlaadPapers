@@ -21,10 +21,6 @@ const std::string& Wallpaper::getName() const {
     return name;
 }
 
-const Size& Wallpaper::getResolution() const {
-    return resolution;
-}
-
 const std::string& Wallpaper::getSource() const {
     return source;
 }

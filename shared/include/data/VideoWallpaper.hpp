@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Wallpaper.hpp"
+#include "data/Size.hpp"
 
 class VideoWallpaper : public Wallpaper {
 public:
@@ -19,6 +20,9 @@ public:
     );
 
     [[nodiscard]]
+    const Size& getResolution() const;
+
+    [[nodiscard]]
     int getFrameRate() const;
 
     [[nodiscard]]
@@ -28,5 +32,6 @@ public:
     yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const override;
 
 protected:
+    Size resolution;
     int frameRate;
 };

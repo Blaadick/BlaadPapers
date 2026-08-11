@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <yyjson.h>
-#include "data/Size.hpp"
 
 class Wallpaper {
 public:
@@ -26,9 +25,6 @@ public:
     const std::string& getName() const;
 
     [[nodiscard]]
-    const Size& getResolution() const;
-
-    [[nodiscard]]
     const std::string& getSource() const;
 
     [[nodiscard]]
@@ -45,7 +41,6 @@ protected:
     std::filesystem::path filePath;
     std::filesystem::path dirPath;
     std::string name;
-    Size resolution;
     std::string source;
     std::vector<std::string> tags;
 };
