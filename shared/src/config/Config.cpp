@@ -16,7 +16,7 @@ void Config::load() {
 }
 
 void Config::loadGeneral() {
-    const auto configFilePath = util::generalConfigFilePath();
+    auto configFilePath = util::generalConfigFilePath();
     if(!std::filesystem::exists(configFilePath)) {
         saveGeneral();
         return;
@@ -56,7 +56,7 @@ void Config::loadGeneral() {
 }
 
 void Config::loadGui() {
-    const auto configFilePath = util::guiConfigFilePath();
+    auto configFilePath = util::guiConfigFilePath();
     if(!std::filesystem::exists(configFilePath)) {
         saveGui();
         return;
@@ -83,7 +83,7 @@ void Config::loadGui() {
 }
 
 void Config::loadApi() {
-    const auto configFilePath = util::apiConfigFilePath();
+    auto configFilePath = util::apiConfigFilePath();
     if(!std::filesystem::exists(configFilePath)) {
         saveApi();
         return;
@@ -120,44 +120,6 @@ void Config::loadApi() {
     }
 
     yyjson_doc_free(doc);
-}
-
-const std::filesystem::path& Config::getWallpapersDirPath() const {
-    return wallpapersDirPath;
-}
-
-const std::vector<std::string>& Config::getBadTags() const {
-    return badTags;
-}
-
-bool Config::isWallpaperBad(const Wallpaper& wallpaper) const {
-    return std::ranges::any_of(
-        badTags,
-        [&wallpaper](const std::string& tag) {
-            return std::ranges::contains(wallpaper.getTags(), tag);
-        }
-    );
-}
-
-const std::optional<std::string>& Config::getWallhavenApiKey() const {
-    return wallhavenApiKey;
-}
-
-const std::optional<std::string>& Config::getDanbooruLogin() const {
-    return danbooruLogin;
-}
-
-const std::optional<std::string>& Config::getDanbooruApiKey() const {
-    return danbooruApiKey;
-}
-
-bool Config::getStatusBarVisible() const {
-    return isStatusBarVisible;
-}
-
-void Config::setStatusBarVisible(const bool newVisibility) {
-    isStatusBarVisible = newVisibility;
-    saveGui();
 }
 
 void Config::save() const {
@@ -234,4 +196,42 @@ void Config::saveApi() const {
     }
 
     yyjson_mut_doc_free(doc);
+}
+
+const std::filesystem::path& Config::getWallpapersDirPath() const {
+    return wallpapersDirPath;
+}
+
+const std::vector<std::string>& Config::getBadTags() const {
+    return badTags;
+}
+
+bool Config::isWallpaperBad(const Wallpaper& wallpaper) const {
+    return std::ranges::any_of(
+        badTags,
+        [&wallpaper](const std::string& tag) {
+            return std::ranges::contains(wallpaper.getTags(), tag);
+        }
+    );
+}
+
+const std::optional<std::string>& Config::getWallhavenApiKey() const {
+    return wallhavenApiKey;
+}
+
+const std::optional<std::string>& Config::getDanbooruLogin() const {
+    return danbooruLogin;
+}
+
+const std::optional<std::string>& Config::getDanbooruApiKey() const {
+    return danbooruApiKey;
+}
+
+bool Config::getStatusBarVisible() const {
+    return isStatusBarVisible;
+}
+
+void Config::setStatusBarVisible(const bool newVisibility) {
+    isStatusBarVisible = newVisibility;
+    saveGui();
 }

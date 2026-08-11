@@ -23,6 +23,14 @@ public:
 
     void loadApi();
 
+    void save() const;
+
+    void saveGeneral() const;
+
+    void saveGui() const;
+
+    void saveApi() const;
+
     [[nodiscard]]
     const std::filesystem::path& getWallpapersDirPath() const;
 
@@ -55,12 +63,4 @@ private:
     std::optional<std::string> danbooruLogin = std::nullopt;
     std::optional<std::string> danbooruApiKey = std::nullopt;
     bool isStatusBarVisible = false;
-
-    void save() const;
-
-    void saveGeneral() const;
-
-    void saveGui() const;
-
-    void saveApi() const;
 };
