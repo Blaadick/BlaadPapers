@@ -7,11 +7,11 @@
 #include <string>
 #include <vector>
 
-class HttpWorker {
+class HttpClient {
 public:
-    HttpWorker();
+    HttpClient();
 
-    ~HttpWorker();
+    ~HttpClient();
 
     std::optional<std::string> requestString(std::string_view url) const;
 

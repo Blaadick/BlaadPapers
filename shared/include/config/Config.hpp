@@ -36,6 +36,9 @@ public:
     const std::optional<std::string>& getWallhavenApiKey() const;
 
     [[nodiscard]]
+    const std::optional<std::string>& getDanbooruLogin() const;
+
+    [[nodiscard]]
     const std::optional<std::string>& getDanbooruApiKey() const;
 
     [[nodiscard]]

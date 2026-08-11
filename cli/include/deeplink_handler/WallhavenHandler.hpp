@@ -4,17 +4,17 @@
 #pragma once
 
 #include "deeplink_handler/DeeplinkHandler.hpp"
-#include "network/HttpWorker.hpp"
+#include "network/HttpClient.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 class WallhavenHandler final : public DeeplinkHandler {
 public:
-    WallhavenHandler(sptr<WallpaperLoaderManager> wallpaperLoader, sptr<Config> config, sptr<HttpWorker> httpWorker);
+    WallhavenHandler(sptr<WallpaperLoaderManager> wallpaperLoader, sptr<Config> config, sptr<HttpClient> httpClient);
 
     int handle(const Url& url) const override;
 
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;
     sptr<Config> config;
-    sptr<HttpWorker> httpWorker;
+    sptr<HttpClient> httpClient;
 };

@@ -13,7 +13,7 @@
 #include "deeplink_handler/WallhavenHandler.hpp"
 #include "flag/Flags.hpp"
 #include "logger/CliLogger.hpp"
-#include "network/HttpWorker.hpp"
+#include "network/HttpClient.hpp"
 #include "option/AddOption.hpp"
 #include "option/ApplyOption.hpp"
 #include "option/CountOption.hpp"
@@ -44,7 +44,7 @@ int main(const int argc, const char** argv) {
     wallpaperLoader->loadWallpapers();
     wallpaperRepository->sortByName();
 
-    auto httpWorker = std::make_shared<HttpWorker>();
+    auto httpClient = std::make_shared<HttpClient>();
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, config, logger));
@@ -59,7 +59,7 @@ int main(const int argc, const char** argv) {
     cliExecutor->addOption("version", std::make_unique<VersionOption>(logger), {Flags::json});
     cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpaperRepository));
     cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpaperRepository));
-    cliExecutor->addHandler("wallhaven.cc", std::make_unique<WallhavenHandler>(wallpaperLoader, config, httpWorker));
+    cliExecutor->addHandler("wallhaven.cc", std::make_unique<WallhavenHandler>(wallpaperLoader, config, httpClient));
 
     return cliExecutor->execute(argc, argv);
 }

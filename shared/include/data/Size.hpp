@@ -10,7 +10,7 @@ struct Size {
     int width = -1;
     int height = -1;
 
-    Size operator*(const int& numberww) const;
+    Size operator*(const int& number) const;
 };
 
 template<>

@@ -143,6 +143,10 @@ const std::optional<std::string>& Config::getWallhavenApiKey() const {
     return wallhavenApiKey;
 }
 
+const std::optional<std::string>& Config::getDanbooruLogin() const {
+    return danbooruLogin;
+}
+
 const std::optional<std::string>& Config::getDanbooruApiKey() const {
     return danbooruApiKey;
 }

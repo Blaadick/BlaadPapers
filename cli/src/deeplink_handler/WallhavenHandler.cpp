@@ -11,8 +11,8 @@
 WallhavenHandler::WallhavenHandler(
     sptr<WallpaperLoaderManager> wallpaperLoader,
     sptr<Config> config,
-    sptr<HttpWorker> httpWorker
-) : wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), httpWorker(std::move(httpWorker)) {}
+    sptr<HttpClient> httpClient
+) : wallpaperLoader(std::move(wallpaperLoader)), config(std::move(config)), httpClient(std::move(httpClient)) {}
 
 int WallhavenHandler::handle(const Url& url) const {
     if(url.path.size() != 2 || url.path[0] != "w") {
@@ -24,7 +24,7 @@ int WallhavenHandler::handle(const Url& url) const {
         requestUrl += "?apikey=" + config->getWallhavenApiKey().value();
     }
 
-    auto wallhavenData = httpWorker->requestString(requestUrl);
+    auto wallhavenData = httpClient->requestString(requestUrl);
     if(!wallhavenData.has_value()) {
         std::cout << "No wallpaper data";
         return 1;
@@ -84,7 +84,7 @@ int WallhavenHandler::handle(const Url& url) const {
 
     yyjson_doc_free(doc);
 
-    auto wallhavenImage = httpWorker->requestBinary(wallpaperFileLink);
+    auto wallhavenImage = httpClient->requestBinary(wallpaperFileLink);
     auto wallpaperFolder = config->getWallpapersDirPath() / wallpaperId;
 
     std::filesystem::create_directory(wallpaperFolder);

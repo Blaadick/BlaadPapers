@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include "network/HttpWorker.hpp"
+#include "network/HttpClient.hpp"
 
 #include <curl/curl.h>
 
@@ -21,15 +21,15 @@ namespace {
     }
 }
 
-HttpWorker::HttpWorker() {
+HttpClient::HttpClient() {
     curl_global_init(CURL_GLOBAL_DEFAULT);
 }
 
-HttpWorker::~HttpWorker() {
+HttpClient::~HttpClient() {
     curl_global_cleanup();
 }
 
-std::optional<std::string> HttpWorker::requestString(const std::string_view url) const {
+std::optional<std::string> HttpClient::requestString(const std::string_view url) const {
     std::string output;
 
     auto curl = curl_easy_init();
@@ -37,11 +37,11 @@ std::optional<std::string> HttpWorker::requestString(const std::string_view url)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToString);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &output);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
-
     auto result = curl_easy_perform(curl);
-    long httpCode = 200;
-    // curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
-    // curl_easy_cleanup(curl);
+
+    long httpCode;
+    curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
+    curl_easy_cleanup(curl);
 
     if(result != CURLE_OK || httpCode != 200) {
         return std::nullopt;
@@ -50,7 +50,7 @@ std::optional<std::string> HttpWorker::requestString(const std::string_view url)
     return output;
 }
 
-std::optional<std::vector<std::byte>> HttpWorker::requestBinary(const std::string_view url) const {
+std::optional<std::vector<std::byte>> HttpClient::requestBinary(const std::string_view url) const {
     std::vector<std::byte> output;
 
     auto curl = curl_easy_init();
@@ -58,11 +58,11 @@ std::optional<std::vector<std::byte>> HttpWorker::requestBinary(const std::strin
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToBytes);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &output);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
-
     auto result = curl_easy_perform(curl);
-    long httpCode = 200;
-    // curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
-    // curl_easy_cleanup(curl);
+
+    long httpCode;
+    curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
+    curl_easy_cleanup(curl);
 
     if(result != CURLE_OK || httpCode != 200) {
         return std::nullopt;
