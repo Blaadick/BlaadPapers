@@ -44,8 +44,8 @@ int HelpOption::execute(const std::vector<std::string_view>&, const std::unorder
 
         const auto supportedFormatsData = yyjson_mut_arr(doc);
         for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
-            for(const auto& extension : loader->getSupportedFormats()) {
-                yyjson_mut_arr_add_str(doc, supportedFormatsData, extension.data());
+            for(const auto& extension : loader->getSupportedFileTypes()) {
+                yyjson_mut_arr_add_str(doc, supportedFormatsData, extension->mime);
             }
         }
         yyjson_mut_obj_add_val(doc, root, "supported_formats", supportedFormatsData);

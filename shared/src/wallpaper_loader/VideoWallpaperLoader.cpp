@@ -10,11 +10,7 @@
 namespace fs = std::filesystem;
 
 VideoWallpaperLoader::VideoWallpaperLoader(sptr<util::Logger> logger) : WallpaperLoader(
-    {
-        ".mp4",
-        ".webm",
-        ".heis"
-    },
+    {&file::mp4, &file::webm, &file::mkv},
     std::move(logger)
 ) {}
 

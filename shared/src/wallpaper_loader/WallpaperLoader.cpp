@@ -8,16 +8,21 @@
 #include <unordered_set>
 
 WallpaperLoader::WallpaperLoader(
-    std::unordered_set<std::string_view> supportedFormats,
+    std::unordered_set<const file::FileType*> supportedFileTypes,
     sptr<util::Logger> logger
-) : supportedFormats(std::move(supportedFormats)), logger(std::move(logger)) {}
+) : supportedFileTypes(std::move(supportedFileTypes)), logger(std::move(logger)) {}
 
-const std::unordered_set<std::string_view>& WallpaperLoader::getSupportedFormats() const {
-    return supportedFormats;
+const std::unordered_set<const file::FileType*>& WallpaperLoader::getSupportedFileTypes() const {
+    return supportedFileTypes;
 }
 
 bool WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const {
-    return supportedFormats.contains(wallpaperFilePath.extension().string());
+    auto fileType = file::getTypeFromFile(wallpaperFilePath);
+    if(!fileType.has_value()) {
+        return false;
+    }
+
+    return supportedFileTypes.contains(&fileType.value());
 }
 
 std::optional<WallpaperData> WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const {

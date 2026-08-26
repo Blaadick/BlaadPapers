@@ -10,15 +10,7 @@
 namespace fs = std::filesystem;
 
 PictureWallpaperLoader::PictureWallpaperLoader(sptr<util::Logger> logger) : WallpaperLoader(
-    {
-        ".png", ".apng",
-        ".jpeg", ".jpg",
-        ".webp",
-        ".bmp",
-        ".avif",
-        ".tiff", ".tif",
-        ".heic", ".heif"
-    },
+    {&file::png, &file::jpeg, &file::svg, &file::webp, &file::bmp, &file::avif, &file::tiff, &file::heif},
     std::move(logger)
 ) {}
 

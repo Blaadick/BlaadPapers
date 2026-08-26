@@ -51,7 +51,7 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
 void WallpapersModel::addWallpapers() {
     std::unordered_set<std::string_view> allSupportedFormats;
     for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
-        const auto loaderFormats = loader->getSupportedFormats();
+        const auto loaderFormats = loader->getSupportedFileTypes();
         allSupportedFormats.insert(loaderFormats.begin(), loaderFormats.end());
     }
 

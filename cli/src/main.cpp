@@ -44,6 +44,8 @@ int main(const int argc, const char** argv) {
     wallpaperLoader->loadWallpapers();
     wallpaperRepository->sortByName();
 
+    auto a = file::getTypeFromMime("dawd");
+
     auto httpClient = std::make_shared<HttpClient>();
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
