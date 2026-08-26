@@ -3,9 +3,9 @@
 
 #pragma once
 
+#include <filesystem>
 #include <optional>
 #include <string>
-#include <vector>
 
 class HttpClient {
 public:
@@ -13,7 +13,18 @@ public:
 
     ~HttpClient();
 
+    [[nodiscard]]
     std::optional<std::string> requestString(std::string_view url) const;
 
-    std::optional<std::vector<std::byte>> requestBinary(std::string_view url) const;
+    [[nodiscard]]
+    std::optional<std::string> requestContentType(std::string_view url) const;
+
+    /**
+     * @return DownloadedFilePath
+     */
+    std::optional<std::filesystem::path> downloadFile(
+        std::string_view url,
+        const std::filesystem::path& downloadDir,
+        const std::string& fileName
+    ) const;
 };

@@ -3,21 +3,27 @@
 
 #include "network/HttpClient.hpp"
 
+#include <fstream>
 #include <curl/curl.h>
+#include "util/PathUtils.hpp"
+
+namespace fs = std::filesystem;
 
 namespace {
-    size_t writeToString(const char* ptr, const size_t size, const size_t nmemb, void* userdata) {
+    size_t writeToString(const char* data, const size_t size, const size_t count, void* userdata) {
         auto* buf = static_cast<std::string*>(userdata);
-        buf->append(ptr, size * nmemb);
+        buf->append(data, size * count);
 
-        return size * nmemb;
+        return size * count;
     }
 
-    size_t writeToBytes(char* ptr, const size_t size, const size_t nmemb, void* userdata) {
-        auto* buffer = static_cast<std::vector<std::byte>*>(userdata);
-        auto* bytePtr = reinterpret_cast<std::byte*>(ptr);
-        buffer->insert(buffer->end(), bytePtr, bytePtr + size * nmemb);
-        return size * nmemb;
+    size_t writeToFile(const char* data, const size_t size, const size_t count, void* userdata) {
+        auto& file = *static_cast<std::ofstream*>(userdata);
+        auto bytes = size * count;
+
+        file.write(data, static_cast<std::streamsize>(bytes));
+
+        return file ? bytes : 0;
     }
 }
 
@@ -50,23 +56,75 @@ std::optional<std::string> HttpClient::requestString(const std::string_view url)
     return output;
 }
 
-std::optional<std::vector<std::byte>> HttpClient::requestBinary(const std::string_view url) const {
-    std::vector<std::byte> output;
-
+std::optional<std::string> HttpClient::requestContentType(const std::string_view url) const {
     auto curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_URL, url.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToBytes);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &output);
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
     auto result = curl_easy_perform(curl);
 
-    long httpCode;
+    long httpCode = 0;
+    char* contentType = nullptr;
     curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
-    curl_easy_cleanup(curl);
+    curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType);
+    std::string returnVal = std::string(contentType);
 
-    if(result != CURLE_OK || httpCode != 200) {
+    if(result != CURLE_OK || httpCode != 200 || contentType == nullptr) {
+        curl_easy_cleanup(curl);
         return std::nullopt;
     }
 
-    return output;
+    curl_easy_cleanup(curl);
+    return returnVal;
+}
+
+std::optional<fs::path> HttpClient::downloadFile(
+    std::string_view url,
+    const fs::path& downloadDir,
+    const std::string& fileName
+) const {
+    util::createDirIfNotExists(downloadDir);
+
+    auto finalPath = downloadDir / fileName;
+    auto partPath = downloadDir / (fileName + ".part");
+
+    curl_off_t existingPartSize = 0;
+    if(fs::exists(partPath)) {
+        existingPartSize = static_cast<curl_off_t>(fs::file_size(partPath));
+    }
+
+    std::ofstream file;
+    if(existingPartSize > 0) {
+        file.open(partPath, std::ios::binary | std::ios::app);
+    } else {
+        file.open(partPath, std::ios::binary | std::ios::trunc);
+    }
+
+    auto curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_URL, url.data());
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+
+    if(existingPartSize > 0) {
+        curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, existingPartSize);
+    }
+
+    auto result = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
+
+    if(result == CURLE_RANGE_ERROR || result == CURLE_BAD_DOWNLOAD_RESUME) {
+        fs::remove(partPath);
+        return std::nullopt;
+    }
+
+    if(result != CURLE_OK) {
+        return std::nullopt;
+    }
+
+    fs::rename(partPath, finalPath);
+    return finalPath;
 }

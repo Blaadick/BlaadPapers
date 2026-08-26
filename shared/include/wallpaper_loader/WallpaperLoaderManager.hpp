@@ -4,6 +4,7 @@
 #pragma once
 
 #include <filesystem>
+#include <ranges>
 #include <typeindex>
 #include <unordered_map>
 #include "WallpaperRepository.hpp"
@@ -34,10 +35,23 @@ public:
         wallpaperLoaders.emplace(typeid(T), std::move(wallpaperLoader));
     }
 
-private:
-    std::unordered_map<std::type_index, uptr<WallpaperLoader>> wallpaperLoaders;
+    const std::unordered_set<const file::FileType*>& getSupportedFileTypes() const {
+        static std::unordered_set<const file::FileType*> supportedFileTypes;
 
+        if(supportedFileTypes.empty()) {
+            for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
+                auto loaderFileTypes = wallpaperLoader->getSupportedFileTypes();
+                supportedFileTypes.insert(loaderFileTypes.begin(), loaderFileTypes.end());
+            }
+        }
+
+        return supportedFileTypes;
+    }
+
+private:
     sptr<WallpaperRepository> wallpaperRepository;
     sptr<Config> config;
     sptr<util::Logger> logger;
+
+    std::unordered_map<std::type_index, uptr<WallpaperLoader>> wallpaperLoaders;
 };
