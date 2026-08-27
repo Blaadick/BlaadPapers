@@ -144,8 +144,8 @@ bool WallpaperRepository::apply(const Wallpaper& wallpaper) const {
 
     close(sock);
 
-    if(util::createDirIfNotExists(util::localDataDirPath())) {
-        std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
+    if(util::createDirIfNotExists(util::localDataDir())) {
+        std::ofstream currentWallpaperIdFile(util::currentWallpaperIdFilePath());
         currentWallpaperIdFile << wallpaper.getId();
     }
 

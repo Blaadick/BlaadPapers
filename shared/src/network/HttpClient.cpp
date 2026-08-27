@@ -69,60 +69,71 @@ std::optional<std::string> HttpClient::requestContentType(const std::string_view
     curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
     curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType);
     std::string returnVal = std::string(contentType);
+    curl_easy_cleanup(curl);
 
     if(result != CURLE_OK || httpCode != 200 || contentType == nullptr) {
-        curl_easy_cleanup(curl);
         return std::nullopt;
     }
 
-    curl_easy_cleanup(curl);
     return returnVal;
 }
 
 std::optional<fs::path> HttpClient::downloadFile(
     std::string_view url,
     const fs::path& downloadDir,
-    const std::string& fileName
+    std::optional<std::string_view> fileName
 ) const {
     util::createDirIfNotExists(downloadDir);
 
-    auto finalPath = downloadDir / fileName;
-    auto partPath = downloadDir / (fileName + ".part");
+    fs::path finalPath;
 
-    curl_off_t existingPartSize = 0;
-    if(fs::exists(partPath)) {
-        existingPartSize = static_cast<curl_off_t>(fs::file_size(partPath));
-    }
-
-    std::ofstream file;
-    if(existingPartSize > 0) {
-        file.open(partPath, std::ios::binary | std::ios::app);
+    if(fileName.has_value()) {
+        finalPath = downloadDir / *fileName;
     } else {
-        file.open(partPath, std::ios::binary | std::ios::trunc);
+
     }
 
-    auto curl = curl_easy_init();
-    curl_easy_setopt(curl, CURLOPT_URL, url.data());
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
-    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+    auto partPath = finalPath += ".part";
 
-    if(existingPartSize > 0) {
+    if(fs::exists(partPath)) {
+        auto existingPartSize = static_cast<curl_off_t>(fs::file_size(partPath));
+        auto file = std::ofstream(partPath, std::ios::binary | std::ios::app);
+
+        auto curl = curl_easy_init();
+        curl_easy_setopt(curl, CURLOPT_URL, url.data());
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
         curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, existingPartSize);
-    }
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+        auto result = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
 
-    auto result = curl_easy_perform(curl);
-    curl_easy_cleanup(curl);
+        if(result != CURLE_OK) {
+            return std::nullopt;
+        }
 
-    if(result == CURLE_RANGE_ERROR || result == CURLE_BAD_DOWNLOAD_RESUME) {
-        fs::remove(partPath);
-        return std::nullopt;
-    }
+        if(result == CURLE_RANGE_ERROR || result == CURLE_BAD_DOWNLOAD_RESUME) {
+            fs::remove(partPath);
+            return downloadFile(url, downloadDir, fileName);
+        }
+    } else {
+        auto file = std::ofstream(partPath, std::ios::binary | std::ios::trunc);
 
-    if(result != CURLE_OK) {
-        return std::nullopt;
+        auto curl = curl_easy_init();
+        curl_easy_setopt(curl, CURLOPT_URL, url.data());
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+        auto result = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+
+        if(result != CURLE_OK) {
+            return std::nullopt;
+        }
     }
 
     fs::rename(partPath, finalPath);

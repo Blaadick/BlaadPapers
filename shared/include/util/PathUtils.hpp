@@ -6,60 +6,91 @@
 #include <filesystem>
 
 namespace util {
-    inline std::filesystem::path cacheDirPath() {
+    inline const std::filesystem::path& userHomeDir() {
         #ifdef __linux__
-        std::filesystem::path homeDir = getenv("HOME");
-        return homeDir.append(".cache/blaadpapers");
+        static const auto homeDir = std::filesystem::path(std::getenv("HOME"));
         #elif _WIN32
-        std::filesystem::path localAppData = getenv("LOCALAPPDATA");
-        return localAppData.append("blaadpapers").append("cache");
+        static const auto homeDir = std::filesystem::path(std::getenv("USERPROFILE"));
         #endif
+
+        return homeDir;
     }
 
-    inline std::filesystem::path configDirPath() {
+    #ifdef _WIN32
+    inline const std::filesystem::path& appDataDir() {
+        static const auto appDataDir = std::filesystem::path(std::getenv("APPDATA"));
+        return appDataDir;
+    }
+
+    inline const std::filesystem::path& localAppDataDir() {
+        static const auto localAppDataDir = std::filesystem::path(std::getenv("LOCALAPPDATA"));
+        return localAppDataDir;
+    }
+    #endif
+
+    inline const std::filesystem::path& desktopDir() {
+        static const auto desktopDir = userHomeDir() / "Desktop";
+        return desktopDir;
+    }
+
+    inline const std::filesystem::path& documentsDir() {
+        static const auto documentsDir = userHomeDir() / "Documents";
+        return documentsDir;
+    }
+
+    inline const std::filesystem::path& downloadsDir() {
+        static const auto downloadsDir = userHomeDir() / "Downloads";
+        return downloadsDir;
+    }
+
+    inline const std::filesystem::path& musicDir() {
+        static const auto musicDir = userHomeDir() / "Music";
+        return musicDir;
+    }
+
+    inline const std::filesystem::path& picturesDir() {
+        static const auto picturesDir = userHomeDir() / "Pictures";
+        return picturesDir;
+    }
+
+    inline const std::filesystem::path& videosDir() {
+        static const auto videosDir = userHomeDir() / "Videos";
+        return videosDir;
+    }
+
+    inline const std::filesystem::path& cacheDir() {
         #ifdef __linux__
-        std::filesystem::path homeDir = getenv("HOME");
-        return homeDir.append(".config/blaadpapers");
+        static const auto cacheDir = userHomeDir() / ".cache" / "blaadpapers";
         #elif _WIN32
-        std::filesystem::path appData = getenv("APPDATA");
-        return appData.append("blaadpapers").append("config");
+        static const auto cacheDir = localAppDataDir() / "blaadpapers" / "cache";
         #endif
+
+        return cacheDir;
     }
 
-    inline std::filesystem::path generalConfigFilePath() {
-        return configDirPath().append("config.json");
-    }
-
-    inline std::filesystem::path guiConfigFilePath() {
-        return configDirPath().append("gui.json");
-    }
-
-    inline std::filesystem::path apiConfigFilePath() {
-        return configDirPath().append("api.json");
-    }
-
-    inline std::filesystem::path localDataDirPath() {
+    inline const std::filesystem::path& configDir() {
         #ifdef __linux__
-        std::filesystem::path homeDir = getenv("HOME");
-        return homeDir.append(".local/share/blaadpapers");
+        static const auto configDir = userHomeDir() / ".config" / "blaadpapers";
         #elif _WIN32
-        std::filesystem::path localAppData = getenv("LOCALAPPDATA");
-        return localAppData.append("blaadpapers");
+        static const auto configDir = appDataDir() / "blaadpapers";
         #endif
+
+        return configDir;
     }
 
-    inline std::filesystem::path documentsDirPath() {
+    inline const std::filesystem::path& localDataDir() {
         #ifdef __linux__
-        std::filesystem::path homeDir = getenv("HOME");
-        return homeDir.append("Documents");
+        static const auto localDataDirPath = userHomeDir() / ".local" / "share" / "blaadpapers";
         #elif _WIN32
-        std::filesystem::path userProfile = getenv("USERPROFILE");
-        return userProfile.append("Documents");
+        static const auto localDataDirPath = localAppDataDir() / "blaadpapers";
         #endif
+
+        return localDataDirPath;
     }
 
-    inline std::filesystem::path currentWallpaperIdPath() {
-        return localDataDirPath().append("current-wallpaper");
+    inline const std::filesystem::path& currentWallpaperIdFilePath() {
+        static auto const currentWallpaperIdFilePath = localDataDir() / "current-wallpaper";
+        return currentWallpaperIdFilePath;
     }
 
     /**

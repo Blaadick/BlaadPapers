@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <optional>
 #include <string>
+#include "util/PathUtils.hpp"
 
 class HttpClient {
 public:
@@ -24,7 +25,7 @@ public:
      */
     std::optional<std::filesystem::path> downloadFile(
         std::string_view url,
-        const std::filesystem::path& downloadDir,
-        const std::string& fileName
+        const std::filesystem::path& downloadDir = util::downloadsDir(),
+        std::optional<std::string_view> fileName = std::nullopt
     ) const;
 };

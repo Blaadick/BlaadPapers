@@ -12,6 +12,7 @@
 #include "util/FormatUtils.hpp"
 #include "util/StringUtils.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "file_processing/FileType.hpp"
 
 namespace fs = std::filesystem;
 
@@ -49,7 +50,7 @@ void WallpapersModel::addWallpapers(const QStringList& paths, const QString& des
 }
 
 void WallpapersModel::addWallpapers() {
-    std::unordered_set<std::string_view> allSupportedFormats;
+    std::unordered_set<const file::FileType*> allSupportedFormats;
     for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
         const auto loaderFormats = loader->getSupportedFileTypes();
         allSupportedFormats.insert(loaderFormats.begin(), loaderFormats.end());

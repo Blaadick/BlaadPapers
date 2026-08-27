@@ -41,14 +41,14 @@ int RunRendererOption::execute(const std::vector<std::string_view>& arguments, c
         mpvArgs += ' ';
     }
 
-    auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperPath().string();
+    auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperFilePath().string();
 
-    if(!fs::exists(util::currentWallpaperIdPath())) {
-        std::ofstream currentWallpaperIdFile(util::currentWallpaperIdPath());
+    if(!fs::exists(util::currentWallpaperIdFilePath())) {
+        std::ofstream currentWallpaperIdFile(util::currentWallpaperIdFilePath());
         currentWallpaperIdFile << "null";
     } else {
         std::string currentWallpaperId;
-        std::ifstream currentWallpaperIdFile(util::currentWallpaperIdPath());
+        std::ifstream currentWallpaperIdFile(util::currentWallpaperIdFilePath());
         std::getline(currentWallpaperIdFile, currentWallpaperId);
 
         const auto currentWallpaper = wallpaperRepository->get(currentWallpaperId);

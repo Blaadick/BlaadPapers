@@ -10,7 +10,7 @@
 namespace fs = std::filesystem;
 
 void PostSetScript::createIfNotExists() {
-    const auto postSetScriptPath = PostSetScript::postSetScriptPath();
+    const auto postSetScriptPath = postSetScriptFilePath();
     if(fs::exists(postSetScriptPath)) {
         return;
     }
@@ -24,7 +24,7 @@ void PostSetScript::execute(const Wallpaper& wallpaper) {
     system(
         std::format(
             R"(bash "{}" "{}" "{}")",
-            postSetScriptPath().c_str(),
+            postSetScriptFilePath().c_str(),
             wallpaper.getName(),
             wallpaper.getFilePath().c_str()
         ).c_str()
@@ -32,6 +32,6 @@ void PostSetScript::execute(const Wallpaper& wallpaper) {
     #endif
 }
 
-fs::path PostSetScript::postSetScriptPath() {
-    return util::configDirPath().append("post_set.sh");
+fs::path PostSetScript::postSetScriptFilePath() {
+    return util::configDir() / "post_set.sh";
 }

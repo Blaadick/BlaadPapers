@@ -16,18 +16,18 @@ namespace file {
         const char* canonicalExtension() const;
     };
 
-    inline constexpr FileType png = {"image/png", {".png"}};
-    inline constexpr FileType apng = {"image/apng", {".apng"}};
-    inline constexpr FileType jpeg = {"image/jpeg", {".jpeg", ".jpg", ".jpe", ".jfif", ".jif", ".jfi"}};
-    inline constexpr FileType svg = {"image/svg+xml", {".svg", ".svgz"}};
-    inline constexpr FileType webp = {"image/webp", {".webp"}};
-    inline constexpr FileType bmp = {"image/bmp", {".bmp", ".dib"}};
-    inline constexpr FileType avif = {"image/avif", {".avif"}};
-    inline constexpr FileType tiff = {"image/tiff", {".tiff", ".tif"}};
-    inline constexpr FileType heif = {"image/heif", {".heif", ".heic", ".heifs", ".heics"}};
-    inline constexpr FileType mp4 = {"image/mp4", {".mp4", ".m4v", ".mp4v"}};
-    inline constexpr FileType webm = {"image/webm", {".webm"}};
-    inline constexpr FileType mkv = {"image/matroska", {".mkv"}};
+    inline constexpr FileType png = {"image/png", {".png", nullptr}};
+    inline constexpr FileType apng = {"image/apng", {".apng", nullptr}};
+    inline constexpr FileType jpeg = {"image/jpeg", {".jpeg", ".jpg", ".jpe", ".jfif", ".jif", ".jfi", nullptr}};
+    inline constexpr FileType svg = {"image/svg+xml", {".svg", ".svgz", nullptr}};
+    inline constexpr FileType webp = {"image/webp", {".webp", nullptr}};
+    inline constexpr FileType bmp = {"image/bmp", {".bmp", ".dib", nullptr}};
+    inline constexpr FileType avif = {"image/avif", {".avif", nullptr}};
+    inline constexpr FileType tiff = {"image/tiff", {".tiff", ".tif", nullptr}};
+    inline constexpr FileType heif = {"image/heif", {".heif", ".heic", ".heifs", ".heics", nullptr}};
+    inline constexpr FileType mp4 = {"image/mp4", {".mp4", ".m4v", ".mp4v", nullptr}};
+    inline constexpr FileType webm = {"image/webm", {".webm", nullptr}};
+    inline constexpr FileType mkv = {"image/matroska", {".mkv", nullptr}};
 
     // TODO Make constexpr
     inline const std::unordered_map<std::string_view, const FileType&> typeByMime = {

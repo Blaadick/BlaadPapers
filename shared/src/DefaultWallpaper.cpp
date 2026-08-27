@@ -9,16 +9,17 @@
 namespace fs = std::filesystem;
 using namespace vips;
 
-std::filesystem::path DefaultWallpaper::defaultWallpaperPath() {
-    return util::localDataDirPath().append("default-wallpaper.webp");
+const std::filesystem::path& DefaultWallpaper::defaultWallpaperFilePath() {
+    static const auto defaultWallpaperFilePath = util::localDataDir() / "default-wallpaper.webp";
+    return defaultWallpaperFilePath;
 }
 
 void DefaultWallpaper::createIfNotExists(const bool shouldInitLibvips) {
-    if(!util::createDirIfNotExists(util::localDataDirPath())) {
+    if(!util::createDirIfNotExists(util::localDataDir())) {
         return;
     }
 
-    if(fs::exists(defaultWallpaperPath())) {
+    if(fs::exists(defaultWallpaperFilePath())) {
         return;
     }
 
@@ -296,7 +297,7 @@ void DefaultWallpaper::createIfNotExists(const bool shouldInitLibvips) {
 
     const auto defaultWallpaper = VImage::new_from_buffer(default_wallpaper_svg, default_wallpaper_svg_len, "");
     defaultWallpaper.webpsave(
-        defaultWallpaperPath().string().c_str(),
+        defaultWallpaperFilePath().string().c_str(),
         VImage::option()->set("lossless", true)
     );
 

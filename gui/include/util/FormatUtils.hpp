@@ -5,17 +5,18 @@
 
 #include <QString>
 #include <unordered_set>
+#include "file_processing/FileType.hpp"
 
 namespace util {
-    inline QString getFormatString(const std::unordered_set<std::string_view>& formats) {
-        auto it = formats.begin();
-        QString formatsString = QString("*%1").arg(*it);
+    inline QString getFormatString(const std::unordered_set<const file::FileType*>& formats) {
+        QStringList extensions;
 
-        for(auto i = 1; i < formats.size(); ++i) {
-            std::advance(it, 1);
-            formatsString += " *" + *it;
+        for(const auto* format : formats) {
+            for(const char* const* ext = format->extensions; *ext != nullptr; ++ext) {
+                extensions << QString("*%1").arg(*ext);
+            }
         }
 
-        return formatsString;
+        return extensions.join(' ');
     }
 }

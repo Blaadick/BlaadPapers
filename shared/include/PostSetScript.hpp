@@ -12,5 +12,5 @@ public:
 
     static void execute(const Wallpaper& wallpaper);
 
-    static std::filesystem::path postSetScriptPath();
+    static std::filesystem::path postSetScriptFilePath();
 };

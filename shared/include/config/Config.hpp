@@ -54,10 +54,19 @@ public:
 
     void setStatusBarVisible(bool newVisibility);
 
+    [[nodiscard]]
+    const std::filesystem::path& generalConfigFilePath() const;
+
+    [[nodiscard]]
+    const std::filesystem::path& guiConfigFilePath() const;
+
+    [[nodiscard]]
+    const std::filesystem::path& apiConfigFilePath() const;
+
 private:
     sptr<util::Logger> logger;
 
-    std::filesystem::path wallpapersDirPath = util::documentsDirPath().append("Wallpapers");
+    std::filesystem::path wallpapersDirPath = util::documentsDir() / "Wallpapers";
     std::vector<std::string> badTags = {"Sensitive", "Questionable", "Explicit"};
     std::optional<std::string> wallhavenApiKey = std::nullopt;
     std::optional<std::string> danbooruLogin = std::nullopt;

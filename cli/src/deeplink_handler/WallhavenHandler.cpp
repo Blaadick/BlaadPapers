@@ -111,7 +111,7 @@ int WallhavenHandler::handle(const Url& url) const {
     auto wallpaperFileName = "wallhaven-" + wallpaperData->id + fileType->canonicalExtension();
     auto wallpaperFile = httpClient->downloadFile(
         wallpaperData->url,
-        util::localDataDirPath().append("downloads"),
+        util::localDataDir() / "downloads",
         wallpaperFileName
     );
 

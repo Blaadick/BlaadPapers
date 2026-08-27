@@ -16,14 +16,13 @@ void Config::load() {
 }
 
 void Config::loadGeneral() {
-    auto configFilePath = util::generalConfigFilePath();
-    if(!std::filesystem::exists(configFilePath)) {
+    if(!std::filesystem::exists(generalConfigFilePath())) {
         saveGeneral();
         return;
     }
 
     yyjson_read_err readErr;
-    auto doc = yyjson_read_file(configFilePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
+    auto doc = yyjson_read_file(generalConfigFilePath().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
         logger->logError("Failed to parse config file. Fallback to defaults");
         return;
@@ -56,14 +55,13 @@ void Config::loadGeneral() {
 }
 
 void Config::loadGui() {
-    auto configFilePath = util::guiConfigFilePath();
-    if(!std::filesystem::exists(configFilePath)) {
+    if(!std::filesystem::exists(guiConfigFilePath())) {
         saveGui();
         return;
     }
 
     yyjson_read_err readErr;
-    auto doc = yyjson_read_file(configFilePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
+    auto doc = yyjson_read_file(guiConfigFilePath().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
         logger->logError("Failed to parse config file. Fallback to defaults");
         return;
@@ -83,14 +81,13 @@ void Config::loadGui() {
 }
 
 void Config::loadApi() {
-    auto configFilePath = util::apiConfigFilePath();
-    if(!std::filesystem::exists(configFilePath)) {
+    if(!std::filesystem::exists(apiConfigFilePath())) {
         saveApi();
         return;
     }
 
     yyjson_read_err readErr;
-    auto doc = yyjson_read_file(configFilePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
+    auto doc = yyjson_read_file(apiConfigFilePath().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
         logger->logError("Failed to parse config file. Fallback to defaults");
         return;
@@ -142,9 +139,9 @@ void Config::saveGeneral() const {
     yyjson_mut_obj_add_val(doc, root, "bad_tags", badTagsData);
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(util::generalConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(generalConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write config file to \"" + util::generalConfigFilePath().string() + '\"');
+        logger->logError("Failed to write config file to \"" + generalConfigFilePath().string() + '\"');
     }
 
     yyjson_mut_doc_free(doc);
@@ -158,9 +155,9 @@ void Config::saveGui() const {
     yyjson_mut_obj_add_bool(doc, root, "status_bar_visible", isStatusBarVisible);
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(util::guiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(guiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write config file to \"" + util::generalConfigFilePath().string() + '\"');
+        logger->logError("Failed to write config file to \"" + generalConfigFilePath().string() + '\"');
     }
 
     yyjson_mut_doc_free(doc);
@@ -190,9 +187,9 @@ void Config::saveApi() const {
     }
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(util::apiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(apiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write config file to \"" + util::generalConfigFilePath().string() + '\"');
+        logger->logError("Failed to write config file to \"" + generalConfigFilePath().string() + '\"');
     }
 
     yyjson_mut_doc_free(doc);
@@ -234,4 +231,19 @@ bool Config::getStatusBarVisible() const {
 void Config::setStatusBarVisible(const bool newVisibility) {
     isStatusBarVisible = newVisibility;
     saveGui();
+}
+
+const std::filesystem::path& Config::generalConfigFilePath() const {
+    static const auto generalConfigFilePath = util::configDir() / "config.json";
+    return generalConfigFilePath;
+}
+
+const std::filesystem::path& Config::guiConfigFilePath() const {
+    static const auto guiConfigFilePath = util::configDir() / "gui.json";
+    return guiConfigFilePath;
+}
+
+const std::filesystem::path& Config::apiConfigFilePath() const {
+    static const auto apiConfigFilePath = util::configDir() / "api.json";
+    return apiConfigFilePath;
 }

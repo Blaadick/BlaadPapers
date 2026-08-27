@@ -5,12 +5,11 @@
 
 #include "config/Config.hpp"
 #include "util/FormatUtils.hpp"
-#include "util/PathUtils.hpp"
 
 ConfigModel::ConfigModel(sptr<Config> config) : config(std::move(config)) {}
 
 QString ConfigModel::getConfigFilePath() {
-    return QString::fromStdString(util::generalConfigFilePath().string());
+    return QString::fromStdString(config->generalConfigFilePath().string());
 }
 
 bool ConfigModel::getStatusBarVisible() {
