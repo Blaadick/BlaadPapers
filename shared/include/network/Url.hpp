@@ -23,3 +23,10 @@ struct Url {
 
     std::string toString() const;
 };
+
+template<>
+struct std::formatter<Url> : std::formatter<std::string> {
+    auto format(const Url& url, std::format_context& ctx) const {
+        return std::formatter<std::string>::format(url.toString(), ctx);
+    }
+};

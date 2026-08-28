@@ -3,7 +3,7 @@
 
 #include "option/AddOption.hpp"
 
-#include "../network/Url.hpp"
+#include "network/Url.hpp"
 
 namespace fs = std::filesystem;
 
@@ -25,15 +25,16 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
     }
 
     std::vector<fs::path> filePaths;
-    std::vector<std::string_view> links;
+    std::vector<Url> links;
     for(const auto& argument : arguments) {
-        if(Url::isUrl(argument)) {
-            links.emplace_back(argument);
+        if(fs::is_regular_file(argument)) {
+            filePaths.emplace_back(argument);
             continue;
         }
 
-        if(fs::is_regular_file(argument)) {
-            filePaths.emplace_back(argument);
+        auto url = Url::parse(argument);
+        if(url.has_value()) {
+            links.emplace_back(*url);
             continue;
         }
 
@@ -45,7 +46,7 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
     }
 
     for(const auto& link : links) {
-        auto downloadedFilePath = httpClient->downloadFile(link, util::localDataDir() / "downloads", "name.png");
+        auto downloadedFilePath = httpClient->downloadFile(link, util::localDataDir() / "downloads");
         if(!downloadedFilePath.has_value()) {
             logger->logWarning(std::format("Failed to download file from {}", link));
             continue;

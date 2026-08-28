@@ -9,7 +9,7 @@
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 struct WallhavenFileData {
-    std::string url;
+    Url url;
     std::string id;
     std::string source;
     Size resolution;

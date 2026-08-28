@@ -17,9 +17,9 @@ WallhavenHandler::WallhavenHandler(
 std::optional<WallhavenFileData> WallhavenHandler::getWallpaperData(const Url& url) const {
     WallhavenFileData wallhavenFileData;
 
-    auto requestUrl = "https://wallhaven.cc/api/v1/w/" + url.path[1];
+    auto requestUrl = Url("https", "wallhaven.cc", {"api", "v1", "w", url.path[1]});
     if(config->getWallhavenApiKey().has_value()) {
-        requestUrl += "?apikey=" + config->getWallhavenApiKey().value();
+        requestUrl.queries.emplace("apikey", *config->getWallhavenApiKey());
     }
 
     auto wallhavenResponse = httpClient->requestString(requestUrl);
@@ -52,7 +52,7 @@ std::optional<WallhavenFileData> WallhavenHandler::getWallpaperData(const Url& u
 
     auto fileLinkData = yyjson_obj_get(wallpaperData, "path");
     if(yyjson_is_str(fileLinkData)) {
-        wallhavenFileData.url = unsafe_yyjson_get_str(fileLinkData);
+        wallhavenFileData.url = *Url::parse(unsafe_yyjson_get_str(fileLinkData));
     }
 
     auto idData = yyjson_obj_get(wallpaperData, "id");
@@ -91,15 +91,15 @@ int WallhavenHandler::handle(const Url& url) const {
         return 1;
     }
 
-    auto contentType = httpClient->requestContentType(wallpaperData->url);
-    if(!contentType.has_value()) {
+    auto header = httpClient->requestHeader(wallpaperData->url);
+    if(!header.has_value()) {
         std::cout << "no content type";
         return 1;
     }
 
-    auto fileType = file::getTypeFromMime(*contentType);
+    auto fileType = file::getTypeFromMime(header->contentType);
     if(!fileType.has_value()) {
-        std::cout << "no file type:" << contentType.value();
+        std::cout << "no file type:" << header->contentType;
         return 1;
     }
 

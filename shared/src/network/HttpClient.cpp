@@ -4,6 +4,7 @@
 #include "network/HttpClient.hpp"
 
 #include <fstream>
+#include <iostream>
 #include <curl/curl.h>
 #include "util/PathUtils.hpp"
 
@@ -35,11 +36,12 @@ HttpClient::~HttpClient() {
     curl_global_cleanup();
 }
 
-std::optional<std::string> HttpClient::requestString(const std::string_view url) const {
+std::optional<std::string> HttpClient::requestString(const Url& url) const {
     std::string output;
 
     auto curl = curl_easy_init();
-    curl_easy_setopt(curl, CURLOPT_URL, url.data());
+    auto urlString = url.toString();
+    curl_easy_setopt(curl, CURLOPT_URL, urlString.c_str());
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToString);
@@ -57,11 +59,12 @@ std::optional<std::string> HttpClient::requestString(const std::string_view url)
     return output;
 }
 
-std::optional<std::string> HttpClient::requestContentType(const std::string_view url) const {
-    std::optional<std::string> response;
+std::optional<HeaderResponse> HttpClient::requestHeader(const Url& url) const {
+    HeaderResponse response;
 
     auto curl = curl_easy_init();
-    curl_easy_setopt(curl, CURLOPT_URL, url.data());
+    auto urlString = url.toString();
+    curl_easy_setopt(curl, CURLOPT_URL, urlString.c_str());
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
     curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
@@ -72,16 +75,20 @@ std::optional<std::string> HttpClient::requestContentType(const std::string_view
     curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
     curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType);
 
-    if(result == CURLE_OK && httpCode == 200) {
-        response = contentType;
+    if(result != CURLE_OK || httpCode != 200) {
+        curl_easy_cleanup(curl);
+        return std::nullopt;
     }
+
+    response.contentType = contentType;
+    response.fileName = url.path.back();
 
     curl_easy_cleanup(curl);
     return response;
 }
 
 std::optional<fs::path> HttpClient::downloadFile(
-    std::string_view url,
+    const Url& url,
     const fs::path& downloadDir,
     std::optional<std::string_view> fileName
 ) const {
@@ -92,17 +99,24 @@ std::optional<fs::path> HttpClient::downloadFile(
     if(fileName.has_value()) {
         finalPath = downloadDir / *fileName;
     } else {
+        auto header = requestHeader(url);
+        if(!header.has_value()) {
+            return std::nullopt;
+        }
 
+        finalPath = downloadDir / header->fileName;
     }
 
-    auto partPath = finalPath += ".part";
+    auto partPath = finalPath;
+    partPath += ".part";
 
     if(fs::exists(partPath)) {
         auto existingPartSize = static_cast<curl_off_t>(fs::file_size(partPath));
         auto file = std::ofstream(partPath, std::ios::binary | std::ios::app);
 
         auto curl = curl_easy_init();
-        curl_easy_setopt(curl, CURLOPT_URL, url.data());
+        auto urlString = url.toString();
+        curl_easy_setopt(curl, CURLOPT_URL, urlString.c_str());
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
         curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, existingPartSize);
@@ -119,14 +133,15 @@ std::optional<fs::path> HttpClient::downloadFile(
             return downloadFile(url, downloadDir, fileName);
         }
 
-        if(result != CURLE_OK || httpCode != 200) {
+        if(result != CURLE_OK || httpCode != 206) {
             return std::nullopt;
         }
     } else {
         auto file = std::ofstream(partPath, std::ios::binary | std::ios::trunc);
 
         auto curl = curl_easy_init();
-        curl_easy_setopt(curl, CURLOPT_URL, url.data());
+        auto urlString = url.toString();
+        curl_easy_setopt(curl, CURLOPT_URL, urlString.c_str());
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
