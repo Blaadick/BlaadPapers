@@ -40,12 +40,13 @@ std::optional<std::string> HttpClient::requestString(const std::string_view url)
 
     auto curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_URL, url.data());
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToString);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &output);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
     auto result = curl_easy_perform(curl);
 
-    long httpCode;
+    long httpCode = 0;
     curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
     curl_easy_cleanup(curl);
 
@@ -57,25 +58,26 @@ std::optional<std::string> HttpClient::requestString(const std::string_view url)
 }
 
 std::optional<std::string> HttpClient::requestContentType(const std::string_view url) const {
+    std::optional<std::string> response;
+
     auto curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_URL, url.data());
-    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
     auto result = curl_easy_perform(curl);
 
     long httpCode = 0;
     char* contentType = nullptr;
     curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
     curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType);
-    std::string returnVal = std::string(contentType);
-    curl_easy_cleanup(curl);
 
-    if(result != CURLE_OK || httpCode != 200 || contentType == nullptr) {
-        return std::nullopt;
+    if(result == CURLE_OK && httpCode == 200) {
+        response = contentType;
     }
 
-    return returnVal;
+    curl_easy_cleanup(curl);
+    return response;
 }
 
 std::optional<fs::path> HttpClient::downloadFile(
@@ -106,17 +108,19 @@ std::optional<fs::path> HttpClient::downloadFile(
         curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, existingPartSize);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
-        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
         auto result = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
 
-        if(result != CURLE_OK) {
-            return std::nullopt;
-        }
+        long httpCode = 0;
+        curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
+        curl_easy_cleanup(curl);
 
         if(result == CURLE_RANGE_ERROR || result == CURLE_BAD_DOWNLOAD_RESUME) {
             fs::remove(partPath);
             return downloadFile(url, downloadDir, fileName);
+        }
+
+        if(result != CURLE_OK || httpCode != 200) {
+            return std::nullopt;
         }
     } else {
         auto file = std::ofstream(partPath, std::ios::binary | std::ios::trunc);
@@ -127,11 +131,13 @@ std::optional<fs::path> HttpClient::downloadFile(
         curl_easy_setopt(curl, CURLOPT_USERAGENT, PROJECT_USER_AGENT);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToFile);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
-        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
         auto result = curl_easy_perform(curl);
+
+        long httpCode = 0;
+        curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &httpCode);
         curl_easy_cleanup(curl);
 
-        if(result != CURLE_OK) {
+        if(result != CURLE_OK || httpCode != 200) {
             return std::nullopt;
         }
     }

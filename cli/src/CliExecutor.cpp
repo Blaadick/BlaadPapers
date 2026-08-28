@@ -7,8 +7,8 @@
 #include <format>
 #include <ranges>
 #include <utility>
-#include "data/Url.hpp"
 #include "flag/Flags.hpp"
+#include "network/Url.hpp"
 
 static constexpr void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
     logger.logInfo("Description:");

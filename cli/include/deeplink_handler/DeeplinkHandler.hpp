@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "data/Url.hpp"
+#include "../network/Url.hpp"
 
 class DeeplinkHandler {
 public:
