@@ -3,31 +3,23 @@
 
 #pragma once
 
+#include <expected>
 #include <filesystem>
-#include <optional>
+#include <functional>
 #include <string>
+#include <boost/url.hpp>
 #include "network/HeaderResponse.hpp"
-#include "network/Url.hpp"
 #include "util/PathUtils.hpp"
 
 class HttpClient {
 public:
-    HttpClient();
-
-    ~HttpClient();
+    [[nodiscard]]
+    std::expected<std::string, std::string> requestString(const boost::url_view& url) const;
 
     [[nodiscard]]
-    std::optional<std::string> requestString(const Url& url) const;
-
-    [[nodiscard]]
-    std::optional<HeaderResponse> requestHeader(const Url& url) const;
-
-    /**
-     * @return DownloadedFilePath
-     */
-    std::optional<std::filesystem::path> downloadFile(
-        const Url& url,
+    std::expected<std::filesystem::path, std::string> downloadFile(
+        const boost::url_view& url,
         const std::filesystem::path& downloadDir = util::downloadsDir(),
-        std::optional<std::string_view> fileName = std::nullopt
+        std::function<bool(const HeaderResponse&)> validateFunction = {}
     ) const;
 };

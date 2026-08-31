@@ -10,7 +10,6 @@
 #include "data/VideoWallpaper.hpp"
 #include "deeplink_handler/ApplyHandler.hpp"
 #include "deeplink_handler/ShuffleHandler.hpp"
-#include "deeplink_handler/WallhavenHandler.hpp"
 #include "flag/Flags.hpp"
 #include "logger/CliLogger.hpp"
 #include "network/HttpClient.hpp"
@@ -28,7 +27,7 @@
 #include "wallpaper_loader/VideoWallpaperLoader.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
-int main(const int argc, const char** argv) {
+int main(int argc, char* argv[]) {
     DefaultWallpaper::createIfNotExists(true);
     PostSetScript::createIfNotExists();
 
@@ -59,7 +58,6 @@ int main(const int argc, const char** argv) {
     cliExecutor->addOption("version", std::make_unique<VersionOption>(logger), {Flags::json});
     cliExecutor->addHandler("apply", std::make_unique<ApplyHandler>(wallpaperRepository));
     cliExecutor->addHandler("shuffle", std::make_unique<ShuffleHandler>(wallpaperRepository));
-    cliExecutor->addHandler("wallhaven.cc", std::make_unique<WallhavenHandler>(wallpaperLoader, config, httpClient));
 
     return cliExecutor->execute(argc, argv);
 }

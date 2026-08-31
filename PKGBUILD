@@ -11,15 +11,19 @@ depends=(
     "qt6-base"
     "qt6-declarative"
     "qt6-svg"
+    "boost-libs"
+    "openssl"
     "libvips"
     "ffmpeg"
-    "yyjson"
     "mpvpaper"
     "bstyle-qml-theme"
 )
 makedepends=(
     "cmake"
     "ninja"
+    "yyjson"
+    "boost"
+    "imageinfo"
 )
 provides=("blaadpapers", "blaadpaperscli")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$_repoowner/$_reponame/archive/refs/tags/v$pkgver.tar.gz")

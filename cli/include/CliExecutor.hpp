@@ -21,7 +21,7 @@ public:
 
     void addOption(std::string, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags = {});
 
-    int execute(int argc, const char** argv);
+    int execute(int argc, char* argv[]);
 
 private:
     std::unordered_map<std::string, uptr<DeeplinkHandler>> deeplinkHandlers;

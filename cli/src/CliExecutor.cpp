@@ -69,7 +69,7 @@ void CliExecutor::addOption(std::string name, uptr<Option> option, const std::un
     options.emplace(std::move(name), std::move(option));
 }
 
-int CliExecutor::execute(const int argc, const char** argv) {
+int CliExecutor::execute(int argc, char* argv[]) {
     if(argc < 2) {
         logger->logWarning("Option or link expected");
         return 1;
