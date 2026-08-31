@@ -8,7 +8,6 @@
 #include <ranges>
 #include <utility>
 #include "flag/Flags.hpp"
-#include "network/Url.hpp"
 
 static constexpr void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
     logger.logInfo("Description:");
@@ -111,13 +110,13 @@ int CliExecutor::execute(int argc, char* argv[]) {
         freopen("/dev/null/", "w", stderr);
     }
 
-    if(const auto url = Url::parse(argv[1]); url.has_value()) {
-        if(url->scheme != "blaadpapers") {
+    if(const auto url = boost::urls::parse_uri_reference(argv[1]); url.has_value()) {
+        if(url->scheme() != "blaadpapers") {
             logger->logWarning("Only blaadpapers links supported");
             return 1;
         }
 
-        const auto it = deeplinkHandlers.find(url->domain);
+        const auto it = deeplinkHandlers.find(url->host());
         if(it == deeplinkHandlers.end()) {
             logger->logWarning("Unknown link");
             return 1;

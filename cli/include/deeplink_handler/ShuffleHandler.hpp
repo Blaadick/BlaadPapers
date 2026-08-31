@@ -10,7 +10,7 @@ class ShuffleHandler final : public DeeplinkHandler {
 public:
     explicit ShuffleHandler(sptr<WallpaperRepository> wallpaperRepository);
 
-    int handle(const Url& url) const override;
+    int handle(const boost::url_view& url) const override;
 
 private:
     sptr<WallpaperRepository> wallpaperRepository;

@@ -5,16 +5,16 @@
 
 ApplyHandler::ApplyHandler(sptr<WallpaperRepository> wallpaperRepository) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
-int ApplyHandler::handle(const Url& url) const {
-    if(url.path.empty()) {
+int ApplyHandler::handle(const boost::url_view& url) const {
+    if(url.path().empty()) {
         return 1;
     }
 
-    if(url.path.size() > 1) {
+    if(url.path().size() > 1) {
         return 1;
     }
 
-    if(wallpaperRepository->apply(url.path[0])) {
+    if(wallpaperRepository->apply(url.segments().back())) {
         return 0;
     }
 

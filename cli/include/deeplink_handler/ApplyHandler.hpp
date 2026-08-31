@@ -10,7 +10,7 @@ class ApplyHandler final : public DeeplinkHandler {
 public:
     explicit ApplyHandler(sptr<WallpaperRepository> wallpaperRepository);
 
-    int handle(const Url& url) const override;
+    int handle(const boost::url_view& url) const override;
 
 private:
     sptr<WallpaperRepository> wallpaperRepository;

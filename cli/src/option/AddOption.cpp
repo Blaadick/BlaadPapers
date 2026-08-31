@@ -3,7 +3,8 @@
 
 #include "option/AddOption.hpp"
 
-#include "network/Url.hpp"
+#include <format>
+#include "util/BoostUriUtils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -20,35 +21,49 @@ std::vector<std::string_view> AddOption::getUsageStrings() const {
 
 int AddOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
     if(arguments.empty()) {
-        logger->logWarning("One or more wallpaper file paths expected");
+        logger->logWarning("One or more URI expected");
         return 1;
     }
 
     std::vector<fs::path> filePaths;
-    std::vector<Url> links;
+    std::vector<boost::url_view> urls;
+
+    // TODO Make WallpaperInstallerDispatcher
     for(const auto& argument : arguments) {
-        if(fs::is_regular_file(argument)) {
+        auto uri = boost::urls::parse_uri_reference(argument);
+        if(!uri.has_value()) {
             filePaths.emplace_back(argument);
             continue;
         }
 
-        auto url = Url::parse(argument);
-        if(url.has_value()) {
-            links.emplace_back(*url);
-            continue;
-        }
+        switch(uri->scheme_id()) {
+            case boost::urls::scheme::none:
+            case boost::urls::scheme::file: {
+                filePaths.emplace_back(uri->path());
+                break;
+            }
 
-        logger->logWarning(std::format("Argument \"{}\" is not URL or file path", argument));
+            case boost::urls::scheme::http:
+            case boost::urls::scheme::https: {
+                urls.emplace_back(*uri);
+                break;
+            }
+
+            default: {
+                logger->logWarning(std::format("URI \"{}\" is unsupported", *uri));
+                break;
+            }
+        }
     }
 
     for(const auto& path : filePaths) {
         wallpaperLoader->addWallpaper(path, config->getWallpapersDirPath());
     }
 
-    for(const auto& link : links) {
-        auto downloadedFilePath = httpClient->downloadFile(link, util::localDataDir() / "downloads");
+    for(const auto& url : urls) {
+        auto downloadedFilePath = httpClient->downloadFile(url, util::localDataDir() / "downloads");
         if(!downloadedFilePath.has_value()) {
-            logger->logWarning(std::format("Failed to download file from {}", link));
+            logger->logWarning(std::format("Failed to download file from \"{}\": {}", url, downloadedFilePath.error()));
             continue;
         }
 
