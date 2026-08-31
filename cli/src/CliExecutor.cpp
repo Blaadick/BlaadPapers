@@ -110,7 +110,7 @@ int CliExecutor::execute(int argc, char* argv[]) {
         freopen("/dev/null/", "w", stderr);
     }
 
-    if(const auto url = boost::urls::parse_uri_reference(argv[1]); url.has_value()) {
+    if(const auto url = boost::urls::parse_uri(argv[1]); url.has_value()) {
         if(url->scheme() != "blaadpapers") {
             logger->logWarning("Only blaadpapers links supported");
             return 1;

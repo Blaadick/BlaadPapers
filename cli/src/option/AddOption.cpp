@@ -30,14 +30,13 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
 
     // TODO Make WallpaperInstallerDispatcher
     for(const auto& argument : arguments) {
-        auto uri = boost::urls::parse_uri_reference(argument);
+        auto uri = boost::urls::parse_uri(argument);
         if(!uri.has_value()) {
             filePaths.emplace_back(argument);
             continue;
         }
 
         switch(uri->scheme_id()) {
-            case boost::urls::scheme::none:
             case boost::urls::scheme::file: {
                 filePaths.emplace_back(uri->path());
                 break;
