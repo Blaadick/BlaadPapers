@@ -30,12 +30,14 @@ yay -S blaadpapers
 Expected after adding major features and implementing custom wallpaper renderer.
 
 ### Manual
-Install deps: 
-- `Qt6` (Base, Declarative, Svg)
+Install deps:
+- [`Boost`](https://www.boost.org/) (Asio, Beast, Url)
+- [`OpenSSL`](https://www.openssl.org/)
+- [`yyjson`](https://ibireme.github.io/yyjson/)
+- [`imageinfo`](https://github.com/xiaozhuai/imageinfo)
+- [`Qt6`](https://www.qt.io) (Base, Declarative, Svg)
 - [`libvips`](https://github.com/libvips/libvips)
 - [`FFmpeg`](https://ffmpeg.org/)
-- [`nlohman-json`](https://github.com/nlohmann/json)
-- [`imageinfo`](https://github.com/xiaozhuai/imageinfo)
 - [`BStyle`](https://github.com/Blaadick/BStyle)
 
 Then run it:
