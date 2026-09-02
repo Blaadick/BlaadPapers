@@ -16,7 +16,7 @@ AddOption::AddOption(
 ) : Option("Adds wallpaper(s) to the wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), httpClient(std::move(httpClient)), config(std::move(config)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> AddOption::getUsageStrings() const {
-    return {"<file/folder_path...>"};
+    return {"<file/URI...>"};
 }
 
 int AddOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
