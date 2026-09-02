@@ -5,7 +5,6 @@
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/beast/ssl.hpp>
 
 namespace asio = boost::asio;
 namespace beast = boost::beast;
@@ -14,20 +13,28 @@ namespace ip = asio::ip;
 namespace ssl = asio::ssl;
 namespace http = beast::http;
 
-std::expected<std::string, std::string> HttpClient::requestString(const boost::url_view& url) const {
+HttpClient::HttpClient() : sslCtx(ssl::context::tlsv12_client), resolver(ioCtx) {
+    sslCtx.set_default_verify_paths();
+    sslCtx.set_verify_mode(ssl::verify_peer);
+}
+
+std::expected<std::string, std::string> HttpClient::requestString(const boost::url_view& url) {
+    auto host = url.host();
+    auto target = url.encoded_target();
+    if(target.empty()) {
+        target = "/";
+    }
+
     try {
         if(url.scheme_id() == urls::scheme::http) {
-            auto host = url.host();
             auto port = url.has_port() ? url.port() : "80";
 
-            asio::io_context ioc;
-            ip::tcp::resolver resolver(ioc);
-            beast::tcp_stream stream(ioc);
+            beast::tcp_stream stream(ioCtx);
 
-            const auto endpoints = resolver.resolve(host, port);
+            auto endpoints = resolver.resolve(host, port);
             stream.connect(endpoints);
 
-            http::request<http::string_body> request(http::verb::get, url, 11);
+            http::request<http::string_body> request(http::verb::get, target, 11);
             request.set(http::field::host, host);
             request.set(http::field::user_agent, PROJECT_USER_AGENT);
             request.set(http::field::connection, "close");
@@ -49,26 +56,18 @@ std::expected<std::string, std::string> HttpClient::requestString(const boost::u
         }
 
         if(url.scheme_id() == urls::scheme::https) {
-            auto host = url.host();
             auto port = url.has_port() ? url.port() : "443";
 
-            asio::io_context ioc;
-            ssl::context ctx(ssl::context::tlsv12_client);
-            ctx.set_default_verify_paths();
-            ctx.set_verify_mode(ssl::verify_peer);
-
-            ip::tcp::resolver resolver(ioc);
-            beast::ssl_stream<beast::tcp_stream> stream(ioc, ctx);
-
+            beast::ssl_stream<beast::tcp_stream> stream(ioCtx, sslCtx);
             if(!SSL_set_tlsext_host_name(stream.native_handle(), host.c_str())) {
                 return std::unexpected("Failed to set SNI hostname");
             }
 
-            const auto endpoints = resolver.resolve(host, port);
+            auto endpoints = resolver.resolve(host, port);
             beast::get_lowest_layer(stream).connect(endpoints);
             stream.handshake(ssl::stream_base::client);
 
-            http::request<http::string_body> request(http::verb::get, url, 11);
+            http::request<http::string_body> request(http::verb::get, target, 11);
             request.set(http::field::host, host);
             request.set(http::field::user_agent, PROJECT_USER_AGENT);
             request.set(http::field::connection, "close");
@@ -99,6 +98,6 @@ std::expected<std::filesystem::path, std::string> HttpClient::downloadFile(
     const boost::url_view& url,
     const std::filesystem::path& downloadDir,
     std::function<bool(const HeaderResponse&)> validateFunction
-) const {
+) {
     return std::unexpected("Downloader not implemented");
 }
