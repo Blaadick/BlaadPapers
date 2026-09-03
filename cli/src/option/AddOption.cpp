@@ -60,6 +60,8 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
     }
 
     for(const auto& url : urls) {
+        logger->logInfo(std::format("Downloading from \"{}\"...", url));
+
         auto downloadedFilePath = httpClient->downloadFile(url, util::localDataDir() / "downloads");
         if(!downloadedFilePath.has_value()) {
             logger->logWarning(std::format("Failed to download file from \"{}\": {}", url, downloadedFilePath.error()));
