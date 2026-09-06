@@ -8,6 +8,7 @@
 #include <boost/beast/http.hpp>
 #include "file_processing/json/JsonArr.hpp"
 #include "file_processing/json/JsonObj.hpp"
+#include "util/PathUtils.hpp"
 
 namespace asio = boost::asio;
 namespace beast = boost::beast;

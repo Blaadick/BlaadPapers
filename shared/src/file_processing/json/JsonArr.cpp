@@ -4,7 +4,6 @@
 #include "file_processing/json/JsonArr.hpp"
 
 #include "file_processing/json/JsonError.hpp"
-#include "file_processing/json/JsonObj.hpp"
 
 JsonArr::JsonArr(sptr<JsonDocHolder> doc, yyjson_val* root) : doc(std::move(doc)), root(root) {}
 
@@ -31,24 +30,4 @@ JsonArr JsonArr::parse(const std::filesystem::path& filePath) {
     }
 
     return *jsonArr;
-}
-
-void JsonArr::forEachObj(const std::function<void(const JsonObj&)>& function) const {
-    size_t i, max;
-    yyjson_val* item;
-    yyjson_arr_foreach(root, i, max, item) {
-        if(yyjson_is_obj(item)) {
-            function(JsonObj(doc, item));
-        }
-    }
-}
-
-void JsonArr::forEachString(const std::function<void(std::string_view)>& function) const {
-    size_t i, max;
-    yyjson_val* item;
-    yyjson_arr_foreach(root, i, max, item) {
-        if(yyjson_is_str(item)) {
-            function(unsafe_yyjson_get_str(item));
-        }
-    }
 }

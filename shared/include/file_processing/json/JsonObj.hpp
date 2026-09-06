@@ -45,6 +45,18 @@ public:
     [[nodiscard]]
     bool getBool(std::string_view key) const;
 
+    [[nodiscard]]
+    std::expected<int, std::string> tryGetInt(std::string_view key) const noexcept;
+
+    [[nodiscard]]
+    int getInt(std::string_view key) const;
+
+    [[nodiscard]]
+    std::expected<double, std::string> tryGetDouble(std::string_view key) const noexcept;
+
+    [[nodiscard]]
+    double getDouble(std::string_view key) const;
+
 private:
     sptr<JsonDocHolder> doc;
     yyjson_val* root;
