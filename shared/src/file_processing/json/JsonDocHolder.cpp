@@ -3,7 +3,7 @@
 
 #include "file_processing/json/JsonDocHolder.hpp"
 
-JsonDocHolder::JsonDocHolder(yyjson_doc* doc): doc(doc) {}
+JsonDocHolder::JsonDocHolder(yyjson_doc* doc) : doc(doc) {}
 
 JsonDocHolder::~JsonDocHolder() {
     yyjson_doc_free(doc);

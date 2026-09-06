@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <fstream>
 #include <yyjson.h>
+#include "file_processing/json/JsonArr.hpp"
+#include "file_processing/json/JsonObj.hpp"
 
 Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
@@ -21,37 +23,23 @@ void Config::loadGeneral() {
         return;
     }
 
-    yyjson_read_err readErr;
-    auto doc = yyjson_read_file(generalConfigFilePath().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
-    if(!doc) {
-        logger->logError("Failed to parse config file. Fallback to defaults");
+    auto generalJson = JsonObj::tryParse(generalConfigFilePath());
+    if(!generalJson.has_value()) {
+        logger->logError(std::format("Failed to parse general config file: {}", generalJson.error()));
         return;
     }
 
-    auto root = yyjson_doc_get_root(doc);
-    if(yyjson_is_obj(root)) {
-        auto wallpapersDirData = yyjson_obj_get(root, "wallpapers_path");
-        if(yyjson_is_str(wallpapersDirData)) {
-            wallpapersDirPath = unsafe_yyjson_get_str(wallpapersDirData);
-        }
-
-        auto badTagsData = yyjson_obj_get(root, "bad_tags");
-        if(yyjson_is_arr(badTagsData)) {
-            badTags.clear();
-
-            size_t i, max;
-            yyjson_val* item;
-            yyjson_arr_foreach(badTagsData, i, max, item) {
-                if(yyjson_is_str(item)) {
-                    badTags.emplace_back(yyjson_get_str(item));
-                }
-            }
-        }
-    } else {
-        logger->logError("Failed to parse config file. Fallback to defaults");
+    auto wallpapersPathData = generalJson->tryGetString("wallpapers_path");
+    if(wallpapersPathData.has_value()) {
+        wallpapersDirPath = *wallpapersPathData;
     }
 
-    yyjson_doc_free(doc);
+    auto badTagsData = generalJson->tryGetArr("bad_tags");
+    badTagsData->forEachString(
+        [this](std::string_view str) {
+            badTags.emplace_back(str);
+        }
+    );
 }
 
 void Config::loadGui() {
@@ -60,24 +48,16 @@ void Config::loadGui() {
         return;
     }
 
-    yyjson_read_err readErr;
-    auto doc = yyjson_read_file(guiConfigFilePath().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
-    if(!doc) {
-        logger->logError("Failed to parse config file. Fallback to defaults");
+    auto guiJson = JsonObj::tryParse(guiConfigFilePath());
+    if(!guiJson.has_value()) {
+        logger->logError(std::format("Failed to parse GUI config file: {}", guiJson.error()));
         return;
     }
 
-    auto root = yyjson_doc_get_root(doc);
-    if(yyjson_is_obj(root)) {
-        auto statusBarVisibleData = yyjson_obj_get(root, "status_bar_visible");
-        if(yyjson_is_bool(statusBarVisibleData)) {
-            isStatusBarVisible = unsafe_yyjson_get_bool(statusBarVisibleData);
-        }
-    } else {
-        logger->logError("Failed to parse config file. Fallback to defaults");
+    auto statusBarVisibleData = guiJson->tryGetBool("status_bar_visible");
+    if(statusBarVisibleData.has_value()) {
+        isStatusBarVisible = *statusBarVisibleData;
     }
-
-    yyjson_doc_free(doc);
 }
 
 void Config::loadApi() {
@@ -86,37 +66,29 @@ void Config::loadApi() {
         return;
     }
 
-    yyjson_read_err readErr;
-    auto doc = yyjson_read_file(apiConfigFilePath().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
-    if(!doc) {
-        logger->logError("Failed to parse config file. Fallback to defaults");
+    auto apiJson = JsonObj::tryParse(apiConfigFilePath());
+    if(!apiJson.has_value()) {
+        logger->logError(std::format("Failed to parse API config file: {}", apiJson.error()));
         return;
     }
 
-    auto root = yyjson_doc_get_root(doc);
-    if(yyjson_is_obj(root)) {
-        auto wallhavenApiKeyData = yyjson_obj_get(root, "wallhaven");
-        if(yyjson_is_str(wallhavenApiKeyData)) {
-            wallhavenApiKey = yyjson_get_str(wallhavenApiKeyData);
-        }
-
-        auto danbooruData = yyjson_obj_get(root, "danbooru");
-        if(yyjson_is_obj(danbooruData)) {
-            auto danbooruLoginData = yyjson_obj_get(danbooruData, "login");
-            if(yyjson_is_str(danbooruLoginData)) {
-                danbooruLogin = yyjson_get_str(danbooruLoginData);
-            }
-
-            auto danbooruApiKeyData = yyjson_obj_get(danbooruData, "key");
-            if(yyjson_is_str(danbooruApiKeyData)) {
-                danbooruApiKey = yyjson_get_str(danbooruApiKeyData);
-            }
-        }
-    } else {
-        logger->logError("Failed to parse config file. Fallback to defaults");
+    auto wallhavenApiStr = apiJson->tryGetString("wallhaven");
+    if(wallhavenApiStr.has_value()) {
+        wallhavenApiKey = *wallhavenApiStr;
     }
 
-    yyjson_doc_free(doc);
+    auto danbooruApiObj = apiJson->tryGetObj("danbooru");
+    if(danbooruApiObj.has_value()) {
+        auto danbooruLoginStr = danbooruApiObj->tryGetString("login");
+        if(danbooruLoginStr.has_value()) {
+            danbooruLogin = *danbooruLoginStr;
+        }
+
+        auto danbooruApiKeyStr = danbooruApiObj->tryGetString("key");
+        if(danbooruApiKeyStr.has_value()) {
+            danbooruApiKey = *danbooruApiKeyStr;
+        }
+    }
 }
 
 void Config::save() const {

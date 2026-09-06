@@ -9,7 +9,7 @@
 #include <boost/url.hpp>
 #include <boost/beast/ssl.hpp>
 #include <boost/beast/http/parser.hpp>
-#include "util/PathUtils.hpp"
+#include "network/DownloadData.hpp"
 
 class HttpClient {
 public:
@@ -21,13 +21,22 @@ public:
     [[nodiscard]]
     std::expected<std::filesystem::path, std::string> downloadFile(
         const boost::url_view& url,
-        const std::filesystem::path& downloadDir = util::downloadsDir()
+        const std::filesystem::path& downloadDir = localDownloadsDirPath()
     );
 
 private:
     boost::asio::io_context ioCtx;
     boost::asio::ssl::context sslCtx;
     boost::asio::ip::tcp::resolver resolver;
+    std::unordered_map<boost::url_view, DownloadData> ongoingDownloads;
+
+    [[nodiscard]]
+    static const std::filesystem::path& localDownloadsDirPath();
+
+    [[nodiscard]]
+    static const std::filesystem::path& downloadsInProgressFilePath();
+
+    void loadDownloadsInProgress();
 
     [[nodiscard]]
     std::optional<std::string> getFilename(boost::beast::string_view contentDisposition) const;

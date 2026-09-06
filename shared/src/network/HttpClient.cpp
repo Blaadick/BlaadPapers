@@ -3,8 +3,11 @@
 
 #include "network/HttpClient.hpp"
 
+#include <yyjson.h>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
+#include "file_processing/json/JsonArr.hpp"
+#include "file_processing/json/JsonObj.hpp"
 
 namespace asio = boost::asio;
 namespace beast = boost::beast;
@@ -16,6 +19,8 @@ namespace http = beast::http;
 HttpClient::HttpClient() : sslCtx(ssl::context::tlsv12_client), resolver(ioCtx) {
     sslCtx.set_default_verify_paths();
     sslCtx.set_verify_mode(ssl::verify_peer);
+
+    loadDownloadsInProgress();
 }
 
 std::expected<std::string, std::string> HttpClient::requestString(const boost::url_view& url) {
@@ -199,6 +204,46 @@ std::expected<std::filesystem::path, std::string> HttpClient::downloadFile(
     }
 
     return std::unexpected("Unsupported url");
+}
+
+const std::filesystem::path& HttpClient::localDownloadsDirPath() {
+    static const auto downloadsDirPath = util::localDataDir() / "downloads";
+    return downloadsDirPath;
+}
+
+const std::filesystem::path& HttpClient::downloadsInProgressFilePath() {
+    static const auto downloadsInProgressFilePath = util::localDataDir() / "downloads.json";
+    return downloadsInProgressFilePath;
+}
+
+void HttpClient::loadDownloadsInProgress() {
+    if(!std::filesystem::exists(downloadsInProgressFilePath())) {
+        return;
+    }
+
+    try {
+        auto downloadsJson = JsonArr::parse(downloadsInProgressFilePath());
+        downloadsJson.forEachObj(
+            [this](const JsonObj& objVal) {
+                auto urlVal = objVal.getString("url");
+                auto finalPathVal = objVal.getString("final_path");
+                auto eTagVal = objVal.getString("etag");
+
+                auto url = urls::parse_uri(urlVal).value();
+
+                ongoingDownloads.emplace(
+                    std::move(url),
+                    DownloadData(
+                        finalPathVal,
+                        std::string(eTagVal)
+                    )
+                );
+            }
+        );
+    } catch(const std::exception&) {
+        std::filesystem::remove_all(localDownloadsDirPath());
+        std::filesystem::remove(downloadsInProgressFilePath());
+    }
 }
 
 std::optional<std::string> HttpClient::getFilename(const beast::string_view contentDisposition) const {
