@@ -36,11 +36,26 @@ private:
     [[nodiscard]]
     static const std::filesystem::path& downloadsInProgressFilePath();
 
-    void loadDownloadsInProgress();
+    void loadOngoingDownloads();
+
+    void saveOngoingDownloads();
+
+    void addOngoingDownload(boost::url_view url, DownloadData downloadData);
+
+    void removeOngoingDownload(const boost::url_view& url);
+
+    std::optional<DownloadData> getOngoingDownload(const boost::url_view& url) const;
 
     [[nodiscard]]
     std::optional<std::string> getFilename(boost::beast::string_view contentDisposition) const;
 
     [[nodiscard]]
     std::optional<std::string> getFilename(const boost::urls::url_view& url) const;
+
+    template<class Stream>
+    std::expected<std::filesystem::path, std::string> performDownload(
+        Stream& stream,
+        const boost::url_view& url,
+        const std::filesystem::path& downloadDir
+    );
 };

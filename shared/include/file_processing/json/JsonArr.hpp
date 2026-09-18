@@ -5,7 +5,6 @@
 
 #include <expected>
 #include <filesystem>
-#include <functional>
 #include <string>
 #include <yyjson.h>
 #include "file_processing/json/JsonDocHolder.hpp"

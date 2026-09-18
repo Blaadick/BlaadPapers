@@ -7,6 +7,6 @@
 #include <string>
 
 struct DownloadData {
-    std::filesystem::path finalPath;
+    std::filesystem::path partFilePath;
     std::string eTag;
 };

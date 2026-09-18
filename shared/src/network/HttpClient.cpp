@@ -21,7 +21,7 @@ HttpClient::HttpClient() : sslCtx(ssl::context::tlsv12_client), resolver(ioCtx) 
     sslCtx.set_default_verify_paths();
     sslCtx.set_verify_mode(ssl::verify_peer);
 
-    loadDownloadsInProgress();
+    loadOngoingDownloads();
 }
 
 std::expected<std::string, std::string> HttpClient::requestString(const boost::url_view& url) {
@@ -101,12 +101,14 @@ std::expected<std::filesystem::path, std::string> HttpClient::downloadFile(
     const std::filesystem::path& downloadDir
 ) {
     auto host = url.host();
-    auto target = url.encoded_target();
-    if(target.empty()) {
-        target = "/";
+
+    if(!util::createDirIfNotExists(downloadDir)) {
+        return std::unexpected(std::format("Failed to create dir {}", downloadDir));
     }
 
     try {
+        beast::error_code ec;
+
         if(url.scheme_id() == urls::scheme::http) {
             auto port = url.has_port() ? url.port() : "80";
             auto endpoints = resolver.resolve(host, port);
@@ -114,42 +116,9 @@ std::expected<std::filesystem::path, std::string> HttpClient::downloadFile(
             beast::tcp_stream stream(ioCtx);
             stream.connect(endpoints);
 
-            http::request<http::empty_body> request(http::verb::get, target, 11);
-            request.set(http::field::host, host);
-            request.set(http::field::user_agent, PROJECT_USER_AGENT);
-            request.set(http::field::connection, "close");
-            http::write(stream, request);
-
-            beast::flat_buffer buffer;
-            http::response_parser<http::file_body> parser;
-            parser.body_limit(boost::none);
-            http::read_header(stream, buffer, parser);
-
-            auto& response = parser.get();
-            if(response.result() != http::status::ok) {
-                return std::unexpected(response.reason());
-            }
-
-            auto filename = getFilename(response[http::field::content_disposition]);
-            if(!filename.has_value()) {
-                filename = getFilename(url);
-                if(!filename.has_value()) {
-                    filename = "file";
-                }
-            }
-
-            auto finalPath = downloadDir / *filename;
-            auto partPath = std::filesystem::path(finalPath) += ".part";
-
-            beast::error_code ec;
-            response.body().open(partPath.c_str(), beast::file_mode::write, ec);
-
-            http::read(stream, buffer, parser);
-            response.body().close();
+            auto result = performDownload(stream, url, downloadDir);
             stream.socket().shutdown(ip::tcp::socket::shutdown_both, ec);
-
-            std::filesystem::rename(partPath, finalPath);
-            return finalPath;
+            return result;
         }
 
         if(url.scheme_id() == urls::scheme::https) {
@@ -163,42 +132,9 @@ std::expected<std::filesystem::path, std::string> HttpClient::downloadFile(
             beast::get_lowest_layer(stream).connect(endpoints);
             stream.handshake(ssl::stream_base::client);
 
-            http::request<http::empty_body> request(http::verb::get, target, 11);
-            request.set(http::field::host, host);
-            request.set(http::field::user_agent, PROJECT_USER_AGENT);
-            request.set(http::field::connection, "close");
-            http::write(stream, request);
-
-            beast::flat_buffer buffer;
-            http::response_parser<http::file_body> parser;
-            parser.body_limit(boost::none);
-            http::read_header(stream, buffer, parser);
-
-            auto& response = parser.get();
-            if(response.result() != http::status::ok) {
-                return std::unexpected(response.reason());
-            }
-
-            auto filename = getFilename(response[http::field::content_disposition]);
-            if(!filename.has_value()) {
-                filename = getFilename(url);
-                if(!filename.has_value()) {
-                    filename = "file";
-                }
-            }
-
-            auto finalPath = downloadDir / *filename;
-            auto partPath = std::filesystem::path(finalPath) += ".part";
-
-            beast::error_code ec;
-            response.body().open(partPath.c_str(), beast::file_mode::write, ec);
-
-            http::read(stream, buffer, parser);
-            response.body().close();
+            auto result = performDownload(stream, url, downloadDir);
             stream.shutdown(ec);
-
-            std::filesystem::rename(partPath, finalPath);
-            return finalPath;
+            return result;
         }
     } catch(const boost::system::system_error& error) {
         return std::unexpected(std::format("{} [{}]", error.code().message(), error.code().category().name()));
@@ -217,7 +153,7 @@ const std::filesystem::path& HttpClient::downloadsInProgressFilePath() {
     return downloadsInProgressFilePath;
 }
 
-void HttpClient::loadDownloadsInProgress() {
+void HttpClient::loadOngoingDownloads() {
     if(!std::filesystem::exists(downloadsInProgressFilePath())) {
         return;
     }
@@ -227,7 +163,7 @@ void HttpClient::loadDownloadsInProgress() {
         downloadsJson.forEachObj(
             [this](const JsonObj& objVal) {
                 auto urlVal = objVal.getString("url");
-                auto finalPathVal = objVal.getString("final_path");
+                auto finalPathVal = objVal.getString("part_file_path");
                 auto eTagVal = objVal.getString("etag");
 
                 auto url = urls::parse_uri(urlVal).value();
@@ -244,7 +180,50 @@ void HttpClient::loadDownloadsInProgress() {
     } catch(const std::exception&) {
         std::filesystem::remove_all(localDownloadsDirPath());
         std::filesystem::remove(downloadsInProgressFilePath());
+        ongoingDownloads.clear();
     }
+}
+
+void HttpClient::saveOngoingDownloads() {
+    auto doc = yyjson_mut_doc_new(nullptr);
+    auto root = yyjson_mut_arr(doc);
+    yyjson_mut_doc_set_root(doc, root);
+
+    for(const auto& [url, download] : ongoingDownloads) {
+        auto downloadData = yyjson_mut_arr_add_obj(doc, root);
+        yyjson_mut_obj_add_str(doc, downloadData, "url", url.data());
+        yyjson_mut_obj_add_str(doc, downloadData, "etag", download.eTag.c_str());
+        yyjson_mut_obj_add_str(doc, downloadData, "part_file_path", download.partFilePath.c_str());
+    }
+
+    yyjson_write_err writeErr;
+    auto isWritten = yyjson_mut_write_file(downloadsInProgressFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    if(!isWritten) {
+        std::filesystem::remove_all(localDownloadsDirPath());
+        std::filesystem::remove(downloadsInProgressFilePath());
+        ongoingDownloads.clear();
+    }
+
+    yyjson_mut_doc_free(doc);
+}
+
+void HttpClient::addOngoingDownload(boost::url_view url, DownloadData downloadData) {
+    ongoingDownloads.emplace(url, downloadData);
+    saveOngoingDownloads();
+}
+
+void HttpClient::removeOngoingDownload(const boost::url_view& url) {
+    ongoingDownloads.erase(url);
+    saveOngoingDownloads();
+}
+
+std::optional<DownloadData> HttpClient::getOngoingDownload(const boost::url_view& url) const {
+    const auto it = ongoingDownloads.find(url);
+    if(it == ongoingDownloads.end()) {
+        return std::nullopt;
+    }
+
+    return it->second;
 }
 
 std::optional<std::string> HttpClient::getFilename(const beast::string_view contentDisposition) const {
@@ -290,4 +269,72 @@ std::optional<std::string> HttpClient::getFilename(const urls::url_view& url) co
     }
 
     return segments.back();
+}
+
+template<typename Stream>
+std::expected<std::filesystem::path, std::string> HttpClient::performDownload(
+    Stream& stream,
+    const boost::url_view& url,
+    const std::filesystem::path& downloadDir
+) {
+    auto host = url.host();
+    auto target = url.encoded_target();
+    if(target.empty()) {
+        target = "/";
+    }
+
+    auto downloadData = getOngoingDownload(url);
+    auto isOngoingDownload = downloadData.has_value() && std::filesystem::exists(downloadData->partFilePath);
+
+    http::request<http::empty_body> request(http::verb::get, target, 11);
+    request.set(http::field::host, host);
+    request.set(http::field::user_agent, PROJECT_USER_AGENT);
+    request.set(http::field::connection, "close");
+    if(isOngoingDownload) {
+        auto existingFileSize = std::filesystem::file_size(downloadData->partFilePath);
+        request.set(http::field::range, "bytes=" + std::to_string(existingFileSize) + "-");
+        request.set(http::field::if_range, downloadData->eTag);
+    }
+    http::write(stream, request);
+
+    beast::flat_buffer buffer;
+    http::response_parser<http::file_body> parser;
+    parser.body_limit(boost::none);
+    http::read_header(stream, buffer, parser);
+
+    auto& response = parser.get();
+
+    auto filename = getFilename(response[http::field::content_disposition]);
+    if(!filename.has_value()) {
+        filename = getFilename(url);
+        if(!filename.has_value()) {
+            filename = "file";
+        }
+    }
+    auto finalPath = downloadDir / *filename;
+
+    beast::error_code ec;
+    std::string partPath;
+
+    if(response.result() == http::status::ok) {
+        partPath = std::filesystem::path(finalPath) += ".part";
+
+        addOngoingDownload(url, DownloadData(partPath, response[http::field::etag]));
+
+        response.body().open(partPath.c_str(), beast::file_mode::write, ec);
+    } else if(response.result() == http::status::partial_content) {
+        partPath = downloadData->partFilePath;
+
+        response.body().open(partPath.c_str(), beast::file_mode::append_existing, ec);
+    } else {
+        return std::unexpected(response.reason());
+    }
+
+    http::read(stream, buffer, parser);
+    response.body().close();
+
+    removeOngoingDownload(url);
+
+    std::filesystem::rename(partPath, finalPath);
+    return finalPath;
 }
