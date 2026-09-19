@@ -1,5 +1,5 @@
 // Copyright (C) 2025-2026 Blaadick
-// SPDX-License-Identifier: GPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "model/StatusModel.hpp"
 

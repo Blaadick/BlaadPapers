@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Blaadick
-// SPDX-License-Identifier: GPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QApplication>
 #include <QQmlApplicationEngine>

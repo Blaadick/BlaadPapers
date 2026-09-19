@@ -3,7 +3,7 @@ _reponame="BlaadPapers"
 
 pkgname="blaadpapers"
 pkgdesc="Fast & clean wallpaper manager"
-license=("GPL-3.0-only")
+license=("GPL-3.0-or-later")
 pkgver="0.4.3"
 pkgrel=1
 arch=("any")

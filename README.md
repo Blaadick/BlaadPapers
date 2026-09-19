@@ -61,4 +61,4 @@ Also, BlaadPapers supports deep linking, like this: [blaadpapers://shuffle?inclu
 Keep in mind that the application is being developed and tested on and for Linux systems. I will try to keep it running on other platforms as well, but this is not a priority.
 
 ## License
-Code is licensed under GPL-3.0-only.
+Code is licensed under GPL-3.0-or-later.
