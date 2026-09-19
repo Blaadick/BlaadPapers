@@ -13,11 +13,11 @@ class StatusModel : public QObject {
 public:
     StatusModel();
 
-    const QString& getStatusText() const;
+    auto getStatusText() const -> const QString&;
 
     void setStatusText(const QString& str);
 
-    int getSendCount() const;
+    auto getSendCount() const -> int;
 
     void increaseSendCount();
 

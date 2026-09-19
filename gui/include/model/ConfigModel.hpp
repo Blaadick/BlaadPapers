@@ -14,9 +14,9 @@ class ConfigModel : public QObject {
 public:
     explicit ConfigModel(sptr<Config> config);
 
-    QString getConfigFilePath();
+    auto getConfigFilePath() -> QString;
 
-    bool getStatusBarVisible();
+    auto getStatusBarVisible() -> bool;
 
     void setStatusBarVisible(bool isVisible);
 

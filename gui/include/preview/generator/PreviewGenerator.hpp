@@ -12,9 +12,9 @@ class PreviewGenerator {
 public:
     virtual ~PreviewGenerator() = default;
 
-    virtual bool createAndSavePreview(
+    virtual auto createAndSavePreview(
         const Wallpaper& wallpaper,
         const Size& previewSize,
         const std::filesystem::path& previewPath
-    ) const = 0;
+    ) const -> bool = 0;
 };

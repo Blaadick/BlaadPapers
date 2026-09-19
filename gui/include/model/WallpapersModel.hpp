@@ -50,11 +50,11 @@ public:
 
     Q_INVOKABLE void refreshWallpapers();
 
-    Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    Q_INVOKABLE auto rowCount(const QModelIndex& parent = QModelIndex()) const -> int override;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    auto data(const QModelIndex& index, int role = Qt::DisplayRole) const -> QVariant override;
 
-    QHash<int, QByteArray> roleNames() const override;
+    auto roleNames() const -> QHash<int, QByteArray> override;
 
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;

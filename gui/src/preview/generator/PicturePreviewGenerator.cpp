@@ -7,11 +7,11 @@
 
 using namespace vips;
 
-bool PicturePreviewGenerator::createAndSavePreview(
+auto PicturePreviewGenerator::createAndSavePreview(
     const Wallpaper& wallpaper,
     const Size& targetSize,
     const std::filesystem::path& targetPath
-) const {
+) const -> bool {
     VImage preview = VImage::new_from_file(
         wallpaper.getFilePath().string().c_str(),
         VImage::option()->set("access", "sequential")

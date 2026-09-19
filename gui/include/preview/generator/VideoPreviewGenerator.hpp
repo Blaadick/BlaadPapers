@@ -7,9 +7,9 @@
 
 class VideoPreviewGenerator final : public PreviewGenerator {
 public:
-    bool createAndSavePreview(
+    auto createAndSavePreview(
         const Wallpaper& wallpaper,
         const Size& previewSize,
         const std::filesystem::path& previewPath
-    ) const override;
+    ) const -> bool override;
 };

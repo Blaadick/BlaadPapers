@@ -7,9 +7,9 @@
 
 class PicturePreviewGenerator final : public PreviewGenerator {
 public:
-    bool createAndSavePreview(
+    auto createAndSavePreview(
         const Wallpaper& wallpaper,
         const Size& targetSize,
         const std::filesystem::path& targetPath
-    ) const override;
+    ) const -> bool override;
 };

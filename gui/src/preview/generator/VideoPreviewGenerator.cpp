@@ -4,11 +4,11 @@
 #include "preview/generator/VideoPreviewGenerator.hpp"
 
 //TODO Use libswscale
-bool VideoPreviewGenerator::createAndSavePreview(
+auto VideoPreviewGenerator::createAndSavePreview(
     const Wallpaper& wallpaper,
     const Size& previewSize,
     const std::filesystem::path& previewPath
-) const {
+) const -> bool {
     system(
         std::format(
             R"(ffmpeg -loglevel quiet -y -i "{0}" -t 5 -vf "fps=24,crop='min(iw,ih*{1}/{2}):min(ih,iw*{2}/{1})',scale={1}:{2}:flags=lanczos" -loop 0 -q:v 100 -compression_level 4 "{3}")",

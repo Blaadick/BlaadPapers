@@ -27,7 +27,7 @@ ApplicationWindow {
         property bool suppressReopen: false
 
         onAboutToHide: {
-            if (menuButton.hovered) {
+            if(menuButton.hovered) {
                 suppressReopen = true
             }
         }
@@ -65,7 +65,7 @@ ApplicationWindow {
                 icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
 
                 onClicked: {
-                    if (contextMenu.suppressReopen) {
+                    if(contextMenu.suppressReopen) {
                         contextMenu.suppressReopen = false
                     } else {
                         const pos = menuButton.mapToGlobal(0, menuButton.height + 10)

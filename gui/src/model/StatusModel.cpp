@@ -5,7 +5,7 @@
 
 StatusModel::StatusModel() = default;
 
-const QString& StatusModel::getStatusText() const {
+auto StatusModel::getStatusText() const -> const QString& {
     return statusText;
 }
 
@@ -14,7 +14,7 @@ void StatusModel::setStatusText(const QString& str) {
     emit statusTextChanged();
 }
 
-int StatusModel::getSendCount() const {
+auto StatusModel::getSendCount() const -> int {
     return sendCount;
 }
 

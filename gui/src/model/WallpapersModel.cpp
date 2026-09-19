@@ -113,11 +113,11 @@ void WallpapersModel::refreshWallpapers() {
     loadWallpapers();
 }
 
-int WallpapersModel::rowCount(const QModelIndex& parent) const {
+auto WallpapersModel::rowCount(const QModelIndex& parent) const -> int {
     return wallpaperRepository->count();
 }
 
-QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
+auto WallpapersModel::data(const QModelIndex& index, const int role) const -> QVariant {
     const Wallpaper* wallpaper = wallpaperRepository->get(index.row());
 
     QStringList qStringTags;
@@ -137,7 +137,7 @@ QVariant WallpapersModel::data(const QModelIndex& index, const int role) const {
     }
 }
 
-QHash<int, QByteArray> WallpapersModel::roleNames() const {
+auto WallpapersModel::roleNames() const -> QHash<int, QByteArray> {
     return {
         {IdRole, "wallpaperId"},
         {NameRole, "wallpaperName"},
