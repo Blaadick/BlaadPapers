@@ -26,10 +26,10 @@ public:
     int getFrameRate() const;
 
     [[nodiscard]]
-    std::string toString() const override;
+    std::string toString() const noexcept override;
 
     [[nodiscard]]
-    yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const override;
+    yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept override;
 
 protected:
     Size resolution;

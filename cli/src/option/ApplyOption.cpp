@@ -8,11 +8,14 @@ ApplyOption::ApplyOption(
     sptr<util::Logger> logger
 ) : Option("Sets the wallpaper"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> ApplyOption::getUsageStrings() const {
+auto ApplyOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {"<wallpaper_id>"};
 }
 
-int ApplyOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
+auto ApplyOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;

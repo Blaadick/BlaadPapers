@@ -14,11 +14,14 @@ AddOption::AddOption(
     sptr<util::Logger> logger
 ) : Option("Adds wallpaper(s) to the wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), downloadManager(std::move(downloadManager)), config(std::move(config)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> AddOption::getUsageStrings() const {
+auto AddOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {"<file/URI...>"};
 }
 
-int AddOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
+auto AddOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     if(arguments.empty()) {
         logger->logWarning("One or more URI expected");
         return 1;

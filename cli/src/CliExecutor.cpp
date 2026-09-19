@@ -55,15 +55,15 @@ static constexpr void printOptionHelpMessage(const Option& option, const std::st
 
 CliExecutor::CliExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
-const std::unordered_map<std::string, uptr<Option>>& CliExecutor::getOptions() const {
+const std::unordered_map<std::string, uptr<Option>>& CliExecutor::getOptions() const noexcept {
     return options;
 }
 
-void CliExecutor::addHandler(std::string domain, uptr<DeeplinkHandler> handler) {
+void CliExecutor::addHandler(std::string domain, uptr<DeeplinkHandler> handler) noexcept {
     deeplinkHandlers.emplace(std::move(domain), std::move(handler));
 }
 
-void CliExecutor::addOption(std::string name, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags) {
+void CliExecutor::addOption(std::string name, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags) noexcept {
     option->setFlags(flags);
     options.emplace(std::move(name), std::move(option));
 }

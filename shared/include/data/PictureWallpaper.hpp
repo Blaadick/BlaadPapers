@@ -18,14 +18,11 @@ public:
         std::vector<std::string> tags
     );
 
-    [[nodiscard]]
-    const Size& getResolution() const;
+    auto getResolution() noexcept -> const Size&;
 
-    [[nodiscard]]
-    std::string toString() const override;
+    auto toString() const noexcept -> std::string override;
 
-    [[nodiscard]]
-    yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const override;
+    auto yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept -> yyjson_mut_val* override;
 
 private:
     Size resolution;

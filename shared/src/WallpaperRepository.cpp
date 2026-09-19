@@ -24,7 +24,7 @@
 namespace fs = std::filesystem;
 namespace rng = std::ranges;
 
-Wallpaper* WallpaperRepository::get(const int index) const {
+auto WallpaperRepository::get(const int index) const -> Wallpaper* {
     if(index >= wallpapers.size()) {
         return nullptr;
     }
@@ -32,7 +32,7 @@ Wallpaper* WallpaperRepository::get(const int index) const {
     return wallpapers[index].get();
 }
 
-Wallpaper* WallpaperRepository::get(const std::string_view id) const {
+auto WallpaperRepository::get(const std::string_view id) const -> Wallpaper* {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper.get();
@@ -42,10 +42,10 @@ Wallpaper* WallpaperRepository::get(const std::string_view id) const {
     return nullptr;
 }
 
-Wallpaper* WallpaperRepository::shuffle(
+auto WallpaperRepository::shuffle(
     std::optional<std::vector<std::string>> includeTags,
     std::optional<std::vector<std::string>> excludeTags
-) const {
+) const -> Wallpaper* {
     if(wallpapers.empty()) {
         return nullptr;
     }
@@ -95,7 +95,7 @@ void WallpaperRepository::add(uptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
-bool WallpaperRepository::apply(const std::string_view id) const {
+auto WallpaperRepository::apply(const std::string_view id) const -> bool {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return apply(*wallpaper);
@@ -105,7 +105,7 @@ bool WallpaperRepository::apply(const std::string_view id) const {
     return false;
 }
 
-bool WallpaperRepository::apply(const Wallpaper& wallpaper) const {
+auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
     #ifdef __linux__
     if(std::strcmp(getenv("XDG_CURRENT_DESKTOP"), "KDE") == 0) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
@@ -164,7 +164,7 @@ bool WallpaperRepository::apply(const Wallpaper& wallpaper) const {
     #endif
 }
 
-bool WallpaperRepository::remove(const std::string_view id) {
+auto WallpaperRepository::remove(const std::string_view id) -> bool {
     const auto it = std::ranges::find_if(
         wallpapers,
         [&id](const auto& wallpaper) {
@@ -196,19 +196,19 @@ void WallpaperRepository::clear() {
     wallpapers.clear();
 }
 
-int WallpaperRepository::count() const {
+auto WallpaperRepository::count() const -> int {
     return static_cast<int>(wallpapers.size());
 }
 
-std::vector<uptr<Wallpaper>>::const_iterator WallpaperRepository::begin() const {
+auto WallpaperRepository::begin() const -> std::vector<uptr<Wallpaper>>::const_iterator {
     return wallpapers.begin();
 }
 
-std::vector<uptr<Wallpaper>>::const_iterator WallpaperRepository::end() const {
+auto WallpaperRepository::end() const -> std::vector<uptr<Wallpaper>>::const_iterator {
     return wallpapers.end();
 }
 
-Wallpaper* WallpaperRepository::operator[](const int index) const {
+auto WallpaperRepository::operator[](const int index) const -> Wallpaper* {
     if(index >= wallpapers.size()) {
         return nullptr;
     }
@@ -216,7 +216,7 @@ Wallpaper* WallpaperRepository::operator[](const int index) const {
     return wallpapers[index].get();
 }
 
-Wallpaper* WallpaperRepository::operator[](const std::string_view id) const {
+auto WallpaperRepository::operator[](const std::string_view id) const -> Wallpaper* {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper.get();

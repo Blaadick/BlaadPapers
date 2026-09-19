@@ -5,14 +5,14 @@
 
 Option::Option(std::string description) : description(std::move(description)) {}
 
-const std::string& Option::getDescription() const {
+auto Option::getDescription() const noexcept -> const std::string& {
     return description;
 }
 
-const std::unordered_set<sptr<Flag>>& Option::getFlags() const {
+auto Option::getFlags() const noexcept -> const std::unordered_set<sptr<Flag>>& {
     return flags;
 }
 
-void Option::setFlags(std::unordered_set<sptr<Flag>> flags) {
+void Option::setFlags(std::unordered_set<sptr<Flag>> flags) noexcept {
     this->flags = std::move(flags);
 }

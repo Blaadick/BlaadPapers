@@ -10,5 +10,5 @@ class VideoWallpaperLoader final : public WallpaperLoader {
 public:
     explicit VideoWallpaperLoader(sptr<util::Logger> logger);
 
-    uptr<Wallpaper> loadWallpaper(const std::filesystem::path& wallpaperFilePath) const override;
+    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> uptr<Wallpaper> override;
 };

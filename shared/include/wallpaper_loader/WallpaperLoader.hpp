@@ -17,15 +17,15 @@ public:
 
     virtual ~WallpaperLoader() = default;
 
-    const std::unordered_set<const file::FileType*>& getSupportedFileTypes() const;
+    virtual auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> uptr<Wallpaper> = 0;
 
-    bool isSupported(const std::filesystem::path& wallpaperFilePath) const;
+    auto getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>&;
 
-    std::optional<WallpaperData> loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const;
+    auto isSupported(const std::filesystem::path& wallpaperFilePath) const -> bool;
+
+    auto loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData>;
 
     void saveWallpaperData(const std::filesystem::path& wallpaperDataFilePath, const WallpaperData& wallpaperData) const;
-
-    virtual uptr<Wallpaper> loadWallpaper(const std::filesystem::path& wallpaperFilePath) const = 0;
 
 protected:
     const std::unordered_set<const file::FileType*> supportedFileTypes;

@@ -3,10 +3,8 @@
 
 #pragma once
 
-#include <ranges>
 #include <string>
 #include <vector>
-
 #include "data/Size.hpp"
 
 namespace util {

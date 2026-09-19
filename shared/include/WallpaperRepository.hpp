@@ -9,44 +9,36 @@
 
 class WallpaperRepository {
 public:
-    [[nodiscard]]
-    Wallpaper* get(int index) const;
+    auto get(int index) const -> Wallpaper*;
 
-    [[nodiscard]]
-    Wallpaper* get(std::string_view id) const;
+    auto get(std::string_view id) const -> Wallpaper*;
 
-    [[nodiscard]]
-    Wallpaper* shuffle(
+    auto shuffle(
         std::optional<std::vector<std::string>> includeTags = std::nullopt,
         std::optional<std::vector<std::string>> excludeTags = std::nullopt
-    ) const;
+    ) const -> Wallpaper*;
 
     void add(uptr<Wallpaper> wallpaper);
 
-    bool apply(std::string_view id) const;
+    auto apply(std::string_view id) const -> bool;
 
-    bool apply(const Wallpaper& wallpaper) const;
+    auto apply(const Wallpaper& wallpaper) const -> bool;
 
-    bool remove(std::string_view id);
+    auto remove(std::string_view id) -> bool;
 
     void sortByName();
 
     void clear();
 
-    [[nodiscard]]
-    int count() const;
+    auto count() const -> int;
 
-    [[nodiscard]]
-    std::vector<uptr<Wallpaper>>::const_iterator begin() const;
+    auto begin() const -> std::vector<uptr<Wallpaper>>::const_iterator;
 
-    [[nodiscard]]
-    std::vector<uptr<Wallpaper>>::const_iterator end() const;
+    auto end() const -> std::vector<uptr<Wallpaper>>::const_iterator;
 
-    [[nodiscard]]
-    Wallpaper* operator[](int index) const;
+    auto operator[](int index) const -> Wallpaper*;
 
-    [[nodiscard]]
-    Wallpaper* operator[](std::string_view id) const;
+    auto operator[](std::string_view id) const -> Wallpaper*;
 
 private:
     std::vector<uptr<Wallpaper>> wallpapers;

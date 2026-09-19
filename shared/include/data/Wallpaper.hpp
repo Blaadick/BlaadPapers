@@ -12,29 +12,21 @@ class Wallpaper {
 public:
     virtual ~Wallpaper() = default;
 
-    [[nodiscard]]
-    const std::string& getId() const;
+    virtual auto toString() const noexcept -> std::string = 0;
 
-    [[nodiscard]]
-    const std::filesystem::path& getFilePath() const;
+    virtual auto yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept -> yyjson_mut_val* = 0;
 
-    [[nodiscard]]
-    const std::filesystem::path& getDirPath() const;
+    auto getId() const noexcept -> const std::string&;
 
-    [[nodiscard]]
-    const std::string& getName() const;
+    auto getFilePath() const noexcept -> const std::filesystem::path&;
 
-    [[nodiscard]]
-    const std::string& getSource() const;
+    auto getDirPath() const noexcept -> const std::filesystem::path&;
 
-    [[nodiscard]]
-    const std::vector<std::string>& getTags() const;
+    auto getName() const noexcept -> const std::string&;
 
-    [[nodiscard]]
-    virtual std::string toString() const = 0;
+    auto getSource() const noexcept -> const std::string&;
 
-    [[nodiscard]]
-    virtual yyjson_mut_val* yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const = 0;
+    auto getTags() const noexcept -> const std::vector<std::string>&;
 
 protected:
     std::string id;

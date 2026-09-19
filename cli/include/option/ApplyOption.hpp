@@ -11,10 +11,8 @@ class ApplyOption final : public Option {
 public:
     ApplyOption(sptr<WallpaperRepository> wallpaperRepository, sptr<util::Logger> logger);
 
-    [[nodiscard]]
-    std::vector<std::string_view> getUsageStrings() const override;
+    std::vector<std::string_view> getUsageStrings() const noexcept override;
 
-    [[nodiscard]]
     int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
 
 private:

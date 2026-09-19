@@ -167,15 +167,15 @@ void Config::saveApi() const {
     yyjson_mut_doc_free(doc);
 }
 
-const std::filesystem::path& Config::getWallpapersDirPath() const {
+auto Config::getWallpapersDirPath() const noexcept -> const std::filesystem::path& {
     return wallpapersDirPath;
 }
 
-const std::vector<std::string>& Config::getBadTags() const {
+auto Config::getBadTags() const noexcept -> const std::vector<std::string>& {
     return badTags;
 }
 
-bool Config::isWallpaperBad(const Wallpaper& wallpaper) const {
+auto Config::isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool {
     return std::ranges::any_of(
         badTags,
         [&wallpaper](const std::string& tag) {
@@ -184,38 +184,38 @@ bool Config::isWallpaperBad(const Wallpaper& wallpaper) const {
     );
 }
 
-const std::optional<std::string>& Config::getWallhavenApiKey() const {
+auto Config::getWallhavenApiKey() const noexcept -> const std::optional<std::string>& {
     return wallhavenApiKey;
 }
 
-const std::optional<std::string>& Config::getDanbooruLogin() const {
+auto Config::getDanbooruLogin() const noexcept -> const std::optional<std::string>& {
     return danbooruLogin;
 }
 
-const std::optional<std::string>& Config::getDanbooruApiKey() const {
+auto Config::getDanbooruApiKey() const noexcept -> const std::optional<std::string>& {
     return danbooruApiKey;
 }
 
-bool Config::getStatusBarVisible() const {
+auto Config::getStatusBarVisible() const noexcept -> bool {
     return isStatusBarVisible;
 }
 
-void Config::setStatusBarVisible(const bool newVisibility) {
+void Config::setStatusBarVisible(const bool newVisibility) noexcept {
     isStatusBarVisible = newVisibility;
     saveGui();
 }
 
-const std::filesystem::path& Config::generalConfigFilePath() const {
+auto Config::generalConfigFilePath() const noexcept -> const std::filesystem::path& {
     static const auto generalConfigFilePath = util::configDir() / "config.json";
     return generalConfigFilePath;
 }
 
-const std::filesystem::path& Config::guiConfigFilePath() const {
+auto Config::guiConfigFilePath() const noexcept -> const std::filesystem::path& {
     static const auto guiConfigFilePath = util::configDir() / "gui.json";
     return guiConfigFilePath;
 }
 
-const std::filesystem::path& Config::apiConfigFilePath() const {
+auto Config::apiConfigFilePath() const noexcept -> const std::filesystem::path& {
     static const auto apiConfigFilePath = util::configDir() / "api.json";
     return apiConfigFilePath;
 }

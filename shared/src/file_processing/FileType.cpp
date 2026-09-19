@@ -3,11 +3,11 @@
 
 #include "file_processing/FileType.hpp"
 
-const char* file::FileType::canonicalExtension() const {
+auto file::FileType::canonicalExtension() const -> const char* {
     return extensions[0];
 }
 
-std::optional<const file::FileType&> file::getTypeFromMime(const std::string_view mime) {
+auto file::getTypeFromMime(const std::string_view mime) -> std::optional<const file::FileType&> {
     auto it = typeByMime.find(mime);
     if(it == typeByMime.end()) {
         return std::nullopt;
@@ -16,7 +16,7 @@ std::optional<const file::FileType&> file::getTypeFromMime(const std::string_vie
     return it->second;
 }
 
-std::optional<const file::FileType&> file::getTypeFromFile(const std::filesystem::path& filePath) {
+auto file::getTypeFromFile(const std::filesystem::path& filePath) -> std::optional<const file::FileType&> {
     if(!std::filesystem::is_regular_file(filePath)) {
         return std::nullopt;
     }

@@ -7,7 +7,7 @@
 
 ShuffleHandler::ShuffleHandler(sptr<WallpaperRepository> wallpaperRepository) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
-int ShuffleHandler::handle(const Uri& uri) const {
+auto ShuffleHandler::handle(const Uri& uri) const -> int {
     if(wallpaperRepository->count() < 1) {
         return 0;
     }

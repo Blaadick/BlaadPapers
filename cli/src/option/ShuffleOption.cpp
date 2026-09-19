@@ -13,14 +13,17 @@ ShuffleOption::ShuffleOption(
     sptr<util::Logger> logger
 ) : Option("Sets the random wallpaper"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> ShuffleOption::getUsageStrings() const {
+auto ShuffleOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {
         "[include_tags] [exclude_tags]",
         R"('["General", "Nature"]' '["Explicit"]')"
     };
 }
 
-int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
+auto ShuffleOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     if(wallpaperRepository->count() == 0) {
         logger->logInfo("No Wallpapers");
         return 0;
@@ -45,7 +48,8 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const
 
         size_t i, max;
         yyjson_val* item;
-        yyjson_arr_foreach(root, i, max, item) {
+        yyjson_arr_foreach(root, i, max, item)
+        {
             if(yyjson_is_str(item)) {
                 includeTags.emplace_back(yyjson_get_str(item));
             }
@@ -68,7 +72,8 @@ int ShuffleOption::execute(const std::vector<std::string_view>& arguments, const
 
         size_t i, max;
         yyjson_val* item;
-        yyjson_arr_foreach(root, i, max, item) {
+        yyjson_arr_foreach(root, i, max, item)
+        {
             if(yyjson_is_str(item)) {
                 excludeTags.emplace_back(yyjson_get_str(item));
             }

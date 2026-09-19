@@ -14,7 +14,7 @@ VideoWallpaperLoader::VideoWallpaperLoader(sptr<util::Logger> logger) : Wallpape
     std::move(logger)
 ) {}
 
-uptr<Wallpaper> VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const {
+auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> uptr<Wallpaper> {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
     auto wallpaperId = wallpaperDirPath.stem().string();

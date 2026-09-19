@@ -7,7 +7,7 @@
 
 JsonArr::JsonArr(sptr<JsonDocHolder> doc, yyjson_val* root) : doc(std::move(doc)), root(root) {}
 
-std::expected<JsonArr, std::string> JsonArr::tryParse(const std::filesystem::path& filePath) noexcept {
+auto JsonArr::tryParse(const std::filesystem::path& filePath) noexcept -> std::expected<JsonArr, std::string> {
     yyjson_read_err readErr;
     auto doc = yyjson_read_file(filePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
@@ -23,7 +23,7 @@ std::expected<JsonArr, std::string> JsonArr::tryParse(const std::filesystem::pat
     return JsonArr(std::make_shared<JsonDocHolder>(doc), root);
 }
 
-JsonArr JsonArr::parse(const std::filesystem::path& filePath) {
+auto JsonArr::parse(const std::filesystem::path& filePath) -> JsonArr {
     auto jsonArr = tryParse(filePath);
     if(!jsonArr.has_value()) {
         throw JsonError(jsonArr.error());

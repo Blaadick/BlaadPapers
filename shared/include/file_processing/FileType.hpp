@@ -13,7 +13,7 @@ namespace file {
         const char* mime;
         const char* extensions[];
 
-        const char* canonicalExtension() const;
+        auto canonicalExtension() const -> const char*;
     };
 
     inline constexpr FileType png = {"image/png", {".png", nullptr}};
@@ -72,9 +72,7 @@ namespace file {
         {".mkv", mkv}
     };
 
-    [[nodiscard]]
-    std::optional<const FileType&> getTypeFromMime(std::string_view mime);
+    auto getTypeFromMime(std::string_view mime) -> std::optional<const FileType&>;
 
-    [[nodiscard]]
-    std::optional<const FileType&> getTypeFromFile(const std::filesystem::path& filePath);
+    auto getTypeFromFile(const std::filesystem::path& filePath) -> std::optional<const FileType&>;
 }

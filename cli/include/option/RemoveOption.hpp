@@ -11,11 +11,12 @@ class RemoveOption final : public Option {
 public:
     RemoveOption(sptr<WallpaperRepository> wallpaperRepository, sptr<util::Logger> logger);
 
-    [[nodiscard]]
-    std::vector<std::string_view> getUsageStrings() const override;
+    auto getUsageStrings() const noexcept -> std::vector<std::string_view> override;
 
-    [[nodiscard]]
-    int execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) override;
+    auto execute(
+        const std::vector<std::string_view>& arguments,
+        const std::unordered_set<sptr<Flag>>& flags
+    ) -> int override;
 
 private:
     sptr<WallpaperRepository> wallpaperRepository;

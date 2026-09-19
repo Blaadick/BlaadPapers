@@ -15,13 +15,13 @@ class CliExecutor {
 public:
     explicit CliExecutor(sptr<util::Logger> logger);
 
-    const std::unordered_map<std::string, uptr<Option>>& getOptions() const;
+    auto getOptions() const noexcept -> const std::unordered_map<std::string, uptr<Option>>&;
 
-    void addHandler(std::string domain, uptr<DeeplinkHandler> handler);
+    void addHandler(std::string domain, uptr<DeeplinkHandler> handler) noexcept;
 
-    void addOption(std::string, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags = {});
+    void addOption(std::string, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags = {}) noexcept;
 
-    int execute(int argc, char* argv[]);
+    auto execute(int argc, char* argv[]) -> int;
 
 private:
     std::unordered_map<std::string, uptr<DeeplinkHandler>> deeplinkHandlers;

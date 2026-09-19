@@ -18,35 +18,24 @@ public:
 
     void loadWallpapers();
 
-    bool addWallpaper(
+    auto addWallpaper(
         const std::filesystem::path& filePath,
         const std::filesystem::path& destinationFolderPath
-    );
+    ) -> bool;
 
     void addWallpapers(
         const std::vector<std::filesystem::path>& paths,
         const std::filesystem::path& destinationFolderPath
     );
 
-    const std::unordered_map<std::type_index, uptr<WallpaperLoader>>& getWallpaperLoaders() const;
+    auto getWallpaperLoaders() const -> const std::unordered_map<std::type_index, uptr<WallpaperLoader>>&;
 
     template<std::derived_from<Wallpaper> T>
     void addWallpaperLoader(uptr<WallpaperLoader> wallpaperLoader) {
         wallpaperLoaders.emplace(typeid(T), std::move(wallpaperLoader));
     }
 
-    const std::unordered_set<const file::FileType*>& getSupportedFileTypes() const {
-        static std::unordered_set<const file::FileType*> supportedFileTypes;
-
-        if(supportedFileTypes.empty()) {
-            for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
-                auto loaderFileTypes = wallpaperLoader->getSupportedFileTypes();
-                supportedFileTypes.insert(loaderFileTypes.begin(), loaderFileTypes.end());
-            }
-        }
-
-        return supportedFileTypes;
-    }
+    auto getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>&;
 
 private:
     sptr<WallpaperRepository> wallpaperRepository;

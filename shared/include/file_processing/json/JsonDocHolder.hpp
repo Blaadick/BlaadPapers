@@ -13,7 +13,7 @@ public:
 
     ~JsonDocHolder();
 
-    JsonDocHolder& operator=(const JsonDocHolder&) = delete;
+    auto operator=(const JsonDocHolder&) -> JsonDocHolder& = delete;
 
     operator yyjson_doc*() const;
 

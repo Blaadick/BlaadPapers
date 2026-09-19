@@ -13,15 +13,15 @@ struct Flag {
     std::string description;
 
     [[nodiscard]]
-    static bool isShortFlag(std::string_view string);
+    static auto isShortFlag(std::string_view string) -> bool;
 
     [[nodiscard]]
-    static bool isLongFlag(std::string_view string);
+    static auto isLongFlag(std::string_view string) -> bool;
 
     [[nodiscard]]
-    static bool isFlag(std::string_view string);
+    static auto isFlag(std::string_view string) -> bool;
 };
 
-yyjson_mut_val* yyjson_mut_flag(yyjson_mut_doc* doc, const Flag* flag);
+auto yyjson_mut_flag(yyjson_mut_doc* doc, const Flag* flag) -> yyjson_mut_val*;
 
-bool yyjson_mut_arr_add_flag(yyjson_mut_doc* doc, yyjson_mut_val* arr, const Flag* flag);
+auto yyjson_mut_arr_add_flag(yyjson_mut_doc* doc, yyjson_mut_val* arr, const Flag* flag) -> bool;

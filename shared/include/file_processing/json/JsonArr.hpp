@@ -17,11 +17,9 @@ class JsonArr {
 public:
     JsonArr(sptr<JsonDocHolder> doc, yyjson_val* root);
 
-    [[nodiscard]]
-    static std::expected<JsonArr, std::string> tryParse(const std::filesystem::path& filePath) noexcept;
+    static auto tryParse(const std::filesystem::path& filePath) noexcept -> std::expected<JsonArr, std::string>;
 
-    [[nodiscard]]
-    static JsonArr parse(const std::filesystem::path& filePath);
+    static auto parse(const std::filesystem::path& filePath) -> JsonArr;
 
     template<std::invocable<const JsonObj&> F>
     void forEachObj(F&& function) const {

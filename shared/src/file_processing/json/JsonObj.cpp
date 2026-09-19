@@ -8,7 +8,7 @@
 
 JsonObj::JsonObj(sptr<JsonDocHolder> doc, yyjson_val* root) : doc(std::move(doc)), root(root) {}
 
-std::expected<JsonObj, std::string> JsonObj::tryParse(const std::filesystem::path& filePath) noexcept {
+auto JsonObj::tryParse(const std::filesystem::path& filePath) noexcept -> std::expected<JsonObj, std::string> {
     yyjson_read_err readErr;
     auto doc = yyjson_read_file(filePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
@@ -24,7 +24,7 @@ std::expected<JsonObj, std::string> JsonObj::tryParse(const std::filesystem::pat
     return JsonObj(std::make_shared<JsonDocHolder>(doc), root);
 }
 
-JsonObj JsonObj::parse(const std::filesystem::path& filePath) {
+auto JsonObj::parse(const std::filesystem::path& filePath) -> JsonObj {
     auto jsonObj = tryParse(filePath);
     if(!jsonObj.has_value()) {
         throw JsonError(jsonObj.error());
@@ -33,7 +33,7 @@ JsonObj JsonObj::parse(const std::filesystem::path& filePath) {
     return *jsonObj;
 }
 
-std::expected<JsonObj, std::string> JsonObj::tryGetObj(std::string_view key) const noexcept {
+auto JsonObj::tryGetObj(std::string_view key) const noexcept -> std::expected<JsonObj, std::string> {
     auto objData = yyjson_obj_getn(root, key.data(), key.size());
     if(!objData) {
         return std::unexpected("No such value");
@@ -46,7 +46,7 @@ std::expected<JsonObj, std::string> JsonObj::tryGetObj(std::string_view key) con
     return JsonObj(doc, objData);
 }
 
-JsonObj JsonObj::getObj(std::string_view key) const {
+auto JsonObj::getObj(std::string_view key) const -> JsonObj {
     auto objectVal = tryGetObj(std::move(key));
     if(!objectVal.has_value()) {
         throw JsonError(objectVal.error());
@@ -55,7 +55,7 @@ JsonObj JsonObj::getObj(std::string_view key) const {
     return *objectVal;
 }
 
-std::expected<JsonArr, std::string> JsonObj::tryGetArr(std::string_view key) const noexcept {
+auto JsonObj::tryGetArr(std::string_view key) const noexcept -> std::expected<JsonArr, std::string> {
     auto arrayData = yyjson_obj_getn(root, key.data(), key.size());
     if(!arrayData) {
         return std::unexpected("No such value");
@@ -68,7 +68,7 @@ std::expected<JsonArr, std::string> JsonObj::tryGetArr(std::string_view key) con
     return JsonArr(doc, arrayData);
 }
 
-JsonArr JsonObj::getArr(std::string_view key) const {
+auto JsonObj::getArr(std::string_view key) const -> JsonArr {
     auto arrayVal = tryGetArr(std::move(key));
     if(!arrayVal.has_value()) {
         throw JsonError(arrayVal.error());
@@ -77,7 +77,7 @@ JsonArr JsonObj::getArr(std::string_view key) const {
     return *arrayVal;
 }
 
-std::expected<std::string_view, std::string> JsonObj::tryGetString(std::string_view key) const noexcept {
+auto JsonObj::tryGetString(std::string_view key) const noexcept -> std::expected<std::string_view, std::string> {
     auto stringData = yyjson_obj_getn(root, key.data(), key.size());
     if(!stringData) {
         return std::unexpected("No such value");
@@ -90,7 +90,7 @@ std::expected<std::string_view, std::string> JsonObj::tryGetString(std::string_v
     return unsafe_yyjson_get_str(stringData);
 }
 
-std::string_view JsonObj::getString(std::string_view key) const {
+auto JsonObj::getString(std::string_view key) const -> std::string_view {
     auto stringVal = tryGetString(std::move(key));
     if(!stringVal.has_value()) {
         throw JsonError(stringVal.error());
@@ -99,7 +99,7 @@ std::string_view JsonObj::getString(std::string_view key) const {
     return *stringVal;
 }
 
-std::expected<bool, std::string> JsonObj::tryGetBool(std::string_view key) const noexcept {
+auto JsonObj::tryGetBool(std::string_view key) const noexcept -> std::expected<bool, std::string> {
     auto boolData = yyjson_obj_getn(root, key.data(), key.size());
     if(!boolData) {
         return std::unexpected("No such value");
@@ -112,7 +112,7 @@ std::expected<bool, std::string> JsonObj::tryGetBool(std::string_view key) const
     return unsafe_yyjson_get_bool(boolData);
 }
 
-bool JsonObj::getBool(std::string_view key) const {
+auto JsonObj::getBool(std::string_view key) const -> bool {
     auto boolVal = tryGetBool(std::move(key));
     if(!boolVal.has_value()) {
         throw JsonError(boolVal.error());
@@ -121,7 +121,7 @@ bool JsonObj::getBool(std::string_view key) const {
     return *boolVal;
 }
 
-std::expected<int, std::string> JsonObj::tryGetInt(std::string_view key) const noexcept {
+auto JsonObj::tryGetInt(std::string_view key) const noexcept -> std::expected<int, std::string> {
     auto intData = yyjson_obj_getn(root, key.data(), key.size());
     if(!intData) {
         return std::unexpected("No such value");
@@ -134,7 +134,7 @@ std::expected<int, std::string> JsonObj::tryGetInt(std::string_view key) const n
     return unsafe_yyjson_get_int(intData);
 }
 
-int JsonObj::getInt(std::string_view key) const {
+auto JsonObj::getInt(std::string_view key) const -> int {
     auto intVal = tryGetInt(std::move(key));
     if(!intVal.has_value()) {
         throw JsonError(intVal.error());
@@ -143,7 +143,7 @@ int JsonObj::getInt(std::string_view key) const {
     return *intVal;
 }
 
-std::expected<double, std::string> JsonObj::tryGetDouble(std::string_view key) const noexcept {
+auto JsonObj::tryGetDouble(std::string_view key) const noexcept -> std::expected<double, std::string> {
     auto doubleData = yyjson_obj_getn(root, key.data(), key.size());
     if(!doubleData) {
         return std::unexpected("No such value");
@@ -156,7 +156,7 @@ std::expected<double, std::string> JsonObj::tryGetDouble(std::string_view key) c
     return unsafe_yyjson_get_real(doubleData);
 }
 
-double JsonObj::getDouble(std::string_view key) const {
+auto JsonObj::getDouble(std::string_view key) const -> double {
     auto doubleVal = tryGetDouble(std::move(key));
     if(!doubleVal.has_value()) {
         throw JsonError(doubleVal.error());

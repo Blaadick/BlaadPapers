@@ -10,7 +10,7 @@ struct Size {
     int width = -1;
     int height = -1;
 
-    Size operator*(const int& number) const;
+    auto operator*(const int& number) const -> Size;
 };
 
 template<>
@@ -23,8 +23,8 @@ struct std::formatter<Size> : std::formatter<std::string> {
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const Size& size);
+auto operator<<(std::ostream& os, const Size& size) -> std::ostream&;
 
-yyjson_mut_val* yyjson_mut_size(yyjson_mut_doc* doc, const Size* size);
+auto yyjson_mut_size(yyjson_mut_doc* doc, const Size* size) noexcept -> yyjson_mut_val*;
 
-bool yyjson_mut_obj_add_size(yyjson_mut_doc* doc, yyjson_mut_val* obj, const char* key, const Size* size);
+auto yyjson_mut_obj_add_size(yyjson_mut_doc* doc, yyjson_mut_val* obj, const char* key, const Size* size) noexcept -> bool;

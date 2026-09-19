@@ -10,11 +10,14 @@ InfoOption::InfoOption(
     sptr<util::Logger> logger
 ) : Option("Shows wallpaper information"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> InfoOption::getUsageStrings() const {
+auto InfoOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {"<wallpaper_id> [flags...]"};
 }
 
-int InfoOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
+auto InfoOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     if(arguments.empty()) {
         logger->logWarning("Wallpaper id expected");
         return 1;

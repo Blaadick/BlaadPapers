@@ -12,11 +12,11 @@ WallpaperLoader::WallpaperLoader(
     sptr<util::Logger> logger
 ) : supportedFileTypes(std::move(supportedFileTypes)), logger(std::move(logger)) {}
 
-const std::unordered_set<const file::FileType*>& WallpaperLoader::getSupportedFileTypes() const {
+auto WallpaperLoader::getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>& {
     return supportedFileTypes;
 }
 
-bool WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const {
+auto WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const -> bool {
     auto fileType = file::getTypeFromFile(wallpaperFilePath);
     if(!fileType.has_value()) {
         return false;
@@ -25,7 +25,9 @@ bool WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath
     return supportedFileTypes.contains(&fileType.value());
 }
 
-std::optional<WallpaperData> WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const {
+auto WallpaperLoader::loadWallpaperData(
+    const std::filesystem::path& wallpaperDataFilePath
+) const -> std::optional<WallpaperData> {
     if(!std::filesystem::exists(wallpaperDataFilePath)) {
         auto wallpaperId = wallpaperDataFilePath.parent_path().stem().string();
         auto defaultWallpaperData = WallpaperData(wallpaperId, "", {"General"});
@@ -73,7 +75,10 @@ std::optional<WallpaperData> WallpaperLoader::loadWallpaperData(const std::files
     return wallpaperData;
 }
 
-void WallpaperLoader::saveWallpaperData(const std::filesystem::path& wallpaperDataFilePath, const WallpaperData& wallpaperData) const {
+void WallpaperLoader::saveWallpaperData(
+    const std::filesystem::path& wallpaperDataFilePath,
+    const WallpaperData& wallpaperData
+) const {
     const auto doc = yyjson_mut_doc_new(nullptr);
     const auto root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);

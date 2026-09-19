@@ -21,14 +21,17 @@ RunRendererOption::RunRendererOption(
     sptr<util::Logger> logger
 ) : Option("Starts the renderer daemon"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> RunRendererOption::getUsageStrings() const {
+auto RunRendererOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {
         "[mpv_args...]",
         "no-interpolation hwdec=vaapi"
     };
 }
 
-int RunRendererOption::execute(const std::vector<std::string_view>& arguments, const std::unordered_set<sptr<Flag>>& flags) {
+auto RunRendererOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     #ifdef __linux__
     if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
         logger->logWarning("Mpvpaper is already running");

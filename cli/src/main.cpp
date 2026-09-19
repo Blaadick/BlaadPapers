@@ -29,7 +29,7 @@
 #include "wallpaper_loader/VideoWallpaperLoader.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
-int main(int argc, char* argv[]) {
+auto main(int argc, char* argv[]) -> int {
     DefaultWallpaper::createIfNotExists(true);
     PostSetScript::createIfNotExists();
 

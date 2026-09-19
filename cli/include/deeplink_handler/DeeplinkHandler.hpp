@@ -9,5 +9,5 @@ class DeeplinkHandler {
 public:
     virtual ~DeeplinkHandler() = default;
 
-    virtual int handle(const Uri& uri) const = 0;
+    virtual auto handle(const Uri& uri) const -> int = 0;
 };

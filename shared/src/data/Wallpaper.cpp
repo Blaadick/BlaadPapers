@@ -5,26 +5,26 @@
 
 #include "config/Config.hpp"
 
-const std::string& Wallpaper::getId() const {
+const std::string& Wallpaper::getId() const noexcept {
     return id;
 }
 
-const std::filesystem::path& Wallpaper::getFilePath() const {
+const std::filesystem::path& Wallpaper::getFilePath() const noexcept {
     return filePath;
 }
 
-const std::filesystem::path& Wallpaper::getDirPath() const {
+const std::filesystem::path& Wallpaper::getDirPath() const noexcept {
     return dirPath;
 }
 
-const std::string& Wallpaper::getName() const {
+const std::string& Wallpaper::getName() const noexcept {
     return name;
 }
 
-const std::string& Wallpaper::getSource() const {
+const std::string& Wallpaper::getSource() const noexcept {
     return source;
 }
 
-const std::vector<std::string>& Wallpaper::getTags() const {
+const std::vector<std::string>& Wallpaper::getTags() const noexcept {
     return tags;
 }

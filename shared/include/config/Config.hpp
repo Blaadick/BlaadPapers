@@ -31,37 +31,27 @@ public:
 
     void saveApi() const;
 
-    [[nodiscard]]
-    const std::filesystem::path& getWallpapersDirPath() const;
+    auto getWallpapersDirPath() const noexcept -> const std::filesystem::path&;
 
-    [[nodiscard]]
-    const std::vector<std::string>& getBadTags() const;
+    auto getBadTags() const noexcept -> const std::vector<std::string>&;
 
-    [[nodiscard]]
-    bool isWallpaperBad(const Wallpaper& wallpaper) const;
+    auto isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool;
 
-    [[nodiscard]]
-    const std::optional<std::string>& getWallhavenApiKey() const;
+    auto getWallhavenApiKey() const noexcept -> const std::optional<std::string>&;
 
-    [[nodiscard]]
-    const std::optional<std::string>& getDanbooruLogin() const;
+    auto getDanbooruLogin() const noexcept -> const std::optional<std::string>&;
 
-    [[nodiscard]]
-    const std::optional<std::string>& getDanbooruApiKey() const;
+    auto getDanbooruApiKey() const noexcept -> const std::optional<std::string>&;
 
-    [[nodiscard]]
-    bool getStatusBarVisible() const;
+    auto getStatusBarVisible() const noexcept -> bool;
 
-    void setStatusBarVisible(bool newVisibility);
+    void setStatusBarVisible(bool newVisibility) noexcept;
 
-    [[nodiscard]]
-    const std::filesystem::path& generalConfigFilePath() const;
+    auto generalConfigFilePath() const noexcept -> const std::filesystem::path&;
 
-    [[nodiscard]]
-    const std::filesystem::path& guiConfigFilePath() const;
+    auto guiConfigFilePath() const noexcept -> const std::filesystem::path&;
 
-    [[nodiscard]]
-    const std::filesystem::path& apiConfigFilePath() const;
+    auto apiConfigFilePath() const noexcept -> const std::filesystem::path&;
 
 private:
     sptr<util::Logger> logger;

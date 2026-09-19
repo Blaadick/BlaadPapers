@@ -35,7 +35,7 @@ int VideoWallpaper::getFrameRate() const {
     return frameRate;
 }
 
-std::string VideoWallpaper::toString() const {
+std::string VideoWallpaper::toString() const noexcept {
     return std::format(
         "{}\n"
         "    Name: {}\n"
@@ -56,7 +56,7 @@ std::string VideoWallpaper::toString() const {
     );
 }
 
-yyjson_mut_val* VideoWallpaper::yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const {
+yyjson_mut_val* VideoWallpaper::yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept {
     const auto wallpaperData = yyjson_mut_obj(doc);
 
     const auto tagsData = yyjson_mut_arr(doc);

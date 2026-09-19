@@ -3,19 +3,19 @@
 
 #include "flag/Flag.hpp"
 
-bool Flag::isShortFlag(const std::string_view string) {
+auto Flag::isShortFlag(const std::string_view string) -> bool {
     return string.starts_with('-') && string.length() == 2;
 }
 
-bool Flag::isLongFlag(const std::string_view string) {
+auto Flag::isLongFlag(const std::string_view string) -> bool {
     return string.starts_with("--") && string.length() > 2;
 }
 
-bool Flag::isFlag(const std::string_view string) {
+auto Flag::isFlag(const std::string_view string) -> bool {
     return isShortFlag(string) || isLongFlag(string);
 }
 
-yyjson_mut_val* yyjson_mut_flag(yyjson_mut_doc* doc, const Flag* flag) {
+auto yyjson_mut_flag(yyjson_mut_doc* doc, const Flag* flag) -> yyjson_mut_val* {
     const auto flagData = yyjson_mut_obj(doc);
 
     yyjson_mut_obj_add_str(doc, flagData, "name", flag->name.c_str());
@@ -32,7 +32,7 @@ yyjson_mut_val* yyjson_mut_flag(yyjson_mut_doc* doc, const Flag* flag) {
     return flagData;
 }
 
-bool yyjson_mut_arr_add_flag(yyjson_mut_doc* doc, yyjson_mut_val* arr, const Flag* flag) {
+auto yyjson_mut_arr_add_flag(yyjson_mut_doc* doc, yyjson_mut_val* arr, const Flag* flag) -> bool {
     const auto val = yyjson_mut_flag(doc, flag);
     return yyjson_mut_arr_append(arr, val);
 }

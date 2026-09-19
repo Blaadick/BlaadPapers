@@ -7,7 +7,7 @@ ApplyHandler::ApplyHandler(
     sptr<WallpaperRepository> wallpaperRepository
 ) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
-int ApplyHandler::handle(const Uri& uri) const {
+auto ApplyHandler::handle(const Uri& uri) const -> int {
     if(uri.path().empty()) {
         return 1;
     }

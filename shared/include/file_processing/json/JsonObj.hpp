@@ -15,47 +15,33 @@ class JsonObj {
 public:
     JsonObj(sptr<JsonDocHolder> doc, yyjson_val* root);
 
-    [[nodiscard]]
-    static std::expected<JsonObj, std::string> tryParse(const std::filesystem::path& filePath) noexcept;
+    static auto tryParse(const std::filesystem::path& filePath) noexcept -> std::expected<JsonObj, std::string>;
 
-    [[nodiscard]]
-    static JsonObj parse(const std::filesystem::path& filePath);
+    static auto parse(const std::filesystem::path& filePath) -> JsonObj;
 
-    [[nodiscard]]
-    std::expected<JsonObj, std::string> tryGetObj(std::string_view key) const noexcept;
+    auto tryGetObj(std::string_view key) const noexcept -> std::expected<JsonObj, std::string>;
 
-    [[nodiscard]]
-    JsonObj getObj(std::string_view key) const;
+    auto getObj(std::string_view key) const -> JsonObj;
 
-    [[nodiscard]]
-    std::expected<JsonArr, std::string> tryGetArr(std::string_view key) const noexcept;
+    auto tryGetArr(std::string_view key) const noexcept -> std::expected<JsonArr, std::string>;
 
-    [[nodiscard]]
-    JsonArr getArr(std::string_view key) const;
+    auto getArr(std::string_view key) const -> JsonArr;
 
-    [[nodiscard]]
-    std::expected<std::string_view, std::string> tryGetString(std::string_view key) const noexcept;
+    auto tryGetString(std::string_view key) const noexcept -> std::expected<std::string_view, std::string>;
 
-    [[nodiscard]]
-    std::string_view getString(std::string_view key) const;
+    auto getString(std::string_view key) const -> std::string_view;
 
-    [[nodiscard]]
-    std::expected<bool, std::string> tryGetBool(std::string_view key) const noexcept;
+    auto tryGetBool(std::string_view key) const noexcept -> std::expected<bool, std::string>;
 
-    [[nodiscard]]
-    bool getBool(std::string_view key) const;
+    auto getBool(std::string_view key) const -> bool;
 
-    [[nodiscard]]
-    std::expected<int, std::string> tryGetInt(std::string_view key) const noexcept;
+    auto tryGetInt(std::string_view key) const noexcept -> std::expected<int, std::string>;
 
-    [[nodiscard]]
-    int getInt(std::string_view key) const;
+    auto getInt(std::string_view key) const -> int;
 
-    [[nodiscard]]
-    std::expected<double, std::string> tryGetDouble(std::string_view key) const noexcept;
+    auto tryGetDouble(std::string_view key) const noexcept -> std::expected<double, std::string>;
 
-    [[nodiscard]]
-    double getDouble(std::string_view key) const;
+    auto getDouble(std::string_view key) const -> double;
 
 private:
     sptr<JsonDocHolder> doc;

@@ -25,11 +25,11 @@ PictureWallpaper::PictureWallpaper(
     this->tags = std::move(tags);
 }
 
-const Size& PictureWallpaper::getResolution() const {
+const Size& PictureWallpaper::getResolution() noexcept {
     return resolution;
 }
 
-std::string PictureWallpaper::toString() const {
+std::string PictureWallpaper::toString() const noexcept {
     return std::format(
         "{}\n"
         "    Name: {}\n"
@@ -48,7 +48,7 @@ std::string PictureWallpaper::toString() const {
     );
 }
 
-yyjson_mut_val* PictureWallpaper::yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const {
+yyjson_mut_val* PictureWallpaper::yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept {
     const auto wallpaperData = yyjson_mut_obj(doc);
 
     const auto tagsData = yyjson_mut_arr(doc);

@@ -10,11 +10,14 @@ ListOption::ListOption(
     sptr<util::Logger> logger
 ) : Option("Shows list of all available wallpapers"), wallpaperRepository(std::move(wallpaperRepository)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> ListOption::getUsageStrings() const {
+auto ListOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {"[flags...]"};
 }
 
-int ListOption::execute(const std::vector<std::string_view>&, const std::unordered_set<sptr<Flag>>& flags) {
+auto ListOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     if(wallpaperRepository->count() == 0) {
         logger->logInfo("No wallpapers");
         return 0;

@@ -13,11 +13,14 @@ HelpOption::HelpOption(
     sptr<util::Logger> logger
 ) : Option("Shows all program options and flags"), options(options), wallpaperLoader(std::move(wallpaperLoader)), logger(std::move(logger)) {}
 
-std::vector<std::string_view> HelpOption::getUsageStrings() const {
+auto HelpOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {"[flags...]"};
 }
 
-int HelpOption::execute(const std::vector<std::string_view>&, const std::unordered_set<sptr<Flag>>& flags) {
+auto HelpOption::execute(
+    const std::vector<std::string_view>& arguments,
+    const std::unordered_set<sptr<Flag>>& flags
+) -> int {
     if(flags.contains(Flags::json)) {
         const auto doc = yyjson_mut_doc_new(nullptr);
         const auto root = yyjson_mut_obj(doc);

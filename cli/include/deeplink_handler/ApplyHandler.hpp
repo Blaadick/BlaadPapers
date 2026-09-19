@@ -10,7 +10,7 @@ class ApplyHandler final : public DeeplinkHandler {
 public:
     explicit ApplyHandler(sptr<WallpaperRepository> wallpaperRepository);
 
-    int handle(const Uri& uri) const override;
+    auto handle(const Uri& uri) const -> int override;
 
 private:
     sptr<WallpaperRepository> wallpaperRepository;
