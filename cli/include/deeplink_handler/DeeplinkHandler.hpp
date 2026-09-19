@@ -3,11 +3,11 @@
 
 #pragma once
 
-#include <boost/url.hpp>
+#include "network/Uri.hpp"
 
 class DeeplinkHandler {
 public:
     virtual ~DeeplinkHandler() = default;
 
-    virtual int handle(const boost::url_view& url) const = 0;
+    virtual int handle(const Uri& uri) const = 0;
 };

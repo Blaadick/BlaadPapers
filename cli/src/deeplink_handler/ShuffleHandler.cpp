@@ -7,26 +7,26 @@
 
 ShuffleHandler::ShuffleHandler(sptr<WallpaperRepository> wallpaperRepository) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
-int ShuffleHandler::handle(const boost::url_view& url) const {
+int ShuffleHandler::handle(const Uri& uri) const {
     if(wallpaperRepository->count() < 1) {
         return 0;
     }
 
-    if(!url.path().empty()) {
+    if(!uri.path().empty()) {
         return 1;
     }
 
     std::vector<std::string> includeTags;
     std::vector<std::string> excludeTags;
 
-    if(auto includeParam = url.params().find("include"); includeParam != url.params().end()) {
-        for(const auto& includeTag : (*includeParam).value | std::views::split(',')) {
+    if(auto includeParam = uri.queries().find("include"); includeParam != uri.queries().end()) {
+        for(const auto& includeTag : includeParam->second | std::views::split(',')) {
             includeTags.emplace_back(includeTag.begin(), includeTag.end());
         }
     }
 
-    if(auto excludeParam = url.params().find("exclude"); excludeParam != url.params().end()) {
-        for(const auto& excludeTag : (*excludeParam)->value | std::views::split(',')) {
+    if(auto excludeParam = uri.queries().find("exclude"); excludeParam != uri.queries().end()) {
+        for(const auto& excludeTag : excludeParam->second | std::views::split(',')) {
             excludeTags.emplace_back(excludeTag.begin(), excludeTag.end());
         }
     }

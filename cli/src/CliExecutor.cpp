@@ -110,19 +110,27 @@ int CliExecutor::execute(int argc, char* argv[]) {
         freopen("/dev/null/", "w", stderr);
     }
 
-    if(const auto url = boost::urls::parse_uri(argv[1]); url.has_value()) {
-        if(url->scheme() != "blaadpapers") {
+    if(Uri::isUri(argv[1])) {
+        auto uri = Uri(argv[1]);
+
+        if(uri.scheme() != "blaadpapers") {
             logger->logWarning("Only blaadpapers links supported");
             return 1;
         }
 
-        const auto it = deeplinkHandlers.find(url->host());
+        auto uriAuthority = uri.authority();
+        if(!uriAuthority.has_value()) {
+            logger->logWarning("Authority required");
+            return 1;
+        }
+
+        auto it = deeplinkHandlers.find(std::string(*uriAuthority));
         if(it == deeplinkHandlers.end()) {
             logger->logWarning("Unknown link");
             return 1;
         }
 
-        return it->second->handle(url.value());
+        return it->second->handle(uri);
     }
 
     const auto it = options.find(argv[1]);

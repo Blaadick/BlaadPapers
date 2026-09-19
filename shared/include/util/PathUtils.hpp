@@ -88,6 +88,11 @@ namespace util {
         return localDataDirPath;
     }
 
+    static const std::filesystem::path& localDownloadsDirPath() {
+        static const auto localDownloadsDirPath = localDataDir() / "downloads";
+        return localDownloadsDirPath;
+    }
+
     inline const std::filesystem::path& currentWallpaperIdFilePath() {
         static auto const currentWallpaperIdFilePath = localDataDir() / "current-wallpaper";
         return currentWallpaperIdFilePath;

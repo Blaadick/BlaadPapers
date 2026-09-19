@@ -4,7 +4,7 @@
 #pragma once
 
 #include "logger/Logger.hpp"
-#include "network/HttpClient.hpp"
+#include "network/http/HttpClient.hpp"
 #include "option/Option.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 

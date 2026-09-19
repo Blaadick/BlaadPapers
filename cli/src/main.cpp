@@ -12,7 +12,9 @@
 #include "deeplink_handler/ShuffleHandler.hpp"
 #include "flag/Flags.hpp"
 #include "logger/CliLogger.hpp"
-#include "network/HttpClient.hpp"
+#include "network/DownloadManager.hpp"
+#include "network/http/HttpClient.hpp"
+#include "network/http/HttpDownloader.hpp"
 #include "option/AddOption.hpp"
 #include "option/ApplyOption.hpp"
 #include "option/CountOption.hpp"
@@ -44,6 +46,9 @@ int main(int argc, char* argv[]) {
     wallpaperRepository->sortByName();
 
     auto httpClient = std::make_shared<HttpClient>();
+    auto downloadManager = std::make_shared<DownloadManager>();
+    downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(downloadManager, httpClient));
+    downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(downloadManager, httpClient));
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, httpClient, config, logger));

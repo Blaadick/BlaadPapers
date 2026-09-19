@@ -4,7 +4,6 @@
 #include "option/AddOption.hpp"
 
 #include <format>
-#include "util/BoostUriUtils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -26,40 +25,31 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
     }
 
     std::vector<fs::path> filePaths;
-    std::vector<boost::url_view> urls;
+    std::vector<Uri> uris;
 
-    // TODO Make WallpaperInstallerDispatcher
+    // TODO Make WallpaperInstallerDispatcher; Check URI out of scheme
     for(const auto& argument : arguments) {
-        auto uri = boost::urls::parse_uri(argument);
-        if(!uri.has_value()) {
+        auto uri = Uri(argument);
+        auto uriScheme = uri.scheme();
+
+        if(uriScheme == "file") {
             filePaths.emplace_back(argument);
             continue;
         }
 
-        switch(uri->scheme_id()) {
-            case boost::urls::scheme::file: {
-                filePaths.emplace_back(uri->path());
-                break;
-            }
-
-            case boost::urls::scheme::http:
-            case boost::urls::scheme::https: {
-                urls.emplace_back(*uri);
-                break;
-            }
-
-            default: {
-                logger->logWarning(std::format("URI \"{}\" is unsupported", *uri));
-                break;
-            }
+        if(uriScheme == "https" || uriScheme == "http") {
+            uris.emplace_back(std::move(uri));
+            continue;
         }
+
+        logger->logWarning(std::format("URI \"{}\" is unsupported", uri));
     }
 
     for(const auto& path : filePaths) {
         wallpaperLoader->addWallpaper(path, config->getWallpapersDirPath());
     }
 
-    for(const auto& url : urls) {
+    for(const auto& url : uris) {
         logger->logInfo(std::format("Downloading from \"{}\"...", url));
 
         auto downloadedFilePath = httpClient->downloadFile(url, util::localDataDir() / "downloads");
