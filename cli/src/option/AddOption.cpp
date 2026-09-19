@@ -9,10 +9,10 @@ namespace fs = std::filesystem;
 
 AddOption::AddOption(
     sptr<WallpaperLoaderManager> wallpaperLoader,
-    sptr<HttpClient> httpClient,
+    sptr<DownloadManager> downloadManager,
     sptr<Config> config,
     sptr<util::Logger> logger
-) : Option("Adds wallpaper(s) to the wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), httpClient(std::move(httpClient)), config(std::move(config)), logger(std::move(logger)) {}
+) : Option("Adds wallpaper(s) to the wallpapers folder"), wallpaperLoader(std::move(wallpaperLoader)), downloadManager(std::move(downloadManager)), config(std::move(config)), logger(std::move(logger)) {}
 
 std::vector<std::string_view> AddOption::getUsageStrings() const {
     return {"<file/URI...>"};
@@ -27,22 +27,12 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
     std::vector<fs::path> filePaths;
     std::vector<Uri> uris;
 
-    // TODO Make WallpaperInstallerDispatcher; Check URI out of scheme
     for(const auto& argument : arguments) {
-        auto uri = Uri(argument);
-        auto uriScheme = uri.scheme();
-
-        if(uriScheme == "file") {
+        if(Uri::isUri(argument)) {
+            uris.emplace_back(argument);
+        } else {
             filePaths.emplace_back(argument);
-            continue;
         }
-
-        if(uriScheme == "https" || uriScheme == "http") {
-            uris.emplace_back(std::move(uri));
-            continue;
-        }
-
-        logger->logWarning(std::format("URI \"{}\" is unsupported", uri));
     }
 
     for(const auto& path : filePaths) {
@@ -52,7 +42,7 @@ int AddOption::execute(const std::vector<std::string_view>& arguments, const std
     for(const auto& url : uris) {
         logger->logInfo(std::format("Downloading from \"{}\"...", url));
 
-        auto downloadedFilePath = httpClient->downloadFile(url, util::localDataDir() / "downloads");
+        auto downloadedFilePath = downloadManager->downloadFile(url, util::localDownloadsDirPath());
         if(!downloadedFilePath.has_value()) {
             logger->logWarning(std::format("Failed to download file from \"{}\": {}", url, downloadedFilePath.error()));
             continue;

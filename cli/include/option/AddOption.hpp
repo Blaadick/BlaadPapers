@@ -4,7 +4,7 @@
 #pragma once
 
 #include "logger/Logger.hpp"
-#include "network/http/HttpClient.hpp"
+#include "network/DownloadManager.hpp"
 #include "option/Option.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
@@ -12,7 +12,7 @@ class AddOption final : public Option {
 public:
     AddOption(
         sptr<WallpaperLoaderManager> wallpaperLoader,
-        sptr<HttpClient> httpClient,
+        sptr<DownloadManager> downloadManager,
         sptr<Config> config,
         sptr<util::Logger> logger
     );
@@ -25,7 +25,7 @@ public:
 
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;
-    sptr<HttpClient> httpClient;
+    sptr<DownloadManager> downloadManager;
     sptr<Config> config;
     sptr<util::Logger> logger;
 };

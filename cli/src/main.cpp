@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(downloadManager, httpClient));
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
-    cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, httpClient, config, logger));
+    cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, downloadManager, config, logger));
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpaperRepository, logger));
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpaperRepository, logger));
     cliExecutor->addOption("help", std::make_unique<HelpOption>(cliExecutor->getOptions(), wallpaperLoader, logger), {Flags::json});
