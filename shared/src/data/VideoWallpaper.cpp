@@ -4,7 +4,6 @@
 #include "data/VideoWallpaper.hpp"
 
 #include <format>
-
 #include "util/StringUtils.hpp"
 
 VideoWallpaper::VideoWallpaper(
@@ -27,15 +26,15 @@ VideoWallpaper::VideoWallpaper(
     this->tags = std::move(tags);
 }
 
-const Size& VideoWallpaper::getResolution() const {
+auto VideoWallpaper::getResolution() const noexcept -> const Size& {
     return resolution;
 }
 
-int VideoWallpaper::getFrameRate() const {
+auto VideoWallpaper::getFrameRate() const noexcept -> int {
     return frameRate;
 }
 
-std::string VideoWallpaper::toString() const noexcept {
+auto VideoWallpaper::toString() const noexcept -> std::string {
     return std::format(
         "{}\n"
         "    Name: {}\n"
@@ -56,7 +55,7 @@ std::string VideoWallpaper::toString() const noexcept {
     );
 }
 
-yyjson_mut_val* VideoWallpaper::yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept {
+auto VideoWallpaper::yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept -> yyjson_mut_val* {
     const auto wallpaperData = yyjson_mut_obj(doc);
 
     const auto tagsData = yyjson_mut_arr(doc);

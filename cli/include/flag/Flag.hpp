@@ -12,13 +12,10 @@ struct Flag {
     std::optional<char> shortName;
     std::string description;
 
-    [[nodiscard]]
     static auto isShortFlag(std::string_view string) -> bool;
 
-    [[nodiscard]]
     static auto isLongFlag(std::string_view string) -> bool;
 
-    [[nodiscard]]
     static auto isFlag(std::string_view string) -> bool;
 };
 
