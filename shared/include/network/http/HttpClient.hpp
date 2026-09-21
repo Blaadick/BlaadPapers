@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <string>
 #include "network/Uri.hpp"
+#include "network/http/DownloadData.hpp"
 
 class HttpClient final {
 public:
@@ -14,15 +15,29 @@ public:
 
     ~HttpClient();
 
-    auto requestString(const Uri& uri) -> std::expected<std::string, std::string>;
+    auto requestString(Uri uri) -> std::expected<std::string, std::string>;
 
     auto downloadFile(
-        const Uri& uri,
+        Uri uri,
         const std::filesystem::path& downloadDir
     ) -> std::expected<std::filesystem::path, std::string>;
 
 private:
-    auto getFilename(std::string_view contentDisposition) const -> std::optional<std::string>;
+    std::unordered_map<Uri, DownloadData> ongoingDownloads;
 
-    auto getFilename(const Uri& uri) const -> std::optional<std::string>;
+    static auto ongoingDownloadsFilePath() -> const std::filesystem::path&;
+
+    void loadOngoingDownloads();
+
+    void saveOngoingDownloads();
+
+    void addOngoingDownload(Uri uri, DownloadData downloadData);
+
+    void removeOngoingDownload(const Uri& uri);
+
+    auto getOngoingDownload(const Uri& uri) const -> std::optional<const DownloadData&>;
+
+    auto extractFilename(std::string_view contentDisposition) const -> std::optional<std::string>;
+
+    auto extractFilename(const Uri& uri) const -> std::optional<std::string>;
 };

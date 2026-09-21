@@ -8,7 +8,7 @@
 
 class HttpDownloader : public Downloader {
 public:
-    explicit HttpDownloader(wptr<DownloadManager> downloadManager, sptr<HttpClient> httpClient);
+    explicit HttpDownloader(sptr<HttpClient> httpClient);
 
     auto downloadFile(
         Uri uri,

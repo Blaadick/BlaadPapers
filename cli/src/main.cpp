@@ -47,8 +47,8 @@ auto main(int argc, char* argv[]) -> int {
 
     auto httpClient = std::make_shared<HttpClient>();
     auto downloadManager = std::make_shared<DownloadManager>();
-    downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(downloadManager, httpClient));
-    downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(downloadManager, httpClient));
+    downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(httpClient));
+    downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(httpClient));
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("add", std::make_unique<AddOption>(wallpaperLoader, downloadManager, config, logger));

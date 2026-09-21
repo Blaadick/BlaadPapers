@@ -3,10 +3,7 @@
 
 #include "network/http/HttpDownloader.hpp"
 
-HttpDownloader::HttpDownloader(
-    wptr<DownloadManager> downloadManager,
-    sptr<HttpClient> httpClient
-) : Downloader(std::move(downloadManager)), httpClient(std::move(httpClient)) {}
+HttpDownloader::HttpDownloader(sptr<HttpClient> httpClient) : httpClient(std::move(httpClient)) {}
 
 auto HttpDownloader::downloadFile(
     Uri uri,
