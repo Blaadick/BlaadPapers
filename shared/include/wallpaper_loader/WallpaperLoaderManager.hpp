@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <expected>
 #include <filesystem>
 #include <ranges>
 #include <typeindex>
@@ -12,21 +13,22 @@
 #include "util/Pointers.hpp"
 #include "wallpaper_loader/WallpaperLoader.hpp"
 
-class WallpaperLoaderManager {
+class WallpaperLoaderManager final {
 public:
-    WallpaperLoaderManager(sptr<WallpaperRepository> wallpaperRepository, sptr<Config> config, sptr<util::Logger> logger);
-
-    void loadWallpapers();
-
-    auto addWallpaper(
-        const std::filesystem::path& filePath,
-        const std::filesystem::path& destinationFolderPath
-    ) -> bool;
-
-    void addWallpapers(
-        const std::vector<std::filesystem::path>& paths,
-        const std::filesystem::path& destinationFolderPath
+    WallpaperLoaderManager(
+        sptr<WallpaperRepository> wallpaperRepository,
+        sptr<Config> config,
+        sptr<util::Logger> logger
     );
+
+    void loadWallpapers() const;
+
+    auto installWallpaper(
+        const std::filesystem::path& filePath,
+        std::optional<WallpaperData> wallpaperData = std::nullopt
+    ) const -> std::expected<uptr<Wallpaper>, std::string>;
+
+    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string>;
 
     auto getWallpaperLoaders() const -> const std::unordered_map<std::type_index, uptr<WallpaperLoader>>&;
 

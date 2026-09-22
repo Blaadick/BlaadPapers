@@ -39,7 +39,10 @@ auto AddOption::execute(
     }
 
     for(const auto& path : filePaths) {
-        wallpaperLoader->addWallpaper(path, config->getWallpapersDirPath());
+        auto wallpaper = wallpaperLoader->installWallpaper(path);
+        if(!wallpaper.has_value()) {
+            logger->logWarning(std::format("Failed to install \"{}\": {}", path, wallpaper.error()));
+        }
     }
 
     for(const auto& url : uris) {
@@ -51,7 +54,11 @@ auto AddOption::execute(
             continue;
         }
 
-        wallpaperLoader->addWallpaper(*downloadedFilePath, config->getWallpapersDirPath());
+        auto wallpaper = wallpaperLoader->installWallpaper(*downloadedFilePath);
+        if(!wallpaper.has_value()) {
+            logger->logWarning(std::format("Failed to install \"{}\": {}", *downloadedFilePath, wallpaper.error()));
+        }
+
         fs::remove(*downloadedFilePath);
     }
 

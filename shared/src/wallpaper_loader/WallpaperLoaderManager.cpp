@@ -19,7 +19,34 @@ WallpaperLoaderManager::WallpaperLoaderManager(
     sptr<util::Logger> logger
 ) : wallpaperRepository(std::move(wallpaperRepository)), config(std::move(config)), logger(std::move(logger)) {}
 
-void WallpaperLoaderManager::loadWallpapers() {
+auto WallpaperLoaderManager::installWallpaper(
+    const fs::path& filePath,
+    std::optional<WallpaperData> wallpaperData
+) const -> std::expected<uptr<Wallpaper>, std::string> {
+    for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
+        if(!wallpaperLoader->isSupported(filePath)) {
+            continue;
+        }
+
+        return wallpaperLoader->installWallpaper(filePath, config->getWallpapersDirPath(), std::move(wallpaperData));
+    }
+
+    return std::unexpected("No supported wallpaper loader found");
+}
+
+auto WallpaperLoaderManager::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> {
+    for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
+        if(!wallpaperLoader->isSupported(wallpaperFilePath)) {
+            continue;
+        }
+
+        return wallpaperLoader->loadWallpaper(wallpaperFilePath);
+    }
+
+    return std::unexpected("No supported wallpaper loader found");
+}
+
+void WallpaperLoaderManager::loadWallpapers() const {
     wallpaperRepository->clear();
 
     if(!util::createDirIfNotExists(config->getWallpapersDirPath())) {
@@ -37,96 +64,19 @@ void WallpaperLoaderManager::loadWallpapers() {
                 continue;
             }
 
-            for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
-                if(wallpaperLoader->isSupported(wallpaperDirEntry)) {
-                    auto loadedWallpaper = wallpaperLoader->loadWallpaper(wallpaperDirEntry);
+            auto loadedWallpaper = loadWallpaper(wallpaperDirEntry);
 
-                    if(!loadedWallpaper) {
-                        logger->logWarning(std::format("Failed to load wallpaper \"{}\"", wallpaperDirEntry.path()));
-                        break;
-                    }
-
-                    wallpaperRepository->add(std::move(loadedWallpaper));
-                }
-            }
-        }
-    }
-}
-
-// TODO Refactor
-bool WallpaperLoaderManager::addWallpaper(const fs::path& filePath, const fs::path& destinationFolderPath) {
-    for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
-        if(!wallpaperLoader->isSupported(filePath)) {
-            continue;
-        }
-
-        const auto wallpaperId = filePath.stem().string();
-        const auto wallpaperDirPath = destinationFolderPath / wallpaperId;
-
-        if(fs::exists(wallpaperDirPath)) {
-            logger->logWarning(
-                std::format(
-                    R"(Failed to add "{}" wallpaper: Wallpaper with same id already exists)",
-                    wallpaperId
-                )
-            );
-
-            return false;
-        }
-
-        if(!fs::create_directory(wallpaperDirPath)) {
-            logger->logWarning(
-                std::format(
-                    R"(Failed to add "{}" wallpaper: Failed to create directory "{}")",
-                    wallpaperId,
-                    wallpaperDirPath.string()
-                )
-            );
-
-            return false;
-        }
-
-        const auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
-        if(!fs::copy_file(filePath, wallpaperFilePath)) {
-            logger->logWarning(
-                std::format(
-                    R"(Failed to add "{}" wallpaper: Failed to copy wallpaper to "{}")",
-                    wallpaperId,
-                    wallpaperFilePath.string()
-                )
-            );
-
-            fs::remove_all(wallpaperDirPath);
-            return false;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-void WallpaperLoaderManager::addWallpapers(const std::vector<fs::path>& paths, const fs::path& destinationFolderPath) {
-    for(const auto& path : paths) {
-        if(fs::is_directory(path)) {
-            for(const auto& dirEntry : fs::directory_iterator(path)) {
-                if(!dirEntry.is_regular_file()) {
-                    continue;
-                }
-
-                addWallpaper(dirEntry.path(), destinationFolderPath);
+            if(!loadedWallpaper) {
+                logger->logWarning(std::format("Failed to load wallpaper \"{}\"", wallpaperDirEntry.path()));
+                break;
             }
 
-            continue;
-        }
-
-        if(fs::is_regular_file(path)) {
-            addWallpaper(path, destinationFolderPath);
+            wallpaperRepository->add(std::move(*loadedWallpaper));
         }
     }
 }
 
-const std::unordered_map<std::type_index, uptr<WallpaperLoader>>& WallpaperLoaderManager::getWallpaperLoaders() const {
+auto WallpaperLoaderManager::getWallpaperLoaders() const -> const std::unordered_map<std::type_index, uptr<WallpaperLoader>>& {
     return wallpaperLoaders;
 }
 

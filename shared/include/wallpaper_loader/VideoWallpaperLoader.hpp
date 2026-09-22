@@ -3,12 +3,17 @@
 
 #pragma once
 
-#include "logger/Logger.hpp"
 #include "wallpaper_loader/WallpaperLoader.hpp"
 
 class VideoWallpaperLoader final : public WallpaperLoader {
 public:
-    explicit VideoWallpaperLoader(sptr<util::Logger> logger);
+    VideoWallpaperLoader();
 
-    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> uptr<Wallpaper> override;
+    auto installWallpaper(
+        const std::filesystem::path& filePath,
+        const std::filesystem::path& destinationFolderPath,
+        std::optional<WallpaperData> wallpaperData
+    ) const -> std::expected<uptr<Wallpaper>, std::string> override;
+
+    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> override;
 };

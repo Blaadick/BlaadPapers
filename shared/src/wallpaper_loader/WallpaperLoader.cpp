@@ -8,16 +8,15 @@
 #include <unordered_set>
 
 WallpaperLoader::WallpaperLoader(
-    std::unordered_set<const file::FileType*> supportedFileTypes,
-    sptr<util::Logger> logger
-) : supportedFileTypes(std::move(supportedFileTypes)), logger(std::move(logger)) {}
+    std::unordered_set<const file::FileType*> supportedFileTypes
+) : supportedFileTypes(std::move(supportedFileTypes)) {}
 
 auto WallpaperLoader::getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>& {
     return supportedFileTypes;
 }
 
-auto WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath) const -> bool {
-    auto fileType = file::getTypeFromFile(wallpaperFilePath);
+auto WallpaperLoader::isSupported(const std::filesystem::path& filePath) const -> bool {
+    auto fileType = file::getTypeFromFile(filePath);
     if(!fileType.has_value()) {
         return false;
     }
@@ -25,16 +24,9 @@ auto WallpaperLoader::isSupported(const std::filesystem::path& wallpaperFilePath
     return supportedFileTypes.contains(&fileType.value());
 }
 
-auto WallpaperLoader::loadWallpaperData(
-    const std::filesystem::path& wallpaperDataFilePath
-) const -> std::optional<WallpaperData> {
+auto WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData> {
     if(!std::filesystem::exists(wallpaperDataFilePath)) {
-        auto wallpaperId = wallpaperDataFilePath.parent_path().stem().string();
-        auto defaultWallpaperData = WallpaperData(wallpaperId, "", {"General"});
-
-        saveWallpaperData(wallpaperDataFilePath, defaultWallpaperData);
-
-        return defaultWallpaperData;
+        return std::nullopt;
     }
 
     WallpaperData wallpaperData;
@@ -75,7 +67,7 @@ auto WallpaperLoader::loadWallpaperData(
     return wallpaperData;
 }
 
-void WallpaperLoader::saveWallpaperData(
+bool WallpaperLoader::saveWallpaperData(
     const std::filesystem::path& wallpaperDataFilePath,
     const WallpaperData& wallpaperData
 ) const {
@@ -95,8 +87,9 @@ void WallpaperLoader::saveWallpaperData(
     yyjson_write_err writeErr;
     const auto isWritten = yyjson_mut_write_file(wallpaperDataFilePath.c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write wallpaper data to \"" + wallpaperDataFilePath.string() + '\"');
+        return false;
     }
 
     yyjson_mut_doc_free(doc);
+    return true;
 }

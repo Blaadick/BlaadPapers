@@ -10,4 +10,12 @@ struct WallpaperData {
     std::string name;
     std::string source;
     std::vector<std::string> tags;
+
+    static WallpaperData getDefaultData(const std::string& wallpaperId) {
+        return WallpaperData(
+            wallpaperId,
+            "",
+            {"General"}
+        );
+    }
 };

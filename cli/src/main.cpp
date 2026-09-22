@@ -39,8 +39,8 @@ auto main(int argc, char* argv[]) -> int {
 
     auto wallpaperRepository = std::make_shared<WallpaperRepository>();
     auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, logger);
-    wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(logger));
-    wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(logger));
+    wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>());
+    wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>());
 
     wallpaperLoader->loadWallpapers();
     wallpaperRepository->sortByName();
