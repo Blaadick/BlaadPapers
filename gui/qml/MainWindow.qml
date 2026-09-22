@@ -35,7 +35,7 @@ ApplicationWindow {
         Action {
             text: "Add wallpapers"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
-            onTriggered: Wallpapers.addWallpapers()
+            onTriggered: Wallpapers.installWallpapersFromDialog()
         }
 
         Action {
@@ -126,7 +126,7 @@ ApplicationWindow {
         anchors.fill: parent
 
         onDropped: function(drop) {
-            Wallpapers.addWallpapers(drop.urls.map(url => url.toString().substring(7)))
+            Wallpapers.installWallpapersAsync(drop.urls.map(url => url.toString().substring(7)))
         }
     }
 

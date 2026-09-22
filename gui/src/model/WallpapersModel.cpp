@@ -38,18 +38,7 @@ void WallpapersModel::loadWallpapers() {
     );
 }
 
-void WallpapersModel::addWallpapers(const QStringList& paths, const QString& destinationDirPath) {
-    std::vector<fs::path> stdPaths;
-    for(const auto& qStringPath : paths) {
-        stdPaths.emplace_back(qStringPath.toStdString());
-    }
-
-    wallpaperLoader->addWallpapers(stdPaths, destinationDirPath.toStdString());
-
-    loadWallpapers();
-}
-
-void WallpapersModel::addWallpapers() {
+void WallpapersModel::installWallpapersFromDialog() {
     std::unordered_set<const file::FileType*> allSupportedFormats;
     for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
         const auto loaderFormats = loader->getSupportedFileTypes();
@@ -69,23 +58,18 @@ void WallpapersModel::addWallpapers() {
         return;
     }
 
-    const auto selectedFiles = fileSelector.selectedFiles();
-    QThreadPool::globalInstance()->start(
-        [this, selectedFiles] {
-            addWallpapers(selectedFiles, QString::fromStdString(config->getWallpapersDirPath().string()));
-        }
-    );
+    installWallpapersAsync(fileSelector.selectedFiles());
 }
 
-void WallpapersModel::addWallpapers(const QStringList& paths) {
+void WallpapersModel::installWallpapersAsync(const QStringList& paths) {
     QThreadPool::globalInstance()->start(
         [this, paths] {
-            addWallpapers(paths, QString::fromStdString(config->getWallpapersDirPath().string()));
+            installWallpapers(paths);
         }
     );
 }
 
-void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
+void WallpapersModel::applyWallpaperAsync(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
             if(wallpaperRepository->apply(wallpaperId.toStdString())) {
@@ -97,7 +81,7 @@ void WallpapersModel::applyWallpaper(const QString& wallpaperId) const {
     );
 }
 
-void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
+void WallpapersModel::deleteWallpaperAsync(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
             if(wallpaperRepository->remove(wallpaperId.toStdString())) {
@@ -113,7 +97,7 @@ void WallpapersModel::refreshWallpapers() {
     loadWallpapers();
 }
 
-auto WallpapersModel::rowCount(const QModelIndex& parent) const -> int {
+auto WallpapersModel::rowCount(const QModelIndex&) const -> int {
     return wallpaperRepository->count();
 }
 
@@ -146,4 +130,20 @@ auto WallpapersModel::roleNames() const -> QHash<int, QByteArray> {
         {TagsRole, "wallpaperTags"},
         {IsBadRole, "isWallpaperBad"},
     };
+}
+
+void WallpapersModel::installWallpapers(const QStringList& paths) {
+    for(auto& path : paths) {
+        if(QFileInfo fileInfo(path); fileInfo.isFile()) {
+            auto installedWallpaper = wallpaperLoader->installWallpaper(fileInfo.filesystemAbsoluteFilePath());
+            if(!installedWallpaper) {
+                logger->logWarning(std::format("Failed to install \"{}\": {}", fileInfo.filesystemAbsoluteFilePath(), installedWallpaper.error()));
+                continue;
+            }
+
+            wallpaperRepository->add(std::move(*installedWallpaper));
+        }
+    }
+
+    loadWallpapers();
 }

@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     auto configModel = std::make_shared<ConfigModel>(config);
     auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, previewManager, logger);
     wallpapersModel->loadWallpapers();
-    logger->logInfo("Loaded " + std::to_string(wallpapers->count()) + " wallpapers");
+    logger->logInfo(std::format("Loaded {} wallpapers", wallpapers->count()));
 
     #ifdef __linux__
     if(!getenv("QT_QUICK_CONTROLS_STYLE")) {

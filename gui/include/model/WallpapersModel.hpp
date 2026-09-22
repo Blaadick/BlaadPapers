@@ -35,22 +35,17 @@ public:
 
     void loadWallpapers();
 
-    void addWallpapers(const QStringList& paths, const QString& destinationDirPath);
+    Q_INVOKABLE void installWallpapersFromDialog();
 
-    /**
-     * Launches file dialog
-     */
-    Q_INVOKABLE void addWallpapers();
+    Q_INVOKABLE void installWallpapersAsync(const QStringList& paths);
 
-    Q_INVOKABLE void addWallpapers(const QStringList& paths);
+    Q_INVOKABLE void applyWallpaperAsync(const QString& wallpaperId) const;
 
-    Q_INVOKABLE void applyWallpaper(const QString& wallpaperId) const;
-
-    Q_INVOKABLE void deleteWallpaper(const QString& wallpaperId) const;
+    Q_INVOKABLE void deleteWallpaperAsync(const QString& wallpaperId) const;
 
     Q_INVOKABLE void refreshWallpapers();
 
-    Q_INVOKABLE auto rowCount(const QModelIndex& parent = QModelIndex()) const -> int override;
+    Q_INVOKABLE auto rowCount(const QModelIndex& parent) const -> int override;
 
     auto data(const QModelIndex& index, int role = Qt::DisplayRole) const -> QVariant override;
 
@@ -62,4 +57,6 @@ private:
     sptr<Config> config;
     sptr<PreviewManager> previewManager;
     sptr<util::Logger> logger;
+
+    void installWallpapers(const QStringList& paths);
 };

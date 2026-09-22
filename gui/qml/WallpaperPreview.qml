@@ -67,7 +67,7 @@ Item {
         Action {
             text: "Apply"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/apply.svg"
-            onTriggered: Wallpapers.applyWallpaper(preview.wid)
+            onTriggered: Wallpapers.applyWallpaperAsync(preview.wid)
         }
 
         Action {
@@ -92,7 +92,7 @@ Item {
         Action {
             text: "Delete"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
-            onTriggered: Wallpapers.deleteWallpaper(preview.wid)
+            onTriggered: Wallpapers.deleteWallpaperAsync(preview.wid)
         }
     }
 
@@ -113,7 +113,7 @@ Item {
         onReleased: (event) => {
             if(event.button === Qt.LeftButton) {
                 preview.isPressed = false
-                Wallpapers.applyWallpaper(preview.wid)
+                Wallpapers.applyWallpaperAsync(preview.wid)
             }
         }
 

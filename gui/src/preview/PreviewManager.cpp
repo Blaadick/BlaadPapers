@@ -4,17 +4,8 @@
 #include "preview/PreviewManager.hpp"
 
 #include "util/PathUtils.hpp"
+#include "util/Screenutils.hpp"
 #include "util/ToString.hpp"
-
-namespace {
-    constexpr Size getScreenAspectRatio(const QScreen* screen) {
-        const auto screenGdc = std::gcd(screen->size().width(), screen->size().height());
-        return Size(
-            screen->size().width() / screenGdc,
-            screen->size().height() / screenGdc
-        );
-    }
-}
 
 PreviewManager::PreviewManager(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
@@ -28,7 +19,7 @@ void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
 
     for(const QScreen* screen : QGuiApplication::screens()) {
         const auto previewFilePath = previewsDirPath / (util::toString(screen) + ".webp");
-        const auto previewSize = getScreenAspectRatio(screen) * 20 * static_cast<int>(screen->devicePixelRatio());
+        const auto previewSize = util::getScreenAspectRatio(screen) * 20 * static_cast<int>(screen->devicePixelRatio());
 
         if(std::filesystem::exists(previewFilePath)) {
             continue;
