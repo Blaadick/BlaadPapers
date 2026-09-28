@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <ranges>
 #include "file_processing/json/JsonArr.hpp"
 #include "file_processing/json/JsonObj.hpp"
 #include "util/PathUtils.hpp"
@@ -227,7 +228,7 @@ void HttpClient::loadOngoingDownloads() {
                 auto eTagVal = objVal.getString("etag");
 
                 ongoingDownloads.emplace(
-                    Uri(urlVal),
+                    Uri::parse(std::string(urlVal)).value(),
                     DownloadData(
                         finalPathVal,
                         std::string(eTagVal)
@@ -318,9 +319,28 @@ auto HttpClient::extractFilename(const std::string_view contentDisposition) cons
 
 auto HttpClient::extractFilename(const Uri& uri) const -> std::optional<std::string> {
     auto path = uri.path();
-    if(path.empty() || path.back().empty()) {
+    if(!path.has_value()) {
         return std::nullopt;
     }
 
-    return path.back().data();
+    if(path == "/") {
+        return std::nullopt;
+    }
+
+    size_t lastPathSegmentEndPos;
+    size_t lastPathSegmentStartPos;
+    if(path->ends_with('/')) {
+        lastPathSegmentEndPos = path->size() - 1;
+        lastPathSegmentStartPos = path->rfind('/', lastPathSegmentEndPos - 1) + 1;
+    } else {
+        lastPathSegmentEndPos = path->size();
+        lastPathSegmentStartPos = path->rfind('/', lastPathSegmentEndPos) + 1;
+    }
+
+    auto fileNameLength = lastPathSegmentEndPos - lastPathSegmentStartPos;
+    if(fileNameLength == 0) {
+        return std::nullopt;
+    }
+
+    return std::string(path->subview(lastPathSegmentStartPos, fileNameLength));
 }

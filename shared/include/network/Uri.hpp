@@ -11,13 +11,7 @@
 
 class Uri final {
 public:
-    explicit Uri(std::string str);
-
-    explicit Uri(std::string_view str);
-
-    explicit Uri(const char* str);
-
-    static auto isUri(std::string_view str) noexcept -> bool;
+    static auto parse(std::string buffer) noexcept -> std::optional<Uri>;
 
     auto string() const noexcept -> const std::string&;
 
@@ -27,22 +21,30 @@ public:
 
     auto authority() const noexcept -> std::optional<std::string_view>;
 
-    auto userInfo() const noexcept -> std::optional<std::string_view>;
-
-    auto host() const noexcept -> std::optional<std::string_view>;
-
-    auto port() const noexcept -> std::optional<std::string_view>;
-
-    auto path() const noexcept -> std::vector<std::string_view>;
+    auto path() const noexcept -> std::optional<std::string_view>;
 
     auto queries() const noexcept -> std::unordered_map<std::string_view, std::string_view>;
 
     auto fragment() const noexcept -> std::optional<std::string_view>;
 
-    bool operator==(const Uri& other) const noexcept;
+    auto operator==(const Uri& other) const noexcept -> bool;
 
 private:
     std::string buffer;
+    std::string_view _scheme;
+    std::optional<std::string_view> _authority;
+    std::optional<std::string_view> _path;
+    std::unordered_map<std::string_view, std::string_view> _queries;
+    std::optional<std::string_view> _fragment;
+
+    Uri(
+        std::string buffer,
+        std::string_view scheme,
+        std::optional<std::string_view> authority = std::nullopt,
+        std::optional<std::string_view> path = {},
+        std::unordered_map<std::string_view, std::string_view> queries = {},
+        std::optional<std::string_view> fragment = std::nullopt
+    );
 };
 
 template<>
@@ -59,7 +61,7 @@ struct std::hash<Uri> {
     }
 };
 
-inline std::string precentEncode(const std::string_view str) {
+inline auto precentEncode(const std::string_view str) -> std::string {
     const auto encodedStr = curl_easy_escape(nullptr, str.data(), str.length());
     std::string result(encodedStr);
 
@@ -67,7 +69,7 @@ inline std::string precentEncode(const std::string_view str) {
     return result;
 }
 
-inline std::string precentDecode(const std::string_view str) {
+inline auto precentDecode(const std::string_view str) -> std::string {
     int outputLength;
     const auto decodedStr = curl_easy_unescape(nullptr, str.data(), str.length(), &outputLength);
     std::string result(decodedStr, outputLength);

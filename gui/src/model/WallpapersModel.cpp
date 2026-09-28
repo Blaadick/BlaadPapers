@@ -5,14 +5,15 @@
 
 #include <iostream>
 #include <QFileDialog>
+#include <QString>
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include "WallpaperRepository.hpp"
 #include "config/Config.hpp"
+#include "file_processing/FileType.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/StringUtils.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
-#include "file_processing/FileType.hpp"
 
 namespace fs = std::filesystem;
 

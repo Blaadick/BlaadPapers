@@ -110,15 +110,14 @@ int CliExecutor::execute(int argc, char* argv[]) {
         freopen("/dev/null/", "w", stderr);
     }
 
-    if(Uri::isUri(argv[1])) {
-        auto uri = Uri(argv[1]);
-
-        if(uri.scheme() != "blaadpapers") {
+    auto uri = Uri::parse(argv[1]);
+    if(uri.has_value()) {
+        if(uri->scheme() != "blaadpapers") {
             logger->logWarning("Only blaadpapers links supported");
             return 1;
         }
 
-        auto uriAuthority = uri.authority();
+        auto uriAuthority = uri->authority();
         if(!uriAuthority.has_value()) {
             logger->logWarning("Authority required");
             return 1;
@@ -130,7 +129,7 @@ int CliExecutor::execute(int argc, char* argv[]) {
             return 1;
         }
 
-        return it->second->handle(uri);
+        return it->second->handle(*uri);
     }
 
     const auto it = options.find(argv[1]);

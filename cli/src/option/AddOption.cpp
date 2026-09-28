@@ -31,8 +31,9 @@ auto AddOption::execute(
     std::vector<Uri> uris;
 
     for(const auto& argument : arguments) {
-        if(Uri::isUri(argument)) {
-            uris.emplace_back(argument);
+        auto uri = Uri::parse(std::string(argument));
+        if(uri.has_value()) {
+            uris.emplace_back(uri.value());
         } else {
             filePaths.emplace_back(argument);
         }

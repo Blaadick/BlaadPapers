@@ -8,12 +8,8 @@
 ShuffleHandler::ShuffleHandler(sptr<WallpaperRepository> wallpaperRepository) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
 auto ShuffleHandler::handle(const Uri& uri) const -> int {
-    if(wallpaperRepository->count() < 1) {
+    if(wallpaperRepository->count() == 0) {
         return 0;
-    }
-
-    if(!uri.path().empty()) {
-        return 1;
     }
 
     std::vector<std::string> includeTags;
