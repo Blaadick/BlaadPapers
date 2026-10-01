@@ -17,7 +17,7 @@ auto PictureWallpaperLoader::installWallpaper(
     const std::filesystem::path& filePath,
     const std::filesystem::path& destinationFolderPath,
     std::optional<WallpaperData> wallpaperData
-) const -> std::expected<uptr<Wallpaper>, std::string> {
+) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperId = filePath.stem().string();
     auto wallpaperDirPath = destinationFolderPath / wallpaperId;
     auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
@@ -50,7 +50,7 @@ auto PictureWallpaperLoader::installWallpaper(
         return std::unexpected("Failed to extract picture data");
     }
 
-    return std::make_unique<PictureWallpaper>(
+    return std::make_shared<PictureWallpaper>(
         wallpaperId,
         wallpaperFilePath,
         wallpaperDirPath,
@@ -61,7 +61,7 @@ auto PictureWallpaperLoader::installWallpaper(
     );
 }
 
-auto PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> {
+auto PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
     auto wallpaperId = wallpaperDirPath.stem().string();
@@ -76,7 +76,7 @@ auto PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpape
         return std::unexpected("Failed to extract picture data");
     }
 
-    return std::make_unique<PictureWallpaper>(
+    return std::make_shared<PictureWallpaper>(
         wallpaperId,
         wallpaperFilePath,
         wallpaperDirPath,

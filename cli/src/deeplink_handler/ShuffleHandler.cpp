@@ -28,8 +28,8 @@ auto ShuffleHandler::handle(const Uri& uri) const -> int {
     }
 
     const auto wallpaperToApply = wallpaperRepository->shuffle(
-        includeTags.empty() ? std::nullopt : std::optional(includeTags),
-        excludeTags.empty() ? std::nullopt : std::optional(excludeTags)
+        includeTags.empty() ? std::vector<std::string>{} : includeTags,
+        excludeTags.empty() ? std::vector<std::string>{} : excludeTags
     );
 
     if(!wallpaperToApply) {

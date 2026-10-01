@@ -43,8 +43,8 @@ auto WallpaperRepository::get(const std::string_view id) const -> Wallpaper* {
 }
 
 auto WallpaperRepository::shuffle(
-    std::optional<std::vector<std::string>> includeTags,
-    std::optional<std::vector<std::string>> excludeTags
+    std::vector<std::string> includeTags,
+    std::vector<std::string> excludeTags
 ) const -> Wallpaper* {
     if(wallpapers.empty()) {
         return nullptr;
@@ -57,10 +57,10 @@ auto WallpaperRepository::shuffle(
         filteredWallpapers.emplace_back(wallpaper.get());
     }
 
-    if(includeTags.has_value()) {
+    if(!includeTags.empty()) {
         const auto notContainsIncludeTags = [&includeTags](Wallpaper* wallpaper) {
             return !rng::all_of(
-                *includeTags,
+                includeTags,
                 [&wallpaper](const std::string& tag) {
                     return rng::contains(wallpaper->getTags(), tag);
                 }
@@ -70,10 +70,10 @@ auto WallpaperRepository::shuffle(
         std::erase_if(filteredWallpapers, notContainsIncludeTags);
     }
 
-    if(excludeTags.has_value()) {
+    if(!excludeTags.empty()) {
         const auto containsExcludeTags = [&excludeTags](Wallpaper* wallpaper) {
             return rng::any_of(
-                *excludeTags,
+                excludeTags,
                 [&wallpaper](const std::string& tag) {
                     return rng::contains(wallpaper->getTags(), tag);
                 }
@@ -91,7 +91,7 @@ auto WallpaperRepository::shuffle(
     return nullptr;
 }
 
-void WallpaperRepository::add(uptr<Wallpaper> wallpaper) {
+void WallpaperRepository::add(sptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
@@ -186,7 +186,7 @@ auto WallpaperRepository::remove(const std::string_view id) -> bool {
 void WallpaperRepository::sortByName() {
     std::ranges::sort(
         wallpapers,
-        [](const uptr<Wallpaper>& w1, const uptr<Wallpaper>& w2) {
+        [](const sptr<Wallpaper>& w1, const sptr<Wallpaper>& w2) {
             return w1->getName() < w2->getName();
         }
     );
@@ -200,28 +200,10 @@ auto WallpaperRepository::count() const -> int {
     return static_cast<int>(wallpapers.size());
 }
 
-auto WallpaperRepository::begin() const -> std::vector<uptr<Wallpaper>>::const_iterator {
+auto WallpaperRepository::begin() const -> std::vector<sptr<Wallpaper>>::const_iterator {
     return wallpapers.begin();
 }
 
-auto WallpaperRepository::end() const -> std::vector<uptr<Wallpaper>>::const_iterator {
+auto WallpaperRepository::end() const -> std::vector<sptr<Wallpaper>>::const_iterator {
     return wallpapers.end();
-}
-
-auto WallpaperRepository::operator[](const int index) const -> Wallpaper* {
-    if(index >= wallpapers.size()) {
-        return nullptr;
-    }
-
-    return wallpapers[index].get();
-}
-
-auto WallpaperRepository::operator[](const std::string_view id) const -> Wallpaper* {
-    for(const auto& wallpaper : wallpapers) {
-        if(wallpaper->getId() == id) {
-            return wallpaper.get();
-        }
-    }
-
-    return nullptr;
 }

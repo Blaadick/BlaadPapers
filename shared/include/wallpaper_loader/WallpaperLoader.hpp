@@ -21,9 +21,9 @@ public:
         const std::filesystem::path& filePath,
         const std::filesystem::path& destinationFolderPath,
         std::optional<WallpaperData> wallpaperData
-    ) const -> std::expected<uptr<Wallpaper>, std::string> = 0;
+    ) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
 
-    virtual auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> = 0;
+    virtual auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
 
     auto getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>&;
 

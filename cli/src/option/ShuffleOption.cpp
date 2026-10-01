@@ -48,8 +48,7 @@ auto ShuffleOption::execute(
 
         size_t i, max;
         yyjson_val* item;
-        yyjson_arr_foreach(root, i, max, item)
-        {
+        yyjson_arr_foreach(root, i, max, item) {
             if(yyjson_is_str(item)) {
                 includeTags.emplace_back(yyjson_get_str(item));
             }
@@ -72,8 +71,7 @@ auto ShuffleOption::execute(
 
         size_t i, max;
         yyjson_val* item;
-        yyjson_arr_foreach(root, i, max, item)
-        {
+        yyjson_arr_foreach(root, i, max, item) {
             if(yyjson_is_str(item)) {
                 excludeTags.emplace_back(yyjson_get_str(item));
             }
@@ -81,8 +79,8 @@ auto ShuffleOption::execute(
     }
 
     const auto wallpaperToApply = wallpaperRepository->shuffle(
-        includeTags.empty() ? std::nullopt : std::optional(includeTags),
-        excludeTags.empty() ? std::nullopt : std::optional(excludeTags)
+        includeTags.empty() ? std::vector<std::string>{} : includeTags,
+        excludeTags.empty() ? std::vector<std::string>{} : excludeTags
     );
 
     if(!wallpaperToApply) {

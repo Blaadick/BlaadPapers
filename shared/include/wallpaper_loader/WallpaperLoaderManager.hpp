@@ -21,14 +21,14 @@ public:
         sptr<util::Logger> logger
     );
 
-    void loadWallpapers() const;
-
     auto installWallpaper(
         const std::filesystem::path& filePath,
         std::optional<WallpaperData> wallpaperData = std::nullopt
-    ) const -> std::expected<uptr<Wallpaper>, std::string>;
+    ) const -> std::expected<sptr<Wallpaper>, std::string>;
 
-    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string>;
+    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string>;
+
+    void loadWallpapers() const;
 
     auto getWallpaperLoaders() const -> const std::unordered_map<std::type_index, uptr<WallpaperLoader>>&;
 

@@ -6,6 +6,8 @@
 #include <format>
 #include <fstream>
 #include <ranges>
+
+#include "TagRepository.hpp"
 #include "config/Config.hpp"
 #include "WallpaperRepository.hpp"
 #include "util/ImageUtils.hpp"
@@ -22,7 +24,7 @@ WallpaperLoaderManager::WallpaperLoaderManager(
 auto WallpaperLoaderManager::installWallpaper(
     const fs::path& filePath,
     std::optional<WallpaperData> wallpaperData
-) const -> std::expected<uptr<Wallpaper>, std::string> {
+) const -> std::expected<sptr<Wallpaper>, std::string> {
     for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
         if(!wallpaperLoader->isSupported(filePath)) {
             continue;
@@ -34,7 +36,7 @@ auto WallpaperLoaderManager::installWallpaper(
     return std::unexpected("No supported wallpaper loader found");
 }
 
-auto WallpaperLoaderManager::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> {
+auto WallpaperLoaderManager::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
     for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
         if(!wallpaperLoader->isSupported(wallpaperFilePath)) {
             continue;

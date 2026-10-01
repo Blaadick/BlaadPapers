@@ -14,11 +14,11 @@ public:
     auto get(std::string_view id) const -> Wallpaper*;
 
     auto shuffle(
-        std::optional<std::vector<std::string>> includeTags = std::nullopt,
-        std::optional<std::vector<std::string>> excludeTags = std::nullopt
+        std::vector<std::string> includeTags = {},
+        std::vector<std::string> excludeTags = {}
     ) const -> Wallpaper*;
 
-    void add(uptr<Wallpaper> wallpaper);
+    void add(sptr<Wallpaper> wallpaper);
 
     auto apply(std::string_view id) const -> bool;
 
@@ -32,14 +32,10 @@ public:
 
     auto count() const -> int;
 
-    auto begin() const -> std::vector<uptr<Wallpaper>>::const_iterator;
+    auto begin() const -> std::vector<sptr<Wallpaper>>::const_iterator;
 
-    auto end() const -> std::vector<uptr<Wallpaper>>::const_iterator;
-
-    auto operator[](int index) const -> Wallpaper*;
-
-    auto operator[](std::string_view id) const -> Wallpaper*;
+    auto end() const -> std::vector<sptr<Wallpaper>>::const_iterator;
 
 private:
-    std::vector<uptr<Wallpaper>> wallpapers;
+    std::vector<sptr<Wallpaper>> wallpapers;
 };

@@ -17,7 +17,7 @@ auto VideoWallpaperLoader::installWallpaper(
     const std::filesystem::path& filePath,
     const std::filesystem::path& destinationFolderPath,
     std::optional<WallpaperData> wallpaperData
-) const -> std::expected<uptr<Wallpaper>, std::string> {
+) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperId = filePath.stem().string();
     auto wallpaperDirPath = destinationFolderPath / wallpaperId;
     auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
@@ -50,7 +50,7 @@ auto VideoWallpaperLoader::installWallpaper(
         return std::unexpected("Failed to decode video data");
     }
 
-    return std::make_unique<VideoWallpaper>(
+    return std::make_shared<VideoWallpaper>(
         wallpaperId,
         wallpaperFilePath,
         wallpaperDirPath,
@@ -62,7 +62,7 @@ auto VideoWallpaperLoader::installWallpaper(
     );
 }
 
-auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> {
+auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
     auto wallpaperId = wallpaperDirPath.stem().string();
@@ -77,7 +77,7 @@ auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperF
         return std::unexpected("Failed to decode video data");
     }
 
-    return std::make_unique<VideoWallpaper>(
+    return std::make_shared<VideoWallpaper>(
         wallpaperId,
         wallpaperFilePath,
         wallpaperDirPath,

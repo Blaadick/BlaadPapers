@@ -13,7 +13,7 @@ public:
         const std::filesystem::path& filePath,
         const std::filesystem::path& destinationFolderPath,
         std::optional<WallpaperData> wallpaperData
-    ) const -> std::expected<uptr<Wallpaper>, std::string> override;
+    ) const -> std::expected<sptr<Wallpaper>, std::string> override;
 
-    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<uptr<Wallpaper>, std::string> override;
+    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> override;
 };

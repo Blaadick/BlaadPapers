@@ -33,7 +33,7 @@ void WallpapersModel::loadWallpapers() {
 
     QtConcurrent::map(
         *wallpaperRepository,
-        [this](const uptr<Wallpaper>& wallpaper) {
+        [this](const sptr<Wallpaper>& wallpaper) {
             previewManager->createAndSavePreviews(*wallpaper);
         }
     );
