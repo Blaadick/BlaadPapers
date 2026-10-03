@@ -16,7 +16,16 @@ bool ConfigModel::getStatusBarVisible() {
     return config->getStatusBarVisible();
 }
 
-void ConfigModel::setStatusBarVisible(const bool isVisible) {
-    config->setStatusBarVisible(isVisible);
+void ConfigModel::setStatusBarVisible(const bool newVisibility) {
+    config->setStatusBarVisible(newVisibility);
     emit statusBarVisibleChanged();
+}
+
+auto ConfigModel::getBadTaggedWallpapersVisible() -> bool {
+    return config->getBadTaggedWallpapersVisible();
+}
+
+void ConfigModel::setBadTaggedWallpapersVisible(const bool newVisibility) {
+    config->setBadTaggedWallpapersVisible(newVisibility);
+    emit badTaggedWallpapersVisibleChanged();
 }

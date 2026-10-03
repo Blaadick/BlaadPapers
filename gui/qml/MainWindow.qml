@@ -47,8 +47,18 @@ ApplicationWindow {
         Action {
             text: "Status Bar"
             checkable: true
-            checked: statusBar.visible
-            onTriggered: Config.statusBarVisible = !statusBar.visible
+            checked: Config.statusBarVisible
+            onTriggered: Config.statusBarVisible = !Config.statusBarVisible
+        }
+
+        Action {
+            text: "Bad Tagged Wallpapers"
+            checkable: true
+            checked: Config.badTaggedWallpapersVisible
+            onTriggered: {
+                Config.badTaggedWallpapersVisible = !Config.badTaggedWallpapersVisible
+                proxy.invalidate()
+            }
         }
     }
 
@@ -92,9 +102,14 @@ ApplicationWindow {
                     component WallpaperData: QtObject {
                         property string wallpaperName
                         property var wallpaperTags
+                        property bool isWallpaperBad
                     }
 
                     function filter(data: WallpaperData): bool {
+                        if(!Config.badTaggedWallpapersVisible && data.isWallpaperBad) {
+                            return false
+                        }
+
                         if(!searchBar.text) {
                             return true
                         }

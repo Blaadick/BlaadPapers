@@ -11,7 +11,7 @@
 #include "util/PathUtils.hpp"
 #include "util/Pointers.hpp"
 
-class Config {
+class Config final {
 public:
     explicit Config(sptr<util::Logger> logger);
 
@@ -47,6 +47,10 @@ public:
 
     void setStatusBarVisible(bool newVisibility) noexcept;
 
+    auto getBadTaggedWallpapersVisible() const noexcept -> bool;
+
+    void setBadTaggedWallpapersVisible(bool newVisibility) noexcept;
+
     auto generalConfigFilePath() const noexcept -> const std::filesystem::path&;
 
     auto guiConfigFilePath() const noexcept -> const std::filesystem::path&;
@@ -57,9 +61,11 @@ private:
     sptr<util::Logger> logger;
 
     std::filesystem::path wallpapersDirPath = util::documentsDir() / "Wallpapers";
+    std::vector<std::string> defaultTags = {"General"};
     std::vector<std::string> badTags = {"Sensitive", "Questionable", "Explicit"};
     std::optional<std::string> wallhavenApiKey = std::nullopt;
     std::optional<std::string> danbooruLogin = std::nullopt;
     std::optional<std::string> danbooruApiKey = std::nullopt;
     bool isStatusBarVisible = false;
+    bool isBadTaggedWallpapersVisible = true;
 };

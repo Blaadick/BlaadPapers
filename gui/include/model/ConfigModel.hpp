@@ -10,6 +10,7 @@ class ConfigModel : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString configFilePath READ getConfigFilePath)
     Q_PROPERTY(bool statusBarVisible READ getStatusBarVisible WRITE setStatusBarVisible NOTIFY statusBarVisibleChanged)
+    Q_PROPERTY(bool badTaggedWallpapersVisible READ getBadTaggedWallpapersVisible WRITE setBadTaggedWallpapersVisible NOTIFY badTaggedWallpapersVisibleChanged)
 
 public:
     explicit ConfigModel(sptr<Config> config);
@@ -18,11 +19,17 @@ public:
 
     auto getStatusBarVisible() -> bool;
 
-    void setStatusBarVisible(bool isVisible);
+    void setStatusBarVisible(bool newVisibility);
+
+    auto getBadTaggedWallpapersVisible() -> bool;
+
+    void setBadTaggedWallpapersVisible(bool newVisibility);
 
 private:
     sptr<Config> config;
 
 signals:
     void statusBarVisibleChanged();
+
+    void badTaggedWallpapersVisibleChanged();
 };

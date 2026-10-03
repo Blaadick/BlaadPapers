@@ -58,6 +58,11 @@ void Config::loadGui() {
     if(statusBarVisibleData.has_value()) {
         isStatusBarVisible = *statusBarVisibleData;
     }
+
+    auto badTaggedWallpapersData = guiJson->tryGetBool("bad_tagged_wallpapers_visible");
+    if(badTaggedWallpapersData.has_value()) {
+        isBadTaggedWallpapersVisible = *badTaggedWallpapersData;
+    }
 }
 
 void Config::loadApi() {
@@ -202,6 +207,15 @@ auto Config::getStatusBarVisible() const noexcept -> bool {
 
 void Config::setStatusBarVisible(const bool newVisibility) noexcept {
     isStatusBarVisible = newVisibility;
+    saveGui();
+}
+
+auto Config::getBadTaggedWallpapersVisible() const noexcept -> bool {
+    return isBadTaggedWallpapersVisible;
+}
+
+void Config::setBadTaggedWallpapersVisible(bool newVisibility) noexcept {
+    isBadTaggedWallpapersVisible = newVisibility;
     saveGui();
 }
 
