@@ -6,10 +6,9 @@
 #include <format>
 #include <fstream>
 #include <ranges>
-
 #include "TagRepository.hpp"
-#include "config/Config.hpp"
 #include "WallpaperRepository.hpp"
+#include "config/Config.hpp"
 #include "util/ImageUtils.hpp"
 #include "util/PathUtils.hpp"
 
@@ -30,7 +29,7 @@ auto WallpaperLoaderManager::installWallpaper(
             continue;
         }
 
-        return wallpaperLoader->installWallpaper(filePath, config->getWallpapersDirPath(), std::move(wallpaperData));
+        return wallpaperLoader->installWallpaper(filePath, std::move(wallpaperData));
     }
 
     return std::unexpected("No supported wallpaper loader found");

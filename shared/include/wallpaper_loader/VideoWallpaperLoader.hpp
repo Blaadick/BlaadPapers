@@ -7,11 +7,10 @@
 
 class VideoWallpaperLoader final : public WallpaperLoader {
 public:
-    VideoWallpaperLoader();
+    explicit VideoWallpaperLoader(sptr<Config> config);
 
     auto installWallpaper(
         const std::filesystem::path& filePath,
-        const std::filesystem::path& destinationFolderPath,
         std::optional<WallpaperData> wallpaperData
     ) const -> std::expected<sptr<Wallpaper>, std::string> override;
 

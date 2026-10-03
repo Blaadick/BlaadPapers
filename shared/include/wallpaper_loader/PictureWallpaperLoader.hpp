@@ -7,11 +7,10 @@
 
 class PictureWallpaperLoader final : public WallpaperLoader {
 public:
-    PictureWallpaperLoader();
+    explicit PictureWallpaperLoader(sptr<Config> config);
 
     auto installWallpaper(
         const std::filesystem::path& filePath,
-        const std::filesystem::path& destinationFolderPath,
         std::optional<WallpaperData> wallpaperData
     ) const -> std::expected<sptr<Wallpaper>, std::string> override;
 

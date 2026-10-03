@@ -8,10 +8,11 @@
 #include <unordered_set>
 
 WallpaperLoader::WallpaperLoader(
+    sptr<Config> config,
     std::unordered_set<const file::FileType*> supportedFileTypes
-) : supportedFileTypes(std::move(supportedFileTypes)) {}
+) : config(std::move(config)), supportedFileTypes(std::move(supportedFileTypes)) {}
 
-auto WallpaperLoader::getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>& {
+auto WallpaperLoader::getSupportedFileTypes() const noexcept -> const std::unordered_set<const file::FileType*>& {
     return supportedFileTypes;
 }
 
@@ -22,6 +23,10 @@ auto WallpaperLoader::isSupported(const std::filesystem::path& filePath) const -
     }
 
     return supportedFileTypes.contains(&fileType.value());
+}
+
+auto WallpaperLoader::getDefaultWallpaperData(const std::string& wallpaperId) const noexcept -> WallpaperData {
+    return WallpaperData(wallpaperId, "", config->getDefaultTags());
 }
 
 auto WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData> {
@@ -67,10 +72,10 @@ auto WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDa
     return wallpaperData;
 }
 
-bool WallpaperLoader::saveWallpaperData(
+auto WallpaperLoader::saveWallpaperData(
     const std::filesystem::path& wallpaperDataFilePath,
     const WallpaperData& wallpaperData
-) const {
+) const -> bool {
     const auto doc = yyjson_mut_doc_new(nullptr);
     const auto root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);

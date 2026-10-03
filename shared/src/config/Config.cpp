@@ -34,12 +34,27 @@ void Config::loadGeneral() {
         wallpapersDirPath = *wallpapersPathData;
     }
 
+    auto defaultTagsData = generalJson->tryGetArr("default_tags");
+    if(defaultTagsData.has_value()) {
+        defaultTags.clear();
+
+        defaultTagsData->forEachString(
+            [this](std::string_view str) {
+                defaultTags.emplace_back(str);
+            }
+        );
+    }
+
     auto badTagsData = generalJson->tryGetArr("bad_tags");
-    badTagsData->forEachString(
-        [this](std::string_view str) {
-            badTags.emplace_back(str);
-        }
-    );
+    if(badTagsData.has_value()) {
+        badTags.clear();
+
+        badTagsData->forEachString(
+            [this](std::string_view str) {
+                badTags.emplace_back(str);
+            }
+        );
+    }
 }
 
 void Config::loadGui() {
@@ -77,9 +92,12 @@ void Config::loadApi() {
         return;
     }
 
-    auto wallhavenApiStr = apiJson->tryGetString("wallhaven");
-    if(wallhavenApiStr.has_value()) {
-        wallhavenApiKey = *wallhavenApiStr;
+    auto wallhavenApiObj = apiJson->tryGetObj("wallhaven");
+    if(wallhavenApiObj.has_value()) {
+        auto wallhavenApiKeyStr = wallhavenApiObj->tryGetString("key");
+        if(wallhavenApiKeyStr.has_value()) {
+            wallhavenApiKey = *wallhavenApiKeyStr;
+        }
     }
 
     auto danbooruApiObj = apiJson->tryGetObj("danbooru");
@@ -107,12 +125,18 @@ void Config::saveGeneral() const {
     auto root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);
 
+    auto defaultTagsData = yyjson_mut_arr(doc);
+    for(const auto& tag : defaultTags) {
+        yyjson_mut_arr_add_str(doc, defaultTagsData, tag.c_str());
+    }
+
     auto badTagsData = yyjson_mut_arr(doc);
     for(const auto& tag : badTags) {
         yyjson_mut_arr_add_str(doc, badTagsData, tag.c_str());
     }
 
     yyjson_mut_obj_add_str(doc, root, "wallpapers_path", wallpapersDirPath.c_str());
+    yyjson_mut_obj_add_val(doc, root, "default_tags", defaultTagsData);
     yyjson_mut_obj_add_val(doc, root, "bad_tags", badTagsData);
 
     yyjson_write_err writeErr;
@@ -130,6 +154,7 @@ void Config::saveGui() const {
     yyjson_mut_doc_set_root(doc, root);
 
     yyjson_mut_obj_add_bool(doc, root, "status_bar_visible", isStatusBarVisible);
+    yyjson_mut_obj_add_bool(doc, root, "bad_tagged_wallpapers_visible", isBadTaggedWallpapersVisible);
 
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(guiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
@@ -145,10 +170,11 @@ void Config::saveApi() const {
     auto root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);
 
+    auto wallhavenData = yyjson_mut_obj_add_obj(doc, root, "wallhaven");
     if(wallhavenApiKey.has_value()) {
-        yyjson_mut_obj_add_str(doc, root, "wallhaven", wallhavenApiKey->c_str());
+        yyjson_mut_obj_add_str(doc, wallhavenData, "key", wallhavenApiKey->c_str());
     } else {
-        yyjson_mut_obj_add_null(doc, root, "wallhaven");
+        yyjson_mut_obj_add_null(doc, wallhavenData, "key");
     }
 
     auto danbooruData = yyjson_mut_obj_add_obj(doc, root, "danbooru");
@@ -174,6 +200,10 @@ void Config::saveApi() const {
 
 auto Config::getWallpapersDirPath() const noexcept -> const std::filesystem::path& {
     return wallpapersDirPath;
+}
+
+auto Config::getDefaultTags() const noexcept -> const std::vector<std::string>& {
+    return defaultTags;
 }
 
 auto Config::getBadTags() const noexcept -> const std::vector<std::string>& {

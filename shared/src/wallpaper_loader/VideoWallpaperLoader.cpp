@@ -9,22 +9,22 @@
 
 namespace fs = std::filesystem;
 
-VideoWallpaperLoader::VideoWallpaperLoader() : WallpaperLoader(
+VideoWallpaperLoader::VideoWallpaperLoader(sptr<Config> config) : WallpaperLoader(
+    std::move(config),
     {&file::mp4, &file::webm, &file::mkv}
 ) {}
 
 auto VideoWallpaperLoader::installWallpaper(
     const std::filesystem::path& filePath,
-    const std::filesystem::path& destinationFolderPath,
     std::optional<WallpaperData> wallpaperData
 ) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperId = filePath.stem().string();
-    auto wallpaperDirPath = destinationFolderPath / wallpaperId;
+    auto wallpaperDirPath = config->getWallpapersDirPath() / wallpaperId;
     auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
 
     if(!wallpaperData) {
-        wallpaperData = WallpaperData::getDefaultData(wallpaperId);
+        wallpaperData = getDefaultWallpaperData(wallpaperId);
     }
 
     if(fs::exists(wallpaperDirPath)) {

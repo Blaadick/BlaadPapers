@@ -9,22 +9,22 @@
 
 namespace fs = std::filesystem;
 
-PictureWallpaperLoader::PictureWallpaperLoader() : WallpaperLoader(
+PictureWallpaperLoader::PictureWallpaperLoader(sptr<Config> config) : WallpaperLoader(
+    std::move(config),
     {&file::png, &file::jpeg, &file::svg, &file::webp, &file::bmp, &file::avif, &file::tiff, &file::heif}
 ) {}
 
 auto PictureWallpaperLoader::installWallpaper(
     const std::filesystem::path& filePath,
-    const std::filesystem::path& destinationFolderPath,
     std::optional<WallpaperData> wallpaperData
 ) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperId = filePath.stem().string();
-    auto wallpaperDirPath = destinationFolderPath / wallpaperId;
+    auto wallpaperDirPath = config->getWallpapersDirPath() / wallpaperId;
     auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
 
     if(!wallpaperData) {
-        wallpaperData = WallpaperData::getDefaultData(wallpaperId);
+        wallpaperData = getDefaultWallpaperData(wallpaperId);
     }
 
     if(fs::exists(wallpaperDirPath)) {

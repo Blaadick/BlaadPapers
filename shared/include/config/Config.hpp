@@ -33,6 +33,8 @@ public:
 
     auto getWallpapersDirPath() const noexcept -> const std::filesystem::path&;
 
+    auto getDefaultTags() const noexcept -> const std::vector<std::string>&;
+
     auto getBadTags() const noexcept -> const std::vector<std::string>&;
 
     auto isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool;
