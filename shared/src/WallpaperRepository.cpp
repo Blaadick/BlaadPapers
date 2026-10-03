@@ -24,18 +24,18 @@
 namespace fs = std::filesystem;
 namespace rng = std::ranges;
 
-auto WallpaperRepository::get(const int index) const -> Wallpaper* {
+auto WallpaperRepository::get(const int index) const -> sptr<Wallpaper> {
     if(index >= wallpapers.size()) {
         return nullptr;
     }
 
-    return wallpapers[index].get();
+    return wallpapers[index];
 }
 
-auto WallpaperRepository::get(const std::string_view id) const -> Wallpaper* {
+auto WallpaperRepository::get(const std::string_view id) const -> sptr<Wallpaper> {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
-            return wallpaper.get();
+            return wallpaper;
         }
     }
 
@@ -45,20 +45,20 @@ auto WallpaperRepository::get(const std::string_view id) const -> Wallpaper* {
 auto WallpaperRepository::shuffle(
     std::vector<std::string> includeTags,
     std::vector<std::string> excludeTags
-) const -> Wallpaper* {
+) const -> sptr<Wallpaper> {
     if(wallpapers.empty()) {
         return nullptr;
     }
 
     std::mt19937 rnd(std::random_device{}());
-    std::vector<Wallpaper*> filteredWallpapers;
+    std::vector<sptr<Wallpaper>> filteredWallpapers;
 
     for(const auto& wallpaper : wallpapers) {
         filteredWallpapers.emplace_back(wallpaper.get());
     }
 
     if(!includeTags.empty()) {
-        const auto notContainsIncludeTags = [&includeTags](Wallpaper* wallpaper) {
+        const auto notContainsIncludeTags = [&includeTags](sptr<Wallpaper> wallpaper) {
             return !rng::all_of(
                 includeTags,
                 [&wallpaper](const std::string& tag) {
@@ -71,7 +71,7 @@ auto WallpaperRepository::shuffle(
     }
 
     if(!excludeTags.empty()) {
-        const auto containsExcludeTags = [&excludeTags](Wallpaper* wallpaper) {
+        const auto containsExcludeTags = [&excludeTags](sptr<Wallpaper> wallpaper) {
             return rng::any_of(
                 excludeTags,
                 [&wallpaper](const std::string& tag) {

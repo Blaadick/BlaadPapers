@@ -103,7 +103,7 @@ auto WallpapersModel::rowCount(const QModelIndex&) const -> int {
 }
 
 auto WallpapersModel::data(const QModelIndex& index, const int role) const -> QVariant {
-    const Wallpaper* wallpaper = wallpaperRepository->get(index.row());
+    auto wallpaper = wallpaperRepository->get(index.row());
 
     QStringList qStringTags;
     qStringTags.reserve(wallpaper->getTags().size());

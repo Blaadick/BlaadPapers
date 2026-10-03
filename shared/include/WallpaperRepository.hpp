@@ -3,20 +3,19 @@
 
 #pragma once
 
-#include <optional>
 #include "data/Wallpaper.hpp"
 #include "util/Pointers.hpp"
 
 class WallpaperRepository {
 public:
-    auto get(int index) const -> Wallpaper*;
+    auto get(int index) const -> sptr<Wallpaper>;
 
-    auto get(std::string_view id) const -> Wallpaper*;
+    auto get(std::string_view id) const -> sptr<Wallpaper>;
 
     auto shuffle(
         std::vector<std::string> includeTags = {},
         std::vector<std::string> excludeTags = {}
-    ) const -> Wallpaper*;
+    ) const -> sptr<Wallpaper>;
 
     void add(sptr<Wallpaper> wallpaper);
 
