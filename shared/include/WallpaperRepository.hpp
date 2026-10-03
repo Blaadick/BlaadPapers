@@ -15,7 +15,7 @@ public:
     auto shuffle(
         std::vector<std::string> includeTags = {},
         std::vector<std::string> excludeTags = {}
-    ) const -> sptr<Wallpaper>;
+    ) const -> std::optional<sptr<Wallpaper>>;
 
     void add(sptr<Wallpaper> wallpaper);
 

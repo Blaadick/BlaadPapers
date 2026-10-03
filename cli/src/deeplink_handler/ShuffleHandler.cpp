@@ -36,7 +36,7 @@ auto ShuffleHandler::handle(const Uri& uri) const -> int {
         return 1;
     }
 
-    if(wallpaperRepository->apply(wallpaperToApply->getId())) {
+    if(wallpaperRepository->apply(wallpaperToApply.value()->getId())) {
         return 0;
     }
 

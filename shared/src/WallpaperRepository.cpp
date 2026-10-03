@@ -45,17 +45,13 @@ auto WallpaperRepository::get(const std::string_view id) const -> sptr<Wallpaper
 auto WallpaperRepository::shuffle(
     std::vector<std::string> includeTags,
     std::vector<std::string> excludeTags
-) const -> sptr<Wallpaper> {
+) const -> std::optional<sptr<Wallpaper>> {
     if(wallpapers.empty()) {
-        return nullptr;
+        return std::nullopt;
     }
 
     std::mt19937 rnd(std::random_device{}());
-    std::vector<sptr<Wallpaper>> filteredWallpapers;
-
-    for(const auto& wallpaper : wallpapers) {
-        filteredWallpapers.emplace_back(wallpaper.get());
-    }
+    std::vector<sptr<Wallpaper>> filteredWallpapers = wallpapers;
 
     if(!includeTags.empty()) {
         const auto notContainsIncludeTags = [&includeTags](sptr<Wallpaper> wallpaper) {
@@ -88,7 +84,7 @@ auto WallpaperRepository::shuffle(
         return filteredWallpapers[randomIndex];
     }
 
-    return nullptr;
+    return std::nullopt;
 }
 
 void WallpaperRepository::add(sptr<Wallpaper> wallpaper) {

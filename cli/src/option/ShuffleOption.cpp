@@ -88,11 +88,11 @@ auto ShuffleOption::execute(
         return 1;
     }
 
-    if(wallpaperRepository->apply(wallpaperToApply->getId())) {
-        logger->logInfo("Wallpaper \"" + wallpaperToApply->getId() + "\" applied");
+    if(wallpaperRepository->apply(wallpaperToApply.value()->getId())) {
+        logger->logInfo("Wallpaper \"" + wallpaperToApply.value()->getId() + "\" applied");
         return 0;
     }
 
-    logger->logError("Wallpaper \"" + wallpaperToApply->getId() + "\" not found");
+    logger->logError("Wallpaper \"" + wallpaperToApply.value()->getId() + "\" not found");
     return 2;
 }
