@@ -15,12 +15,8 @@ auto ApplyHandler::handle(const Uri& uri) const -> int {
         return 1;
     }
 
-    auto splitPath = *path | std::views::split('/') | std::ranges::to<std::vector>();
-    if(splitPath.size() > 1) {
-        return 1;
-    }
-
-    if(wallpaperRepository->apply(std::string(splitPath.back().begin(), splitPath.back().end()))) {
+    auto wallpaperId = precentDecode(path->subview(1));
+    if(wallpaperRepository->apply(wallpaperId)) {
         return 0;
     }
 

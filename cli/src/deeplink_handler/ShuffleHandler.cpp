@@ -15,19 +15,24 @@ auto ShuffleHandler::handle(const Uri& uri) const -> int {
     std::vector<std::string> includeTags;
     std::vector<std::string> excludeTags;
 
-    if(auto includeParam = uri.queries().find("include"); includeParam != uri.queries().end()) {
-        for(const auto& includeTag : includeParam->second | std::views::split(',')) {
-            includeTags.emplace_back(includeTag.begin(), includeTag.end());
+    auto queries = uri.queries();
+    if(!queries.empty()) {
+        if(auto includeParam = queries.find("include"); includeParam != queries.end()) {
+            for(const auto& includeTag : includeParam->second | std::views::split(',')) {
+                auto encodedTag = std::string_view(includeTag.begin(), includeTag.end());
+                includeTags.emplace_back(precentDecode(encodedTag));
+            }
+        }
+
+        if(auto excludeParam = queries.find("exclude"); excludeParam != queries.end()) {
+            for(const auto& excludeTag : excludeParam->second | std::views::split(',')) {
+                auto encodedTag = std::string_view(excludeTag.begin(), excludeTag.end());
+                excludeTags.emplace_back(precentDecode(encodedTag));
+            }
         }
     }
 
-    if(auto excludeParam = uri.queries().find("exclude"); excludeParam != uri.queries().end()) {
-        for(const auto& excludeTag : excludeParam->second | std::views::split(',')) {
-            excludeTags.emplace_back(excludeTag.begin(), excludeTag.end());
-        }
-    }
-
-    const auto wallpaperToApply = wallpaperRepository->shuffle(
+    auto wallpaperToApply = wallpaperRepository->shuffle(
         includeTags.empty() ? std::vector<std::string>{} : includeTags,
         excludeTags.empty() ? std::vector<std::string>{} : excludeTags
     );

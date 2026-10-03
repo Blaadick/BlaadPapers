@@ -5,7 +5,10 @@
 
 #include <QClipboard>
 #include <QGuiApplication>
+#include "network/Uri.hpp"
 
 void ClipboardModel::copyWallpaperDeeplink(const QString& wallpaperId) {
-    QGuiApplication::clipboard()->setText(QString("blaadpapers://apply/" + wallpaperId));
+    QGuiApplication::clipboard()->setText(
+        QString::fromStdString("blaadpapers://apply/" + precentEncode(wallpaperId.toStdString()))
+    );
 }
