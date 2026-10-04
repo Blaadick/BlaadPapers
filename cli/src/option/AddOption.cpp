@@ -30,28 +30,28 @@ auto AddOption::execute(
     std::vector<fs::path> filePaths;
     std::vector<Uri> uris;
 
-    for(const auto& argument : arguments) {
+    for(auto& argument : arguments) {
         auto uri = Uri::parse(std::string(argument));
         if(uri.has_value()) {
-            uris.emplace_back(uri.value());
+            uris.emplace_back(std::move(*uri));
         } else {
             filePaths.emplace_back(argument);
         }
     }
 
-    for(const auto& path : filePaths) {
+    for(auto& path : filePaths) {
         auto wallpaper = wallpaperLoader->installWallpaper(path);
         if(!wallpaper.has_value()) {
             logger->logWarning(std::format("Failed to install \"{}\": {}", path, wallpaper.error()));
         }
     }
 
-    for(const auto& url : uris) {
-        logger->logInfo(std::format("Downloading from \"{}\"...", url));
+    for(auto& uri : uris) {
+        logger->logInfo(std::format("Downloading from \"{}\"...", uri));
 
-        auto downloadedFilePath = downloadManager->downloadFile(url, util::localDownloadsDirPath());
+        auto downloadedFilePath = downloadManager->downloadFile(std::move(uri), util::localDownloadsDirPath());
         if(!downloadedFilePath.has_value()) {
-            logger->logWarning(std::format("Failed to download file from \"{}\": {}", url, downloadedFilePath.error()));
+            logger->logWarning(std::format("Failed to download file from \"{}\": {}", uri, downloadedFilePath.error()));
             continue;
         }
 

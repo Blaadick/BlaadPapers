@@ -13,7 +13,10 @@ void DownloadManager::addDownloader(std::string scheme, uptr<Downloader> downloa
     downloaders.emplace(std::move(scheme), std::move(downloader));
 }
 
-auto DownloadManager::downloadFile(Uri uri, const std::filesystem::path& downloadDir) -> std::expected<std::filesystem::path, std::string> {
+auto DownloadManager::downloadFile(
+    Uri uri,
+    const std::filesystem::path& downloadDir
+) -> std::expected<std::filesystem::path, std::string> {
     auto it = downloaders.find(std::string(uri.scheme()));
     if(it == downloaders.end()) {
         return std::unexpected("Unsupported URI scheme");

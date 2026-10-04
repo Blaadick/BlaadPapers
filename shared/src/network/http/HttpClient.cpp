@@ -11,9 +11,37 @@
 #include "util/PathUtils.hpp"
 
 namespace {
-    auto writeToString(char* data, std::size_t size, std::size_t count, void* out) -> std::size_t {
-        static_cast<std::string*>(out)->append(data, size * count);
+    using CurlHeaders = std::unique_ptr<curl_slist, decltype(&curl_slist_free_all)>;
+    using CurlMulti = std::unique_ptr<CURLM, decltype(&curl_multi_cleanup)>;
+    using CurlHandle = std::unique_ptr<CURL, decltype(&curl_easy_cleanup)>;
+
+    auto isSuccess(long status) -> bool {
+        return status >= 200 && status < 300;
+    }
+
+    auto readHeader(CURL* curl, const char* name) -> std::optional<std::string> {
+        curl_header* header = nullptr;
+        if(curl_easy_header(curl, name, 0, CURLH_HEADER, -1, &header) != CURLHE_OK) {
+            return std::nullopt;
+        }
+        return std::string(header->value);
+    }
+
+    auto writeToString(char* data, std::size_t size, std::size_t count, void* userdata) -> std::size_t {
+        static_cast<std::string*>(userdata)->append(data, size * count);
         return size * count;
+    }
+
+    auto writeToFile(char* data, std::size_t size, std::size_t count, void* userdata) -> std::size_t {
+        auto& file = *static_cast<std::ofstream*>(userdata);
+        if(!file.is_open()) {
+            return CURL_WRITEFUNC_PAUSE;
+        }
+
+        auto length = size * count;
+        file.write(data, length);
+
+        return file ? length : 0;
     }
 }
 
@@ -27,7 +55,7 @@ HttpClient::~HttpClient() {
 }
 
 auto HttpClient::requestString(Uri uri) -> std::expected<std::string, std::string> {
-    const std::unique_ptr<CURL, decltype(&curl_easy_cleanup)> curl(curl_easy_init(), curl_easy_cleanup);
+    CurlHandle curl(curl_easy_init(), curl_easy_cleanup);
     if(!curl) {
         return std::unexpected("curl_easy_init failed");
     }
@@ -41,6 +69,8 @@ auto HttpClient::requestString(Uri uri) -> std::expected<std::string, std::strin
     curl_easy_setopt(curl.get(), CURLOPT_NOSIGNAL, 1L);
     curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, writeToString);
     curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &body);
+    curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &body);
+    curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, PROJECT_USER_AGENT);
 
     if(auto code = curl_easy_perform(curl.get()); code != CURLE_OK) {
         return std::unexpected(curl_easy_strerror(code));
@@ -49,15 +79,16 @@ auto HttpClient::requestString(Uri uri) -> std::expected<std::string, std::strin
     return body;
 }
 
+namespace {}
+
 auto HttpClient::downloadFile(
     Uri uri,
     const std::filesystem::path& downloadDir
 ) -> std::expected<std::filesystem::path, std::string> {
-    std::error_code ec;
-    std::filesystem::create_directories(downloadDir);
-
+    auto ec = std::error_code{};
+    std::filesystem::create_directories(downloadDir, ec);
     if(ec) {
-        return std::unexpected("Cannot create " + downloadDir.string() + ": " + ec.message());
+        return std::unexpected(std::format("Cannot create dir {} ({})", downloadDir, ec.message()));
     }
 
     std::optional<DownloadData> previous;
@@ -65,147 +96,137 @@ auto HttpClient::downloadFile(
         previous = *ongoing;
     }
 
-    std::uintmax_t offset = 0;
+    std::uintmax_t offset;
     if(previous) {
         offset = std::filesystem::file_size(previous->partFilePath, ec);
-
         if(ec) {
             offset = 0;
         }
     }
 
-    std::unique_ptr<curl_slist, decltype(&curl_slist_free_all)> headers(nullptr, curl_slist_free_all);
-    std::unique_ptr<CURL, decltype(&curl_easy_cleanup)> curlHandle(curl_easy_init(), curl_easy_cleanup);
-    CURL* curl = curlHandle.get();
-    if(!curl) {
-        return std::unexpected("curl_easy_init failed");
+    auto headers = CurlHeaders(nullptr, curl_slist_free_all);
+    auto multi = CurlMulti(curl_multi_init(), curl_multi_cleanup);
+    auto curl = CurlHandle(curl_easy_init(), curl_easy_cleanup);
+    if(!multi || !curl) {
+        return std::unexpected("Cannot initialize libcurl");
     }
 
-    char errorBuffer[CURL_ERROR_SIZE] = {};
-    curl_easy_setopt(curl, CURLOPT_URL, uri.c_str());
-    curl_easy_setopt(curl, CURLOPT_PROTOCOLS_STR, "http,https");
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
-    curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuffer);
+    std::ofstream file;
+    char errorBuffer[CURL_ERROR_SIZE];
+
+    curl_easy_setopt(curl.get(), CURLOPT_URL, uri.c_str());
+    curl_easy_setopt(curl.get(), CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl.get(), CURLOPT_FAILONERROR, 1L);
+    curl_easy_setopt(curl.get(), CURLOPT_ERRORBUFFER, errorBuffer);
+    curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, writeToFile);
+    curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &file);
+    curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, PROJECT_USER_AGENT);
 
     if(offset > 0) {
-        curl_easy_setopt(curl, CURLOPT_RANGE, (std::to_string(offset) + "-").c_str());
+        curl_easy_setopt(curl.get(), CURLOPT_RANGE, std::format("{}-", offset).c_str());
         if(!previous->eTag.empty()) {
-            headers.reset(curl_slist_append(nullptr, ("If-Range: " + previous->eTag).c_str()));
-            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers.get());
+            headers.reset(curl_slist_append(nullptr, std::format("If-Range: {}", previous->eTag).c_str()));
+            curl_easy_setopt(curl.get(), CURLOPT_HTTPHEADER, headers.get());
         }
     }
 
-    std::filesystem::path finalPath;
-    std::filesystem::path partFilePath;
-    std::ofstream file;
-    std::string error;
+    const auto addResult = curl_multi_add_handle(multi.get(), curl.get());
+    if(addResult != CURLM_OK) {
+        return std::unexpected(curl_multi_strerror(addResult));
+    }
 
-    auto openFile = [&]() -> bool {
-        long status = 0;
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
-
-        curl_header* header = nullptr;
-        std::optional<std::string> filename;
-        if(curl_easy_header(curl, "Content-Disposition", 0, CURLH_HEADER, -1, &header) == CURLHE_OK) {
-            filename = extractFilename(header->value);
+    auto running = 0;
+    auto status = 0L;
+    while(true) {
+        auto performResult = curl_multi_perform(multi.get(), &running);
+        if(performResult != CURLM_OK) {
+            return std::unexpected(curl_multi_strerror(performResult));
         }
-        if(!filename.has_value()) {
+
+        curl_easy_getinfo(curl.get(), CURLINFO_RESPONSE_CODE, &status);
+
+        if(running == 0 || isSuccess(status)) {
+            break;
+        }
+
+        curl_multi_poll(multi.get(), nullptr, 0, 1000, nullptr);
+    }
+
+    if(!isSuccess(status)) {
+        return std::unexpected(errorBuffer);
+    }
+
+    auto resumed = previous && status == 206;
+
+    std::filesystem::path partFilePath;
+    if(previous) {
+        partFilePath = previous->partFilePath;
+    } else {
+        std::optional<std::string> filename;
+        if(const auto disposition = readHeader(curl.get(), "Content-Disposition")) {
+            filename = extractFilename(*disposition);
+        }
+        if(!filename) {
             filename = extractFilename(uri);
         }
-        if(!filename.has_value()) {
-            filename = "file";
-        }
 
-        finalPath = downloadDir / *filename;
-
-        if(previous && status == 206) {
-            partFilePath = previous->partFilePath;
-            file.open(partFilePath, std::ios::binary | std::ios::app);
-            if(!file) {
-                error = "Cannot open " + partFilePath.string();
-                return false;
-            }
-            return true;
-        }
-
-        if(previous) {
-            std::error_code ignored;
-            removeOngoingDownload(uri);
-            std::filesystem::remove(previous->partFilePath, ignored);
-        }
-
-        std::string eTag;
-        if(curl_easy_header(curl, "ETag", 0, CURLH_HEADER, -1, &header) == CURLHE_OK) {
-            eTag = header->value;
-        }
-
-        partFilePath = finalPath;
+        partFilePath = downloadDir / filename.value_or("file");
         partFilePath += ".part";
-        file.open(partFilePath, std::ios::binary | std::ios::trunc);
-        if(!file) {
-            error = "Cannot open " + partFilePath.string();
-            return false;
-        }
-
-        addOngoingDownload(uri, DownloadData{partFilePath, std::move(eTag)});
-        return true;
-    };
-
-    auto writeBody = [&](const char* data, std::size_t size) -> bool {
-        if(!file.is_open() && !openFile()) {
-            return false;
-        }
-
-        return static_cast<bool>(file.write(data, size));
-    };
-
-    using WriteBody = decltype(writeBody);
-
-    curl_easy_setopt(
-        curl,
-        CURLOPT_WRITEFUNCTION,
-        +[](char* data, std::size_t size, std::size_t count, void* userdata) -> std::size_t {
-        auto& body = *static_cast<WriteBody*>(userdata);
-        return body(data, size * count) ? size * count : 0;
-        }
-    );
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &writeBody);
-
-    const CURLcode result = curl_easy_perform(curl);
-
-    long status = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
-
-    if(offset > 0 && status == 416) {
-        removeOngoingDownload(uri);
-        std::filesystem::remove(previous->partFilePath, ec);
-        return downloadFile(std::move(uri), downloadDir);
     }
 
-    if(result != CURLE_OK) {
-        if(error.empty()) {
-            error = errorBuffer[0] ? errorBuffer : curl_easy_strerror(result);
-        }
-        return std::unexpected(error);
+    file.open(partFilePath, std::ios::binary | (resumed ? std::ios::app : std::ios::trunc));
+    if(!file) {
+        return std::unexpected(std::format("Cannot open {}", partFilePath.string()));
     }
 
-    if(!file.is_open() && !openFile()) {
-        return std::unexpected(error);
+    if(!resumed) {
+        if(previous) {
+            removeOngoingDownload(uri);
+        }
+
+        addOngoingDownload(uri, DownloadData{partFilePath, readHeader(curl.get(), "ETag").value_or("")});
+    }
+
+    if(running > 0) {
+        const auto pauseResult = curl_easy_pause(curl.get(), CURLPAUSE_CONT);
+        if(pauseResult != CURLE_OK) {
+            return std::unexpected(curl_easy_strerror(pauseResult));
+        }
+    }
+
+    while(running > 0) {
+        const auto performResult = curl_multi_perform(multi.get(), &running);
+
+        if(performResult != CURLM_OK) {
+            return std::unexpected(curl_multi_strerror(performResult));
+        }
+
+        if(running > 0) {
+            curl_multi_poll(multi.get(), nullptr, 0, 1000, nullptr);
+        }
+    }
+
+    auto messages = 0;
+    const auto message = curl_multi_info_read(multi.get(), &messages);
+    if(!message || message->data.result != CURLE_OK) {
+        return std::unexpected(errorBuffer);
     }
 
     file.close();
     if(!file) {
-        return std::unexpected("Cannot write " + partFilePath.string());
+        return std::unexpected(std::format("Cannot write {}", partFilePath.string()));
     }
 
-    std::filesystem::rename(partFilePath, finalPath, ec);
+    auto filePath = partFilePath;
+    filePath.replace_extension();
+
+    std::filesystem::rename(partFilePath, filePath, ec);
     if(ec) {
-        return std::unexpected("Cannot rename " + partFilePath.string() + ": " + ec.message());
+        return std::unexpected(std::format("Cannot rename file {} ({})", partFilePath.string(), ec.message()));
     }
 
     removeOngoingDownload(uri);
-    return finalPath;
+    return filePath;
 }
 
 const std::filesystem::path& HttpClient::ongoingDownloadsFilePath() {
