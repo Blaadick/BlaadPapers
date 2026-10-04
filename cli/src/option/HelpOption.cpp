@@ -59,7 +59,7 @@ auto HelpOption::execute(
         yyjson_mut_doc_free(doc);
     } else {
         logger->logInfo("Description:");
-        logger->logInfo(std::format("  {}", PROJECT_DESCRIPTION));
+        logger->logInfo(std::format("    {}", PROJECT_DESCRIPTION));
 
         logger->logInfo("\nOptions:");
 
@@ -68,12 +68,12 @@ auto HelpOption::execute(
         );
 
         for(const auto& [name, option] : options) {
-            logger->logInfo(std::format("  {:<{}}  ->  {}", name, maxNameLength, option->getDescription()));
+            logger->logInfo(std::format("    {:<{}}  ->  {}", name, maxNameLength, option->getDescription()));
         }
 
         logger->logInfo("\nFlags:");
-        logger->logInfo(std::format("  --{}  (-{})  ->  {}", Flags::help->name, Flags::help->shortName.value(), Flags::help->description));
-        logger->logInfo(std::format("  --{} (-{})  ->  {}", Flags::quiet->name, Flags::quiet->shortName.value(), Flags::quiet->description));
+        logger->logInfo(std::format("    --{}  (-{})  ->  {}", Flags::help->name, *Flags::help->shortName, Flags::help->description));
+        logger->logInfo(std::format("    --{} (-{})  ->  {}", Flags::quiet->name, *Flags::quiet->shortName, Flags::quiet->description));
     }
 
     return 0;

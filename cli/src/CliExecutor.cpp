@@ -11,12 +11,12 @@
 
 static constexpr void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
     logger.logInfo("Description:");
-    logger.logInfo(std::format("  {} - {}", optionName, option.getDescription()));
+    logger.logInfo(std::format("    {}", option.getDescription()));
 
     if(!option.getUsageStrings().empty()) {
         logger.logInfo("\nUsage:");
         for(const auto& usageString : option.getUsageStrings()) {
-            logger.logInfo(std::format("  blaadpapers {} {}", optionName, usageString));
+            logger.logInfo(std::format("    blaadpapers {} {}", optionName, usageString));
         }
     }
 
@@ -45,9 +45,9 @@ static constexpr void printOptionHelpMessage(const Option& option, const std::st
 
         for(const auto& flag : option.getFlags()) {
             if(flag->shortName.has_value()) {
-                logger.logInfo(std::format("  --{:<{}} (-{})  ->  {}", flag->name, maxNameLength, flag->shortName.value(), flag->description));
+                logger.logInfo(std::format("    --{:<{}} (-{})  ->  {}", flag->name, maxNameLength, *flag->shortName, flag->description));
             } else {
-                logger.logInfo(std::format("  --{:<{}}  ->  {}", flag->name, maxNameLengthWithoutShort, flag->description));
+                logger.logInfo(std::format("    --{:<{}}  ->  {}", flag->name, maxNameLengthWithoutShort, flag->description));
             }
         }
     }
