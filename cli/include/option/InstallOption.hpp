@@ -8,9 +8,9 @@
 #include "option/Option.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
-class AddOption final : public Option {
+class InstallOption final : public Option {
 public:
-    AddOption(
+    InstallOption(
         sptr<WallpaperLoaderManager> wallpaperLoader,
         sptr<DownloadManager> downloadManager,
         sptr<Config> config,
