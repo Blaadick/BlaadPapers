@@ -21,6 +21,11 @@ ApplicationWindow {
         }
     }
 
+    DownloadWindow {
+        id: downloadWindow
+        transientParent: mainWindow
+    }
+
     Menu {
         id: contextMenu
 
@@ -33,9 +38,15 @@ ApplicationWindow {
         }
 
         Action {
-            text: "Add wallpapers"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
+            text: "Install wallpapers"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
             onTriggered: Wallpapers.installWallpapersFromDialog()
+        }
+
+        Action {
+            text: "Download wallpapers"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
+            onTriggered: downloadWindow.show()
         }
 
         Action {

@@ -1,0 +1,66 @@
+// Copyright (C) 2026 Blaadick
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Window
+
+Window {
+    width: 500
+    height: 300
+    minimumWidth: 400
+    minimumHeight: 200
+    modality: Qt.NonModal
+    title: "Download wallpapers"
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 10
+        spacing: 10
+
+        TextArea {
+            id: input
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            placeholderText: "https://example.com/some_file1.ext\nhttps://example.com/some_file2.ext\n..."
+            wrapMode: TextArea.Wrap
+
+            focus: true
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 10
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Button {
+                text: "Cancel"
+                onClicked: {
+                    input.clear()
+                    downloadWindow.close()
+                }
+            }
+
+            Button {
+                text: "Download && Install"
+                onClicked: {
+                    const stringList = input.text
+                        .split(/\r?\n/)
+                        .map(line => line.trim())
+                        .filter(line => line.length > 0)
+
+                    Wallpapers.downloadAndInstallWallpapersAsync(stringList)
+
+                    input.clear()
+                    downloadWindow.close()
+                }
+            }
+        }
+    }
+}

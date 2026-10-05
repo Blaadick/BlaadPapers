@@ -18,6 +18,8 @@
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
+#include "network/file/FileDownloader.hpp"
+#include "network/http/HttpDownloader.hpp"
 #include "preview/generator/PicturePreviewGenerator.hpp"
 #include "preview/generator/VideoPreviewGenerator.hpp"
 #include "wallpaper_loader/PictureWallpaperLoader.hpp"
@@ -54,8 +56,14 @@ int main(int argc, char** argv) {
     previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());
     previewManager->addGenerator<VideoWallpaper>(std::make_unique<VideoPreviewGenerator>());
 
+    auto httpClient = std::make_shared<HttpClient>();
+    auto downloadManager = std::make_shared<DownloadManager>();
+    downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(httpClient));
+    downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(httpClient));
+    downloadManager->addDownloader("file", std::make_unique<FileDownloader>());
+
     auto configModel = std::make_shared<ConfigModel>(config);
-    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, config, previewManager, logger);
+    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, downloadManager, config, previewManager, logger);
     wallpapersModel->loadWallpapers();
     logger->logInfo(std::format("Loaded {} wallpapers", wallpapers->count()));
 

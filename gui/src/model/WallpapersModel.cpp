@@ -8,23 +8,21 @@
 #include <QString>
 #include <QtConcurrentMap>
 #include <QThreadPool>
-#include "WallpaperRepository.hpp"
-#include "config/Config.hpp"
-#include "file_processing/FileType.hpp"
 #include "util/FormatExt.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/StringUtils.hpp"
-#include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
+class Uri;
 namespace fs = std::filesystem;
 
 WallpapersModel::WallpapersModel(
     sptr<WallpaperLoaderManager> wallpaperLoader,
     sptr<WallpaperRepository> wallpaperRepository,
+    sptr<DownloadManager> downloadManager,
     sptr<Config> config,
     sptr<PreviewManager> previewManager,
     sptr<util::Logger> logger
-) : wallpaperLoader(std::move(wallpaperLoader)), wallpaperRepository(std::move(wallpaperRepository)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
+) : wallpaperLoader(std::move(wallpaperLoader)), wallpaperRepository(std::move(wallpaperRepository)), downloadManager(std::move(downloadManager)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
 
 void WallpapersModel::loadWallpapers() {
     beginResetModel();
@@ -67,6 +65,44 @@ void WallpapersModel::installWallpapersAsync(const QStringList& paths) {
     QThreadPool::globalInstance()->start(
         [this, paths] {
             installWallpapers(paths);
+        }
+    );
+}
+
+void WallpapersModel::downloadAndInstallWallpapersAsync(const QStringList& stringList) {
+    QThreadPool::globalInstance()->start(
+        [this, stringList] {
+            std::vector<Uri> uris;
+            for(auto& string : stringList) {
+                auto uri = Uri::parse(string.toStdString());
+                if(uri.has_value()) {
+                    uris.emplace_back(std::move(*uri));
+                } else {
+                    logger->logWarning(std::format("Failed to parse \"{}\" as URI", string));
+                }
+            }
+
+            for(auto& uri : uris) {
+                logger->logInfo(std::format("Downloading from \"{}\"...", uri));
+
+                auto downloadedFilePath = downloadManager->downloadFile(uri, util::localDownloadsDirPath());
+                if(!downloadedFilePath.has_value()) {
+                    logger->logWarning(std::format("Failed to download file from \"{}\": {}", uri, downloadedFilePath.error()));
+                    continue;
+                }
+
+                auto wallpaper = wallpaperLoader->installWallpaper(*downloadedFilePath);
+                if(wallpaper.has_value()) {
+                    wallpaperRepository->add(*wallpaper);
+                    refreshWallpapers();
+
+                    logger->logWarning(std::format("Wallpaper \"{}\" installed", wallpaper.value()->getId()));
+                } else {
+                    logger->logWarning(std::format("Failed to install \"{}\": {}", downloadedFilePath->filename(), wallpaper.error()));
+                }
+
+                fs::remove(*downloadedFilePath);
+            }
         }
     );
 }

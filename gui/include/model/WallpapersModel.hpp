@@ -7,9 +7,11 @@
 #include <QVariant>
 #include "WallpaperRepository.hpp"
 #include "logger/Logger.hpp"
+#include "network/DownloadManager.hpp"
 #include "preview/PreviewManager.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
+// TODO Split & refactor
 class WallpapersModel : public QAbstractListModel {
     Q_OBJECT
 
@@ -28,6 +30,7 @@ public:
     WallpapersModel(
         sptr<WallpaperLoaderManager> wallpaperLoader,
         sptr<WallpaperRepository> wallpaperRepository,
+        sptr<DownloadManager> downloadManager,
         sptr<Config> config,
         sptr<PreviewManager> previewManager,
         sptr<util::Logger> logger
@@ -38,6 +41,8 @@ public:
     Q_INVOKABLE void installWallpapersFromDialog();
 
     Q_INVOKABLE void installWallpapersAsync(const QStringList& paths);
+
+    Q_INVOKABLE void downloadAndInstallWallpapersAsync(const QStringList& stringList);
 
     Q_INVOKABLE void applyWallpaperAsync(const QString& wallpaperId) const;
 
@@ -54,6 +59,7 @@ public:
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;
     sptr<WallpaperRepository> wallpaperRepository;
+    sptr<DownloadManager> downloadManager;
     sptr<Config> config;
     sptr<PreviewManager> previewManager;
     sptr<util::Logger> logger;
