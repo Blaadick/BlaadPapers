@@ -85,10 +85,8 @@ auto HttpClient::downloadFile(
     Uri uri,
     const std::filesystem::path& downloadDir
 ) -> std::expected<std::filesystem::path, std::string> {
-    auto ec = std::error_code{};
-    std::filesystem::create_directories(downloadDir, ec);
-    if(ec) {
-        return std::unexpected(std::format("Cannot create dir {} ({})", downloadDir, ec.message()));
+    if(!util::createDirIfNotExists(downloadDir)) {
+        return std::unexpected(std::format("Failed to create directory \"{}\"", downloadDir));
     }
 
     std::optional<DownloadData> previous;
@@ -98,10 +96,7 @@ auto HttpClient::downloadFile(
 
     std::uintmax_t offset;
     if(previous) {
-        offset = std::filesystem::file_size(previous->partFilePath, ec);
-        if(ec) {
-            offset = 0;
-        }
+        offset = std::filesystem::file_size(previous->partFilePath);
     }
 
     auto headers = CurlHeaders(nullptr, curl_slist_free_all);
@@ -220,10 +215,7 @@ auto HttpClient::downloadFile(
     auto filePath = partFilePath;
     filePath.replace_extension();
 
-    std::filesystem::rename(partFilePath, filePath, ec);
-    if(ec) {
-        return std::unexpected(std::format("Cannot rename file {} ({})", partFilePath.string(), ec.message()));
-    }
+    std::filesystem::rename(partFilePath, filePath);
 
     removeOngoingDownload(uri);
     return filePath;

@@ -13,13 +13,14 @@
 #include "flag/Flags.hpp"
 #include "logger/CliLogger.hpp"
 #include "network/DownloadManager.hpp"
+#include "network/file/FileDownloader.hpp"
 #include "network/http/HttpClient.hpp"
 #include "network/http/HttpDownloader.hpp"
-#include "option/InstallOption.hpp"
 #include "option/ApplyOption.hpp"
 #include "option/CountOption.hpp"
 #include "option/HelpOption.hpp"
 #include "option/InfoOption.hpp"
+#include "option/InstallOption.hpp"
 #include "option/ListOption.hpp"
 #include "option/RemoveOption.hpp"
 #include "option/RunRendererOption.hpp"
@@ -49,6 +50,7 @@ auto main(int argc, char* argv[]) -> int {
     auto downloadManager = std::make_shared<DownloadManager>();
     downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(httpClient));
     downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(httpClient));
+    downloadManager->addDownloader("file", std::make_unique<FileDownloader>());
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpaperRepository, logger));

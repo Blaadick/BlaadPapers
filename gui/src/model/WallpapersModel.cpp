@@ -138,7 +138,7 @@ void WallpapersModel::installWallpapers(const QStringList& paths) {
         if(QFileInfo fileInfo(path); fileInfo.isFile()) {
             auto installedWallpaper = wallpaperLoader->installWallpaper(fileInfo.filesystemAbsoluteFilePath());
             if(!installedWallpaper) {
-                logger->logWarning(std::format("Failed to install \"{}\": {}", fileInfo.filesystemAbsoluteFilePath(), installedWallpaper.error()));
+                logger->logWarning(std::format("Failed to install \"{}\": {}", fileInfo.fileName(), installedWallpaper.error()));
                 continue;
             }
 

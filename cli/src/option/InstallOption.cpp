@@ -46,7 +46,7 @@ auto InstallOption::execute(
     for(auto& path : filePaths) {
         auto wallpaper = wallpaperLoader->installWallpaper(path);
         if(!wallpaper.has_value()) {
-            logger->logWarning(std::format("Failed to install \"{}\": {}", path, wallpaper.error()));
+            logger->logWarning(std::format("Failed to install \"{}\": {}", path.filename(), wallpaper.error()));
         }
     }
 
@@ -61,7 +61,7 @@ auto InstallOption::execute(
 
         auto wallpaper = wallpaperLoader->installWallpaper(*downloadedFilePath);
         if(!wallpaper.has_value()) {
-            logger->logWarning(std::format("Failed to install \"{}\": {}", *downloadedFilePath, wallpaper.error()));
+            logger->logWarning(std::format("Failed to install \"{}\": {}", downloadedFilePath->filename(), wallpaper.error()));
         }
 
         fs::remove(*downloadedFilePath);
