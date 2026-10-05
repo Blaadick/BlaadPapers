@@ -10,32 +10,32 @@
 PreviewManager::PreviewManager(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
 void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
-    const auto previewsDirPath = wallpaper.getDirPath() / "preview";
+    auto previewsDirPath = wallpaper.getDirPath() / "preview";
 
     if(!util::createDirIfNotExists(previewsDirPath)) {
-        logger->logWarning("Failed to create directory \"" + previewsDirPath.string() + "\"");
+        logger->logWarning(std::format("Failed to create directory \"{}\"", previewsDirPath));
         return;
     }
 
     for(const QScreen* screen : QGuiApplication::screens()) {
-        const auto previewFilePath = previewsDirPath / (util::toString(screen) + ".webp");
-        const auto previewSize = util::getScreenAspectRatio(screen) * 20 * static_cast<int>(screen->devicePixelRatio());
+        auto previewFilePath = previewsDirPath / (util::toString(screen) + ".webp");
+        auto previewSize = util::getScreenAspectRatio(screen) * 20 * static_cast<int>(screen->devicePixelRatio());
 
         if(std::filesystem::exists(previewFilePath)) {
             continue;
         }
 
-        const auto it = generators.find(typeid(wallpaper));
+        auto it = generators.find(typeid(wallpaper));
         if(it == generators.end()) {
-            logger->logError("No preview generator found for wallpaper \"" + wallpaper.getId() + '\"');
+            logger->logError(std::format("No preview generator found for {} ({})", wallpaper.getId(), wallpaper.getFilePath().extension()));
             return;
         }
 
-        const auto isSaved = it->second->createAndSavePreview(wallpaper, previewSize, previewFilePath);
+        auto isSaved = it->second->createAndSavePreview(wallpaper, previewSize, previewFilePath);
         if(isSaved) {
-            logger->logInfo("Preview of \"" + wallpaper.getId() + "\" saved for " + util::toString(screen));
+            logger->logInfo(std::format("Preview of \"{}\" saved for {}", wallpaper.getId(), util::toString(screen)));
         } else {
-            logger->logWarning("Unable to save preview file \"" + previewFilePath.string() + "\"");
+            logger->logWarning(std::format("Unable to save preview file \"{}\"", previewFilePath));
         }
     }
 }

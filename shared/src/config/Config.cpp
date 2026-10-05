@@ -142,7 +142,7 @@ void Config::saveGeneral() const {
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(generalConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write config file to \"" + generalConfigFilePath().string() + '\"');
+        logger->logError(std::format("Failed to write config file to \"{}\"", generalConfigFilePath()));
     }
 
     yyjson_mut_doc_free(doc);
@@ -159,7 +159,7 @@ void Config::saveGui() const {
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(guiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write config file to \"" + generalConfigFilePath().string() + '\"');
+        logger->logError(std::format("Failed to write config file to \"{}\"", guiConfigFilePath()));
     }
 
     yyjson_mut_doc_free(doc);
@@ -192,7 +192,7 @@ void Config::saveApi() const {
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(apiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
-        logger->logError("Failed to write config file to \"" + generalConfigFilePath().string() + '\"');
+        logger->logError(std::format("Failed to write config file to \"{}\"", apiConfigFilePath()));
     }
 
     yyjson_mut_doc_free(doc);

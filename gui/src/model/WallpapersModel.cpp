@@ -11,6 +11,7 @@
 #include "WallpaperRepository.hpp"
 #include "config/Config.hpp"
 #include "file_processing/FileType.hpp"
+#include "util/FormatExt.hpp"
 #include "util/FormatUtils.hpp"
 #include "util/StringUtils.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
@@ -74,9 +75,9 @@ void WallpapersModel::applyWallpaperAsync(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
             if(wallpaperRepository->apply(wallpaperId.toStdString())) {
-                logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" applied");
+                logger->logInfo(std::format("Wallpaper \"{}\" applied", wallpaperId));
             } else {
-                logger->logWarning("Failed to apply wallpaper \"" + wallpaperId.toStdString() + "\"");
+                logger->logWarning(std::format("Failed to apply wallpaper \"{}\"", wallpaperId));
             }
         }
     );
@@ -86,9 +87,9 @@ void WallpapersModel::deleteWallpaperAsync(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
             if(wallpaperRepository->remove(wallpaperId.toStdString())) {
-                logger->logInfo("Wallpaper \"" + wallpaperId.toStdString() + "\" deleted");
+                logger->logInfo(std::format("Wallpaper \"{}\" deleted", wallpaperId));
             } else {
-                logger->logWarning("Failed to delete wallpaper \"" + wallpaperId.toStdString() + "\"");
+                logger->logWarning(std::format("Failed to delete wallpaper \"{}\"", wallpaperId));
             }
         }
     );
@@ -146,5 +147,5 @@ void WallpapersModel::installWallpapers(const QStringList& paths) {
         }
     }
 
-    loadWallpapers();
+    refreshWallpapers();
 }

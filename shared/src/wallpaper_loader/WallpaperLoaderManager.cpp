@@ -51,7 +51,7 @@ void WallpaperLoaderManager::loadWallpapers() const {
     wallpaperRepository->clear();
 
     if(!util::createDirIfNotExists(config->getWallpapersDirPath())) {
-        logger->logError("Failed to create directory \"" + config->getWallpapersDirPath().string() + "\"");
+        logger->logError(std::format("Failed to create directory \"{}\"", config->getWallpapersDirPath()));
         return;
     }
 
