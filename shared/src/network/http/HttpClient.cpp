@@ -24,6 +24,7 @@ namespace {
         if(curl_easy_header(curl, name, 0, CURLH_HEADER, -1, &header) != CURLHE_OK) {
             return std::nullopt;
         }
+
         return std::string(header->value);
     }
 
@@ -72,14 +73,13 @@ auto HttpClient::requestString(Uri uri) -> std::expected<std::string, std::strin
     curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &body);
     curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, PROJECT_USER_AGENT);
 
-    if(auto code = curl_easy_perform(curl.get()); code != CURLE_OK) {
+    auto code = curl_easy_perform(curl.get());
+    if(code != CURLE_OK) {
         return std::unexpected(curl_easy_strerror(code));
     }
 
     return body;
 }
-
-namespace {}
 
 auto HttpClient::downloadFile(
     Uri uri,
@@ -94,7 +94,7 @@ auto HttpClient::downloadFile(
         previous = *ongoing;
     }
 
-    std::uintmax_t offset;
+    std::uintmax_t offset = 0;
     if(previous) {
         offset = std::filesystem::file_size(previous->partFilePath);
     }
@@ -179,7 +179,7 @@ auto HttpClient::downloadFile(
             removeOngoingDownload(uri);
         }
 
-        addOngoingDownload(uri, DownloadData{partFilePath, readHeader(curl.get(), "ETag").value_or("")});
+        addOngoingDownload(uri, DownloadData(partFilePath, readHeader(curl.get(), "ETag").value_or("")));
     }
 
     if(running > 0) {

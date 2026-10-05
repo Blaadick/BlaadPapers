@@ -12,7 +12,7 @@ auto FileDownloader::downloadFile(Uri uri, const std::filesystem::path& download
 
     auto pathEncoded = uri.path();
     if(!pathEncoded.has_value()) {
-        return std::unexpected("No file path in \"file://\" URI provided");
+        return std::unexpected("No file path recognized");
     }
 
     auto sourcePath = std::filesystem::path(precentDecode(*pathEncoded));
