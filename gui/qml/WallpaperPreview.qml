@@ -7,7 +7,7 @@ import QtQuick.Controls
 
 Item {
     id: preview
-    scale: isPressed || !isHovered ? 1 : 1.08
+    scale: isPressed || !isHovered ? 1 : 1.1
 
     Behavior on scale {
         NumberAnimation {
@@ -89,10 +89,17 @@ Item {
 
         MenuSeparator {}
 
-        Action {
-            text: "Delete"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
-            onTriggered: Wallpapers.deleteWallpaperAsync(preview.wid)
+        MenuItem {
+            DelayButton {
+                text: "Delete"
+                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
+                anchors.fill: parent
+
+                onActivated: {
+                    Wallpapers.deleteWallpaperAsync(preview.wid)
+                    contextMenu.close()
+                }
+            }
         }
     }
 

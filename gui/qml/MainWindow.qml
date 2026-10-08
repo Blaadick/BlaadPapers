@@ -16,6 +16,7 @@ ApplicationWindow {
 
     Shortcut {
         sequence: "F5"
+
         onActivated: {
             Wallpapers.refreshWallpapers()
         }
@@ -37,21 +38,29 @@ ApplicationWindow {
             }
         }
 
-        Action {
-            text: "Install wallpapers"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
-            onTriggered: Wallpapers.installWallpapersFromDialog()
-        }
+        Menu {
+            title: "Add"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
 
-        Action {
-            text: "Download wallpapers"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
-            onTriggered: downloadWindow.show()
+            Action {
+                text: "Install wallpaper(s)"
+                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
+
+                onTriggered: Wallpapers.installWallpapersFromDialog()
+            }
+
+            Action {
+                text: "Download wallpaper(s)"
+                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
+
+                onTriggered: downloadWindow.show()
+            }
         }
 
         Action {
             text: "Open Config"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/file_open.svg"
+
             onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
         }
 
@@ -59,6 +68,7 @@ ApplicationWindow {
             text: "Status Bar"
             checkable: true
             checked: Config.statusBarVisible
+
             onTriggered: Config.statusBarVisible = !Config.statusBarVisible
         }
 
@@ -66,6 +76,7 @@ ApplicationWindow {
             text: "Bad Tagged Wallpapers"
             checkable: true
             checked: Config.badTaggedWallpapersVisible
+
             onTriggered: {
                 Config.badTaggedWallpapersVisible = !Config.badTaggedWallpapersVisible
                 proxy.invalidate()
@@ -81,9 +92,11 @@ ApplicationWindow {
         RowLayout {
             spacing: 10
 
-            ToolButton {
+            Button {
                 id: menuButton
                 icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
+                Layout.preferredHeight: searchBar.height
+                Layout.preferredWidth: searchBar.height
 
                 onClicked: {
                     if(contextMenu.suppressReopen) {
@@ -106,28 +119,23 @@ ApplicationWindow {
 
         SortFilterProxyModel {
             id: proxy
-            model: Wallpapers
+            sourceModel: Wallpapers
 
             filters: [
                 FunctionFilter {
-                    component WallpaperData: QtObject {
-                        property string wallpaperName
-                        property var wallpaperTags
-                        property bool isWallpaperBad
+                    function filter(isWallpaperBad: bool): bool {
+                        return Config.badTaggedWallpapersVisible || !isWallpaperBad;
                     }
-
-                    function filter(data: WallpaperData): bool {
-                        if(!Config.badTaggedWallpapersVisible && data.isWallpaperBad) {
-                            return false
-                        }
-
+                },
+                FunctionFilter {
+                    function filter(wallpaperName: string, wallpaperTags: list<string>): bool {
                         if(!searchBar.text) {
                             return true
                         }
 
                         const filterText = searchBar.text.toLowerCase()
-                        return data.wallpaperName.toLowerCase().includes(filterText)
-                            || data.wallpaperTags.some(tag => tag.toLowerCase().includes(filterText))
+                        return wallpaperName.toLowerCase().includes(filterText)
+                            || wallpaperTags.some(tag => tag.toLowerCase().includes(filterText))
                     }
                 }
             ]

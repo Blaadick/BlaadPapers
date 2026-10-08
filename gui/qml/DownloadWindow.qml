@@ -41,6 +41,7 @@ Window {
 
             Button {
                 text: "Cancel"
+
                 onClicked: {
                     input.clear()
                     downloadWindow.close()
@@ -49,6 +50,8 @@ Window {
 
             Button {
                 text: "Download && Install"
+                highlighted: true
+
                 onClicked: {
                     const stringList = input.text
                         .split(/\r?\n/)
