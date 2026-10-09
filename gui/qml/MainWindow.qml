@@ -3,6 +3,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 import QtQuick.Layouts
 import QtQml.Models
 
@@ -141,11 +142,33 @@ ApplicationWindow {
             ]
         }
 
-        WallpaperFlow {
-            id: wallpaperFlow
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: proxy
+
+            Rectangle {
+                id: roundMask
+                visible: false
+                radius: 10
+                anchors.fill: parent
+                color: "black"
+
+                layer.enabled: true
+            }
+
+            WallpaperFlow {
+                id: wallpaperFlow
+                anchors.fill: parent
+                model: proxy
+
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    maskEnabled: true
+                    maskThresholdMin: 0.5
+                    maskSpreadAtMin: 1.0
+                    maskSource: roundMask
+                }
+            }
         }
 
         StatusBar {

@@ -9,7 +9,6 @@ import QtQuick.Effects
 Item {
     id: preview
 
-    property real radius: 10
     property string wid
     property string name
     property string rootDir
@@ -22,7 +21,7 @@ Item {
     Rectangle {
         id: roundMask
         visible: false
-        radius: preview.radius
+        radius: 10
         anchors.fill: parent
         color: "black"
 
