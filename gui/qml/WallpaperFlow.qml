@@ -3,75 +3,95 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 
-Flickable {
-    id: flick
-    contentHeight: flow.implicitHeight
-    boundsBehavior: Flickable.StopAtBounds
-    clip: true
+Item {
+    property alias model: repeater.model
 
-    property alias model: flow.model
-    property real targetContentY: 0
+    Rectangle {
+        id: roundMask
+        visible: false
+        radius: 10
+        anchors.fill: parent
+        color: "black"
 
-    NumberAnimation {
-        id: scrollAnim
-        target: flick
-        property: "contentY"
-        duration: 240
-        easing.type: Easing.OutCubic
+        layer.enabled: true
     }
 
-    WheelHandler {
-        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-        onWheel: (event) => {
-            const step = event.angleDelta.y / 120 * (flow.itemHeight + flow.spacing)
-            const maxY = Math.max(0, flick.contentHeight - flick.height)
-            flick.targetContentY = Math.min(maxY, Math.max(0, flick.targetContentY - step))
+    Flickable {
+        id: flick
+        anchors.fill: parent
+        contentHeight: flow.implicitHeight
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
 
-            scrollAnim.stop()
-            scrollAnim.from = flick.contentY
-            scrollAnim.to = flick.targetContentY
-            scrollAnim.start()
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSource: roundMask
         }
-    }
 
-    onContentYChanged: {
-        if(!scrollAnim.running) {
-            targetContentY = contentY
+        property real targetContentY: 0
+
+        NumberAnimation on contentY {
+            id: scrollAnim
+            duration: 240
+            easing.type: Easing.OutCubic
         }
-    }
 
-    ScrollBar.vertical: ScrollBar {
-        policy: ScrollBar.AsNeeded
-    }
+        WheelHandler {
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+            onWheel: (event) => {
+                const step = event.angleDelta.y / 120 * (flow.itemHeight + flow.spacing)
+                const maxY = Math.max(0, flick.contentHeight - flick.height)
+                flick.targetContentY = Math.min(maxY, Math.max(0, flick.targetContentY - step))
 
-    Flow {
-        id: flow
-        width: flick.width
-        spacing: 10
+                scrollAnim.stop()
+                scrollAnim.from = flick.contentY
+                scrollAnim.to = flick.targetContentY
+                scrollAnim.start()
+            }
+        }
 
-        property alias model: repeater.model
-        property int cols: Math.max(Math.floor((width + spacing) / (280 + spacing)), 1)
-        property real itemWidth: (width - (cols - 1) * spacing - 1) / cols
-        property real itemHeight: itemWidth / (Screen.width / Screen.height)
+        onContentYChanged: {
+            if(!scrollAnim.running) {
+                targetContentY = contentY
+            }
+        }
 
-        Repeater {
-            id: repeater
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
 
-            delegate: Item {
-                width: flow.itemWidth
-                height: flow.itemHeight
-                clip: true
+        Flow {
+            id: flow
+            width: flick.width
+            spacing: 10
 
-                WallpaperPreview {
-                    anchors.fill: parent
+            property int cols: Math.max(Math.floor((width + spacing) / (280 + spacing)), 1)
+            property real itemWidth: (width - (cols - 1) * spacing - 1) / cols
+            property real itemHeight: itemWidth / (Screen.width / Screen.height)
 
-                    wid: wallpaperId
-                    name: wallpaperName
-                    rootDir: wallpaperRootDir
-                    source: wallpaperSource
-                    tags: wallpaperTags
-                    isBad: isWallpaperBad
+            Repeater {
+                id: repeater
+
+                delegate: Item {
+                    width: flow.itemWidth
+                    height: flow.itemHeight
+                    clip: true
+
+                    WallpaperPreview {
+                        anchors.fill: parent
+
+                        wid: wallpaperId
+                        name: wallpaperName
+                        rootDir: wallpaperRootDir
+                        source: wallpaperSource
+                        tags: wallpaperTags
+                        isBad: isWallpaperBad
+                    }
                 }
             }
         }
