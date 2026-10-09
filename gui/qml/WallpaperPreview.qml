@@ -4,18 +4,12 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 
 Item {
     id: preview
-    scale: isPressed || !isHovered ? 1 : 1.1
 
-    Behavior on scale {
-        NumberAnimation {
-            easing.type: Easing.OutQuad
-            duration: 60
-        }
-    }
-
+    property real radius: 10
     property string wid
     property string name
     property string rootDir
@@ -25,33 +19,51 @@ Item {
     property bool isPressed
     property bool isHovered
 
-    AnimatedImage {
-        anchors.fill: parent
-        visible: censor.opacity < 1
-        source: `file://${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
-        fillMode: Image.PreserveAspectCrop
-        asynchronous: true
-    }
-
     Rectangle {
-        id: censor
-
+        id: roundMask
+        visible: false
+        radius: preview.radius
         anchors.fill: parent
-        opacity: preview.isBad && !preview.isHovered ? 1 : 0
         color: "black"
 
-        Text {
-            anchors.centerIn: parent
-            text: "BAD"
-            font.pixelSize: parent.width * 0.5
-            font.bold: true
-            color: "darkred"
+        layer.enabled: true
+    }
+
+    Item {
+        anchors.fill: parent
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            autoPaddingEnabled: false
+            blurEnabled: preview.isBad
+            blur: preview.isBad && !preview.isHovered ? 1 : 0
+            blurMax: 64
+            blurMultiplier: 0.2
+            maskEnabled: true
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSource: roundMask
+
+            Behavior on blur {
+                NumberAnimation {
+                    easing.type: Easing.OutQuad
+                    duration: 240
+                }
+            }
         }
 
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: 300
+        AnimatedImage {
+            anchors.fill: parent
+            scale: preview.isHovered && !preview.isPressed ? 1.1 : 1
+            source: `file://${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
+            fillMode: Image.PreserveAspectCrop
+            asynchronous: true
+
+            Behavior on scale {
+                NumberAnimation {
+                    easing.type: Easing.OutQuad
+                    duration: 120
+                }
             }
         }
     }
@@ -80,11 +92,6 @@ Item {
             text: "Copy Deeplink"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/link.svg"
             onTriggered: Clipboard.copyWallpaperDeeplink(preview.wid)
-        }
-
-        Action {
-            text: "Edit (WIP)"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/edit.svg"
         }
 
         MenuSeparator {}

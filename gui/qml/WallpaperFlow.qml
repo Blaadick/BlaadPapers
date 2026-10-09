@@ -17,7 +17,7 @@ Flickable {
         id: scrollAnim
         target: flick
         property: "contentY"
-        duration: 280
+        duration: 240
         easing.type: Easing.OutCubic
     }
 
@@ -65,6 +65,7 @@ Flickable {
 
                 WallpaperPreview {
                     anchors.fill: parent
+
                     wid: wallpaperId
                     name: wallpaperName
                     rootDir: wallpaperRootDir
