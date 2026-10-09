@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QApplication>
+#include <QCommandLineParser>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
@@ -26,18 +26,27 @@
 #include "wallpaper_loader/VideoWallpaperLoader.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
-int main(int argc, char** argv) {
-    QApplication app(argc, argv);
-    QApplication::setApplicationName("blaadpapers");
-    QApplication::setApplicationDisplayName(PROJECT_NAME);
-    QApplication::setApplicationVersion(PROJECT_VERSION);
+auto main(int argc, char* argv[]) -> int {
+    QGuiApplication app(argc, argv);
+    QGuiApplication::setApplicationName(PROJECT_NAME);
+    QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
+    QGuiApplication::setApplicationVersion(PROJECT_VERSION);
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(PROJECT_DESCRIPTION);
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(app);
 
     vips_init(argv[0]);
     vips_cache_set_max(0);
 
-    DefaultWallpaper::createIfNotExists(false);
+    if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {
+        DefaultWallpaper::create();
+    }
+
     PostSetScript::createIfNotExists();
 
     auto clipboardModel = std::make_shared<ClipboardModel>();
@@ -67,12 +76,6 @@ int main(int argc, char** argv) {
     wallpapersModel->loadWallpapers();
     logger->logInfo(std::format("Loaded {} wallpapers", wallpapers->count()));
 
-    #ifdef __linux__
-    if(!getenv("QT_QUICK_CONTROLS_STYLE")) {
-        QQuickStyle::setStyle("BStyle");
-    }
-    #endif
-
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("Wallpapers", &*wallpapersModel);
     engine.rootContext()->setContextProperty("Config", &*configModel);
@@ -80,13 +83,6 @@ int main(int argc, char** argv) {
     engine.rootContext()->setContextProperty("Clipboard", &*clipboardModel);
     engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
-    QObject::connect(
-        &app,
-        &QCoreApplication::aboutToQuit,
-        [] {
-            vips_shutdown();
-        }
-    );
-
-    return QApplication::exec();
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, &vips_shutdown);
+    return QGuiApplication::exec();
 }

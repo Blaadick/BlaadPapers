@@ -9,5 +9,5 @@ class DefaultWallpaper {
 public:
     static const std::filesystem::path& defaultWallpaperFilePath();
 
-    static void createIfNotExists(bool shouldInitLibvips);
+    static void create();
 };

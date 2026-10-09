@@ -14,12 +14,8 @@ const std::filesystem::path& DefaultWallpaper::defaultWallpaperFilePath() {
     return defaultWallpaperFilePath;
 }
 
-void DefaultWallpaper::createIfNotExists(const bool shouldInitLibvips) {
+void DefaultWallpaper::create() {
     if(!util::createDirIfNotExists(util::localDataDir())) {
-        return;
-    }
-
-    if(fs::exists(defaultWallpaperFilePath())) {
         return;
     }
 
@@ -290,18 +286,9 @@ void DefaultWallpaper::createIfNotExists(const bool shouldInitLibvips) {
     };
     constexpr unsigned int default_wallpaper_svg_len = 3133;
 
-    if(shouldInitLibvips) {
-        vips_init("blaadpapers");
-        vips_cache_set_max(0);
-    }
-
-    const auto defaultWallpaper = VImage::new_from_buffer(default_wallpaper_svg, default_wallpaper_svg_len, "");
+    auto defaultWallpaper = VImage::new_from_buffer(default_wallpaper_svg, default_wallpaper_svg_len, "");
     defaultWallpaper.webpsave(
         defaultWallpaperFilePath().string().c_str(),
         VImage::option()->set("lossless", true)
     );
-
-    if(shouldInitLibvips) {
-        vips_shutdown();
-    }
 }
