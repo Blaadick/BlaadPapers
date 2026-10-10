@@ -27,6 +27,14 @@
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 auto main(int argc, char* argv[]) -> int {
+    // TODO Interim colors distortion fix
+    QSurfaceFormat fmt;
+    fmt.setRedBufferSize(8);
+    fmt.setGreenBufferSize(8);
+    fmt.setBlueBufferSize(8);
+    fmt.setAlphaBufferSize(8);
+    QSurfaceFormat::setDefaultFormat(fmt);
+
     QGuiApplication app(argc, argv);
     QGuiApplication::setApplicationName(PROJECT_NAME);
     QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
