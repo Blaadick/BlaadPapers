@@ -25,9 +25,9 @@ namespace file {
     inline constexpr FileType avif = {"image/avif", {".avif", nullptr}};
     inline constexpr FileType tiff = {"image/tiff", {".tiff", ".tif", nullptr}};
     inline constexpr FileType heif = {"image/heif", {".heif", ".heic", ".heifs", ".heics", nullptr}};
-    inline constexpr FileType mp4 = {"image/mp4", {".mp4", ".m4v", ".mp4v", nullptr}};
-    inline constexpr FileType webm = {"image/webm", {".webm", nullptr}};
-    inline constexpr FileType mkv = {"image/matroska", {".mkv", nullptr}};
+    inline constexpr FileType mp4 = {"video/mp4", {".mp4", ".m4v", ".mp4v", nullptr}};
+    inline constexpr FileType webm = {"video/webm", {".webm", nullptr}};
+    inline constexpr FileType mkv = {"video/x-matroska", {".mkv", nullptr}};
 
     // TODO Make constexpr
     inline const std::unordered_map<std::string_view, const FileType&> typeByMime = {
