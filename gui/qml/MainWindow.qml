@@ -5,7 +5,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
-import QtQml.Models
 
 ApplicationWindow {
     id: mainWindow

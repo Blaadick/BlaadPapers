@@ -4,15 +4,15 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Window
 
-Window {
+ApplicationWindow {
     width: 500
     height: 300
     minimumWidth: 400
     minimumHeight: 200
     modality: Qt.NonModal
-    title: "Download wallpapers"
+    flags: Qt.Dialog
+    title: "Download Wallpapers"
 
     ColumnLayout {
         anchors.fill: parent
@@ -21,19 +21,16 @@ Window {
 
         TextArea {
             id: input
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
             placeholderText: "https://example.com/some_file1.ext\nhttps://example.com/some_file2.ext\n..."
             wrapMode: TextArea.Wrap
-
             focus: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
 
         RowLayout {
-            Layout.fillWidth: true
             spacing: 10
+            Layout.fillWidth: true
 
             Item {
                 Layout.fillWidth: true
