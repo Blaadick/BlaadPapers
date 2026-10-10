@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Install Wallpaper(s)
+Icon=blaadpapers
+Type=Application
+Exec=/usr/bin/blaadpaperscli install %F
+MimeType=image/png;image/jpeg;image/svg+xml;image/webp;image/bmb;image/avif;image/tiff;image/heif;video/mp4;video/webm;video/x-matroska;
+Terminal=false
+NoDisplay=true

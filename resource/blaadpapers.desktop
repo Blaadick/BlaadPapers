@@ -5,6 +5,7 @@ Comment=Fast & clean wallpaper manager
 Icon=blaadpapers
 Type=Application
 Exec=/usr/bin/blaadpapers
+Terminal=false
 Categories=Graphics;Viewer;Qt
 Actions=Daemon
 Keywords=wallpaper
