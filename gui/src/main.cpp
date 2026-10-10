@@ -85,10 +85,10 @@ auto main(int argc, char* argv[]) -> int {
     logger->logInfo(std::format("Loaded {} wallpapers", wallpapers->count()));
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("Wallpapers", &*wallpapersModel);
-    engine.rootContext()->setContextProperty("Config", &*configModel);
-    engine.rootContext()->setContextProperty("Status", &*statusModel);
-    engine.rootContext()->setContextProperty("Clipboard", &*clipboardModel);
+    engine.rootContext()->setContextProperty("Wallpapers", wallpapersModel.get());
+    engine.rootContext()->setContextProperty("Config", configModel.get());
+    engine.rootContext()->setContextProperty("Status", statusModel.get());
+    engine.rootContext()->setContextProperty("Clipboard", clipboardModel.get());
     engine.loadFromModule(PROJECT_NAME, "MainWindow");
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, &vips_shutdown);

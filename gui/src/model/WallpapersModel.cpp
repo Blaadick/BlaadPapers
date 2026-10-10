@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <QFileDialog>
-#include <QString>
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include "util/FormatExt.hpp"
@@ -38,27 +37,17 @@ void WallpapersModel::loadWallpapers() {
     );
 }
 
-void WallpapersModel::installWallpapersFromDialog() {
+QStringList WallpapersModel::getFileDialogNameFilters() const {
     std::unordered_set<const file::FileType*> allSupportedFormats;
     for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
         const auto loaderFormats = loader->getSupportedFileTypes();
         allSupportedFormats.insert(loaderFormats.begin(), loaderFormats.end());
     }
 
-    QFileDialog fileSelector;
-    fileSelector.setFileMode(QFileDialog::ExistingFiles);
-    fileSelector.setNameFilters(
-        {
-            QString("Supported Files (%1)").arg(util::getFormatString(allSupportedFormats)),
-            QString("Any Files (*)")
-        }
-    );
-
-    if(!fileSelector.exec()) {
-        return;
-    }
-
-    installWallpapersAsync(fileSelector.selectedFiles());
+    return {
+        QString("Supported Files (%1)").arg(util::getFormatString(allSupportedFormats)),
+        QString("Any Files (*)")
+    };
 }
 
 void WallpapersModel::installWallpapersAsync(const QStringList& paths) {
@@ -83,8 +72,6 @@ void WallpapersModel::downloadAndInstallWallpapersAsync(const QStringList& strin
             }
 
             for(auto& uri : uris) {
-                logger->logInfo(std::format("Downloading from \"{}\"...", uri));
-
                 auto downloadedFilePath = downloadManager->downloadFile(uri, util::localDownloadsDirPath());
                 if(!downloadedFilePath.has_value()) {
                     logger->logWarning(std::format("Failed to download file from \"{}\": {}", uri, downloadedFilePath.error()));
@@ -96,7 +83,43 @@ void WallpapersModel::downloadAndInstallWallpapersAsync(const QStringList& strin
                     wallpaperRepository->add(*wallpaper);
                     refreshWallpapers();
 
-                    logger->logWarning(std::format("Wallpaper \"{}\" installed", wallpaper.value()->getId()));
+                    logger->logInfo(std::format("Wallpaper \"{}\" installed", wallpaper.value()->getId()));
+                } else {
+                    logger->logWarning(std::format("Failed to install \"{}\": {}", downloadedFilePath->filename(), wallpaper.error()));
+                }
+
+                fs::remove(*downloadedFilePath);
+            }
+        }
+    );
+}
+
+void WallpapersModel::downloadAndInstallWallpapersAsync(const QList<QUrl>& urlList) {
+    QThreadPool::globalInstance()->start(
+        [this, urlList] {
+            std::vector<Uri> uris;
+            for(auto& url : urlList) {
+                auto uri = Uri::parse(url.toString(QUrl::FullyEncoded).toStdString());
+                if(uri.has_value()) {
+                    uris.emplace_back(std::move(*uri));
+                } else {
+                    logger->logWarning(std::format("Failed to parse \"{}\" as URI", url.toString()));
+                }
+            }
+
+            for(auto& uri : uris) {
+                auto downloadedFilePath = downloadManager->downloadFile(uri, util::localDownloadsDirPath());
+                if(!downloadedFilePath.has_value()) {
+                    logger->logWarning(std::format("Failed to download file from \"{}\": {}", uri, downloadedFilePath.error()));
+                    continue;
+                }
+
+                auto wallpaper = wallpaperLoader->installWallpaper(*downloadedFilePath);
+                if(wallpaper.has_value()) {
+                    wallpaperRepository->add(*wallpaper);
+                    refreshWallpapers();
+
+                    logger->logInfo(std::format("Wallpaper \"{}\" installed", wallpaper.value()->getId()));
                 } else {
                     logger->logWarning(std::format("Failed to install \"{}\": {}", downloadedFilePath->filename(), wallpaper.error()));
                 }

@@ -3,6 +3,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQml.Models
 
@@ -20,6 +21,16 @@ ApplicationWindow {
         onActivated: {
             Wallpapers.refreshWallpapers()
         }
+    }
+
+    FileDialog {
+        id: installFileDialog
+        title: "Select Files"
+        fileMode: FileDialog.OpenFiles
+        options: FileDialog.ReadOnly
+        nameFilters: Wallpapers.getFileDialogNameFilters()
+
+        onAccepted: Wallpapers.downloadAndInstallWallpapersAsync(selectedFiles)
     }
 
     DownloadWindow {
@@ -46,7 +57,7 @@ ApplicationWindow {
                 text: "Install wallpaper(s)"
                 icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
 
-                onTriggered: Wallpapers.installWallpapersFromDialog()
+                onTriggered: installFileDialog.open()
             }
 
             Action {

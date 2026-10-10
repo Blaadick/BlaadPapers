@@ -4,6 +4,8 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QString>
+#include <QUrl>
 #include <QVariant>
 #include "WallpaperRepository.hpp"
 #include "logger/Logger.hpp"
@@ -38,11 +40,13 @@ public:
 
     void loadWallpapers();
 
-    Q_INVOKABLE void installWallpapersFromDialog();
+    Q_INVOKABLE QStringList getFileDialogNameFilters() const;
 
     Q_INVOKABLE void installWallpapersAsync(const QStringList& paths);
 
     Q_INVOKABLE void downloadAndInstallWallpapersAsync(const QStringList& stringList);
+
+    Q_INVOKABLE void downloadAndInstallWallpapersAsync(const QList<QUrl>& urlList);
 
     Q_INVOKABLE void applyWallpaperAsync(const QString& wallpaperId) const;
 
