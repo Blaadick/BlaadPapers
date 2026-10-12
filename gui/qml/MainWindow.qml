@@ -154,9 +154,22 @@ ApplicationWindow {
 
     DropArea {
         anchors.fill: parent
+        keys: ["text/uri-list"]
 
         onDropped: drop => {
-            Wallpapers.downloadAndInstallWallpapersAsync(drop.urls)
+            if(drop.hasHtml) {
+                const url = drop.html.match(/\bsrc=["']([^"']+)["']/i)
+                if(!url) {
+                    drop.accept(Qt.IgnoreAction)
+                    return
+                }
+
+                Wallpapers.downloadAndInstallWallpapersAsync(url[1])
+            } else {
+                Wallpapers.downloadAndInstallWallpapersAsync(drop.urls)
+            }
+
+            drop.acceptProposedAction()
         }
 
         Rectangle {
@@ -164,6 +177,10 @@ ApplicationWindow {
             visible: parent.containsDrag
             color: "#ffffff"
             opacity: 0.2
+
+            HoverHandler {
+                cursorShape: Qt.DragCopyCursor
+            }
         }
     }
 }
