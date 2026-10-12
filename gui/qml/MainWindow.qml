@@ -153,19 +153,17 @@ ApplicationWindow {
     }
 
     DropArea {
-        id: dropArea
         anchors.fill: parent
 
-        onDropped: function(drop) {
-            Wallpapers.installWallpapersAsync(drop.urls.map(url => url.toString().substring(7)))
+        onDropped: drop => {
+            Wallpapers.downloadAndInstallWallpapersAsync(drop.urls)
         }
-    }
 
-    Rectangle {
-        id: dropAreaVisualization
-        anchors.fill: parent
-        visible: dropArea.containsDrag
-        color: "#ffffff"
-        opacity: 0.2
+        Rectangle {
+            anchors.fill: parent
+            visible: parent.containsDrag
+            color: "#ffffff"
+            opacity: 0.2
+        }
     }
 }
