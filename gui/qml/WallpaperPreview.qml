@@ -19,37 +19,36 @@ Item {
     property bool isHovered
 
     ContextMenu.menu: Menu {
+        id: contextMenu
+
         Action {
             text: "Apply"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/apply.svg"
+
             onTriggered: Wallpapers.applyWallpaperAsync(preview.wid)
         }
 
         Action {
             text: "Open Folder"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/folder_open.svg"
+
             onTriggered: Qt.openUrlExternally(`file://${preview.rootDir}`)
         }
 
         Action {
             text: "Copy Deeplink"
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/link.svg"
+
             onTriggered: Clipboard.copyWallpaperDeeplink(preview.wid)
         }
 
         MenuSeparator {}
 
-        MenuItem {
-            DelayButton {
-                text: "Delete"
-                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
-                anchors.fill: parent
+        Action {
+            text: "Delete"
+            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
 
-                onActivated: {
-                    Wallpapers.deleteWallpaperAsync(preview.wid)
-                    contextMenu.close()
-                }
-            }
+            onTriggered: Wallpapers.deleteWallpaperAsync(preview.wid)
         }
     }
 

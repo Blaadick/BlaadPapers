@@ -37,63 +37,6 @@ ApplicationWindow {
         transientParent: mainWindow
     }
 
-    Menu {
-        id: contextMenu
-
-        property bool suppressReopen: false
-
-        onAboutToHide: {
-            if(menuButton.hovered) {
-                suppressReopen = true
-            }
-        }
-
-        Menu {
-            title: "Add"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
-
-            Action {
-                text: "Install wallpaper(s)"
-                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
-
-                onTriggered: installFileDialog.open()
-            }
-
-            Action {
-                text: "Download wallpaper(s)"
-                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
-
-                onTriggered: downloadWindow.show()
-            }
-        }
-
-        Action {
-            text: "Open Config"
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/file_open.svg"
-
-            onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
-        }
-
-        Action {
-            text: "Status Bar"
-            checkable: true
-            checked: Config.statusBarVisible
-
-            onTriggered: Config.statusBarVisible = !Config.statusBarVisible
-        }
-
-        Action {
-            text: "Bad Tagged Wallpapers"
-            checkable: true
-            checked: Config.badTaggedWallpapersVisible
-
-            onTriggered: {
-                Config.badTaggedWallpapersVisible = !Config.badTaggedWallpapersVisible
-                proxy.invalidate()
-            }
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 10
@@ -103,22 +46,66 @@ ApplicationWindow {
             spacing: 10
 
             Button {
-                id: menuButton
+                id: mainMenuButton
                 icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
                 Layout.preferredHeight: searchBar.height
                 Layout.preferredWidth: searchBar.height
 
-                onClicked: {
-                    if(contextMenu.suppressReopen) {
-                        contextMenu.suppressReopen = false
-                    } else {
-                        const pos = menuButton.mapToGlobal(0, menuButton.height + 10)
-                        contextMenu.popup(pos)
+                onClicked: mainMenu.visible ? mainMenu.close() : mainMenu.open()
+
+                Menu {
+                    id: mainMenu
+                    y: mainMenuButton.height + 10
+                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                    Menu {
+                        title: "Add"
+                        icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
+
+                        Action {
+                            text: "Install wallpaper(s)"
+                            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
+
+                            onTriggered: installFileDialog.open()
+                        }
+
+                        Action {
+                            text: "Download wallpaper(s)"
+                            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
+
+                            onTriggered: downloadWindow.show()
+                        }
+                    }
+
+                    Action {
+                        text: "Open Config"
+                        icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/file_open.svg"
+
+                        onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
+                    }
+
+                    Action {
+                        text: "Status Bar"
+                        checkable: true
+                        checked: Config.statusBarVisible
+
+                        onTriggered: Config.statusBarVisible = !Config.statusBarVisible
+                    }
+
+                    Action {
+                        text: "Bad Tagged Wallpapers"
+                        checkable: true
+                        checked: Config.badTaggedWallpapersVisible
+
+                        onTriggered: {
+                            Config.badTaggedWallpapersVisible = !Config.badTaggedWallpapersVisible
+                            proxy.invalidate()
+                        }
                     }
                 }
             }
 
-            TextField {
+            SearchField {
                 id: searchBar
                 placeholderText: "Search"
                 Layout.fillWidth: true
