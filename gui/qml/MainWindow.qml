@@ -164,7 +164,7 @@ ApplicationWindow {
                     return
                 }
 
-                Wallpapers.downloadAndInstallWallpapersAsync(url[1])
+                Wallpapers.downloadAndInstallWallpaperAsync(url[1])
             } else {
                 Wallpapers.downloadAndInstallWallpapersAsync(drop.urls)
             }

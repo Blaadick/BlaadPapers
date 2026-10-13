@@ -42,9 +42,7 @@ public:
 
     Q_INVOKABLE QStringList getFileDialogNameFilters() const;
 
-    Q_INVOKABLE void installWallpapersAsync(const QStringList& paths);
-
-    Q_INVOKABLE void downloadAndInstallWallpapersAsync(const QStringList& stringList);
+    Q_INVOKABLE void downloadAndInstallWallpaperAsync(const QUrl& url);
 
     Q_INVOKABLE void downloadAndInstallWallpapersAsync(const QList<QUrl>& urlList);
 
@@ -68,5 +66,5 @@ private:
     sptr<PreviewManager> previewManager;
     sptr<util::Logger> logger;
 
-    void installWallpapers(const QStringList& paths);
+    void downloadAndInstallWallpaper(const QUrl& url);
 };
