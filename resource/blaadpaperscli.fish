@@ -52,7 +52,7 @@ function __blaadpaperscli_supported_formats
     blaadpaperscli help --json 2>/dev/null | jq -r '.supported_formats[]' | string trim -l -c '.'
 end
 
-function __blaadpaperscli_add_paths
+function __blaadpaperscli_install_paths
     set -l formats (__blaadpaperscli_supported_formats)
     if test (count $formats) -eq 0
         __fish_complete_path
@@ -96,4 +96,4 @@ for cmd in apply info remove
     complete -c blaadpaperscli -n "__blaadpaperscli_using_subcommand $cmd; and __blaadpaperscli_is_second_arg" -a "(__blaadpaperscli_wallpaper_ids)"
 end
 
-complete -c blaadpaperscli -n "__blaadpaperscli_using_subcommand add" -f -a "(__blaadpaperscli_add_paths)"
+complete -c blaadpaperscli -n "__blaadpaperscli_using_subcommand install" -f -a "(__blaadpaperscli_install_paths)"
