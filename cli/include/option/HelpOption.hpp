@@ -7,12 +7,10 @@
 #include "option/Option.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
-// TODO Change CliExecutor to map of options
 class HelpOption final : public Option {
 public:
     HelpOption(
         const std::unordered_map<std::string, uptr<Option>>& options,
-        sptr<WallpaperLoaderManager> wallpaperLoader,
         sptr<util::Logger> logger
     );
 
@@ -25,6 +23,5 @@ public:
 
 private:
     const std::unordered_map<std::string, uptr<Option>>& options;
-    sptr<WallpaperLoaderManager> wallpaperLoader;
     sptr<util::Logger> logger;
 };
