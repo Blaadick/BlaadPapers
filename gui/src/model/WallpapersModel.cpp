@@ -4,7 +4,6 @@
 #include "model/WallpapersModel.hpp"
 
 #include <iostream>
-#include <QFileDialog>
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include "util/FormatExt.hpp"

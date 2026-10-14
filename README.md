@@ -31,8 +31,7 @@ Expected after adding major features and implementing custom wallpaper renderer.
 
 ### Manual
 Install deps:
-- [`Boost`](https://www.boost.org/) (Asio, Beast, Url)
-- [`OpenSSL`](https://www.openssl.org/)
+- [`curl`](https://curl.se/)
 - [`yyjson`](https://ibireme.github.io/yyjson/)
 - [`imageinfo`](https://github.com/xiaozhuai/imageinfo)
 - [`Qt6`](https://www.qt.io) (Base, Declarative, Svg)
