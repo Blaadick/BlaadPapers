@@ -1,6 +1,6 @@
 <div align="center">
     <picture>
-        <img src="resource/blaadpapers.svg" alt="BlaadPapersLogo" width="20%"/>
+        <img src="shared/resource/blaadpapers.svg" alt="BlaadPapersLogo" width="20%"/>
     </picture>
     <h1>BlaadPapers</h1>
 </div>
