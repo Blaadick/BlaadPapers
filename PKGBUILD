@@ -11,6 +11,7 @@ depends=(
     "qt6-base"
     "qt6-declarative"
     "qt6-svg"
+    "qt6-imageformats"
     "curl"
     "libvips"
     "ffmpeg"
@@ -21,7 +22,6 @@ makedepends=(
     "cmake"
     "ninja"
     "yyjson"
-    "boost"
     "imageinfo"
 )
 provides=("blaadpapers", "blaadpaperscli")
