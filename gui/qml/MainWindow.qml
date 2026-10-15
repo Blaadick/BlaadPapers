@@ -59,18 +59,18 @@ ApplicationWindow {
                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
                     Menu {
-                        title: "Add"
+                        title: qsTr("Add")
                         icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
 
                         Action {
-                            text: "Install wallpaper(s)"
+                            text: qsTr("Install wallpaper(s)")
                             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
 
                             onTriggered: installFileDialog.open()
                         }
 
                         Action {
-                            text: "Download wallpaper(s)"
+                            text: qsTr("Download wallpaper(s)")
                             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
 
                             onTriggered: downloadWindow.show()
@@ -78,14 +78,14 @@ ApplicationWindow {
                     }
 
                     Action {
-                        text: "Open Config"
+                        text: qsTr("Open Config")
                         icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/file_open.svg"
 
                         onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
                     }
 
                     Action {
-                        text: "Status Bar"
+                        text: qsTr("Status Bar")
                         checkable: true
                         checked: Config.statusBarVisible
 
@@ -93,7 +93,7 @@ ApplicationWindow {
                     }
 
                     Action {
-                        text: "Bad Tagged Wallpapers"
+                        text: qsTr("Bad Tagged Wallpapers")
                         checkable: true
                         checked: Config.badTaggedWallpapersVisible
 
@@ -107,7 +107,7 @@ ApplicationWindow {
 
             SearchField {
                 id: searchBar
-                placeholderText: "Search"
+                placeholderText: qsTr("Search")
                 Layout.fillWidth: true
 
                 onTextChanged: proxy.invalidate()

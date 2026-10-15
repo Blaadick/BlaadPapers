@@ -7,8 +7,9 @@ import QtQuick.Controls
 import QtQuick.Effects
 
 Item {
-    id: preview
+    id: control
 
+    readonly property bool isMotionReduced: Application.styleHints.accessibility.motionPreference === 1
     property string wid
     property string name
     property string rootDir
@@ -22,39 +23,39 @@ Item {
         id: contextMenu
 
         Action {
-            text: "Apply"
+            text: qsTr("Apply")
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/apply.svg"
 
-            onTriggered: Wallpapers.applyWallpaperAsync(preview.wid)
+            onTriggered: Wallpapers.applyWallpaperAsync(control.wid)
         }
 
         Action {
-            text: "Open Folder"
+            text: qsTr("Open Folder")
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/folder_open.svg"
 
-            onTriggered: Qt.openUrlExternally(`file://${preview.rootDir}`)
+            onTriggered: Qt.openUrlExternally(`file://${control.rootDir}`)
         }
 
         Action {
-            text: "Copy Deeplink"
+            text: qsTr("Copy Deeplink")
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/link.svg"
 
-            onTriggered: Clipboard.copyWallpaperDeeplink(preview.wid)
+            onTriggered: Clipboard.copyWallpaperDeeplink(control.wid)
         }
 
         MenuSeparator {}
 
         Action {
-            text: "Delete"
+            text: qsTr("Delete")
             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
 
-            onTriggered: Wallpapers.deleteWallpaperAsync(preview.wid)
+            onTriggered: Wallpapers.deleteWallpaperAsync(control.wid)
         }
     }
 
     ToolTip {
         id: tooltip
-        text: `${preview.name}\n${preview.tags.join(", ")}${preview.source === "" ? "" : `\n${preview.source}`}`
+        text: `${control.name}\n${control.tags.join(", ")}${control.source === "" ? "" : `\n${control.source}`}`
     }
 
     Rectangle {
@@ -73,8 +74,8 @@ Item {
         layer.enabled: true
         layer.effect: MultiEffect {
             autoPaddingEnabled: false
-            blurEnabled: preview.isBad
-            blur: preview.isBad && !preview.isHovered ? 1 : 0
+            blurEnabled: control.isBad
+            blur: control.isBad && !control.isHovered ? 1 : 0
             blurMax: 64
             blurMultiplier: 0.2
             maskEnabled: true
@@ -85,7 +86,7 @@ Item {
             Behavior on blur {
                 NumberAnimation {
                     easing.type: Easing.OutQuad
-                    duration: 240
+                    duration: control.isMotionReduced ? 0 : 240
                 }
             }
         }
@@ -97,35 +98,36 @@ Item {
             hoverEnabled: true
 
             onPressed: {
-                preview.isPressed = true
+                control.isPressed = true
             }
 
             onReleased: {
-                preview.isPressed = false
-                Wallpapers.applyWallpaperAsync(preview.wid)
+                control.isPressed = false
+                Wallpapers.applyWallpaperAsync(control.wid)
             }
 
             onCanceled: {
-                preview.isPressed = false
+                control.isPressed = false
             }
 
             onEntered: {
-                preview.isHovered = true
+                control.isHovered = true
                 tooltip.visible = true
             }
 
             onExited: {
-                preview.isHovered = false
+                control.isHovered = false
                 tooltip.visible = false
             }
         }
 
         AnimatedImage {
             anchors.fill: parent
-            scale: preview.isHovered && !preview.isPressed ? 1.1 : 1
+            scale: !control.isMotionReduced && !control.isPressed && control.isHovered ? 1.1 : 1
             source: `file://${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
+            cache: false
 
             Behavior on scale {
                 NumberAnimation {

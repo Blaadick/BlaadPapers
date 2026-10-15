@@ -6,6 +6,9 @@ import QtQuick.Controls
 import QtQuick.Effects
 
 Item {
+    id: control
+
+    readonly property bool isMotionReduced: Application.styleHints.accessibility.motionPreference === 1
     property alias model: repeater.model
 
     Rectangle {
@@ -37,7 +40,7 @@ Item {
 
         NumberAnimation on contentY {
             id: scrollAnim
-            duration: 240
+            duration: control.isMotionReduced ? 0 : 240
             easing.type: Easing.OutCubic
         }
 
