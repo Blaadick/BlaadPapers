@@ -47,6 +47,7 @@ auto VideoWallpaperLoader::installWallpaper(
 
     auto videoData = getVideoData(wallpaperFilePath);
     if(!videoData.has_value()) {
+        fs::remove_all(wallpaperDirPath);
         return std::unexpected("Failed to decode video data");
     }
 

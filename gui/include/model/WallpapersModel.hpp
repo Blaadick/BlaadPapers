@@ -46,9 +46,11 @@ public:
 
     Q_INVOKABLE void downloadAndInstallWallpapersAsync(const QList<QUrl>& urlList);
 
-    Q_INVOKABLE void applyWallpaperAsync(const QString& wallpaperId) const;
+    Q_INVOKABLE void deleteWallpaperAsync(const QString& wallpaperId);
 
-    Q_INVOKABLE void deleteWallpaperAsync(const QString& wallpaperId) const;
+    Q_INVOKABLE void deleteWallpapersAsync(const QStringList& wallpaperIds);
+
+    Q_INVOKABLE void applyWallpaperAsync(const QString& wallpaperId) const;
 
     Q_INVOKABLE void refreshWallpapers();
 
@@ -67,4 +69,6 @@ private:
     sptr<util::Logger> logger;
 
     void downloadAndInstallWallpaper(const QUrl& url);
+
+    void deleteWallpaper(const QString& wallpaperId);
 };

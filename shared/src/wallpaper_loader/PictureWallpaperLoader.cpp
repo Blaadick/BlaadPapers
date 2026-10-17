@@ -47,6 +47,7 @@ auto PictureWallpaperLoader::installWallpaper(
 
     auto pictureSize = getPictureResolutionData(wallpaperFilePath);
     if(!pictureSize.has_value()) {
+        fs::remove_all(wallpaperDirPath);
         return std::unexpected("Failed to extract picture data");
     }
 
