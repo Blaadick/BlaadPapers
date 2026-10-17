@@ -66,13 +66,13 @@ void WallpaperLoaderManager::loadWallpapers() const {
             }
 
             auto loadedWallpaper = loadWallpaper(wallpaperDirEntry);
-
             if(!loadedWallpaper) {
-                logger->logWarning(std::format("Failed to load wallpaper \"{}\"", wallpaperDirEntry.path()));
+                logger->logWarning(std::format("Failed to load wallpaper \"{}\": {}", wallpaperDirEntry.path(), loadedWallpaper.error()));
                 break;
             }
 
             wallpaperRepository->add(std::move(*loadedWallpaper));
+            break;
         }
     }
 }

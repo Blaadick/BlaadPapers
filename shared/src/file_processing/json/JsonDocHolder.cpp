@@ -9,6 +9,6 @@ JsonDocHolder::~JsonDocHolder() {
     yyjson_doc_free(doc);
 }
 
-JsonDocHolder::operator struct yyjson_doc*() const {
+JsonDocHolder::operator yyjson_doc*() const {
     return doc;
 }

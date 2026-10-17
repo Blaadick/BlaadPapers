@@ -111,3 +111,15 @@ namespace util {
         return true;
     }
 }
+
+#ifdef _WIN32
+template<>
+struct std::formatter<std::filesystem::path> : std::formatter<std::string> {
+    auto format(const std::filesystem::path& path, std::format_context& ctx) const {
+        return std::formatter<std::string>::format(
+            path.string(),
+            ctx
+        );
+    }
+};
+#endif
