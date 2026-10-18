@@ -53,6 +53,7 @@ void WallpapersModel::downloadAndInstallWallpaperAsync(const QUrl& url) {
     QThreadPool::globalInstance()->start(
         [this, url] {
             downloadAndInstallWallpaper(url);
+            refreshWallpapers();
         }
     );
 }
@@ -63,6 +64,8 @@ void WallpapersModel::downloadAndInstallWallpapersAsync(const QList<QUrl>& urlLi
             for(auto& url : urlList) {
                 downloadAndInstallWallpaper(url);
             }
+
+            refreshWallpapers();
         }
     );
 }
@@ -71,6 +74,7 @@ void WallpapersModel::deleteWallpaperAsync(const QString& wallpaperId) {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
             deleteWallpaper(wallpaperId);
+            refreshWallpapers();
         }
     );
 }
@@ -81,6 +85,8 @@ void WallpapersModel::deleteWallpapersAsync(const QStringList& wallpaperIds) {
             for(auto& url : wallpaperIds) {
                 deleteWallpaper(url);
             }
+
+            refreshWallpapers();
         }
     );
 }
@@ -153,7 +159,6 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) {
     if(wallpaper.has_value()) {
         wallpaperRepository->add(*wallpaper);
         logger->logInfo(std::format("Wallpaper \"{}\" installed", wallpaper.value()->getId()));
-        refreshWallpapers();
     } else {
         logger->logWarning(std::format("Failed to install \"{}\": {}", downloadedFilePath->filename(), wallpaper.error()));
     }
@@ -164,7 +169,6 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) {
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) {
     if(wallpaperRepository->remove(wallpaperId.toStdString())) {
         logger->logInfo(std::format("Wallpaper \"{}\" deleted", wallpaperId));
-        refreshWallpapers();
     } else {
         logger->logWarning(std::format("Failed to delete wallpaper \"{}\"", wallpaperId));
     }

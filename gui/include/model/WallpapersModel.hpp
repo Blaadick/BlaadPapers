@@ -3,8 +3,11 @@
 
 #pragma once
 
+#include <functional>
 #include <QAbstractListModel>
+#include <QFuture>
 #include <QString>
+#include <QThreadPool>
 #include <QUrl>
 #include <QVariant>
 #include "WallpaperRepository.hpp"
@@ -68,7 +71,17 @@ private:
     sptr<PreviewManager> previewManager;
     sptr<util::Logger> logger;
 
+    QThreadPool deletePool;
+    int runningJobs = 0;
+    QList<QFuture<bool>> previewFutures;
+
     void downloadAndInstallWallpaper(const QUrl& url);
 
     void deleteWallpaper(const QString& wallpaperId);
+
+    static void stopPreviews(QList<QFuture<bool>> previewFutures);
+
+    void runInBackground(QThreadPool& pool, std::function<void()> job);
+
+    void finishBackgroundJob();
 };
