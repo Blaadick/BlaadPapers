@@ -102,13 +102,9 @@ namespace util {
      * Returns false on error. If directory already exists, or was successfully created, returns true.
      */
     inline bool createDirIfNotExists(const std::filesystem::path& path) {
-        if(!std::filesystem::exists(path)) {
-            if(!std::filesystem::create_directories(path)) {
-                return false;
-            }
-        }
-
-        return true;
+        std::error_code errorCode;
+        std::filesystem::create_directories(path, errorCode);
+        return std::filesystem::is_directory(path, errorCode);
     }
 }
 
