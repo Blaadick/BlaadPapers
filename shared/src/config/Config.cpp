@@ -12,9 +12,13 @@
 Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
 void Config::load() {
-    loadGeneral();
-    loadGui();
-    loadApi();
+    if(util::createDirIfNotExists(util::configDir())) {
+        loadGeneral();
+        loadGui();
+        loadApi();
+    } else {
+        logger->logError("Failde to create configs directory");
+    }
 }
 
 void Config::loadGeneral() {
