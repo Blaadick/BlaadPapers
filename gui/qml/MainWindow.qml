@@ -24,7 +24,7 @@ ApplicationWindow {
 
     FileDialog {
         id: installFileDialog
-        title: "Select Files"
+        title: qsTr("Select Files")
         fileMode: FileDialog.OpenFiles
         options: FileDialog.ReadOnly
         nameFilters: Wallpapers.getFileDialogNameFilters()
@@ -34,6 +34,11 @@ ApplicationWindow {
 
     DownloadWindow {
         id: downloadWindow
+        transientParent: mainWindow
+    }
+
+    SettingsWindow {
+        id: settingsWindow
         transientParent: mainWindow
     }
 
@@ -55,7 +60,7 @@ ApplicationWindow {
 
                 Menu {
                     id: mainMenu
-                    y: mainMenuButton.height + 10
+                    y: mainMenuButton.height + 4
                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
                     Menu {
@@ -63,14 +68,14 @@ ApplicationWindow {
                         icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
 
                         Action {
-                            text: qsTr("Install wallpaper(s)")
+                            text: qsTr("Install Wallpaper(s)")
                             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
 
                             onTriggered: installFileDialog.open()
                         }
 
                         Action {
-                            text: qsTr("Download wallpaper(s)")
+                            text: qsTr("Download Wallpaper(s)")
                             icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
 
                             onTriggered: downloadWindow.show()
@@ -78,18 +83,10 @@ ApplicationWindow {
                     }
 
                     Action {
-                        text: qsTr("Open Config")
-                        icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/file_open.svg"
+                        text: qsTr("Settings")
+                        icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/settings.svg"
 
-                        onTriggered: Qt.openUrlExternally(`file://${Config.configFilePath}`)
-                    }
-
-                    Action {
-                        text: qsTr("Status Bar")
-                        checkable: true
-                        checked: Config.statusBarVisible
-
-                        onTriggered: Config.statusBarVisible = !Config.statusBarVisible
+                        onTriggered: settingsWindow.show()
                     }
 
                     Action {
