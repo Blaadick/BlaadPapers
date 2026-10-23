@@ -18,6 +18,7 @@ class ConfigModel : public QObject {
     Q_PROPERTY(QString danbooruApiKey READ getDanbooruApiKey WRITE setDanbooruApiKey NOTIFY danbooruApiKeyChanged)
     Q_PROPERTY(bool statusBarVisible READ getStatusBarVisible WRITE setStatusBarVisible NOTIFY statusBarVisibleChanged)
     Q_PROPERTY(bool badTaggedWallpapersVisible READ getBadTaggedWallpapersVisible WRITE setBadTaggedWallpapersVisible NOTIFY badTaggedWallpapersVisibleChanged)
+    Q_PROPERTY(bool nativeTextRendering READ getNativeTextRendering WRITE setNativeTextRendering NOTIFY nativeTextRenderingChanged)
     Q_PROPERTY(QString colorScheme READ getColorScheme WRITE setColorScheme NOTIFY colorSchemeChanged)
 
 public:
@@ -57,6 +58,10 @@ public:
 
     void setBadTaggedWallpapersVisible(bool newVisibility);
 
+    auto getNativeTextRendering() -> bool;
+
+    void setNativeTextRendering(bool newNativeTextRendering);
+
     auto getColorScheme() -> QString;
 
     void setColorScheme(const QString& newColorScheme);
@@ -80,6 +85,8 @@ signals:
     void statusBarVisibleChanged();
 
     void badTaggedWallpapersVisibleChanged();
+
+    void nativeTextRenderingChanged();
 
     void colorSchemeChanged();
 };

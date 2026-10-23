@@ -126,6 +126,15 @@ void ConfigModel::setBadTaggedWallpapersVisible(const bool newVisibility) {
     emit badTaggedWallpapersVisibleChanged();
 }
 
+auto ConfigModel::getNativeTextRendering() -> bool {
+    return config->getNativeTextRendering();
+}
+
+void ConfigModel::setNativeTextRendering(const bool newNativeTextRendering) {
+    config->setNativeTextRendering(newNativeTextRendering);
+    emit nativeTextRenderingChanged();
+}
+
 auto ConfigModel::getColorScheme() -> QString {
     return QString::fromStdString(config->getColorScheme());
 }

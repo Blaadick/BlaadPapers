@@ -65,6 +65,10 @@ public:
 
     void setBadTaggedWallpapersVisible(bool newVisibility) noexcept;
 
+    auto getNativeTextRendering() const noexcept -> bool;
+
+    void setNativeTextRendering(bool newNativeTextRendering) noexcept;
+
     auto getColorScheme() const noexcept -> const std::string&;
 
     void setColorScheme(std::string_view newColorScheme) noexcept;
@@ -86,5 +90,6 @@ private:
     std::optional<std::string> danbooruApiKey = std::nullopt;
     bool isStatusBarVisible = false;
     bool isBadTaggedWallpapersVisible = true;
+    bool isNativeTextRendering = true;
     std::string colorScheme = "system";
 };

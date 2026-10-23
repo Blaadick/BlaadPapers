@@ -28,22 +28,25 @@
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
 auto main(int argc, char* argv[]) -> int {
-    // TODO Interim colors distortion fix
-    QSurfaceFormat fmt;
-    fmt.setRedBufferSize(8);
-    fmt.setGreenBufferSize(8);
-    fmt.setBlueBufferSize(8);
-    fmt.setAlphaBufferSize(8);
-    QSurfaceFormat::setDefaultFormat(fmt);
+    vips_init(argv[0]);
+    vips_cache_set_max(0);
 
-    QGuiApplication app(argc, argv);
+    auto statusModel = std::make_shared<StatusModel>();
+    auto logger = std::make_shared<util::GuiLogger>(statusModel);
+    auto config = std::make_shared<Config>(logger);
+    config->load();
+
+    QGuiApplication::setDesktopFileName("blaadpapers");
     QGuiApplication::setApplicationName(PROJECT_NAME);
     QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
     QGuiApplication::setApplicationVersion(PROJECT_VERSION);
-    QGuiApplication::setDesktopFileName("blaadpapers");
-    QIcon::setThemeName("blaadpapers");
-    QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+    QGuiApplication app(argc, argv);
+
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
+    QIcon::setThemeName("blaadpapers");
+    if(config->getNativeTextRendering()) {
+        QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+    }
 
     QCommandLineParser parser;
     parser.setApplicationDescription(PROJECT_DESCRIPTION);
@@ -51,21 +54,11 @@ auto main(int argc, char* argv[]) -> int {
     parser.addVersionOption();
     parser.process(app);
 
-    vips_init(argv[0]);
-    vips_cache_set_max(0);
-
     if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {
         DefaultWallpaper::create();
     }
 
     PostSetScript::createIfNotExists();
-
-    auto clipboardModel = std::make_shared<ClipboardModel>();
-
-    auto statusModel = std::make_shared<StatusModel>();
-    auto logger = std::make_shared<util::GuiLogger>(statusModel);
-    auto config = std::make_shared<Config>(logger);
-    config->load();
 
     auto wallpapers = std::make_shared<WallpaperRepository>();
     auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpapers, config, logger);
@@ -82,6 +75,7 @@ auto main(int argc, char* argv[]) -> int {
     downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(httpClient));
     downloadManager->addDownloader("file", std::make_unique<FileDownloader>());
 
+    auto clipboardModel = std::make_shared<ClipboardModel>();
     auto configModel = std::make_shared<ConfigModel>(config);
     auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, downloadManager, config, previewManager, logger);
     wallpapersModel->loadWallpapers();

@@ -93,6 +93,11 @@ void Config::loadGui() {
         isBadTaggedWallpapersVisible = *badTaggedWallpapersData;
     }
 
+    auto nativeTextRenderingData = guiJson->tryGetBool("native_text_rendering");
+    if(nativeTextRenderingData.has_value()) {
+        isNativeTextRendering = *nativeTextRenderingData;
+    }
+
     auto colorSchemeData = guiJson->tryGetString("color_scheme");
     if(colorSchemeData.has_value()) {
         colorScheme = validOrDefault(*colorSchemeData, colorSchemes);
@@ -174,6 +179,7 @@ void Config::saveGui() const {
 
     yyjson_mut_obj_add_bool(doc, root, "status_bar_visible", isStatusBarVisible);
     yyjson_mut_obj_add_bool(doc, root, "bad_tagged_wallpapers_visible", isBadTaggedWallpapersVisible);
+    yyjson_mut_obj_add_bool(doc, root, "native_text_rendering", isNativeTextRendering);
     yyjson_mut_obj_add_str(doc, root, "color_scheme", colorScheme.c_str());
 
     yyjson_write_err writeErr;
@@ -296,6 +302,15 @@ auto Config::getBadTaggedWallpapersVisible() const noexcept -> bool {
 
 void Config::setBadTaggedWallpapersVisible(const bool newVisibility) noexcept {
     isBadTaggedWallpapersVisible = newVisibility;
+    saveGui();
+}
+
+auto Config::getNativeTextRendering() const noexcept -> bool {
+    return isNativeTextRendering;
+}
+
+void Config::setNativeTextRendering(const bool newNativeTextRendering) noexcept {
+    isNativeTextRendering = newNativeTextRendering;
     saveGui();
 }
 
