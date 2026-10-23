@@ -6,7 +6,7 @@ pkgdesc="Fast & clean wallpaper manager (latest commit from master)"
 license=("GPL-3.0-or-later")
 pkgver="0.4.3"
 pkgrel=1
-arch=("x86_64" "aarch64")
+arch=("x86_64")
 depends=(
     "qt6-base"
     "qt6-declarative"
@@ -26,7 +26,7 @@ makedepends=(
     "imageinfo"
 )
 provides=("blaadpapers")
-conflicts=("blaadpapers" "blaadpapers-bin")
+conflicts=("blaadpapers")
 source=("blaadpapers::git+$url.git")
 sha512sums=("SKIP")
 
