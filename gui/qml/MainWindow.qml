@@ -14,6 +14,12 @@ ApplicationWindow {
     height: Math.min(minimumHeight * 3, Screen.height)
     visible: true
 
+    Binding {
+        target: Application.styleHints
+        property: "colorScheme"
+        value: Config.colorScheme === "dark" ? Qt.ColorScheme.Dark : Config.colorScheme === "light" ? Qt.ColorScheme.Light : Qt.ColorScheme.Unknown
+    }
+
     Shortcut {
         sequences: [StandardKey.Refresh, "Ctrl+R"]
 
