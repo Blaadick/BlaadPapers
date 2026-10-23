@@ -58,7 +58,7 @@ ApplicationWindow {
 
             Button {
                 id: mainMenuButton
-                icon.name: "menu"
+                icon.name: "application-menu"
                 Layout.preferredHeight: searchBar.height
                 Layout.preferredWidth: searchBar.height
 
@@ -75,7 +75,7 @@ ApplicationWindow {
 
                         Action {
                             text: qsTr("Install Wallpaper(s)")
-                            icon.name: "install"
+                            icon.name: "package"
 
                             onTriggered: installFileDialog.open()
                         }

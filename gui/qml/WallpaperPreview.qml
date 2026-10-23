@@ -31,7 +31,7 @@ Item {
 
         Action {
             text: qsTr("Open Folder")
-            icon.name: "folder_open"
+            icon.name: "folder-open"
 
             onTriggered: Qt.openUrlExternally(`file://${control.rootDir}`)
         }
@@ -47,7 +47,7 @@ Item {
 
         Action {
             text: qsTr("Delete")
-            icon.name: "delete"
+            icon.name: "edit-delete"
 
             onTriggered: Wallpapers.deleteWallpaperAsync(control.wid)
         }
