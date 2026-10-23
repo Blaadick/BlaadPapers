@@ -33,17 +33,29 @@ public:
 
     auto getWallpapersDirPath() const noexcept -> const std::filesystem::path&;
 
+    void setWallpapersDirPath(std::filesystem::path newPath) noexcept;
+
     auto getDefaultTags() const noexcept -> const std::vector<std::string>&;
 
+    void setDefaultTags(std::vector<std::string> newTags) noexcept;
+
     auto getBadTags() const noexcept -> const std::vector<std::string>&;
+
+    void setBadTags(std::vector<std::string> newTags) noexcept;
 
     auto isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool;
 
     auto getWallhavenApiKey() const noexcept -> const std::optional<std::string>&;
 
+    void setWallhavenApiKey(std::optional<std::string> newKey) noexcept;
+
     auto getDanbooruLogin() const noexcept -> const std::optional<std::string>&;
 
+    void setDanbooruLogin(std::optional<std::string> newLogin) noexcept;
+
     auto getDanbooruApiKey() const noexcept -> const std::optional<std::string>&;
+
+    void setDanbooruApiKey(std::optional<std::string> newKey) noexcept;
 
     auto getStatusBarVisible() const noexcept -> bool;
 
@@ -52,6 +64,18 @@ public:
     auto getBadTaggedWallpapersVisible() const noexcept -> bool;
 
     void setBadTaggedWallpapersVisible(bool newVisibility) noexcept;
+
+    auto getColorScheme() const noexcept -> const std::string&;
+
+    void setColorScheme(std::string_view newColorScheme) noexcept;
+
+    auto getContrast() const noexcept -> const std::string&;
+
+    void setContrast(std::string_view newContrast) noexcept;
+
+    auto getMotion() const noexcept -> const std::string&;
+
+    void setMotion(std::string_view newMotion) noexcept;
 
     auto generalConfigFilePath() const noexcept -> const std::filesystem::path&;
 
@@ -70,4 +94,7 @@ private:
     std::optional<std::string> danbooruApiKey = std::nullopt;
     bool isStatusBarVisible = false;
     bool isBadTaggedWallpapersVisible = true;
+    std::string colorScheme = "system";
+    std::string contrast = "system";
+    std::string motion = "system";
 };

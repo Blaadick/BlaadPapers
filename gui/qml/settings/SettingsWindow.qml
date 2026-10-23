@@ -4,10 +4,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQml.Models
-import Qt.labs.qmlmodels
 
 ApplicationWindow {
+    id: settingsWindow
     width: 900
     height: 500
     minimumWidth: layout.implicitWidth + 2 * layout.anchors.margins
@@ -15,6 +14,8 @@ ApplicationWindow {
     modality: Qt.NonModal
     flags: Qt.Tool | Qt.WindowStaysOnTopHint
     title: qsTr("Settings")
+
+    default property alias content: pages.data
 
     ColumnLayout {
         id: layout
@@ -27,42 +28,26 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            TreeView {
+            ListView {
                 id: tabs
-                clip: true
+                spacing: 4
+                model: pages.children
                 Layout.fillHeight: true
-                Layout.preferredWidth: contentWidth
+                Layout.preferredWidth: 150
+                boundsBehavior: Flickable.StopAtBounds
 
-                model: TreeModel {
-                    TableModelColumn {
-                        display: "name"
-                    }
+                delegate: ItemDelegate {
+                    required property var modelData
+                    required property int index
 
-                    rows: [
-                        {
-                            name: qsTr("General"),
-                            page: 0,
-                            rows: [
-                                {name: qsTr("API"), page: 2}
-                            ]
-                        },
-                        {
-                            name: qsTr("Interface"),
-                            page: 1
-                        }
-                    ]
+                    width: ListView.view.width
+                    text: modelData.title
+                    highlighted: ListView.isCurrentItem
+
+                    onClicked: tabs.currentIndex = index
                 }
-
-                selectionModel: ItemSelectionModel {}
-
-                delegate: TreeViewDelegate {}
 
                 ScrollBar.vertical: ScrollBar {}
-
-                Component.onCompleted: {
-                    expandRecursively()
-                    selectionModel.setCurrentIndex(index(0, 0), ItemSelectionModel.SelectCurrent)
-                }
             }
 
             GroupBox {
@@ -70,14 +55,9 @@ ApplicationWindow {
                 Layout.fillHeight: true
 
                 StackLayout {
+                    id: pages
                     anchors.fill: parent
-                    currentIndex: tabs.selectionModel.currentIndex.valid ? tabs.model.getRow(tabs.selectionModel.currentIndex).page : 0
-
-                    GeneralSettings {}
-
-                    GuiSettings {}
-
-                    ApiSettings {}
+                    currentIndex: tabs.currentIndex
                 }
             }
         }
@@ -87,10 +67,10 @@ ApplicationWindow {
             Layout.fillWidth: true
 
             Button {
-                text: qsTr("Open Config")
+                text: qsTr("Open Configs")
                 flat: true
 
-                onClicked: Qt.openUrlExternally(`file://${Config.configFilePath}`)
+                onClicked: Qt.openUrlExternally(Config.configDirUrl)
             }
 
             Item {
@@ -104,6 +84,8 @@ ApplicationWindow {
             Button {
                 text: qsTr("Ok")
                 highlighted: true
+
+                onClicked: settingsWindow.hide()
             }
         }
     }

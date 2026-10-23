@@ -40,6 +40,12 @@ ApplicationWindow {
     SettingsWindow {
         id: settingsWindow
         transientParent: mainWindow
+
+        GeneralSettingsTab {}
+
+        AppearanceSettingsTab {}
+
+        ApiSettingsTab {}
     }
 
     ColumnLayout {

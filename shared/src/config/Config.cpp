@@ -4,10 +4,22 @@
 #include "config/Config.hpp"
 
 #include <algorithm>
+#include <array>
 #include <fstream>
+#include <span>
 #include <yyjson.h>
 #include "file_processing/json/JsonArr.hpp"
 #include "file_processing/json/JsonObj.hpp"
+
+namespace {
+    constexpr std::array<std::string_view, 3> colorSchemes = {"system", "dark", "light"};
+    constexpr std::array<std::string_view, 3> contrasts = {"system", "normal", "high"};
+    constexpr std::array<std::string_view, 3> motions = {"system", "normal", "reduced"};
+
+    auto validOrDefault(const std::string_view value, std::span<const std::string_view> allowed) -> std::string {
+        return std::string(std::ranges::contains(allowed, value) ? value : allowed.front());
+    }
+}
 
 Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
@@ -81,6 +93,21 @@ void Config::loadGui() {
     auto badTaggedWallpapersData = guiJson->tryGetBool("bad_tagged_wallpapers_visible");
     if(badTaggedWallpapersData.has_value()) {
         isBadTaggedWallpapersVisible = *badTaggedWallpapersData;
+    }
+
+    auto colorSchemeData = guiJson->tryGetString("color_scheme");
+    if(colorSchemeData.has_value()) {
+        colorScheme = validOrDefault(*colorSchemeData, colorSchemes);
+    }
+
+    auto contrastData = guiJson->tryGetString("contrast");
+    if(contrastData.has_value()) {
+        contrast = validOrDefault(*contrastData, contrasts);
+    }
+
+    auto motionData = guiJson->tryGetString("motion");
+    if(motionData.has_value()) {
+        motion = validOrDefault(*motionData, motions);
     }
 }
 
@@ -159,6 +186,9 @@ void Config::saveGui() const {
 
     yyjson_mut_obj_add_bool(doc, root, "status_bar_visible", isStatusBarVisible);
     yyjson_mut_obj_add_bool(doc, root, "bad_tagged_wallpapers_visible", isBadTaggedWallpapersVisible);
+    yyjson_mut_obj_add_str(doc, root, "color_scheme", colorScheme.c_str());
+    yyjson_mut_obj_add_str(doc, root, "contrast", contrast.c_str());
+    yyjson_mut_obj_add_str(doc, root, "motion", motion.c_str());
 
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(guiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
@@ -206,12 +236,27 @@ auto Config::getWallpapersDirPath() const noexcept -> const std::filesystem::pat
     return wallpapersDirPath;
 }
 
+void Config::setWallpapersDirPath(std::filesystem::path newPath) noexcept {
+    wallpapersDirPath = std::move(newPath);
+    saveGeneral();
+}
+
 auto Config::getDefaultTags() const noexcept -> const std::vector<std::string>& {
     return defaultTags;
 }
 
+void Config::setDefaultTags(std::vector<std::string> newTags) noexcept {
+    defaultTags = std::move(newTags);
+    saveGeneral();
+}
+
 auto Config::getBadTags() const noexcept -> const std::vector<std::string>& {
     return badTags;
+}
+
+void Config::setBadTags(std::vector<std::string> newTags) noexcept {
+    badTags = std::move(newTags);
+    saveGeneral();
 }
 
 auto Config::isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool {
@@ -227,12 +272,27 @@ auto Config::getWallhavenApiKey() const noexcept -> const std::optional<std::str
     return wallhavenApiKey;
 }
 
+void Config::setWallhavenApiKey(std::optional<std::string> newKey) noexcept {
+    wallhavenApiKey = std::move(newKey);
+    saveApi();
+}
+
 auto Config::getDanbooruLogin() const noexcept -> const std::optional<std::string>& {
     return danbooruLogin;
 }
 
+void Config::setDanbooruLogin(std::optional<std::string> newLogin) noexcept {
+    danbooruLogin = std::move(newLogin);
+    saveApi();
+}
+
 auto Config::getDanbooruApiKey() const noexcept -> const std::optional<std::string>& {
     return danbooruApiKey;
+}
+
+void Config::setDanbooruApiKey(std::optional<std::string> newKey) noexcept {
+    danbooruApiKey = std::move(newKey);
+    saveApi();
 }
 
 auto Config::getStatusBarVisible() const noexcept -> bool {
@@ -248,8 +308,35 @@ auto Config::getBadTaggedWallpapersVisible() const noexcept -> bool {
     return isBadTaggedWallpapersVisible;
 }
 
-void Config::setBadTaggedWallpapersVisible(bool newVisibility) noexcept {
+void Config::setBadTaggedWallpapersVisible(const bool newVisibility) noexcept {
     isBadTaggedWallpapersVisible = newVisibility;
+    saveGui();
+}
+
+auto Config::getColorScheme() const noexcept -> const std::string& {
+    return colorScheme;
+}
+
+void Config::setColorScheme(std::string_view newColorScheme) noexcept {
+    colorScheme = validOrDefault(newColorScheme, colorSchemes);
+    saveGui();
+}
+
+auto Config::getContrast() const noexcept -> const std::string& {
+    return contrast;
+}
+
+void Config::setContrast(std::string_view newContrast) noexcept {
+    contrast = validOrDefault(newContrast, contrasts);
+    saveGui();
+}
+
+auto Config::getMotion() const noexcept -> const std::string& {
+    return motion;
+}
+
+void Config::setMotion(std::string_view newMotion) noexcept {
+    motion = validOrDefault(newMotion, motions);
     saveGui();
 }
 

@@ -21,7 +21,7 @@ ApplicationWindow {
 
         TextArea {
             id: input
-            placeholderText: "https://example.com/some_file1.ext\nhttps://example.com/some_file2.ext\n..."
+            placeholderText: "Ein\nDos\nTrios\nNe\nFem\nLiu\n..."
             wrapMode: TextArea.Wrap
             focus: true
             Layout.fillWidth: true

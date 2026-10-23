@@ -4,18 +4,52 @@
 #pragma once
 
 #include <QObject>
+#include <QUrl>
 #include "config/Config.hpp"
 
 class ConfigModel : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString configFilePath READ getConfigFilePath)
+    Q_PROPERTY(QUrl configDirUrl READ getConfigDirUrl CONSTANT)
+    Q_PROPERTY(QString wallpapersPath READ getWallpapersPath WRITE setWallpapersPath NOTIFY wallpapersPathChanged)
+    Q_PROPERTY(QStringList defaultTags READ getDefaultTags WRITE setDefaultTags NOTIFY defaultTagsChanged)
+    Q_PROPERTY(QStringList badTags READ getBadTags WRITE setBadTags NOTIFY badTagsChanged)
+    Q_PROPERTY(QString wallhavenApiKey READ getWallhavenApiKey WRITE setWallhavenApiKey NOTIFY wallhavenApiKeyChanged)
+    Q_PROPERTY(QString danbooruLogin READ getDanbooruLogin WRITE setDanbooruLogin NOTIFY danbooruLoginChanged)
+    Q_PROPERTY(QString danbooruApiKey READ getDanbooruApiKey WRITE setDanbooruApiKey NOTIFY danbooruApiKeyChanged)
     Q_PROPERTY(bool statusBarVisible READ getStatusBarVisible WRITE setStatusBarVisible NOTIFY statusBarVisibleChanged)
     Q_PROPERTY(bool badTaggedWallpapersVisible READ getBadTaggedWallpapersVisible WRITE setBadTaggedWallpapersVisible NOTIFY badTaggedWallpapersVisibleChanged)
+    Q_PROPERTY(QString colorScheme READ getColorScheme WRITE setColorScheme NOTIFY colorSchemeChanged)
+    Q_PROPERTY(QString contrast READ getContrast WRITE setContrast NOTIFY contrastChanged)
+    Q_PROPERTY(QString motion READ getMotion WRITE setMotion NOTIFY motionChanged)
 
 public:
     explicit ConfigModel(sptr<Config> config);
 
-    auto getConfigFilePath() -> QString;
+    auto getConfigDirUrl() -> QUrl;
+
+    auto getWallpapersPath() -> QString;
+
+    void setWallpapersPath(const QString& newPath);
+
+    auto getDefaultTags() -> QStringList;
+
+    void setDefaultTags(const QStringList& newTags);
+
+    auto getBadTags() -> QStringList;
+
+    void setBadTags(const QStringList& newTags);
+
+    auto getWallhavenApiKey() -> QString;
+
+    void setWallhavenApiKey(const QString& newKey);
+
+    auto getDanbooruLogin() -> QString;
+
+    void setDanbooruLogin(const QString& newLogin);
+
+    auto getDanbooruApiKey() -> QString;
+
+    void setDanbooruApiKey(const QString& newKey);
 
     auto getStatusBarVisible() -> bool;
 
@@ -25,11 +59,41 @@ public:
 
     void setBadTaggedWallpapersVisible(bool newVisibility);
 
+    auto getColorScheme() -> QString;
+
+    void setColorScheme(const QString& newColorScheme);
+
+    auto getContrast() -> QString;
+
+    void setContrast(const QString& newContrast);
+
+    auto getMotion() -> QString;
+
+    void setMotion(const QString& newMotion);
+
 private:
     sptr<Config> config;
 
 signals:
+    void wallpapersPathChanged();
+
+    void defaultTagsChanged();
+
+    void badTagsChanged();
+
+    void wallhavenApiKeyChanged();
+
+    void danbooruLoginChanged();
+
+    void danbooruApiKeyChanged();
+
     void statusBarVisibleChanged();
 
     void badTaggedWallpapersVisibleChanged();
+
+    void colorSchemeChanged();
+
+    void contrastChanged();
+
+    void motionChanged();
 };
