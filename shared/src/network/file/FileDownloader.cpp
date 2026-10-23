@@ -17,7 +17,15 @@ auto FileDownloader::downloadFile(Uri uri, const std::filesystem::path& download
         return std::unexpected("No file path recognized");
     }
 
-    auto sourcePath = fs::path(precentDecode(*pathEncoded));
+    auto sourcePathStr = precentDecode(*pathEncoded);
+
+    #ifdef _WIN32
+    if(sourcePathStr.size() > 2 && sourcePathStr[0] == '/' && sourcePathStr[2] == ':') {
+        sourcePathStr.erase(0, 1);
+    }
+    #endif
+
+    auto sourcePath = fs::path(sourcePathStr);
     auto destinationPath = downloadDir / sourcePath.filename();
 
     std::error_code errorCode;

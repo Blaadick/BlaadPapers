@@ -31,15 +31,16 @@ auto InstallOption::execute(
     std::vector<Uri> uris;
 
     for(auto& argument : arguments) {
+        if(std::filesystem::exists(argument)) {
+            filePaths.emplace_back(argument);
+            continue;
+        }
+
         auto uri = Uri::parse(std::string(argument));
         if(uri.has_value()) {
             uris.emplace_back(std::move(*uri));
         } else {
-            if(std::filesystem::exists(argument)) {
-                filePaths.emplace_back(argument);
-            } else {
-                logger->logWarning(std::format("File \"{}\" does not exists", argument));
-            }
+            logger->logWarning(std::format("File \"{}\" does not exists", argument));
         }
     }
 
