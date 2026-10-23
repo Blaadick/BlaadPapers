@@ -1,0 +1,34 @@
+#include <winver.h>
+
+1 ICON "@PROJECT_SOURCE_DIR@/shared/resource/windows/blaadpapers.ico"
+1 24 "@PROJECT_SOURCE_DIR@/shared/resource/windows/utf8.manifest"
+
+1 VERSIONINFO
+FILEVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+PRODUCTVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+FILEFLAGS 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "Comments", "@PROJECT_DESCRIPTION@"
+            VALUE "CompanyName", "Blaadick"
+            VALUE "FileDescription", "@FILE_DESCRIPTION@"
+            VALUE "FileVersion", "@PROJECT_VERSION@"
+            VALUE "InternalName", "@BINARY_NAME@"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Blaadick"
+            VALUE "OriginalFilename", "@BINARY_NAME@.exe"
+            VALUE "ProductName", "@PROJECT_NAME@"
+            VALUE "ProductVersion", "@PROJECT_VERSION@"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

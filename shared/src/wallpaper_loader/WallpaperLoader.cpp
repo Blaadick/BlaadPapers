@@ -37,7 +37,7 @@ auto WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDa
     WallpaperData wallpaperData;
 
     yyjson_read_err err;
-    auto doc = yyjson_read_file(wallpaperDataFilePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &err);
+    auto doc = yyjson_read_file(wallpaperDataFilePath.string().c_str(), YYJSON_READ_NOFLAG, nullptr, &err);
     if(!doc) {
         return std::nullopt;
     }
@@ -90,7 +90,7 @@ auto WallpaperLoader::saveWallpaperData(
     yyjson_mut_obj_add_val(doc, root, "tags", wallpaperTagsData);
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(wallpaperDataFilePath.c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(wallpaperDataFilePath.string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
         yyjson_mut_doc_free(doc);
         return false;

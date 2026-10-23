@@ -10,7 +10,7 @@ JsonObj::JsonObj(sptr<JsonDocHolder> doc, yyjson_val* root) : doc(std::move(doc)
 
 auto JsonObj::tryParse(const std::filesystem::path& filePath) noexcept -> std::expected<JsonObj, std::string> {
     yyjson_read_err readErr;
-    auto doc = yyjson_read_file(filePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
+    auto doc = yyjson_read_file(filePath.string().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
         return std::unexpected(readErr.msg);
     }

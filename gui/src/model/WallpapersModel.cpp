@@ -123,7 +123,7 @@ auto WallpapersModel::data(const QModelIndex& index, const int role) const -> QV
     switch(role) {
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
-        case RootDirRole: return QString::fromStdString(wallpaper->getDirPath());
+        case RootDirRole: return QString::fromStdString(wallpaper->getDirPath().string());
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;
         case IsBadRole: return config->isWallpaperBad(*wallpaper);

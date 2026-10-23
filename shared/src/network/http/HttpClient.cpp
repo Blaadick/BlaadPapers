@@ -264,11 +264,11 @@ void HttpClient::saveOngoingDownloads() {
         auto downloadData = yyjson_mut_arr_add_obj(doc, root);
         yyjson_mut_obj_add_str(doc, downloadData, "url", url.c_str());
         yyjson_mut_obj_add_str(doc, downloadData, "etag", download.eTag.c_str());
-        yyjson_mut_obj_add_str(doc, downloadData, "part_file_path", download.partFilePath.c_str());
+        yyjson_mut_obj_add_strcpy(doc, downloadData, "part_file_path", download.partFilePath.string().c_str());
     }
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(ongoingDownloadsFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(ongoingDownloadsFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
         std::filesystem::remove(ongoingDownloadsFilePath());
         ongoingDownloads.clear();

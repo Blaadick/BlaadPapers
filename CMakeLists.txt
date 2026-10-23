@@ -12,3 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(cli)
 add_subdirectory(gui)
 add_subdirectory(shared)
+
+if(WIN32)
+    add_subdirectory(packaging/windows)
+endif()

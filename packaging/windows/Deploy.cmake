@@ -1,0 +1,66 @@
+set(PREFIX "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}")
+
+file(GLOB VIPS_MODULES_DIR "${MINGW_PREFIX}/lib/vips-modules-*")
+get_filename_component(VIPS_MODULES_DIR_NAME "${VIPS_MODULES_DIR}" NAME)
+set(VIPS_MODULES "${VIPS_MODULES_DIR}/vips-heif.dll" "${VIPS_MODULES_DIR}/vips-jxl.dll")
+file(INSTALL ${VIPS_MODULES} DESTINATION "${PREFIX}/lib/${VIPS_MODULES_DIR_NAME}")
+
+set(CMAKE_GET_RUNTIME_DEPENDENCIES_TOOL objdump)
+set(CMAKE_GET_RUNTIME_DEPENDENCIES_COMMAND "${OBJDUMP}")
+file(GET_RUNTIME_DEPENDENCIES
+    MODULES ${VIPS_MODULES}
+    DIRECTORIES "${MINGW_PREFIX}/bin"
+    PRE_EXCLUDE_REGEXES "^api-ms-" "^ext-ms-"
+    POST_EXCLUDE_REGEXES "[Ss]ystem32"
+    RESOLVED_DEPENDENCIES_VAR VIPS_DEPENDENCIES
+)
+file(INSTALL ${VIPS_DEPENDENCIES} DESTINATION "${PREFIX}")
+
+file(GLOB BINARIES RELATIVE "${PREFIX}" "${PREFIX}/*.dll")
+file(GLOB_RECURSE PLUGINS RELATIVE "${PREFIX}/plugins" "${PREFIX}/plugins/*.dll")
+file(GLOB_RECURSE QML_PLUGINS RELATIVE "${PREFIX}/qml" "${PREFIX}/qml/*.dll")
+set(SOURCES ${VIPS_MODULES})
+list(TRANSFORM BINARIES PREPEND "${MINGW_PREFIX}/bin/")
+list(TRANSFORM PLUGINS PREPEND "${QT_PLUGINS_DIR}/")
+list(TRANSFORM QML_PLUGINS PREPEND "${QT_QML_DIR}/")
+list(APPEND SOURCES ${BINARIES} ${PLUGINS} ${QML_PLUGINS})
+
+execute_process(COMMAND pacman -Qqo ${SOURCES} OUTPUT_VARIABLE PACKAGES COMMAND_ERROR_IS_FATAL ANY)
+string(REPLACE "\n" ";" PACKAGES "${PACKAGES}")
+list(REMOVE_ITEM PACKAGES "")
+list(REMOVE_DUPLICATES PACKAGES)
+list(SORT PACKAGES)
+
+set(NOTICES "BlaadPapers bundles the following third-party components.\n")
+string(APPEND NOTICES "Their license texts are in the \"licenses\" directory.\n")
+string(APPEND NOTICES "Source code of each component is available from its project page.\n")
+set(LICENSE_IDS "")
+foreach(PACKAGE ${PACKAGES})
+    execute_process(COMMAND pacman -Qi "${PACKAGE}" OUTPUT_VARIABLE PACKAGE_INFO COMMAND_ERROR_IS_FATAL ANY)
+    string(REGEX MATCH "Version +: ([^\n]*)" _ "${PACKAGE_INFO}")
+    set(PACKAGE_VERSION "${CMAKE_MATCH_1}")
+    string(REGEX MATCH "URL +: ([^\n]*)" _ "${PACKAGE_INFO}")
+    set(PACKAGE_URL "${CMAKE_MATCH_1}")
+    string(REGEX MATCH "Licenses +: ([^\n]*(\n  +[^\n]*)*)" _ "${PACKAGE_INFO}")
+    string(REGEX REPLACE "[ \n]+" " " PACKAGE_LICENSES "${CMAKE_MATCH_1}")
+    string(REPLACE "spdx:" "" PACKAGE_LICENSES "${PACKAGE_LICENSES}")
+    string(STRIP "${PACKAGE_LICENSES}" PACKAGE_LICENSES)
+
+    string(REGEX REPLACE "^mingw-w64-[^-]+-[^-]+-" "" COMPONENT "${PACKAGE}")
+    string(APPEND NOTICES "\n${COMPONENT} ${PACKAGE_VERSION}\n    License: ${PACKAGE_LICENSES}\n    Source: ${PACKAGE_URL}\n")
+
+    if(IS_DIRECTORY "${MINGW_PREFIX}/share/licenses/${COMPONENT}")
+        file(COPY "${MINGW_PREFIX}/share/licenses/${COMPONENT}/" DESTINATION "${PREFIX}/licenses/${COMPONENT}")
+    endif()
+
+    string(REPLACE " " ";" PACKAGE_LICENSE_IDS "${PACKAGE_LICENSES}")
+    list(APPEND LICENSE_IDS ${PACKAGE_LICENSE_IDS})
+endforeach()
+file(WRITE "${PREFIX}/THIRD-PARTY-NOTICES.txt" "${NOTICES}")
+
+list(REMOVE_DUPLICATES LICENSE_IDS)
+foreach(LICENSE_ID ${LICENSE_IDS})
+    if(EXISTS "${SPDX_LICENSES_DIR}/${LICENSE_ID}.txt")
+        file(INSTALL "${SPDX_LICENSES_DIR}/${LICENSE_ID}.txt" DESTINATION "${PREFIX}/licenses/spdx")
+    endif()
+endforeach()

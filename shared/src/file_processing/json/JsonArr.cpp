@@ -9,7 +9,7 @@ JsonArr::JsonArr(sptr<JsonDocHolder> doc, yyjson_val* root) : doc(std::move(doc)
 
 auto JsonArr::tryParse(const std::filesystem::path& filePath) noexcept -> std::expected<JsonArr, std::string> {
     yyjson_read_err readErr;
-    auto doc = yyjson_read_file(filePath.c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
+    auto doc = yyjson_read_file(filePath.string().c_str(), YYJSON_READ_NOFLAG, nullptr, &readErr);
     if(!doc) {
         return std::unexpected(readErr.msg);
     }

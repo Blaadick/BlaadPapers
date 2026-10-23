@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>blaadpapers</id>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-3.0-or-later</project_license>
+
+    <name>BlaadPapers</name>
+    <summary>@PROJECT_DESCRIPTION@</summary>
+    <description>
+        <p>Convenient wallpaper manager supporting both GUI and CLI usage, made to be as fast and pleasing to the eye as possible.</p>
+        <p>Picture and video wallpapers are organized with tags and can be applied, shuffled or opened through blaadpapers:// links. Wallpapers are rendered with mpvpaper, which has to be installed separately.</p>
+    </description>
+
+    <developer id="org.blaadworks.blaadick">
+        <name>Blaadick</name>
+    </developer>
+
+    <launchable type="desktop-id">blaadpapers.desktop</launchable>
+
+    <url type="homepage">https://github.com/Blaadick/BlaadPapers</url>
+    <url type="bugtracker">https://github.com/Blaadick/BlaadPapers/issues</url>
+    <url type="vcs-browser">https://github.com/Blaadick/BlaadPapers</url>
+
+    <screenshots>
+        <screenshot type="default">
+            <caption>Main screen</caption>
+            <image>https://github.com/user-attachments/assets/1c084af2-1a25-4363-90f6-b14ebd89eb8f</image>
+        </screenshot>
+    </screenshots>
+
+    <categories>
+        <category>Graphics</category>
+        <category>Viewer</category>
+    </categories>
+
+    <keywords>
+        <keyword>wallpaper</keyword>
+    </keywords>
+
+    <content_rating type="oars-1.1"/>
+
+    <releases>
+        <release version="@PROJECT_VERSION@" date="@RELEASE_DATE@"/>
+    </releases>
+</component>

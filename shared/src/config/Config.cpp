@@ -166,12 +166,12 @@ void Config::saveGeneral() const {
         yyjson_mut_arr_add_str(doc, badTagsData, tag.c_str());
     }
 
-    yyjson_mut_obj_add_str(doc, root, "wallpapers_path", wallpapersDirPath.c_str());
+    yyjson_mut_obj_add_strcpy(doc, root, "wallpapers_path", wallpapersDirPath.string().c_str());
     yyjson_mut_obj_add_val(doc, root, "default_tags", defaultTagsData);
     yyjson_mut_obj_add_val(doc, root, "bad_tags", badTagsData);
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(generalConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(generalConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
         logger->logError(std::format("Failed to write config file to \"{}\"", generalConfigFilePath()));
     }
@@ -191,7 +191,7 @@ void Config::saveGui() const {
     yyjson_mut_obj_add_str(doc, root, "motion", motion.c_str());
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(guiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(guiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
         logger->logError(std::format("Failed to write config file to \"{}\"", guiConfigFilePath()));
     }
@@ -224,7 +224,7 @@ void Config::saveApi() const {
     }
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(apiConfigFilePath().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(apiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
         logger->logError(std::format("Failed to write config file to \"{}\"", apiConfigFilePath()));
     }

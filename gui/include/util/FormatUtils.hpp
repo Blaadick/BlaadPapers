@@ -12,8 +12,8 @@ namespace util {
         QStringList extensions;
 
         for(const auto* format : formats) {
-            for(const char* const* ext = format->extensions; *ext != nullptr; ++ext) {
-                extensions << QString("*%1").arg(*ext);
+            for(const auto extension : format->extensions) {
+                extensions << QString("*%1").arg(QString::fromUtf8(extension));
             }
         }
 
