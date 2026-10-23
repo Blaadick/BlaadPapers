@@ -15,7 +15,9 @@ Convenient wallpaper manager supporting both GUI and CLI usage. I will try to ma
 
 <div align="center">
     <picture>
-        <img src="https://github.com/user-attachments/assets/66883352-e1d0-4389-9909-21a9c4b0dea9" alt="Main Screen" width="100%"/>
+        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/1c084af2-1a25-4363-90f6-b14ebd89eb8f">
+        <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/e3ecf412-e560-4379-928d-cb49f93e8590">
+        <img src="https://github.com/user-attachments/assets/e3ecf412-e560-4379-928d-cb49f93e8590" alt="Main Screen" width="100%"/>
     </picture>
     <p><i>Main Screen</i></p>
 </div>
