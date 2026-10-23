@@ -15,7 +15,7 @@ ApplicationWindow {
     visible: true
 
     Shortcut {
-        sequence: "F5"
+        sequences: [StandardKey.Refresh, "Ctrl+R"]
 
         onActivated: {
             Wallpapers.refreshWallpapers()
@@ -85,14 +85,16 @@ ApplicationWindow {
                     Action {
                         text: qsTr("Settings")
                         icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/settings.svg"
+                        shortcut: "Ctrl+Alt+S"
 
                         onTriggered: settingsWindow.show()
                     }
 
                     Action {
-                        text: qsTr("Bad Tagged Wallpapers")
+                        text: qsTr("Bad Wallpapers")
                         checkable: true
                         checked: Config.badTaggedWallpapersVisible
+                        shortcut: "Ctrl+B"
 
                         onTriggered: {
                             Config.badTaggedWallpapersVisible = !Config.badTaggedWallpapersVisible
