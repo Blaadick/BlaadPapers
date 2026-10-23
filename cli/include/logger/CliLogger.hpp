@@ -8,6 +8,8 @@
 namespace util {
     class CliLogger final : public Logger {
     public:
+        CliLogger();
+
         void logInfo(std::string_view message) const noexcept override;
 
         void logWarning(std::string_view message) const noexcept override;

@@ -5,7 +5,22 @@
 
 #include <iostream>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 namespace util {
+    CliLogger::CliLogger() {
+        #ifdef _WIN32
+        for(const auto handle : {GetStdHandle(STD_OUTPUT_HANDLE), GetStdHandle(STD_ERROR_HANDLE)}) {
+            DWORD mode = 0;
+            if(GetConsoleMode(handle, &mode)) {
+                SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+            }
+        }
+        #endif
+    }
+
     void CliLogger::logInfo(const std::string_view message) const noexcept {
         std::cout << message << "\n";
     }

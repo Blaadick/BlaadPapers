@@ -6,10 +6,23 @@
 #include <chrono>
 #include <iostream>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 using namespace std::chrono;
 
 namespace util {
-    GuiLogger::GuiLogger(sptr<StatusModel> statusModel) : statusModel(std::move(statusModel)) {}
+    GuiLogger::GuiLogger(sptr<StatusModel> statusModel) : statusModel(std::move(statusModel)) {
+        #ifdef _WIN32
+        for(const auto handle : {GetStdHandle(STD_OUTPUT_HANDLE), GetStdHandle(STD_ERROR_HANDLE)}) {
+            DWORD mode = 0;
+            if(GetConsoleMode(handle, &mode)) {
+                SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+            }
+        }
+        #endif
+    }
 
     void GuiLogger::logInfo(const std::string_view message) const noexcept {
         auto currentTime = zoned_time(current_zone(), round<duration<long long, std::milli>>(system_clock::now()));
