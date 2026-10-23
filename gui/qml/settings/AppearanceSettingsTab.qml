@@ -30,7 +30,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/system-default.svg"
+            icon.name: "system-default"
             checkable: true
             checked: Config.colorScheme === "system"
             ButtonGroup.group: colorScheme
@@ -41,7 +41,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/dark-theme.svg"
+            icon.name: "dark-theme"
             checkable: true
             checked: Config.colorScheme === "dark"
             ButtonGroup.group: colorScheme
@@ -52,7 +52,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/light-theme.svg"
+            icon.name: "light-theme"
             checkable: true
             checked: Config.colorScheme === "light"
             ButtonGroup.group: colorScheme
@@ -73,7 +73,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/system-default.svg"
+            icon.name: "system-default"
             checkable: true
             checked: Config.motion === "system"
             ButtonGroup.group: motion
@@ -84,7 +84,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/normal-motion.svg"
+            icon.name: "normal-motion"
             checkable: true
             checked: Config.motion === "normal"
             ButtonGroup.group: motion
@@ -95,7 +95,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/reduced-motion.svg"
+            icon.name: "reduced-motion"
             checkable: true
             checked: Config.motion === "reduced"
             ButtonGroup.group: motion
@@ -116,7 +116,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/system-default.svg"
+            icon.name: "system-default"
             checkable: true
             checked: Config.contrast === "system"
             ButtonGroup.group: contrast
@@ -127,7 +127,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/normal-contrast.svg"
+            icon.name: "normal-contrast"
             checkable: true
             checked: Config.contrast === "normal"
             ButtonGroup.group: contrast
@@ -138,7 +138,7 @@ SettingsTab {
         }
 
         Button {
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/high-contrast.svg"
+            icon.name: "high-contrast"
             checkable: true
             checked: Config.contrast === "high"
             ButtonGroup.group: contrast

@@ -1,0 +1,10 @@
+[Icon Theme]
+Name=BlaadPapers
+Comment=BlaadPapers icon theme
+Directories=scalable
+
+[scalable]
+Size=24
+MinSize=8
+MaxSize=512
+Type=Scalable

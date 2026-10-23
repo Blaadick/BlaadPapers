@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QCommandLineParser>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
@@ -39,6 +40,8 @@ auto main(int argc, char* argv[]) -> int {
     QGuiApplication::setApplicationName(PROJECT_NAME);
     QGuiApplication::setApplicationDisplayName(PROJECT_NAME);
     QGuiApplication::setApplicationVersion(PROJECT_VERSION);
+    QGuiApplication::setDesktopFileName("blaadpapers");
+    QIcon::setThemeName("blaadpapers");
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
 

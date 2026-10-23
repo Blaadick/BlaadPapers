@@ -58,7 +58,7 @@ ApplicationWindow {
 
             Button {
                 id: mainMenuButton
-                icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/menu.svg"
+                icon.name: "menu"
                 Layout.preferredHeight: searchBar.height
                 Layout.preferredWidth: searchBar.height
 
@@ -71,18 +71,18 @@ ApplicationWindow {
 
                     Menu {
                         title: qsTr("Add")
-                        icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/add.svg"
+                        icon.name: "add"
 
                         Action {
                             text: qsTr("Install Wallpaper(s)")
-                            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/install.svg"
+                            icon.name: "install"
 
                             onTriggered: installFileDialog.open()
                         }
 
                         Action {
                             text: qsTr("Download Wallpaper(s)")
-                            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/download.svg"
+                            icon.name: "download"
 
                             onTriggered: downloadWindow.show()
                         }
@@ -90,7 +90,7 @@ ApplicationWindow {
 
                     Action {
                         text: qsTr("Settings")
-                        icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/settings.svg"
+                        icon.name: "settings"
                         shortcut: "Ctrl+Alt+S"
 
                         onTriggered: settingsWindow.show()

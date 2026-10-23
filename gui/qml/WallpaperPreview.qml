@@ -24,21 +24,21 @@ Item {
 
         Action {
             text: qsTr("Apply")
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/apply.svg"
+            icon.name: "apply"
 
             onTriggered: Wallpapers.applyWallpaperAsync(control.wid)
         }
 
         Action {
             text: qsTr("Open Folder")
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/folder_open.svg"
+            icon.name: "folder_open"
 
             onTriggered: Qt.openUrlExternally(`file://${control.rootDir}`)
         }
 
         Action {
             text: qsTr("Copy Deeplink")
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/link.svg"
+            icon.name: "link"
 
             onTriggered: Clipboard.copyWallpaperDeeplink(control.wid)
         }
@@ -47,7 +47,7 @@ Item {
 
         Action {
             text: qsTr("Delete")
-            icon.source: "qrc:/qt/qml/BlaadPapers/resource/icon/delete.svg"
+            icon.name: "delete"
 
             onTriggered: Wallpapers.deleteWallpaperAsync(control.wid)
         }
