@@ -19,6 +19,14 @@ jobs:
                 sudo -u builder git clone https://aur.archlinux.org/imageinfo.git /home/builder/imageinfo
                 cd /home/builder/imageinfo && sudo -u builder makepkg -si --noconfirm
 
+        -   name: Install BStyle
+            run: |
+                BSTYLE_TAG=$(basename "$(curl -sSfLo /dev/null -w '%{url_effective}' https://github.com/Blaadick/BStyle/releases/latest)")
+                git clone --depth 1 --branch "$BSTYLE_TAG" https://github.com/Blaadick/BStyle /tmp/bstyle
+                cmake -S /tmp/bstyle -B /tmp/bstyle/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+                cmake --build /tmp/bstyle/build --parallel
+                cmake --install /tmp/bstyle/build
+
         -   uses: actions/checkout@v7.0.1
 
         -   name: Build
@@ -55,6 +63,7 @@ jobs:
                 VIPS_MODULES_DIR=$(echo /usr/lib/vips-modules-*)
                 install -Dm755 -t "AppDir/usr/lib/$(basename "$VIPS_MODULES_DIR")" "$VIPS_MODULES_DIR"/vips-{heif,jxl}.so
                 install -Dm755 -t AppDir/usr/plugins/wayland-graphics-integration-client /usr/lib/qt6/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so
+                install -d AppDir/usr/qml && cp -r /usr/lib/qt6/qml/BStyle AppDir/usr/qml/
                 install -Dm644 /dev/stdin AppDir/apprun-hooks/vips.sh <<< 'export VIPSHOME="$APPDIR/usr"'
                 printf '[Paths]\nPrefix = usr\n' > AppDir/qt.conf
                 sed 's|/usr/bin/||; /^Actions=/d; /^\[Desktop Action/,$d' gui/resource/blaadpapers.desktop > blaadpapers.desktop
@@ -95,6 +104,14 @@ jobs:
 
         -   name: Make cfitsio pkg-config paths relocatable
             run: sed -i 's#"/ucrt64/\(lib\|include\)"#${prefix}/\1#' /ucrt64/lib/pkgconfig/cfitsio.pc
+
+        -   name: Install BStyle
+            run: |
+                BSTYLE_TAG=$(basename "$(curl -sSfLo /dev/null -w '%{url_effective}' https://github.com/Blaadick/BStyle/releases/latest)")
+                git clone --depth 1 --branch "$BSTYLE_TAG" https://github.com/Blaadick/BStyle /tmp/bstyle
+                cmake -S /tmp/bstyle -B /tmp/bstyle/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+                cmake --build /tmp/bstyle/build --parallel
+                cmake --install /tmp/bstyle/build
 
         -   uses: actions/checkout@v7.0.1
 

@@ -31,7 +31,9 @@ auto WallpaperLoader::getDefaultWallpaperData(const std::string& wallpaperId) co
 
 auto WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData> {
     if(!std::filesystem::exists(wallpaperDataFilePath)) {
-        return std::nullopt;
+        auto defaultWallpaperData = getDefaultWallpaperData(wallpaperDataFilePath.parent_path().stem().string());
+        saveWallpaperData(wallpaperDataFilePath, defaultWallpaperData);
+        return defaultWallpaperData;
     }
 
     WallpaperData wallpaperData;

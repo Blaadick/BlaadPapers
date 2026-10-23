@@ -1,8 +1,8 @@
 # Maintainer: Blaadick <null>
 
 pkgname="blaadpapers-git"
-url="https://github.com/Blaadick/BlaadPapers"
 pkgdesc="Fast & clean wallpaper manager (latest commit from master)"
+url="https://github.com/Blaadick/BlaadPapers"
 license=("GPL-3.0-or-later")
 pkgver="0.4.3"
 pkgrel=1
@@ -17,7 +17,7 @@ depends=(
     "libvips"
     "ffmpeg"
     "mpvpaper"
-    "bstyle-qml-theme"
+    "bstyle"
 )
 makedepends=(
     "git"

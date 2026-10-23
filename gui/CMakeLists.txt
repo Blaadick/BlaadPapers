@@ -19,6 +19,12 @@ qt_add_resources(blaadpapers icons
     FILES ${ICONS}
 )
 
+qt_add_resources(blaadpapers controls_config
+    PREFIX /
+    BASE resource
+    FILES resource/qtquickcontrols2.conf
+)
+
 target_link_libraries(blaadpapers PRIVATE shared Qt6::QuickControls2 Qt6::Concurrent Qt6::Svg)
 target_include_directories(blaadpapers PRIVATE include)
 
