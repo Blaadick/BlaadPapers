@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QCommandLineParser>
-#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
-#include <QThreadPool>
+#include <QStyleHints>
 #include <vips/vips8>
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
@@ -44,6 +43,15 @@ auto main(int argc, char* argv[]) -> int {
 
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
     QIcon::setThemeName("blaadpapers");
+
+    if(config->getColorScheme() == "dark") {
+        QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Dark);
+    } else if(config->getColorScheme() == "light") {
+        QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
+    } else {
+        QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Unknown);
+    }
+
     if(config->getNativeTextRendering()) {
         QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     }

@@ -29,7 +29,10 @@ SettingsTab {
             Layout.preferredHeight: height
             Layout.preferredWidth: height
 
-            onClicked: Config.colorScheme = "system"
+            onClicked: {
+                Config.colorScheme = "system"
+                Application.styleHints.colorScheme = Qt.ColorScheme.Unknown
+            }
         }
 
         Button {
@@ -40,7 +43,10 @@ SettingsTab {
             Layout.preferredHeight: height
             Layout.preferredWidth: height
 
-            onClicked: Config.colorScheme = "dark"
+            onClicked: {
+                Config.colorScheme = "dark"
+                Application.styleHints.colorScheme = Qt.ColorScheme.Dark
+            }
         }
 
         Button {
@@ -51,7 +57,10 @@ SettingsTab {
             Layout.preferredHeight: height
             Layout.preferredWidth: height
 
-            onClicked: Config.colorScheme = "light"
+            onClicked: {
+                Config.colorScheme = "light"
+                Application.styleHints.colorScheme = Qt.ColorScheme.Light
+            }
         }
     }
 
