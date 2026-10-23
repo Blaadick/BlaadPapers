@@ -134,21 +134,3 @@ void ConfigModel::setColorScheme(const QString& newColorScheme) {
     config->setColorScheme(newColorScheme.toStdString());
     emit colorSchemeChanged();
 }
-
-auto ConfigModel::getContrast() -> QString {
-    return QString::fromStdString(config->getContrast());
-}
-
-void ConfigModel::setContrast(const QString& newContrast) {
-    config->setContrast(newContrast.toStdString());
-    emit contrastChanged();
-}
-
-auto ConfigModel::getMotion() -> QString {
-    return QString::fromStdString(config->getMotion());
-}
-
-void ConfigModel::setMotion(const QString& newMotion) {
-    config->setMotion(newMotion.toStdString());
-    emit motionChanged();
-}

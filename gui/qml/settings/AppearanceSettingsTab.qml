@@ -12,14 +12,6 @@ SettingsTab {
         id: colorScheme
     }
 
-    ButtonGroup {
-        id: contrast
-    }
-
-    ButtonGroup {
-        id: motion
-    }
-
     RowLayout {
         Label {
             text: qsTr("Color Scheme")
@@ -65,92 +57,6 @@ SettingsTab {
 
     RowLayout {
         Label {
-            text: qsTr("Motion")
-        }
-
-        Item {
-            Layout.fillWidth: true
-        }
-
-        Button {
-            icon.name: "system-default"
-            checkable: true
-            checked: Config.motion === "system"
-            ButtonGroup.group: motion
-            Layout.preferredHeight: height
-            Layout.preferredWidth: height
-
-            onClicked: Config.motion = "system"
-        }
-
-        Button {
-            icon.name: "normal-motion"
-            checkable: true
-            checked: Config.motion === "normal"
-            ButtonGroup.group: motion
-            Layout.preferredHeight: height
-            Layout.preferredWidth: height
-
-            onClicked: Config.motion = "normal"
-        }
-
-        Button {
-            icon.name: "reduced-motion"
-            checkable: true
-            checked: Config.motion === "reduced"
-            ButtonGroup.group: motion
-            Layout.preferredHeight: height
-            Layout.preferredWidth: height
-
-            onClicked: Config.motion = "reduced"
-        }
-    }
-
-    RowLayout {
-        Label {
-            text: qsTr("Contrast")
-        }
-
-        Item {
-            Layout.fillWidth: true
-        }
-
-        Button {
-            icon.name: "system-default"
-            checkable: true
-            checked: Config.contrast === "system"
-            ButtonGroup.group: contrast
-            Layout.preferredHeight: height
-            Layout.preferredWidth: height
-
-            onClicked: Config.contrast = "system"
-        }
-
-        Button {
-            icon.name: "normal-contrast"
-            checkable: true
-            checked: Config.contrast === "normal"
-            ButtonGroup.group: contrast
-            Layout.preferredHeight: height
-            Layout.preferredWidth: height
-
-            onClicked: Config.contrast = "normal"
-        }
-
-        Button {
-            icon.name: "high-contrast"
-            checkable: true
-            checked: Config.contrast === "high"
-            ButtonGroup.group: contrast
-            Layout.preferredHeight: height
-            Layout.preferredWidth: height
-
-            onClicked: Config.contrast = "high"
-        }
-    }
-
-    RowLayout {
-        Label {
             text: qsTr("Show Status Bar")
         }
 
@@ -162,6 +68,22 @@ SettingsTab {
             checked: Config.statusBarVisible
 
             onToggled: Config.statusBarVisible = !Config.statusBarVisible
+        }
+    }
+
+    RowLayout {
+        Label {
+            text: qsTr("Native Text Rendering")
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        Switch {
+            checked: Config.nativeTextRendering
+
+            onToggled: Config.nativeTextRendering = !Config.nativeTextRendering
         }
     }
 }

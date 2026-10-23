@@ -69,14 +69,6 @@ public:
 
     void setColorScheme(std::string_view newColorScheme) noexcept;
 
-    auto getContrast() const noexcept -> const std::string&;
-
-    void setContrast(std::string_view newContrast) noexcept;
-
-    auto getMotion() const noexcept -> const std::string&;
-
-    void setMotion(std::string_view newMotion) noexcept;
-
     auto generalConfigFilePath() const noexcept -> const std::filesystem::path&;
 
     auto guiConfigFilePath() const noexcept -> const std::filesystem::path&;
@@ -95,6 +87,4 @@ private:
     bool isStatusBarVisible = false;
     bool isBadTaggedWallpapersVisible = true;
     std::string colorScheme = "system";
-    std::string contrast = "system";
-    std::string motion = "system";
 };

@@ -19,8 +19,6 @@ class ConfigModel : public QObject {
     Q_PROPERTY(bool statusBarVisible READ getStatusBarVisible WRITE setStatusBarVisible NOTIFY statusBarVisibleChanged)
     Q_PROPERTY(bool badTaggedWallpapersVisible READ getBadTaggedWallpapersVisible WRITE setBadTaggedWallpapersVisible NOTIFY badTaggedWallpapersVisibleChanged)
     Q_PROPERTY(QString colorScheme READ getColorScheme WRITE setColorScheme NOTIFY colorSchemeChanged)
-    Q_PROPERTY(QString contrast READ getContrast WRITE setContrast NOTIFY contrastChanged)
-    Q_PROPERTY(QString motion READ getMotion WRITE setMotion NOTIFY motionChanged)
 
 public:
     explicit ConfigModel(sptr<Config> config);
@@ -63,14 +61,6 @@ public:
 
     void setColorScheme(const QString& newColorScheme);
 
-    auto getContrast() -> QString;
-
-    void setContrast(const QString& newContrast);
-
-    auto getMotion() -> QString;
-
-    void setMotion(const QString& newMotion);
-
 private:
     sptr<Config> config;
 
@@ -92,8 +82,4 @@ signals:
     void badTaggedWallpapersVisibleChanged();
 
     void colorSchemeChanged();
-
-    void contrastChanged();
-
-    void motionChanged();
 };

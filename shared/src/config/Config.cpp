@@ -13,8 +13,6 @@
 
 namespace {
     constexpr std::array<std::string_view, 3> colorSchemes = {"system", "dark", "light"};
-    constexpr std::array<std::string_view, 3> contrasts = {"system", "normal", "high"};
-    constexpr std::array<std::string_view, 3> motions = {"system", "normal", "reduced"};
 
     auto validOrDefault(const std::string_view value, std::span<const std::string_view> allowed) -> std::string {
         return std::string(std::ranges::contains(allowed, value) ? value : allowed.front());
@@ -99,16 +97,6 @@ void Config::loadGui() {
     if(colorSchemeData.has_value()) {
         colorScheme = validOrDefault(*colorSchemeData, colorSchemes);
     }
-
-    auto contrastData = guiJson->tryGetString("contrast");
-    if(contrastData.has_value()) {
-        contrast = validOrDefault(*contrastData, contrasts);
-    }
-
-    auto motionData = guiJson->tryGetString("motion");
-    if(motionData.has_value()) {
-        motion = validOrDefault(*motionData, motions);
-    }
 }
 
 void Config::loadApi() {
@@ -187,8 +175,6 @@ void Config::saveGui() const {
     yyjson_mut_obj_add_bool(doc, root, "status_bar_visible", isStatusBarVisible);
     yyjson_mut_obj_add_bool(doc, root, "bad_tagged_wallpapers_visible", isBadTaggedWallpapersVisible);
     yyjson_mut_obj_add_str(doc, root, "color_scheme", colorScheme.c_str());
-    yyjson_mut_obj_add_str(doc, root, "contrast", contrast.c_str());
-    yyjson_mut_obj_add_str(doc, root, "motion", motion.c_str());
 
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(guiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
@@ -319,24 +305,6 @@ auto Config::getColorScheme() const noexcept -> const std::string& {
 
 void Config::setColorScheme(std::string_view newColorScheme) noexcept {
     colorScheme = validOrDefault(newColorScheme, colorSchemes);
-    saveGui();
-}
-
-auto Config::getContrast() const noexcept -> const std::string& {
-    return contrast;
-}
-
-void Config::setContrast(std::string_view newContrast) noexcept {
-    contrast = validOrDefault(newContrast, contrasts);
-    saveGui();
-}
-
-auto Config::getMotion() const noexcept -> const std::string& {
-    return motion;
-}
-
-void Config::setMotion(std::string_view newMotion) noexcept {
-    motion = validOrDefault(newMotion, motions);
     saveGui();
 }
 
