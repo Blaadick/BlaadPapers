@@ -1,0 +1,53 @@
+name: Build
+
+on:
+    push:
+        branches: ['**']
+    pull_request:
+
+jobs:
+    linux-x86_64:
+        name: linux-x86_64
+        runs-on: ubuntu-latest
+        container: archlinux:base-devel
+        steps:
+        -   name: Install dependencies
+            run: |
+                pacman -Syu --noconfirm --needed git cmake ninja qt6-base qt6-declarative qt6-svg libvips ffmpeg curl yyjson
+                useradd -m builder
+                echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
+                sudo -u builder git clone https://aur.archlinux.org/imageinfo.git /home/builder/imageinfo
+                cd /home/builder/imageinfo && sudo -u builder makepkg -si --noconfirm
+
+        -   uses: actions/checkout@v7.0.1
+
+        -   name: Build
+            run: |
+                cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+                cmake --build build --parallel
+
+    windows-x86_64:
+        name: windows-x86_64
+        runs-on: windows-latest
+        defaults:
+            run:
+                shell: msys2 {0}
+        steps:
+        -   uses: msys2/setup-msys2@v2.33.0
+            with:
+                msystem: UCRT64
+                update: true
+                pacboy: >-
+                    toolchain:p cmake:p ninja:p pkgconf:p
+                    qt6-base:p qt6-declarative:p qt6-svg:p
+                    libvips:p ffmpeg:p curl:p yyjson:p imageinfo:p
+
+        -   name: Make cfitsio pkg-config paths relocatable
+            run: sed -i 's#"/ucrt64/\(lib\|include\)"#${prefix}/\1#' /ucrt64/lib/pkgconfig/cfitsio.pc
+
+        -   uses: actions/checkout@v7.0.1
+
+        -   name: Build
+            run: |
+                cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+                cmake --build build --parallel

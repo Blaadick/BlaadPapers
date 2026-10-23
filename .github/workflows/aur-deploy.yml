@@ -1,0 +1,153 @@
+name: AUR Deploy
+
+on:
+    workflow_call:
+        inputs:
+            tag:
+                required: true
+                type: string
+        secrets:
+            SSH_KEY_AUR:
+                required: true
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: Release tag to publish (e.g. v0.4.3)
+                required: true
+                type: string
+
+jobs:
+    blaadpapers:
+        runs-on: ubuntu-latest
+        container: archlinux:base-devel
+        env:
+            TAG: ${{ inputs.tag }}
+        steps:
+        -   name: Install dependencies
+            run: |
+                pacman -Syu --noconfirm --needed git openssh pacman-contrib
+                useradd -m builder
+
+        -   uses: actions/checkout@v7.0.1
+            with:
+                ref: ${{ inputs.tag }}
+
+        -   name: Read project info
+            run: |
+                VERSION="${TAG#v}"
+                grep -qE "^\s+VERSION $VERSION$" CMakeLists.txt || { echo "::error::Tag $TAG does not match project VERSION in CMakeLists.txt"; exit 1; }
+                DESCRIPTION=$(sed -n 's/^\s*DESCRIPTION "\(.*\)"$/\1/p' CMakeLists.txt)
+                [ -n "$DESCRIPTION" ] || { echo "::error::Project DESCRIPTION not found in CMakeLists.txt"; exit 1; }
+                echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+                echo "DESCRIPTION=$DESCRIPTION" >> "$GITHUB_ENV"
+
+        -   name: Prepare PKGBUILD
+            run: |
+                PKGDIR=/home/builder/blaadpapers
+                install -d -o builder "$PKGDIR"
+                install -m644 -o builder packaging/arch/blaadpapers/PKGBUILD "$PKGDIR/PKGBUILD"
+                cd "$PKGDIR"
+
+                PKGDESC=$(printf '%s' "$DESCRIPTION" | sed 's/[&/\]/\\&/g')
+                sed -i "s/^pkgver=.*/pkgver=\"$VERSION\"/; s/^pkgdesc=.*/pkgdesc=\"$PKGDESC\"/; s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+
+                sudo -u builder updpkgsums
+                sudo -u builder makepkg --printsrcinfo > .SRCINFO
+
+        -   name: Publish to AUR
+            env:
+                SSH_KEY_AUR: ${{ secrets.SSH_KEY_AUR }}
+            run: |
+                SSH_DIR="$RUNNER_TEMP/ssh"
+                install -d -m700 "$SSH_DIR"
+                printf '%s\n' "$SSH_KEY_AUR" > "$SSH_DIR/aur"
+                chmod 600 "$SSH_DIR/aur"
+                ssh-keyscan -t ed25519,rsa aur.archlinux.org > "$SSH_DIR/known_hosts"
+                export GIT_SSH_COMMAND="ssh -i $SSH_DIR/aur -o IdentitiesOnly=yes -o UserKnownHostsFile=$SSH_DIR/known_hosts"
+
+                git clone ssh://aur@aur.archlinux.org/blaadpapers.git aur
+
+                cp /home/builder/blaadpapers/PKGBUILD /home/builder/blaadpapers/.SRCINFO aur/
+                cd aur
+
+                git add PKGBUILD .SRCINFO
+                if git diff --cached --quiet; then
+                    echo "blaadpapers is already up to date"
+                    exit 0
+                fi
+                git -c user.name="${{ github.actor }}" -c user.email="${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com" \
+                    commit -m "Update to $VERSION"
+                git push origin HEAD:master
+
+    blaadpapers-git:
+        runs-on: ubuntu-latest
+        container: archlinux:base-devel
+        env:
+            TAG: ${{ inputs.tag }}
+        steps:
+        -   name: Install dependencies
+            run: |
+                pacman -Syu --noconfirm --needed git openssh
+                useradd -m builder
+
+        -   uses: actions/checkout@v7.0.1
+            with:
+                ref: ${{ inputs.tag }}
+
+        -   name: Read project info
+            run: |
+                VERSION="${TAG#v}"
+                grep -qE "^\s+VERSION $VERSION$" CMakeLists.txt || { echo "::error::Tag $TAG does not match project VERSION in CMakeLists.txt"; exit 1; }
+                DESCRIPTION=$(sed -n 's/^\s*DESCRIPTION "\(.*\)"$/\1/p' CMakeLists.txt)
+                [ -n "$DESCRIPTION" ] || { echo "::error::Project DESCRIPTION not found in CMakeLists.txt"; exit 1; }
+                echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+                echo "DESCRIPTION=$DESCRIPTION" >> "$GITHUB_ENV"
+
+        -   name: Prepare PKGBUILD
+            run: |
+                PKGDIR=/home/builder/blaadpapers-git
+                install -d -o builder "$PKGDIR"
+                install -m644 -o builder packaging/arch/blaadpapers-git/PKGBUILD "$PKGDIR/PKGBUILD"
+                cd "$PKGDIR"
+
+                git config --global --add safe.directory "$GITHUB_WORKSPACE"
+                PKGVER="$VERSION.r0.g$(git -C "$GITHUB_WORKSPACE" rev-parse --short=7 HEAD)"
+                PKGDESC=$(printf '%s' "$DESCRIPTION (latest commit from master)" | sed 's/[&/\]/\\&/g')
+                sed -i "s/^pkgver=.*/pkgver=\"$PKGVER\"/; s/^pkgdesc=.*/pkgdesc=\"$PKGDESC\"/; s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+
+                sudo -u builder makepkg --printsrcinfo > .SRCINFO
+
+        -   name: Publish to AUR
+            env:
+                SSH_KEY_AUR: ${{ secrets.SSH_KEY_AUR }}
+            run: |
+                SSH_DIR="$RUNNER_TEMP/ssh"
+                install -d -m700 "$SSH_DIR"
+                printf '%s\n' "$SSH_KEY_AUR" > "$SSH_DIR/aur"
+                chmod 600 "$SSH_DIR/aur"
+                ssh-keyscan -t ed25519,rsa aur.archlinux.org > "$SSH_DIR/known_hosts"
+                export GIT_SSH_COMMAND="ssh -i $SSH_DIR/aur -o IdentitiesOnly=yes -o UserKnownHostsFile=$SSH_DIR/known_hosts"
+
+                git clone ssh://aur@aur.archlinux.org/blaadpapers-git.git aur
+
+                # A VCS package must not be re-uploaded just for a new pkgver: push it only when the PKGBUILD itself changed
+                if [ -f aur/PKGBUILD ]; then
+                    grep -v '^pkgver=' aur/PKGBUILD > "$RUNNER_TEMP/old"
+                    grep -v '^pkgver=' /home/builder/blaadpapers-git/PKGBUILD > "$RUNNER_TEMP/new"
+                    if cmp -s "$RUNNER_TEMP/old" "$RUNNER_TEMP/new"; then
+                        echo "blaadpapers-git PKGBUILD has not changed, skipping"
+                        exit 0
+                    fi
+                fi
+
+                cp /home/builder/blaadpapers-git/PKGBUILD /home/builder/blaadpapers-git/.SRCINFO aur/
+                cd aur
+
+                git add PKGBUILD .SRCINFO
+                if git diff --cached --quiet; then
+                    echo "blaadpapers-git is already up to date"
+                    exit 0
+                fi
+                git -c user.name="${{ github.actor }}" -c user.email="${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com" \
+                    commit -m "Update to $VERSION"
+                git push origin HEAD:master

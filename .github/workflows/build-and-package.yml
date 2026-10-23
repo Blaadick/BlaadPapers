@@ -1,0 +1,149 @@
+name: Build & Package
+
+on:
+    push:
+        tags: ['v*']
+    workflow_dispatch:
+
+jobs:
+    linux-x86_64:
+        name: linux-x86_64
+        runs-on: ubuntu-latest
+        container: archlinux:base-devel
+        steps:
+        -   name: Install dependencies
+            run: |
+                pacman -Syu --noconfirm --needed git cmake ninja qt6-base qt6-declarative qt6-svg qt6-imageformats qt6-wayland libvips libheif libjxl ffmpeg curl yyjson patchelf
+                useradd -m builder
+                echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
+                sudo -u builder git clone https://aur.archlinux.org/imageinfo.git /home/builder/imageinfo
+                cd /home/builder/imageinfo && sudo -u builder makepkg -si --noconfirm
+
+        -   uses: actions/checkout@v7.0.1
+
+        -   name: Build
+            run: |
+                cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+                cmake --build build --parallel
+
+        -   name: Download linuxdeploy
+            run: |
+                mkdir tools
+                curl -sSfL -o tools/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20251107-1/linuxdeploy-x86_64.AppImage
+                curl -sSfL -o tools/linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+                curl -sSfL -o tools/linuxdeploy-plugin-appimage https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage
+                curl -sSfL -o tools/runtime-x86_64 https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64
+                chmod +x tools/linuxdeploy*
+
+        -   name: Build AppImage
+            env:
+                APPIMAGE_EXTRACT_AND_RUN: 1
+                QMAKE: /usr/bin/qmake6
+                QML_SOURCES_PATHS: gui/qml
+                EXTRA_PLATFORM_PLUGINS: libqwayland.so
+                PATCHELF: /usr/bin/patchelf
+                NO_STRIP: 1
+                LDAI_RUNTIME_FILE: tools/runtime-x86_64
+                LDAI_NO_APPSTREAM: 1
+                LDAI_UPDATE_INFORMATION: gh-releases-zsync|Blaadick|BlaadPapers|latest|BlaadPapers-*-linux-x86_64.AppImage.zsync
+            run: |
+                export PATH="$PWD/tools:$PATH"
+                export LINUXDEPLOY_OUTPUT_VERSION=$(sed -n 's/^CMAKE_PROJECT_VERSION:STATIC=//p' build/CMakeCache.txt)
+                export LDAI_OUTPUT="BlaadPapers-$LINUXDEPLOY_OUTPUT_VERSION-linux-x86_64.AppImage"
+                PROJECT_DESCRIPTION=$(sed -n 's/^CMAKE_PROJECT_DESCRIPTION:STATIC=//p' build/CMakeCache.txt | sed 's/&/\\\&amp;/g')
+
+                VIPS_MODULES_DIR=$(echo /usr/lib/vips-modules-*)
+                install -Dm755 -t "AppDir/usr/lib/$(basename "$VIPS_MODULES_DIR")" "$VIPS_MODULES_DIR"/vips-{heif,jxl}.so
+                install -Dm755 -t AppDir/usr/plugins/wayland-graphics-integration-client /usr/lib/qt6/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so
+                install -Dm644 /dev/stdin AppDir/apprun-hooks/vips.sh <<< 'export VIPSHOME="$APPDIR/usr"'
+                printf '[Paths]\nPrefix = usr\n' > AppDir/qt.conf
+                sed 's|/usr/bin/||; /^Actions=/d; /^\[Desktop Action/,$d' gui/resource/blaadpapers.desktop > blaadpapers.desktop
+                sed "s/@PROJECT_VERSION@/$LINUXDEPLOY_OUTPUT_VERSION/; s/@PROJECT_DESCRIPTION@/$PROJECT_DESCRIPTION/; s/@RELEASE_DATE@/$(date -u +%F)/" gui/resource/blaadpapers.metainfo.xml.in \
+                    | install -Dm644 /dev/stdin AppDir/usr/share/metainfo/blaadpapers.appdata.xml
+
+                linuxdeploy --appdir AppDir \
+                    --executable build/gui/blaadpapers \
+                    --desktop-file blaadpapers.desktop --icon-file shared/resource/blaadpapers.svg \
+                    --plugin qt --output appimage
+
+        -   uses: actions/upload-artifact@v7.0.2
+            with:
+                path: BlaadPapers-*-linux-x86_64.AppImage
+                archive: false
+
+        -   uses: actions/upload-artifact@v7.0.2
+            with:
+                path: BlaadPapers-*-linux-x86_64.AppImage.zsync
+                archive: false
+
+    windows-x86_64:
+        name: windows-x86_64
+        runs-on: windows-latest
+        defaults:
+            run:
+                shell: msys2 {0}
+        steps:
+        -   uses: msys2/setup-msys2@v2.33.0
+            with:
+                msystem: UCRT64
+                update: true
+                install: git
+                pacboy: >-
+                    toolchain:p cmake:p ninja:p pkgconf:p nsis:p
+                    qt6-base:p qt6-declarative:p qt6-svg:p qt6-imageformats:p
+                    libvips:p libheif:p libjxl:p ffmpeg:p curl:p yyjson:p imageinfo:p
+
+        -   name: Make cfitsio pkg-config paths relocatable
+            run: sed -i 's#"/ucrt64/\(lib\|include\)"#${prefix}/\1#' /ucrt64/lib/pkgconfig/cfitsio.pc
+
+        -   uses: actions/checkout@v7.0.1
+
+        -   name: Download SPDX license texts
+            run: |
+                curl -sL https://github.com/spdx/license-list-data/archive/refs/tags/v3.29.0.tar.gz | tar -xz
+                mv license-list-data-3.29.0/text spdx
+
+        -   name: Build installer
+            run: |
+                cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSPDX_LICENSES_DIR="$(cygpath -m "$PWD/spdx")"
+                cmake --build build --target package --parallel
+
+        -   uses: actions/upload-artifact@v7.0.2
+            with:
+                path: build/BlaadPapers-*-windows-x86_64-setup.exe
+                archive: false
+
+        -   uses: actions/upload-artifact@v7.0.2
+            with:
+                path: build/BlaadPapers-*-windows-x86_64-portable.zip
+                archive: false
+
+    release:
+        name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        needs: [linux-x86_64, windows-x86_64]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+        -   uses: actions/download-artifact@v8.0.2
+            with:
+                merge-multiple: true
+                skip-decompress: true
+
+        -   uses: softprops/action-gh-release@v3.0.3
+            with:
+                files: |
+                    BlaadPapers-*-linux-x86_64.AppImage
+                    BlaadPapers-*-linux-x86_64.AppImage.zsync
+                    BlaadPapers-*-windows-x86_64-setup.exe
+                    BlaadPapers-*-windows-x86_64-portable.zip
+                generate_release_notes: true
+
+    aur:
+        name: AUR Deploy
+        needs: release
+        uses: ./.github/workflows/aur-deploy.yml
+        with:
+            tag: ${{ github.ref_name }}
+        secrets: inherit
