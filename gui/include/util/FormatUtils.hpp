@@ -8,7 +8,7 @@
 #include "file_processing/FileType.hpp"
 
 namespace util {
-    inline QString getFormatString(const std::unordered_set<const file::FileType*>& formats) {
+    inline auto getFormatString(const std::unordered_set<const file::FileType*>& formats) -> QString {
         QStringList extensions;
 
         for(const auto* format : formats) {

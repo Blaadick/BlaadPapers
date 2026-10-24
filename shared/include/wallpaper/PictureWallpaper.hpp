@@ -6,7 +6,7 @@
 #include "Size.hpp"
 #include "Wallpaper.hpp"
 
-class PictureWallpaper : public Wallpaper {
+class PictureWallpaper final : public Wallpaper {
 public:
     PictureWallpaper(
         std::filesystem::path filePath,

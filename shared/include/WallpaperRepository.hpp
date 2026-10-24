@@ -6,7 +6,7 @@
 #include "util/Pointers.hpp"
 #include "wallpaper/Wallpaper.hpp"
 
-class WallpaperRepository {
+class WallpaperRepository final {
 public:
     auto get(int index) const -> sptr<Wallpaper>;
 

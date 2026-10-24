@@ -17,7 +17,7 @@
 #include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 // TODO Split & refactor
-class WallpapersModel : public QAbstractListModel {
+class WallpapersModel final : public QAbstractListModel {
     Q_OBJECT
 
 public:
@@ -33,7 +33,7 @@ public:
     };
 
     WallpapersModel(
-        sptr<WallpaperLoaderManager> wallpaperLoader,
+        sptr<WallpaperLoaderManager> wallpaperLoaderManager,
         sptr<WallpaperRepository> wallpaperRepository,
         sptr<FetchManager> fetchManager,
         sptr<Config> config,
@@ -43,7 +43,7 @@ public:
 
     void loadWallpapers();
 
-    Q_INVOKABLE QStringList getFileDialogNameFilters() const;
+    Q_INVOKABLE auto getFileDialogNameFilters() const -> QStringList;
 
     Q_INVOKABLE void downloadAndInstallWallpaperAsync(const QUrl& url);
 
@@ -64,7 +64,7 @@ public:
     auto roleNames() const -> QHash<int, QByteArray> override;
 
 private:
-    sptr<WallpaperLoaderManager> wallpaperLoader;
+    sptr<WallpaperLoaderManager> wallpaperLoaderManager;
     sptr<WallpaperRepository> wallpaperRepository;
     sptr<FetchManager> fetchManager;
     sptr<Config> config;

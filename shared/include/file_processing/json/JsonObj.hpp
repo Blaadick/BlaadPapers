@@ -11,7 +11,7 @@
 
 class JsonArr;
 
-class JsonObj {
+class JsonObj final {
 public:
     JsonObj(sptr<JsonDocHolder> doc, yyjson_val* root);
 

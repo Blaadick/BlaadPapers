@@ -46,7 +46,7 @@ namespace {
 
 ConfigModel::ConfigModel(sptr<Config> config) : config(std::move(config)) {}
 
-auto ConfigModel::getConfigDirUrl() -> QUrl {
+auto ConfigModel::getConfigDirUrl() const -> QUrl {
     return QUrl::fromLocalFile(QString::fromStdString(util::configDir().string()));
 }
 
@@ -108,7 +108,7 @@ void ConfigModel::setDanbooruApiKey(const QString& newKey) {
     emit danbooruApiKeyChanged();
 }
 
-bool ConfigModel::getStatusBarVisible() const {
+auto ConfigModel::getStatusBarVisible() const -> bool {
     return config->getStatusBarVisible();
 }
 

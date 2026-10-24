@@ -10,7 +10,7 @@
 #include "util/Pointers.hpp"
 #include "wallpaper/Wallpaper.hpp"
 
-class PreviewManager {
+class PreviewManager final {
 public:
     explicit PreviewManager(sptr<util::Logger> logger);
 

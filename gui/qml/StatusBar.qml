@@ -16,7 +16,6 @@ Item {
         spacing: 10
 
         Label {
-            id: info
             text: `${Status.statusText}${Status.sendCount > 1 ? ` x${Status.sendCount}` : ''}`
         }
     }

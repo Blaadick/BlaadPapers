@@ -5,9 +5,9 @@
 
 #include <filesystem>
 
-class DefaultWallpaper {
+class DefaultWallpaper final {
 public:
-    static const std::filesystem::path& defaultWallpaperFilePath();
+    static auto defaultWallpaperFilePath() -> const std::filesystem::path&;
 
     static void create();
 };

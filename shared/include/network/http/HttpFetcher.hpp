@@ -8,7 +8,7 @@
 #include "network/http/HttpClient.hpp"
 #include "util/Pointers.hpp"
 
-class HttpFetcher : public Fetcher {
+class HttpFetcher final : public Fetcher {
 public:
     HttpFetcher(sptr<HttpClient> httpClient, sptr<util::Logger> logger);
 

@@ -9,6 +9,6 @@
 
 void ClipboardModel::copyWallpaperDeeplink(const QString& wallpaperId) {
     QGuiApplication::clipboard()->setText(
-        QString::fromStdString("blaadpapers://apply/" + precentEncode(wallpaperId.toStdString()))
+        QString::fromStdString("blaadpapers://apply/" + percentEncode(wallpaperId.toStdString()))
     );
 }

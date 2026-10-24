@@ -5,7 +5,7 @@
 
 #include <stdexcept>
 
-class JsonError : public std::runtime_error {
+class JsonError final : public std::runtime_error {
 public:
     explicit JsonError(const std::string& string);
 

@@ -14,9 +14,9 @@
 #include "util/PathUtils.hpp"
 #include "wallpaper/PictureWallpaper.hpp"
 #ifdef __linux__
-#include "unistd.h"
-#include "sys/socket.h"
-#include "sys/un.h"
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #elif _WIN32
 #include <windows.h>
 #endif

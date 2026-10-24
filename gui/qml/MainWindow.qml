@@ -126,7 +126,7 @@ ApplicationWindow {
             filters: [
                 FunctionFilter {
                     function filter(isWallpaperBad: bool): bool {
-                        return Config.badTaggedWallpapersVisible || !isWallpaperBad;
+                        return Config.badTaggedWallpapersVisible || !isWallpaperBad
                     }
                 },
                 FunctionFilter {
@@ -144,7 +144,6 @@ ApplicationWindow {
         }
 
         WallpaperFlow {
-            id: wallpaperFlow
             model: proxy
             Layout.fillWidth: true
             Layout.fillHeight: true

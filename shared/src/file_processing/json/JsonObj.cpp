@@ -47,7 +47,7 @@ auto JsonObj::tryGetObj(std::string_view key) const noexcept -> std::expected<Js
 }
 
 auto JsonObj::getObj(std::string_view key) const -> JsonObj {
-    auto objectVal = tryGetObj(std::move(key));
+    auto objectVal = tryGetObj(key);
     if(!objectVal.has_value()) {
         throw JsonError(objectVal.error());
     }
@@ -69,7 +69,7 @@ auto JsonObj::tryGetArr(std::string_view key) const noexcept -> std::expected<Js
 }
 
 auto JsonObj::getArr(std::string_view key) const -> JsonArr {
-    auto arrayVal = tryGetArr(std::move(key));
+    auto arrayVal = tryGetArr(key);
     if(!arrayVal.has_value()) {
         throw JsonError(arrayVal.error());
     }
@@ -91,7 +91,7 @@ auto JsonObj::tryGetString(std::string_view key) const noexcept -> std::expected
 }
 
 auto JsonObj::getString(std::string_view key) const -> std::string_view {
-    auto stringVal = tryGetString(std::move(key));
+    auto stringVal = tryGetString(key);
     if(!stringVal.has_value()) {
         throw JsonError(stringVal.error());
     }
@@ -113,7 +113,7 @@ auto JsonObj::tryGetBool(std::string_view key) const noexcept -> std::expected<b
 }
 
 auto JsonObj::getBool(std::string_view key) const -> bool {
-    auto boolVal = tryGetBool(std::move(key));
+    auto boolVal = tryGetBool(key);
     if(!boolVal.has_value()) {
         throw JsonError(boolVal.error());
     }
@@ -135,7 +135,7 @@ auto JsonObj::tryGetInt(std::string_view key) const noexcept -> std::expected<in
 }
 
 auto JsonObj::getInt(std::string_view key) const -> int {
-    auto intVal = tryGetInt(std::move(key));
+    auto intVal = tryGetInt(key);
     if(!intVal.has_value()) {
         throw JsonError(intVal.error());
     }
@@ -157,7 +157,7 @@ auto JsonObj::tryGetDouble(std::string_view key) const noexcept -> std::expected
 }
 
 auto JsonObj::getDouble(std::string_view key) const -> double {
-    auto doubleVal = tryGetDouble(std::move(key));
+    auto doubleVal = tryGetDouble(key);
     if(!doubleVal.has_value()) {
         throw JsonError(doubleVal.error());
     }

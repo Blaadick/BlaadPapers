@@ -3,27 +3,27 @@
 
 #include "wallpaper/Wallpaper.hpp"
 
-const std::filesystem::path& Wallpaper::getFilePath() const noexcept {
+auto Wallpaper::getFilePath() const noexcept -> const std::filesystem::path& {
     return filePath;
 }
 
-std::filesystem::path Wallpaper::getRootDirPath() const noexcept {
+auto Wallpaper::getRootDirPath() const noexcept -> std::filesystem::path {
     return filePath.parent_path();
 }
 
-const std::string& Wallpaper::getId() const noexcept {
+auto Wallpaper::getId() const noexcept -> const std::string& {
     return id;
 }
 
-const std::string& Wallpaper::getName() const noexcept {
+auto Wallpaper::getName() const noexcept -> const std::string& {
     return name;
 }
 
-const std::string& Wallpaper::getSource() const noexcept {
+auto Wallpaper::getSource() const noexcept -> const std::string& {
     return source;
 }
 
-const std::vector<std::string>& Wallpaper::getTags() const noexcept {
+auto Wallpaper::getTags() const noexcept -> const std::vector<std::string>& {
     return tags;
 }
 

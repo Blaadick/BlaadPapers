@@ -70,7 +70,6 @@ auto HttpClient::requestString(Uri uri) -> std::expected<std::string, std::strin
     curl_easy_setopt(curl.get(), CURLOPT_NOSIGNAL, 1L);
     curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, writeToString);
     curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &body);
-    curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &body);
     curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, PROJECT_USER_AGENT);
 
     auto code = curl_easy_perform(curl.get());
@@ -221,7 +220,7 @@ auto HttpClient::downloadFile(
     return filePath;
 }
 
-const std::filesystem::path& HttpClient::ongoingDownloadsFilePath() {
+auto HttpClient::ongoingDownloadsFilePath() -> const std::filesystem::path& {
     static const auto ongoingDownloadsFilePath = util::localDataDir() / "downloads.json";
     return ongoingDownloadsFilePath;
 }
@@ -287,7 +286,7 @@ void HttpClient::removeOngoingDownload(const Uri& uri) {
     saveOngoingDownloads();
 }
 
-std::optional<const DownloadData&> HttpClient::getOngoingDownload(const Uri& uri) const {
+auto HttpClient::getOngoingDownload(const Uri& uri) const -> std::optional<const DownloadData&> {
     const auto it = ongoingDownloads.find(uri);
     if(it == ongoingDownloads.end()) {
         return std::nullopt;
@@ -317,7 +316,7 @@ auto HttpClient::extractFilename(const std::string_view contentDisposition) cons
         auto quotePos = value.rfind('\'');
 
         if(quotePos != std::string_view::npos) {
-            return precentDecode(value.subview(quotePos + 1));
+            return percentDecode(value.subview(quotePos + 1));
         }
 
         return std::string(value);
@@ -331,7 +330,7 @@ auto HttpClient::extractFilename(const std::string_view contentDisposition) cons
 }
 
 auto HttpClient::extractFilename(const Uri& uri) const -> std::optional<std::string> {
-    auto path = uri.path();
+    auto path = uri.getPath();
     if(!path.has_value()) {
         return std::nullopt;
     }

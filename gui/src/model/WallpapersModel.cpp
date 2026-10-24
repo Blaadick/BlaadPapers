@@ -14,17 +14,17 @@ class Uri;
 namespace fs = std::filesystem;
 
 WallpapersModel::WallpapersModel(
-    sptr<WallpaperLoaderManager> wallpaperLoader,
+    sptr<WallpaperLoaderManager> wallpaperLoaderManager,
     sptr<WallpaperRepository> wallpaperRepository,
     sptr<FetchManager> fetchManager,
     sptr<Config> config,
     sptr<PreviewManager> previewManager,
     sptr<util::Logger> logger
-) : wallpaperLoader(std::move(wallpaperLoader)), wallpaperRepository(std::move(wallpaperRepository)), fetchManager(std::move(fetchManager)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
+) : wallpaperLoaderManager(std::move(wallpaperLoaderManager)), wallpaperRepository(std::move(wallpaperRepository)), fetchManager(std::move(fetchManager)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
 
 void WallpapersModel::loadWallpapers() {
     beginResetModel();
-    wallpaperLoader->loadWallpapers();
+    wallpaperLoaderManager->loadWallpapers();
     wallpaperRepository->sortByName();
     endResetModel();
 
@@ -36,9 +36,9 @@ void WallpapersModel::loadWallpapers() {
     );
 }
 
-QStringList WallpapersModel::getFileDialogNameFilters() const {
+auto WallpapersModel::getFileDialogNameFilters() const -> QStringList {
     std::unordered_set<const file::FileType*> allSupportedFormats;
-    for(const auto& loader : wallpaperLoader->getWallpaperLoaders() | std::views::values) {
+    for(const auto& loader : wallpaperLoaderManager->getWallpaperLoaders() | std::views::values) {
         const auto loaderFormats = loader->getSupportedFileTypes();
         allSupportedFormats.insert(loaderFormats.begin(), loaderFormats.end());
     }
@@ -82,8 +82,8 @@ void WallpapersModel::deleteWallpaperAsync(const QString& wallpaperId) {
 void WallpapersModel::deleteWallpapersAsync(const QStringList& wallpaperIds) {
     QThreadPool::globalInstance()->start(
         [this, wallpaperIds] {
-            for(auto& url : wallpaperIds) {
-                deleteWallpaper(url);
+            for(auto& wallpaperId : wallpaperIds) {
+                deleteWallpaper(wallpaperId);
             }
 
             refreshWallpapers();
@@ -149,13 +149,13 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) {
         return;
     }
 
-    auto downloadedFilePath = fetchManager->FetchFile(*uri, util::localDownloadsDirPath());
+    auto downloadedFilePath = fetchManager->fetchFile(*uri, util::localDownloadsDir());
     if(!downloadedFilePath.has_value()) {
         logger->logWarning(std::format("Failed to download file from \"{}\": {}", *uri, downloadedFilePath.error()));
         return;
     }
 
-    auto wallpaper = wallpaperLoader->installWallpaper(*downloadedFilePath);
+    auto wallpaper = wallpaperLoaderManager->installWallpaper(*downloadedFilePath);
     if(wallpaper.has_value()) {
         wallpaperRepository->add(*wallpaper);
         logger->logInfo(std::format("Wallpaper \"{}\" installed", wallpaper.value()->getId()));

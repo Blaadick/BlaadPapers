@@ -12,12 +12,12 @@ auto FileFetcher::fetchFile(Uri uri, const std::filesystem::path& destinationDir
         return std::unexpected(std::format("Failed to create directory \"{}\"", destinationDir));
     }
 
-    auto pathEncoded = uri.path();
+    auto pathEncoded = uri.getPath();
     if(!pathEncoded.has_value()) {
         return std::unexpected("No file path recognized");
     }
 
-    auto sourcePathStr = precentDecode(*pathEncoded);
+    auto sourcePathStr = percentDecode(*pathEncoded);
 
     #ifdef _WIN32
     if(sourcePathStr.size() > 2 && sourcePathStr[0] == '/' && sourcePathStr[2] == ':') {

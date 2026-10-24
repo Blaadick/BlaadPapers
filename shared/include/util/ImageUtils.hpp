@@ -7,7 +7,7 @@
 #include <imageinfo.hpp>
 #include "Size.hpp"
 
-inline std::optional<Size> getPictureResolutionData(const std::filesystem::path& filePath) {
+inline auto getPictureResolutionData(const std::filesystem::path& filePath) -> std::optional<Size> {
     auto info = imageinfo::parse<imageinfo::FilePathReader>(filePath.string().c_str());
 
     if(!info.ok()) {

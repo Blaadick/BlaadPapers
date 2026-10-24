@@ -15,26 +15,26 @@ auto ShuffleHandler::handle(const Uri& uri) const -> int {
     std::vector<std::string> includeTags;
     std::vector<std::string> excludeTags;
 
-    auto queries = uri.queries();
+    auto queries = uri.getQueries();
     if(!queries.empty()) {
         if(auto includeParam = queries.find("include"); includeParam != queries.end()) {
             for(const auto& includeTag : includeParam->second | std::views::split(',')) {
                 auto encodedTag = std::string_view(includeTag.begin(), includeTag.end());
-                includeTags.emplace_back(precentDecode(encodedTag));
+                includeTags.emplace_back(percentDecode(encodedTag));
             }
         }
 
         if(auto excludeParam = queries.find("exclude"); excludeParam != queries.end()) {
             for(const auto& excludeTag : excludeParam->second | std::views::split(',')) {
                 auto encodedTag = std::string_view(excludeTag.begin(), excludeTag.end());
-                excludeTags.emplace_back(precentDecode(encodedTag));
+                excludeTags.emplace_back(percentDecode(encodedTag));
             }
         }
     }
 
     auto wallpaperToApply = wallpaperRepository->shuffle(
-        includeTags.empty() ? std::vector<std::string>{} : includeTags,
-        excludeTags.empty() ? std::vector<std::string>{} : excludeTags
+        includeTags,
+        excludeTags
     );
 
     if(!wallpaperToApply) {

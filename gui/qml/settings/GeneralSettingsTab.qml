@@ -10,7 +10,7 @@ SettingsTab {
 
     RowLayout {
         Label {
-            text: "Wallpapers Path"
+            text: qsTr("Wallpapers Path")
         }
 
         Item {

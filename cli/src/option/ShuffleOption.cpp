@@ -79,8 +79,8 @@ auto ShuffleOption::execute(
     }
 
     const auto wallpaperToApply = wallpaperRepository->shuffle(
-        includeTags.empty() ? std::vector<std::string>{} : includeTags,
-        excludeTags.empty() ? std::vector<std::string>{} : excludeTags
+        includeTags,
+        excludeTags
     );
 
     if(!wallpaperToApply) {

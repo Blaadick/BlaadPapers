@@ -6,11 +6,11 @@
 #include <filesystem>
 #include "wallpaper/Wallpaper.hpp"
 
-class PostSetScript {
+class PostSetScript final {
 public:
     static void createIfNotExists();
 
     static void execute(const Wallpaper& wallpaper);
 
-    static std::filesystem::path postSetScriptFilePath();
+    static auto postSetScriptFilePath() -> std::filesystem::path;
 };

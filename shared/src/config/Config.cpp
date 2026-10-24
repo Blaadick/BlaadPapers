@@ -27,7 +27,7 @@ void Config::load() {
         loadGui();
         loadApi();
     } else {
-        logger->logError("Failde to create configs directory");
+        logger->logError("Failed to create configs directory");
     }
 }
 

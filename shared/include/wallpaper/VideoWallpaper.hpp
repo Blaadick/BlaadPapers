@@ -6,7 +6,7 @@
 #include "Size.hpp"
 #include "Wallpaper.hpp"
 
-class VideoWallpaper : public Wallpaper {
+class VideoWallpaper final : public Wallpaper {
 public:
     VideoWallpaper(
         std::filesystem::path filePath,
@@ -26,7 +26,7 @@ public:
 
     auto yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept -> yyjson_mut_val* override;
 
-protected:
+private:
     Size resolution;
     int frameRate;
 };

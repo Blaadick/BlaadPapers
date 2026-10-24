@@ -14,7 +14,7 @@
 
 class WallpaperLoader {
 public:
-    explicit WallpaperLoader(sptr<Config> config, std::unordered_set<const file::FileType*> supportedFileTypes);
+    WallpaperLoader(sptr<Config> config, std::unordered_set<const file::FileType*> supportedFileTypes);
 
     virtual ~WallpaperLoader() = default;
 
@@ -33,7 +33,7 @@ public:
 
     auto loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData>;
 
-    bool saveWallpaperData(const std::filesystem::path& wallpaperDataFilePath, const WallpaperData& wallpaperData) const;
+    auto saveWallpaperData(const std::filesystem::path& wallpaperDataFilePath, const WallpaperData& wallpaperData) const -> bool;
 
 protected:
     sptr<Config> config;

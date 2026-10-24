@@ -13,13 +13,13 @@ class Fetcher;
 
 class FetchManager final {
 public:
-    void addFetcher(std::string scheme, uptr<Fetcher> downloader);
+    void addFetcher(std::string scheme, uptr<Fetcher> fetcher);
 
-    auto FetchFile(
+    auto fetchFile(
         Uri uri,
         const std::filesystem::path& downloadDir
     ) -> std::expected<std::filesystem::path, std::string>;
 
 private:
-    std::unordered_map<std::string, uptr<Fetcher>> downloaders;
+    std::unordered_map<std::string, uptr<Fetcher>> fetchers;
 };

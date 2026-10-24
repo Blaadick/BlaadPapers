@@ -9,8 +9,8 @@ using namespace vips;
 
 auto PicturePreviewGenerator::createAndSavePreview(
     const Wallpaper& wallpaper,
-    const Size& targetSize,
-    const std::filesystem::path& targetPath
+    const Size& previewSize,
+    const std::filesystem::path& previewPath
 ) const -> bool {
     VImage preview = VImage::new_from_file(
         wallpaper.getFilePath().string().c_str(),
@@ -19,25 +19,25 @@ auto PicturePreviewGenerator::createAndSavePreview(
 
     const int shrinkSize = std::max(
         1,
-        std::min(preview.width() / targetSize.width, preview.height() / targetSize.height)
+        std::min(preview.width() / previewSize.width, preview.height() / previewSize.height)
     );
     preview = preview.shrink(shrinkSize, shrinkSize);
 
     const float scale = std::max(
-        static_cast<float>(targetSize.width) / static_cast<float>(preview.width()),
-        static_cast<float>(targetSize.height) / static_cast<float>(preview.height())
+        static_cast<float>(previewSize.width) / static_cast<float>(preview.width()),
+        static_cast<float>(previewSize.height) / static_cast<float>(preview.height())
     );
     preview = preview.resize(scale, VImage::option()->set("kernel", VIPS_KERNEL_LANCZOS3));
 
     preview = preview.crop(
-        (preview.width() - targetSize.width) / 2,
-        (preview.height() - targetSize.height) / 2,
-        targetSize.width,
-        targetSize.height
+        (preview.width() - previewSize.width) / 2,
+        (preview.height() - previewSize.height) / 2,
+        previewSize.width,
+        previewSize.height
     );
 
     preview.write_to_file(
-        targetPath.string().c_str(),
+        previewPath.string().c_str(),
         VImage::option()->set("Q", 100)->set("effort", 6)->set("strip", true)->set("smart_subsample", true)
     );
     return true;

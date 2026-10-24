@@ -7,7 +7,7 @@
 #include "Size.hpp"
 
 namespace util {
-    constexpr Size getScreenAspectRatio(const QScreen* screen) {
+    constexpr auto getScreenAspectRatio(const QScreen* screen) -> Size {
         const auto screenGdc = std::gcd(screen->size().width(), screen->size().height());
         return Size(
             screen->size().width() / screenGdc,

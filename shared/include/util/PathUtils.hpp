@@ -6,7 +6,7 @@
 #include <filesystem>
 
 namespace util {
-    inline const std::filesystem::path& userHomeDir() {
+    inline auto userHomeDir() -> const std::filesystem::path& {
         #ifdef __linux__
         static const auto homeDir = std::filesystem::path(std::getenv("HOME"));
         #elif _WIN32
@@ -17,48 +17,48 @@ namespace util {
     }
 
     #ifdef _WIN32
-    inline const std::filesystem::path& appDataDir() {
+    inline auto appDataDir() -> const std::filesystem::path& {
         static const auto appDataDir = std::filesystem::path(std::getenv("APPDATA"));
         return appDataDir;
     }
 
-    inline const std::filesystem::path& localAppDataDir() {
+    inline auto localAppDataDir() -> const std::filesystem::path& {
         static const auto localAppDataDir = std::filesystem::path(std::getenv("LOCALAPPDATA"));
         return localAppDataDir;
     }
     #endif
 
-    inline const std::filesystem::path& desktopDir() {
+    inline auto desktopDir() -> const std::filesystem::path& {
         static const auto desktopDir = userHomeDir() / "Desktop";
         return desktopDir;
     }
 
-    inline const std::filesystem::path& documentsDir() {
+    inline auto documentsDir() -> const std::filesystem::path& {
         static const auto documentsDir = userHomeDir() / "Documents";
         return documentsDir;
     }
 
-    inline const std::filesystem::path& downloadsDir() {
+    inline auto downloadsDir() -> const std::filesystem::path& {
         static const auto downloadsDir = userHomeDir() / "Downloads";
         return downloadsDir;
     }
 
-    inline const std::filesystem::path& musicDir() {
+    inline auto musicDir() -> const std::filesystem::path& {
         static const auto musicDir = userHomeDir() / "Music";
         return musicDir;
     }
 
-    inline const std::filesystem::path& picturesDir() {
+    inline auto picturesDir() -> const std::filesystem::path& {
         static const auto picturesDir = userHomeDir() / "Pictures";
         return picturesDir;
     }
 
-    inline const std::filesystem::path& videosDir() {
+    inline auto videosDir() -> const std::filesystem::path& {
         static const auto videosDir = userHomeDir() / "Videos";
         return videosDir;
     }
 
-    inline const std::filesystem::path& cacheDir() {
+    inline auto cacheDir() -> const std::filesystem::path& {
         #ifdef __linux__
         static const auto cacheDir = userHomeDir() / ".cache" / "blaadpapers";
         #elif _WIN32
@@ -68,7 +68,7 @@ namespace util {
         return cacheDir;
     }
 
-    inline const std::filesystem::path& configDir() {
+    inline auto configDir() -> const std::filesystem::path& {
         #ifdef __linux__
         static const auto configDir = userHomeDir() / ".config" / "blaadpapers";
         #elif _WIN32
@@ -78,30 +78,30 @@ namespace util {
         return configDir;
     }
 
-    inline const std::filesystem::path& localDataDir() {
+    inline auto localDataDir() -> const std::filesystem::path& {
         #ifdef __linux__
-        static const auto localDataDirPath = userHomeDir() / ".local" / "share" / "blaadpapers";
+        static const auto localDataDir = userHomeDir() / ".local" / "share" / "blaadpapers";
         #elif _WIN32
-        static const auto localDataDirPath = localAppDataDir() / "blaadpapers";
+        static const auto localDataDir = localAppDataDir() / "blaadpapers";
         #endif
 
-        return localDataDirPath;
+        return localDataDir;
     }
 
-    static const std::filesystem::path& localDownloadsDirPath() {
-        static const auto localDownloadsDirPath = localDataDir() / "downloads";
-        return localDownloadsDirPath;
+    inline auto localDownloadsDir() -> const std::filesystem::path& {
+        static const auto localDownloadsDir = localDataDir() / "downloads";
+        return localDownloadsDir;
     }
 
-    inline const std::filesystem::path& currentWallpaperIdFilePath() {
-        static auto const currentWallpaperIdFilePath = localDataDir() / "current-wallpaper";
+    inline auto currentWallpaperIdFilePath() -> const std::filesystem::path& {
+        static const auto currentWallpaperIdFilePath = localDataDir() / "current-wallpaper";
         return currentWallpaperIdFilePath;
     }
 
     /**
      * Returns false on error. If directory already exists, or was successfully created, returns true.
      */
-    inline bool createDirIfNotExists(const std::filesystem::path& path) {
+    inline auto createDirIfNotExists(const std::filesystem::path& path) -> bool {
         std::error_code errorCode;
         std::filesystem::create_directories(path, errorCode);
         return std::filesystem::is_directory(path, errorCode);

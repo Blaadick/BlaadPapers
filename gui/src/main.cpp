@@ -68,10 +68,10 @@ auto main(int argc, char* argv[]) -> int {
 
     PostSetScript::createIfNotExists();
 
-    auto wallpapers = std::make_shared<WallpaperRepository>();
-    auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpapers, config, logger);
-    wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
-    wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
+    auto wallpaperRepository = std::make_shared<WallpaperRepository>();
+    auto wallpaperLoaderManager = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, logger);
+    wallpaperLoaderManager->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
+    wallpaperLoaderManager->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
 
     auto previewManager = std::make_shared<PreviewManager>(logger);
     previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());
@@ -85,9 +85,9 @@ auto main(int argc, char* argv[]) -> int {
 
     auto clipboardModel = std::make_shared<ClipboardModel>();
     auto configModel = std::make_shared<ConfigModel>(config);
-    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, fetchManager, config, previewManager, logger);
+    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoaderManager, wallpaperRepository, fetchManager, config, previewManager, logger);
     wallpapersModel->loadWallpapers();
-    logger->logInfo(std::format("Loaded {} wallpapers", wallpapers->count()));
+    logger->logInfo(std::format("Loaded {} wallpaperRepository", wallpaperRepository->count()));
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("Wallpapers", wallpapersModel.get());

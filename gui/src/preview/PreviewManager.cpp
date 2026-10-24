@@ -4,7 +4,7 @@
 #include "preview/PreviewManager.hpp"
 
 #include "util/PathUtils.hpp"
-#include "util/Screenutils.hpp"
+#include "util/ScreenUtils.hpp"
 #include "util/ToString.hpp"
 
 PreviewManager::PreviewManager(sptr<util::Logger> logger) : logger(std::move(logger)) {}

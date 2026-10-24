@@ -17,33 +17,33 @@ public:
 
     auto c_str() const noexcept -> const char*;
 
-    auto scheme() const noexcept -> std::string_view;
+    auto getScheme() const noexcept -> std::string_view;
 
-    auto authority() const noexcept -> std::optional<std::string_view>;
+    auto getAuthority() const noexcept -> std::optional<std::string_view>;
 
-    auto path() const noexcept -> std::optional<std::string_view>;
+    auto getPath() const noexcept -> std::optional<std::string_view>;
 
-    auto queries() const noexcept -> std::unordered_map<std::string_view, std::string_view>;
+    auto getQueries() const noexcept -> std::unordered_map<std::string_view, std::string_view>;
 
-    auto fragment() const noexcept -> std::optional<std::string_view>;
+    auto getFragment() const noexcept -> std::optional<std::string_view>;
 
     auto operator==(const Uri& other) const noexcept -> bool;
 
 private:
     std::string buffer;
-    std::string_view _scheme;
-    std::optional<std::string_view> _authority;
-    std::optional<std::string_view> _path;
-    std::unordered_map<std::string_view, std::string_view> _queries;
-    std::optional<std::string_view> _fragment;
+    std::string_view scheme;
+    std::optional<std::string_view> authority;
+    std::optional<std::string_view> path;
+    std::unordered_map<std::string_view, std::string_view> queries;
+    std::optional<std::string_view> fragment;
 
     Uri(
         std::string buffer,
         std::string_view scheme,
-        std::optional<std::string_view> authority = std::nullopt,
-        std::optional<std::string_view> path = {},
-        std::unordered_map<std::string_view, std::string_view> queries = {},
-        std::optional<std::string_view> fragment = std::nullopt
+        std::optional<std::string_view> authority,
+        std::optional<std::string_view> path,
+        std::unordered_map<std::string_view, std::string_view> queries,
+        std::optional<std::string_view> fragment
     );
 };
 
@@ -61,7 +61,7 @@ struct std::hash<Uri> {
     }
 };
 
-inline auto precentEncode(const std::string_view str) -> std::string {
+inline auto percentEncode(const std::string_view str) -> std::string {
     const auto encodedStr = curl_easy_escape(nullptr, str.data(), str.length());
     std::string result(encodedStr);
 
@@ -69,7 +69,7 @@ inline auto precentEncode(const std::string_view str) -> std::string {
     return result;
 }
 
-inline auto precentDecode(const std::string_view str) -> std::string {
+inline auto percentDecode(const std::string_view str) -> std::string {
     int outputLength;
     const auto decodedStr = curl_easy_unescape(nullptr, str.data(), str.length(), &outputLength);
     std::string result(decodedStr, outputLength);

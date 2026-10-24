@@ -12,7 +12,7 @@ ApplicationWindow {
     minimumHeight: 200
     modality: Qt.NonModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
-    title: "Download Wallpapers"
+    title: qsTr("Download Wallpapers")
 
     ColumnLayout {
         anchors.fill: parent
@@ -37,7 +37,7 @@ ApplicationWindow {
             }
 
             Button {
-                text: "Cancel"
+                text: qsTr("Cancel")
 
                 onClicked: {
                     input.clear()
@@ -46,7 +46,7 @@ ApplicationWindow {
             }
 
             Button {
-                text: "Download && Install"
+                text: qsTr("Download && Install")
                 highlighted: true
 
                 onClicked: {

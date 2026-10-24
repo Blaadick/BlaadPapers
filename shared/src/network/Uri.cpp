@@ -73,11 +73,11 @@ auto Uri::parse(std::string buffer) noexcept -> std::optional<Uri> {
 
     return Uri(
         std::move(buffer),
-        std::move(scheme),
-        std::move(authority),
-        std::move(path),
+        scheme,
+        authority,
+        path,
         std::move(queries),
-        std::move(fragment)
+        fragment
     );
 }
 
@@ -89,24 +89,24 @@ auto Uri::c_str() const noexcept -> const char* {
     return buffer.c_str();
 }
 
-auto Uri::scheme() const noexcept -> std::string_view {
-    return _scheme;
+auto Uri::getScheme() const noexcept -> std::string_view {
+    return scheme;
 }
 
-auto Uri::authority() const noexcept -> std::optional<std::string_view> {
-    return _authority;
+auto Uri::getAuthority() const noexcept -> std::optional<std::string_view> {
+    return authority;
 }
 
-auto Uri::path() const noexcept -> std::optional<std::string_view> {
-    return _path;
+auto Uri::getPath() const noexcept -> std::optional<std::string_view> {
+    return path;
 }
 
-auto Uri::queries() const noexcept -> std::unordered_map<std::string_view, std::string_view> {
-    return _queries;
+auto Uri::getQueries() const noexcept -> std::unordered_map<std::string_view, std::string_view> {
+    return queries;
 }
 
-auto Uri::fragment() const noexcept -> std::optional<std::string_view> {
-    return _fragment;
+auto Uri::getFragment() const noexcept -> std::optional<std::string_view> {
+    return fragment;
 }
 
 auto Uri::operator==(const Uri& other) const noexcept -> bool {
@@ -120,4 +120,4 @@ Uri::Uri(
     std::optional<std::string_view> path,
     std::unordered_map<std::string_view, std::string_view> queries,
     std::optional<std::string_view> fragment
-) : buffer(std::move(buffer)), _scheme(std::move(scheme)), _authority(std::move(authority)), _path(std::move(path)), _queries(std::move(queries)), _fragment(std::move(fragment)) {}
+) : buffer(std::move(buffer)), scheme(scheme), authority(authority), path(path), queries(std::move(queries)), fragment(fragment) {}

@@ -9,7 +9,7 @@
 namespace fs = std::filesystem;
 using namespace vips;
 
-const std::filesystem::path& DefaultWallpaper::defaultWallpaperFilePath() {
+auto DefaultWallpaper::defaultWallpaperFilePath() -> const std::filesystem::path& {
     static const auto defaultWallpaperFilePath = util::localDataDir() / "default-wallpaper.webp";
     return defaultWallpaperFilePath;
 }

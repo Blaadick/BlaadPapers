@@ -11,7 +11,7 @@
 #include "option/Option.hpp"
 #include "util/Pointers.hpp"
 
-class CliExecutor {
+class CliExecutor final {
 public:
     explicit CliExecutor(sptr<util::Logger> logger);
 
@@ -19,7 +19,7 @@ public:
 
     void addHandler(std::string domain, uptr<DeeplinkHandler> handler) noexcept;
 
-    void addOption(std::string, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags = {}) noexcept;
+    void addOption(std::string name, uptr<Option> option, const std::unordered_set<sptr<Flag>>& flags = {}) noexcept;
 
     auto execute(int argc, char* argv[]) -> int;
 

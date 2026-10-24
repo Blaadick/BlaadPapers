@@ -11,7 +11,7 @@
 class InstallOption final : public Option {
 public:
     InstallOption(
-        sptr<WallpaperLoaderManager> wallpaperLoader,
+        sptr<WallpaperLoaderManager> wallpaperLoaderManager,
         sptr<FetchManager> fetchManager,
         sptr<Config> config,
         sptr<util::Logger> logger
@@ -25,7 +25,7 @@ public:
     ) -> int override;
 
 private:
-    sptr<WallpaperLoaderManager> wallpaperLoader;
+    sptr<WallpaperLoaderManager> wallpaperLoaderManager;
     sptr<FetchManager> fetchManager;
     sptr<Config> config;
     sptr<util::Logger> logger;

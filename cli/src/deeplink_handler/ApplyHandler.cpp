@@ -10,12 +10,12 @@ ApplyHandler::ApplyHandler(
 ) : wallpaperRepository(std::move(wallpaperRepository)) {}
 
 auto ApplyHandler::handle(const Uri& uri) const -> int {
-    auto path = uri.path();
+    auto path = uri.getPath();
     if(!path.has_value()) {
         return 1;
     }
 
-    auto wallpaperId = precentDecode(path->subview(1));
+    auto wallpaperId = percentDecode(path->subview(1));
     if(wallpaperRepository->apply(wallpaperId)) {
         return 0;
     }

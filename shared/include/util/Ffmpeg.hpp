@@ -9,7 +9,7 @@ extern "C" {
 
 #include "wallpaper/VideoData.hpp"
 
-inline std::optional<VideoData> getVideoData(const std::filesystem::path& filePath) {
+inline auto getVideoData(const std::filesystem::path& filePath) -> std::optional<VideoData> {
     AVFormatContext* fmt = nullptr;
     AVDictionary* options = nullptr;
     av_dict_set(&options, "probesize", "32", 0);

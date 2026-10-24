@@ -24,7 +24,7 @@ auto VideoWallpaperLoader::installWallpaper(
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
 
     if(!wallpaperData) {
-        wallpaperData = getDefaultWallpaperData(std::string(wallpaperId));
+        wallpaperData = getDefaultWallpaperData(wallpaperId);
     }
 
     if(fs::exists(wallpaperDirPath)) {
@@ -67,7 +67,7 @@ auto VideoWallpaperLoader::loadWallpaper(std::filesystem::path wallpaperFilePath
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
     auto wallpaperId = wallpaperDirPath.stem().string();
 
-    auto wallpaperData = loadWallpaperData(wallpaperDataFilePath);;
+    auto wallpaperData = loadWallpaperData(wallpaperDataFilePath);
     if(!wallpaperData.has_value()) {
         return std::unexpected("Failed to load wallpaper data");
     }

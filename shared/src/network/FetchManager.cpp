@@ -9,16 +9,16 @@
 #include "network/Fetcher.hpp"
 #include "util/PathUtils.hpp"
 
-void FetchManager::addFetcher(std::string scheme, uptr<Fetcher> downloader) {
-    downloaders.emplace(std::move(scheme), std::move(downloader));
+void FetchManager::addFetcher(std::string scheme, uptr<Fetcher> fetcher) {
+    fetchers.emplace(std::move(scheme), std::move(fetcher));
 }
 
-auto FetchManager::FetchFile(
+auto FetchManager::fetchFile(
     Uri uri,
     const std::filesystem::path& downloadDir
 ) -> std::expected<std::filesystem::path, std::string> {
-    auto it = downloaders.find(std::string(uri.scheme()));
-    if(it == downloaders.end()) {
+    auto it = fetchers.find(std::string(uri.getScheme()));
+    if(it == fetchers.end()) {
         return std::unexpected("Unsupported URI scheme");
     }
 

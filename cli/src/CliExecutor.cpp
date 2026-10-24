@@ -9,45 +9,47 @@
 #include <utility>
 #include "flag/Flags.hpp"
 
-static constexpr void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
-    logger.logInfo("Description:");
-    logger.logInfo(std::format("    {}", option.getDescription()));
+namespace {
+    void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {
+        logger.logInfo("Description:");
+        logger.logInfo(std::format("    {}", option.getDescription()));
 
-    if(!option.getUsageStrings().empty()) {
-        logger.logInfo("\nUsage:");
-        for(const auto& usageString : option.getUsageStrings()) {
-            logger.logInfo(std::format("    blaadpapers {} {}", optionName, usageString));
-        }
-    }
-
-    if(!option.getFlags().empty()) {
-        logger.logInfo("\nFlags:");
-
-        const bool hasFlagWithShortName = std::ranges::any_of(
-            option.getFlags(),
-            [](const auto& flag) {
-                return flag->shortName.has_value();
+        if(!option.getUsageStrings().empty()) {
+            logger.logInfo("\nUsage:");
+            for(const auto& usageString : option.getUsageStrings()) {
+                logger.logInfo(std::format("    blaadpapers {} {}", optionName, usageString));
             }
-        );
-
-        auto maxNameLength = std::ranges::max(
-            option.getFlags() | std::views::transform(
-                [](const auto& flag) {
-                    return flag->name.length();
-                }
-            )
-        );
-        auto maxNameLengthWithoutShort = maxNameLength;
-
-        if(hasFlagWithShortName) {
-            maxNameLengthWithoutShort += 5;
         }
 
-        for(const auto& flag : option.getFlags()) {
-            if(flag->shortName.has_value()) {
-                logger.logInfo(std::format("    --{:<{}} (-{})  ->  {}", flag->name, maxNameLength, *flag->shortName, flag->description));
-            } else {
-                logger.logInfo(std::format("    --{:<{}}  ->  {}", flag->name, maxNameLengthWithoutShort, flag->description));
+        if(!option.getFlags().empty()) {
+            logger.logInfo("\nFlags:");
+
+            const bool hasFlagWithShortName = std::ranges::any_of(
+                option.getFlags(),
+                [](const auto& flag) {
+                    return flag->shortName.has_value();
+                }
+            );
+
+            auto maxNameLength = std::ranges::max(
+                option.getFlags() | std::views::transform(
+                    [](const auto& flag) {
+                        return flag->name.length();
+                    }
+                )
+            );
+            auto maxNameLengthWithoutShort = maxNameLength;
+
+            if(hasFlagWithShortName) {
+                maxNameLengthWithoutShort += 5;
+            }
+
+            for(const auto& flag : option.getFlags()) {
+                if(flag->shortName.has_value()) {
+                    logger.logInfo(std::format("    --{:<{}} (-{})  ->  {}", flag->name, maxNameLength, *flag->shortName, flag->description));
+                } else {
+                    logger.logInfo(std::format("    --{:<{}}  ->  {}", flag->name, maxNameLengthWithoutShort, flag->description));
+                }
             }
         }
     }
@@ -55,7 +57,7 @@ static constexpr void printOptionHelpMessage(const Option& option, const std::st
 
 CliExecutor::CliExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
-const std::unordered_map<std::string, uptr<Option>>& CliExecutor::getOptions() const noexcept {
+auto CliExecutor::getOptions() const noexcept -> const std::unordered_map<std::string, uptr<Option>>& {
     return options;
 }
 
@@ -68,7 +70,7 @@ void CliExecutor::addOption(std::string name, uptr<Option> option, const std::un
     options.emplace(std::move(name), std::move(option));
 }
 
-int CliExecutor::execute(int argc, char* argv[]) {
+auto CliExecutor::execute(int argc, char* argv[]) -> int {
     if(argc < 2) {
         logger->logWarning("Option or link expected");
         return 1;
@@ -112,12 +114,12 @@ int CliExecutor::execute(int argc, char* argv[]) {
 
     auto uri = Uri::parse(argv[1]);
     if(uri.has_value()) {
-        if(uri->scheme() != "blaadpapers") {
+        if(uri->getScheme() != "blaadpapers") {
             logger->logWarning("Only blaadpapers links supported");
             return 1;
         }
 
-        auto uriAuthority = uri->authority();
+        auto uriAuthority = uri->getAuthority();
         if(!uriAuthority.has_value()) {
             logger->logWarning("Authority required");
             return 1;

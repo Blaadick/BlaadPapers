@@ -7,7 +7,7 @@
 #include <QUrl>
 #include "config/Config.hpp"
 
-class ConfigModel : public QObject {
+class ConfigModel final : public QObject {
     Q_OBJECT
     Q_PROPERTY(QUrl configDirUrl READ getConfigDirUrl CONSTANT)
     Q_PROPERTY(QString wallpapersPath READ getWallpapersPath WRITE setWallpapersPath NOTIFY wallpapersPathChanged)
@@ -24,7 +24,7 @@ class ConfigModel : public QObject {
 public:
     explicit ConfigModel(sptr<Config> config);
 
-    auto getConfigDirUrl() -> QUrl;
+    auto getConfigDirUrl() const -> QUrl;
 
     auto getWallpapersPath() const -> QString;
 

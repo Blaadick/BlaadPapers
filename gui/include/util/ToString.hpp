@@ -8,7 +8,7 @@
 #include <string>
 
 namespace util {
-    inline std::string toString(const QScreen* screen) {
+    inline auto toString(const QScreen* screen) -> std::string {
         const auto pixelSize = screen->size() * screen->devicePixelRatio();
         return std::format("{}x{}", pixelSize.width(), pixelSize.height());
     }

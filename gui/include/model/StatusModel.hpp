@@ -5,7 +5,7 @@
 
 #include <QObject>
 
-class StatusModel : public QObject {
+class StatusModel final : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString statusText READ getStatusText NOTIFY statusTextChanged)
     Q_PROPERTY(int sendCount READ getSendCount NOTIFY sendCountChanged)

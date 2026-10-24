@@ -32,6 +32,6 @@ void PostSetScript::execute(const Wallpaper& wallpaper) {
     #endif
 }
 
-fs::path PostSetScript::postSetScriptFilePath() {
+auto PostSetScript::postSetScriptFilePath() -> fs::path {
     return util::configDir() / "post_set.sh";
 }

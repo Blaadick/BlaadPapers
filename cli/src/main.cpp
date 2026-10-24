@@ -46,11 +46,11 @@ auto main(int argc, char* argv[]) -> int {
     config->load();
 
     auto wallpaperRepository = std::make_shared<WallpaperRepository>();
-    auto wallpaperLoader = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, logger);
-    wallpaperLoader->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
-    wallpaperLoader->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
+    auto wallpaperLoaderManager = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, logger);
+    wallpaperLoaderManager->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
+    wallpaperLoaderManager->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
 
-    wallpaperLoader->loadWallpapers();
+    wallpaperLoaderManager->loadWallpapers();
     wallpaperRepository->sortByName();
 
     auto httpClient = std::make_shared<HttpClient>();
@@ -64,7 +64,7 @@ auto main(int argc, char* argv[]) -> int {
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpaperRepository, logger));
     cliExecutor->addOption("help", std::make_unique<HelpOption>(cliExecutor->getOptions(), logger), {Flags::json});
     cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpaperRepository, logger), {Flags::json});
-    cliExecutor->addOption("install", std::make_unique<InstallOption>(wallpaperLoader, fetchManager, config, logger));
+    cliExecutor->addOption("install", std::make_unique<InstallOption>(wallpaperLoaderManager, fetchManager, config, logger));
     cliExecutor->addOption("list", std::make_unique<ListOption>(wallpaperRepository, logger), {Flags::json});
     cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpaperRepository, logger));
     cliExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpaperRepository, logger));

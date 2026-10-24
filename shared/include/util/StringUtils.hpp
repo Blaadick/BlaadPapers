@@ -8,7 +8,7 @@
 #include "Size.hpp"
 
 namespace util {
-    inline std::string join(const std::vector<std::string>& strings, const std::string_view separator = ", ") {
+    inline auto join(const std::vector<std::string>& strings, const std::string_view separator = ", ") -> std::string {
         if(strings.empty()) {
             return "";
         }
@@ -35,7 +35,7 @@ namespace util {
         return output;
     }
 
-    inline std::string toString(const Size& size) {
+    inline auto toString(const Size& size) -> std::string {
         return std::format("{}", size);
     }
 }
