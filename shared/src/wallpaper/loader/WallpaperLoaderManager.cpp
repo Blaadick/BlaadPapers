@@ -35,13 +35,13 @@ auto WallpaperLoaderManager::installWallpaper(
     return std::unexpected("No supported wallpaper loader found");
 }
 
-auto WallpaperLoaderManager::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
+auto WallpaperLoaderManager::loadWallpaper(std::filesystem::path wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
     for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
         if(!wallpaperLoader->isSupported(wallpaperFilePath)) {
             continue;
         }
 
-        return wallpaperLoader->loadWallpaper(wallpaperFilePath);
+        return wallpaperLoader->loadWallpaper(std::move(wallpaperFilePath));
     }
 
     return std::unexpected("No supported wallpaper loader found");

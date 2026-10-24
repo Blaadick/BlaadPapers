@@ -23,13 +23,13 @@ public:
         std::optional<WallpaperData> wallpaperData
     ) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
 
-    virtual auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
+    virtual auto loadWallpaper(std::filesystem::path wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
 
     auto getSupportedFileTypes() const noexcept -> const std::unordered_set<const file::FileType*>&;
 
     auto isSupported(const std::filesystem::path& filePath) const -> bool;
 
-    auto getDefaultWallpaperData(const std::string& wallpaperId) const noexcept -> WallpaperData;
+    auto getDefaultWallpaperData(std::string wallpaperId) const noexcept -> WallpaperData;
 
     auto loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData>;
 

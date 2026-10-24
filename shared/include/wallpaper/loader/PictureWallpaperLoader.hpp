@@ -14,5 +14,5 @@ public:
         std::optional<WallpaperData> wallpaperData
     ) const -> std::expected<sptr<Wallpaper>, std::string> override;
 
-    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> override;
+    auto loadWallpaper(std::filesystem::path wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> override;
 };

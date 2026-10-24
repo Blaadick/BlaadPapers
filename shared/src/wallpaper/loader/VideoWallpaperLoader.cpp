@@ -24,7 +24,7 @@ auto VideoWallpaperLoader::installWallpaper(
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
 
     if(!wallpaperData) {
-        wallpaperData = getDefaultWallpaperData(wallpaperId);
+        wallpaperData = getDefaultWallpaperData(std::string(wallpaperId));
     }
 
     if(fs::exists(wallpaperDirPath)) {
@@ -52,17 +52,17 @@ auto VideoWallpaperLoader::installWallpaper(
     }
 
     return std::make_shared<VideoWallpaper>(
-        wallpaperFilePath,
-        wallpaperId,
-        wallpaperData->name,
-        wallpaperData->source,
-        wallpaperData->tags,
+        std::move(wallpaperFilePath),
+        std::move(wallpaperId),
+        std::move(wallpaperData->name),
+        std::move(wallpaperData->source),
+        std::move(wallpaperData->tags),
         videoData->resolution,
         videoData->frameRate
     );
 }
 
-auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
+auto VideoWallpaperLoader::loadWallpaper(std::filesystem::path wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
     auto wallpaperId = wallpaperDirPath.stem().string();
@@ -78,11 +78,11 @@ auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperF
     }
 
     return std::make_shared<VideoWallpaper>(
-        wallpaperFilePath,
-        wallpaperId,
-        wallpaperData->name,
-        wallpaperData->source,
-        wallpaperData->tags,
+        std::move(wallpaperFilePath),
+        std::move(wallpaperId),
+        std::move(wallpaperData->name),
+        std::move(wallpaperData->source),
+        std::move(wallpaperData->tags),
         videoData->resolution,
         videoData->frameRate
     );

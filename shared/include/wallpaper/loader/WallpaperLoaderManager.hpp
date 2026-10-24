@@ -26,7 +26,7 @@ public:
         std::optional<WallpaperData> wallpaperData = std::nullopt
     ) const -> std::expected<sptr<Wallpaper>, std::string>;
 
-    auto loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string>;
+    auto loadWallpaper(std::filesystem::path wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string>;
 
     void loadWallpapers() const;
 

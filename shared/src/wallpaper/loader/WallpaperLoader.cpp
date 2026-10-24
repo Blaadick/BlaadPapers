@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <string>
 #include <unordered_set>
+#include "file_processing/json/JsonArr.hpp"
+#include "file_processing/json/JsonObj.hpp"
 
 WallpaperLoader::WallpaperLoader(
     sptr<Config> config,
@@ -25,53 +27,38 @@ auto WallpaperLoader::isSupported(const std::filesystem::path& filePath) const -
     return supportedFileTypes.contains(&fileType.value());
 }
 
-auto WallpaperLoader::getDefaultWallpaperData(const std::string& wallpaperId) const noexcept -> WallpaperData {
-    return WallpaperData(wallpaperId, "", config->getDefaultTags());
+auto WallpaperLoader::getDefaultWallpaperData(std::string wallpaperId) const noexcept -> WallpaperData {
+    return WallpaperData(std::move(wallpaperId), "", config->getDefaultTags());
 }
 
 auto WallpaperLoader::loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData> {
     if(!std::filesystem::exists(wallpaperDataFilePath)) {
         auto defaultWallpaperData = getDefaultWallpaperData(wallpaperDataFilePath.parent_path().stem().string());
-        saveWallpaperData(wallpaperDataFilePath, defaultWallpaperData);
+        if(!saveWallpaperData(wallpaperDataFilePath, defaultWallpaperData)) {
+            return std::nullopt;
+        }
+
         return defaultWallpaperData;
     }
 
-    WallpaperData wallpaperData;
+    try {
+        WallpaperData wallpaperData;
 
-    yyjson_read_err err;
-    auto doc = yyjson_read_file(wallpaperDataFilePath.string().c_str(), YYJSON_READ_NOFLAG, nullptr, &err);
-    if(!doc) {
-        return std::nullopt;
-    }
+        auto jsonObj = JsonObj::parse(wallpaperDataFilePath);
+        wallpaperData.name = jsonObj.getString("name");
+        wallpaperData.source = jsonObj.getString("source");
 
-    auto root = yyjson_doc_get_root(doc);
-    if(!yyjson_is_obj(root)) {
-        return std::nullopt;
-    }
-
-    auto wallpaperNameData = yyjson_obj_get(root, "name");
-    if(yyjson_is_str(wallpaperNameData)) {
-        wallpaperData.name = unsafe_yyjson_get_str(wallpaperNameData);
-    }
-
-    auto wallpaperSourceData = yyjson_obj_get(root, "source");
-    if(yyjson_is_str(wallpaperSourceData)) {
-        wallpaperData.source = unsafe_yyjson_get_str(wallpaperSourceData);
-    }
-
-    auto wallpaperTagsData = yyjson_obj_get(root, "tags");
-    if(yyjson_is_arr(wallpaperTagsData)) {
-        size_t i, max;
-        yyjson_val* item;
-        yyjson_arr_foreach(wallpaperTagsData, i, max, item) {
-            if(yyjson_is_str(item)) {
-                wallpaperData.tags.emplace_back(yyjson_get_str(item));
+        auto wallpaperTagsVal = jsonObj.getArr("tags");
+        wallpaperTagsVal.forEachString(
+            [&wallpaperData](const std::string_view& string) {
+                wallpaperData.tags.emplace_back(string);
             }
-        }
-    }
+        );
 
-    yyjson_doc_free(doc);
-    return wallpaperData;
+        return wallpaperData;
+    } catch(const std::exception&) {
+        return std::nullopt;
+    }
 }
 
 auto WallpaperLoader::saveWallpaperData(
