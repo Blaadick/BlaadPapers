@@ -9,17 +9,17 @@
 #include "network/Uri.hpp"
 #include "util/Pointers.hpp"
 
-class Downloader;
+class Fetcher;
 
-class DownloadManager final {
+class FetchManager final {
 public:
-    void addDownloader(std::string scheme, uptr<Downloader> downloader);
+    void addFetcher(std::string scheme, uptr<Fetcher> downloader);
 
-    auto downloadFile(
+    auto FetchFile(
         Uri uri,
         const std::filesystem::path& downloadDir
     ) -> std::expected<std::filesystem::path, std::string>;
 
 private:
-    std::unordered_map<std::string, uptr<Downloader>> downloaders;
+    std::unordered_map<std::string, uptr<Fetcher>> downloaders;
 };

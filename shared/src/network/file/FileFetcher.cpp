@@ -1,15 +1,15 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "network/file/FileDownloader.hpp"
+#include "network/file/FileFetcher.hpp"
 
 #include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;
 
-auto FileDownloader::downloadFile(Uri uri, const std::filesystem::path& downloadDir) -> std::expected<std::filesystem::path, std::string> {
-    if(!util::createDirIfNotExists(downloadDir)) {
-        return std::unexpected(std::format("Failed to create directory \"{}\"", downloadDir));
+auto FileFetcher::fetchFile(Uri uri, const std::filesystem::path& destinationDir) -> std::expected<std::filesystem::path, std::string> {
+    if(!util::createDirIfNotExists(destinationDir)) {
+        return std::unexpected(std::format("Failed to create directory \"{}\"", destinationDir));
     }
 
     auto pathEncoded = uri.path();
@@ -26,7 +26,7 @@ auto FileDownloader::downloadFile(Uri uri, const std::filesystem::path& download
     #endif
 
     auto sourcePath = fs::path(sourcePathStr);
-    auto destinationPath = downloadDir / sourcePath.filename();
+    auto destinationPath = destinationDir / sourcePath.filename();
 
     std::error_code errorCode;
     if(!fs::copy_file(sourcePath, destinationPath, fs::copy_options::overwrite_existing, errorCode)) {

@@ -4,7 +4,7 @@
 #pragma once
 
 #include "logger/Logger.hpp"
-#include "network/DownloadManager.hpp"
+#include "network/FetchManager.hpp"
 #include "option/Option.hpp"
 #include "wallpaper_loader/WallpaperLoaderManager.hpp"
 
@@ -12,7 +12,7 @@ class InstallOption final : public Option {
 public:
     InstallOption(
         sptr<WallpaperLoaderManager> wallpaperLoader,
-        sptr<DownloadManager> downloadManager,
+        sptr<FetchManager> fetchManager,
         sptr<Config> config,
         sptr<util::Logger> logger
     );
@@ -26,7 +26,7 @@ public:
 
 private:
     sptr<WallpaperLoaderManager> wallpaperLoader;
-    sptr<DownloadManager> downloadManager;
+    sptr<FetchManager> fetchManager;
     sptr<Config> config;
     sptr<util::Logger> logger;
 };

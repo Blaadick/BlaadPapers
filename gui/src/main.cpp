@@ -18,8 +18,8 @@
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
-#include "network/file/FileDownloader.hpp"
-#include "network/http/HttpDownloader.hpp"
+#include "network/file/FileFetcher.hpp"
+#include "network/http/HttpFetcher.hpp"
 #include "preview/generator/PicturePreviewGenerator.hpp"
 #include "preview/generator/VideoPreviewGenerator.hpp"
 #include "wallpaper_loader/PictureWallpaperLoader.hpp"
@@ -78,14 +78,14 @@ auto main(int argc, char* argv[]) -> int {
     previewManager->addGenerator<VideoWallpaper>(std::make_unique<VideoPreviewGenerator>());
 
     auto httpClient = std::make_shared<HttpClient>();
-    auto downloadManager = std::make_shared<DownloadManager>();
-    downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(httpClient));
-    downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(httpClient));
-    downloadManager->addDownloader("file", std::make_unique<FileDownloader>());
+    auto fetchManager = std::make_shared<FetchManager>();
+    fetchManager->addFetcher("http", std::make_unique<HttpFetcher>(httpClient, logger));
+    fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
+    fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
 
     auto clipboardModel = std::make_shared<ClipboardModel>();
     auto configModel = std::make_shared<ConfigModel>(config);
-    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, downloadManager, config, previewManager, logger);
+    auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoader, wallpapers, fetchManager, config, previewManager, logger);
     wallpapersModel->loadWallpapers();
     logger->logInfo(std::format("Loaded {} wallpapers", wallpapers->count()));
 

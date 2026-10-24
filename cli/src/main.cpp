@@ -13,10 +13,10 @@
 #include "deeplink_handler/ShuffleHandler.hpp"
 #include "flag/Flags.hpp"
 #include "logger/CliLogger.hpp"
-#include "network/DownloadManager.hpp"
-#include "network/file/FileDownloader.hpp"
+#include "network/FetchManager.hpp"
+#include "network/file/FileFetcher.hpp"
 #include "network/http/HttpClient.hpp"
-#include "network/http/HttpDownloader.hpp"
+#include "network/http/HttpFetcher.hpp"
 #include "option/ApplyOption.hpp"
 #include "option/CountOption.hpp"
 #include "option/HelpOption.hpp"
@@ -54,17 +54,17 @@ auto main(int argc, char* argv[]) -> int {
     wallpaperRepository->sortByName();
 
     auto httpClient = std::make_shared<HttpClient>();
-    auto downloadManager = std::make_shared<DownloadManager>();
-    downloadManager->addDownloader("http", std::make_unique<HttpDownloader>(httpClient));
-    downloadManager->addDownloader("https", std::make_unique<HttpDownloader>(httpClient));
-    downloadManager->addDownloader("file", std::make_unique<FileDownloader>());
+    auto fetchManager = std::make_shared<FetchManager>();
+    fetchManager->addFetcher("http", std::make_unique<HttpFetcher>(httpClient, logger));
+    fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
+    fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpaperRepository, logger));
     cliExecutor->addOption("count", std::make_unique<CountOption>(wallpaperRepository, logger));
     cliExecutor->addOption("help", std::make_unique<HelpOption>(cliExecutor->getOptions(), logger), {Flags::json});
     cliExecutor->addOption("info", std::make_unique<InfoOption>(wallpaperRepository, logger), {Flags::json});
-    cliExecutor->addOption("install", std::make_unique<InstallOption>(wallpaperLoader, downloadManager, config, logger));
+    cliExecutor->addOption("install", std::make_unique<InstallOption>(wallpaperLoader, fetchManager, config, logger));
     cliExecutor->addOption("list", std::make_unique<ListOption>(wallpaperRepository, logger), {Flags::json});
     cliExecutor->addOption("remove", std::make_unique<RemoveOption>(wallpaperRepository, logger));
     cliExecutor->addOption("run-renderer", std::make_unique<RunRendererOption>(wallpaperRepository, logger));

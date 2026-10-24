@@ -16,11 +16,11 @@ namespace fs = std::filesystem;
 WallpapersModel::WallpapersModel(
     sptr<WallpaperLoaderManager> wallpaperLoader,
     sptr<WallpaperRepository> wallpaperRepository,
-    sptr<DownloadManager> downloadManager,
+    sptr<FetchManager> fetchManager,
     sptr<Config> config,
     sptr<PreviewManager> previewManager,
     sptr<util::Logger> logger
-) : wallpaperLoader(std::move(wallpaperLoader)), wallpaperRepository(std::move(wallpaperRepository)), downloadManager(std::move(downloadManager)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
+) : wallpaperLoader(std::move(wallpaperLoader)), wallpaperRepository(std::move(wallpaperRepository)), fetchManager(std::move(fetchManager)), config(std::move(config)), previewManager(std::move(previewManager)), logger(std::move(logger)) {}
 
 void WallpapersModel::loadWallpapers() {
     beginResetModel();
@@ -123,7 +123,7 @@ auto WallpapersModel::data(const QModelIndex& index, const int role) const -> QV
     switch(role) {
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
-        case RootDirRole: return QString::fromStdString(wallpaper->getDirPath().string());
+        case RootDirRole: return QUrl::fromLocalFile(QString::fromStdString(wallpaper->getDirPath().string()));
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;
         case IsBadRole: return config->isWallpaperBad(*wallpaper);
@@ -149,7 +149,7 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) {
         return;
     }
 
-    auto downloadedFilePath = downloadManager->downloadFile(*uri, util::localDownloadsDirPath());
+    auto downloadedFilePath = fetchManager->FetchFile(*uri, util::localDownloadsDirPath());
     if(!downloadedFilePath.has_value()) {
         logger->logWarning(std::format("Failed to download file from \"{}\": {}", *uri, downloadedFilePath.error()));
         return;

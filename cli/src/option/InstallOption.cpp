@@ -9,10 +9,10 @@ namespace fs = std::filesystem;
 
 InstallOption::InstallOption(
     sptr<WallpaperLoaderManager> wallpaperLoader,
-    sptr<DownloadManager> downloadManager,
+    sptr<FetchManager> fetchManager,
     sptr<Config> config,
     sptr<util::Logger> logger
-) : Option("Installs file(s) to the wallpapers folder; Downloads file(s) from internet and install them"), wallpaperLoader(std::move(wallpaperLoader)), downloadManager(std::move(downloadManager)), config(std::move(config)), logger(std::move(logger)) {}
+) : Option("Installs file(s) to the wallpapers folder; Downloads file(s) from internet and install them"), wallpaperLoader(std::move(wallpaperLoader)), fetchManager(std::move(fetchManager)), config(std::move(config)), logger(std::move(logger)) {}
 
 auto InstallOption::getUsageStrings() const noexcept -> std::vector<std::string_view> {
     return {"<file/URI...>", "./Downloads/some_file.ext https://example.com/some_file.ext"};
@@ -52,9 +52,7 @@ auto InstallOption::execute(
     }
 
     for(auto& uri : uris) {
-        logger->logInfo(std::format("Downloading from \"{}\"...", uri));
-
-        auto downloadedFilePath = downloadManager->downloadFile(uri, util::localDownloadsDirPath());
+        auto downloadedFilePath = fetchManager->FetchFile(uri, util::localDownloadsDirPath());
         if(!downloadedFilePath.has_value()) {
             logger->logWarning(std::format("Failed to download file from \"{}\": {}", uri, downloadedFilePath.error()));
             continue;
