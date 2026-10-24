@@ -1,6 +1,6 @@
 #include <winver.h>
 
-1 ICON "@PROJECT_SOURCE_DIR@/shared/resource/windows/blaadpapers.ico"
+IDI_ICON1 ICON "@PROJECT_SOURCE_DIR@/shared/resource/windows/blaadpapers.ico"
 1 24 "@PROJECT_SOURCE_DIR@/shared/resource/windows/utf8.manifest"
 
 1 VERSIONINFO
