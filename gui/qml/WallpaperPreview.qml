@@ -12,7 +12,7 @@ Item {
     readonly property bool isMotionReduced: Application.styleHints.accessibility.motionPreference === 1
     property string wid
     property string name
-    property string rootDir
+    property url rootDir
     property string source
     property var tags
     property bool isBad
@@ -33,7 +33,7 @@ Item {
             text: qsTr("Open Folder")
             icon.name: "folder-open"
 
-            onTriggered: Qt.openUrlExternally(`file://${control.rootDir}`)
+            onTriggered: Qt.openUrlExternally(control.rootDir)
         }
 
         Action {
@@ -124,7 +124,7 @@ Item {
         AnimatedImage {
             anchors.fill: parent
             scale: !control.isMotionReduced && !control.isPressed && control.isHovered ? 1.1 : 1
-            source: `file://${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
+            source: `${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: false
