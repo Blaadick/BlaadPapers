@@ -91,7 +91,7 @@ ApplicationWindow {
                     Action {
                         text: qsTr("Settings")
                         icon.name: "settings"
-                        shortcut: "Ctrl+Alt+S"
+                        shortcut: "Ctrl+,"
 
                         onTriggered: settingsWindow.show()
                     }

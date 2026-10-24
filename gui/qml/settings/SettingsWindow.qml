@@ -17,6 +17,11 @@ ApplicationWindow {
 
     default property alias content: pages.data
 
+    Shortcut {
+        sequences: [StandardKey.Cancel]
+        onActivated: settingsWindow.close()
+    }
+
     ColumnLayout {
         id: layout
         anchors.fill: parent
@@ -78,7 +83,13 @@ ApplicationWindow {
             }
 
             Button {
+                text: qsTr("Reset All")
+                enabled: false
+            }
+
+            Button {
                 text: qsTr("Reset")
+                enabled: false
             }
 
             Button {

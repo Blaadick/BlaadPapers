@@ -6,6 +6,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 ApplicationWindow {
+    id: downloadWindow
     width: 500
     height: 300
     minimumWidth: 400
@@ -13,6 +14,11 @@ ApplicationWindow {
     modality: Qt.NonModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: qsTr("Download Wallpapers")
+
+    Shortcut {
+        sequences: [StandardKey.Cancel]
+        onActivated: downloadWindow.close()
+    }
 
     ColumnLayout {
         anchors.fill: parent
