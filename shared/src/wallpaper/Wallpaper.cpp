@@ -3,18 +3,16 @@
 
 #include "wallpaper/Wallpaper.hpp"
 
-#include "config/Config.hpp"
-
-const std::string& Wallpaper::getId() const noexcept {
-    return id;
-}
-
 const std::filesystem::path& Wallpaper::getFilePath() const noexcept {
     return filePath;
 }
 
-const std::filesystem::path& Wallpaper::getDirPath() const noexcept {
-    return dirPath;
+std::filesystem::path Wallpaper::getRootDirPath() const noexcept {
+    return filePath.parent_path();
+}
+
+const std::string& Wallpaper::getId() const noexcept {
+    return id;
 }
 
 const std::string& Wallpaper::getName() const noexcept {

@@ -9,14 +9,13 @@
 class VideoWallpaper : public Wallpaper {
 public:
     VideoWallpaper(
-        std::string id,
         std::filesystem::path filePath,
-        std::filesystem::path dirPath,
+        std::string id,
         std::string name,
-        Size resolution,
-        int frameRate,
         std::string source,
-        std::vector<std::string> tags
+        std::vector<std::string> tags,
+        Size resolution,
+        int frameRate
     );
 
     auto getResolution() const noexcept -> const Size&;

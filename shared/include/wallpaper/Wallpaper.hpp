@@ -16,11 +16,11 @@ public:
 
     virtual auto yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept -> yyjson_mut_val* = 0;
 
-    auto getId() const noexcept -> const std::string&;
-
     auto getFilePath() const noexcept -> const std::filesystem::path&;
 
-    auto getDirPath() const noexcept -> const std::filesystem::path&;
+    auto getRootDirPath() const noexcept -> std::filesystem::path;
+
+    auto getId() const noexcept -> const std::string&;
 
     auto getName() const noexcept -> const std::string&;
 
@@ -29,9 +29,8 @@ public:
     auto getTags() const noexcept -> const std::vector<std::string>&;
 
 protected:
-    std::string id;
     std::filesystem::path filePath;
-    std::filesystem::path dirPath;
+    std::string id;
     std::string name;
     std::string source;
     std::vector<std::string> tags;

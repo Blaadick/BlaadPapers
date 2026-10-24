@@ -9,13 +9,12 @@
 class PictureWallpaper : public Wallpaper {
 public:
     PictureWallpaper(
-        std::string id,
         std::filesystem::path filePath,
-        std::filesystem::path dirPath,
+        std::string id,
         std::string name,
-        Size resolution,
         std::string source,
-        std::vector<std::string> tags
+        std::vector<std::string> tags,
+        Size resolution
     );
 
     auto getResolution() const noexcept -> const Size&;

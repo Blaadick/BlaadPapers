@@ -52,14 +52,13 @@ auto VideoWallpaperLoader::installWallpaper(
     }
 
     return std::make_shared<VideoWallpaper>(
-        wallpaperId,
         wallpaperFilePath,
-        wallpaperDirPath,
+        wallpaperId,
         wallpaperData->name,
-        videoData->resolution,
-        videoData->frameRate,
         wallpaperData->source,
-        wallpaperData->tags
+        wallpaperData->tags,
+        videoData->resolution,
+        videoData->frameRate
     );
 }
 
@@ -79,13 +78,12 @@ auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperF
     }
 
     return std::make_shared<VideoWallpaper>(
-        wallpaperId,
         wallpaperFilePath,
-        wallpaperDirPath,
+        wallpaperId,
         wallpaperData->name,
-        videoData->resolution,
-        videoData->frameRate,
         wallpaperData->source,
-        wallpaperData->tags
+        wallpaperData->tags,
+        videoData->resolution,
+        videoData->frameRate
     );
 }

@@ -10,7 +10,7 @@
 PreviewManager::PreviewManager(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
 void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
-    auto previewsDirPath = wallpaper.getDirPath() / "preview";
+    auto previewsDirPath = wallpaper.getRootDirPath() / "preview";
 
     if(!util::createDirIfNotExists(previewsDirPath)) {
         logger->logWarning(std::format("Failed to create directory \"{}\"", previewsDirPath));

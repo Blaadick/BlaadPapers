@@ -7,23 +7,21 @@
 #include "util/StringUtils.hpp"
 
 VideoWallpaper::VideoWallpaper(
-    std::string id,
     std::filesystem::path filePath,
-    std::filesystem::path dirPath,
+    std::string id,
     std::string name,
-    const Size resolution,
-    const int frameRate,
     std::string source,
-    std::vector<std::string> tags
+    std::vector<std::string> tags,
+    const Size resolution,
+    const int frameRate
 ) {
-    this->id = std::move(id);
     this->filePath = std::move(filePath);
-    this->dirPath = std::move(dirPath);
+    this->id = std::move(id);
     this->name = std::move(name);
-    this->resolution = resolution;
-    this->frameRate = frameRate;
     this->source = std::move(source);
     this->tags = std::move(tags);
+    this->resolution = resolution;
+    this->frameRate = frameRate;
 }
 
 auto VideoWallpaper::getResolution() const noexcept -> const Size& {

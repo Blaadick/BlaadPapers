@@ -175,7 +175,7 @@ auto WallpaperRepository::remove(const std::string_view id) -> bool {
     const auto wallpaper = std::move(*it);
     wallpapers.erase(it);
 
-    fs::remove_all(wallpaper->getDirPath());
+    fs::remove_all(wallpaper->getRootDirPath());
     return true;
 }
 

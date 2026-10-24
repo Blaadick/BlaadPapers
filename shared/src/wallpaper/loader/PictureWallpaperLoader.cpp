@@ -52,13 +52,12 @@ auto PictureWallpaperLoader::installWallpaper(
     }
 
     return std::make_shared<PictureWallpaper>(
-        wallpaperId,
         wallpaperFilePath,
-        wallpaperDirPath,
+        wallpaperId,
         wallpaperData->name,
-        *pictureSize,
         wallpaperData->source,
-        wallpaperData->tags
+        wallpaperData->tags,
+        *pictureSize
     );
 }
 
@@ -78,12 +77,11 @@ auto PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpape
     }
 
     return std::make_shared<PictureWallpaper>(
-        wallpaperId,
         wallpaperFilePath,
-        wallpaperDirPath,
+        wallpaperId,
         wallpaperData->name,
-        *pictureSize,
         wallpaperData->source,
-        wallpaperData->tags
+        wallpaperData->tags,
+        *pictureSize
     );
 }
