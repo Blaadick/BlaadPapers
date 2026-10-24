@@ -5,7 +5,7 @@
 
 #include "CliExecutor.hpp"
 #include "option/Option.hpp"
-#include "wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 class HelpOption final : public Option {
 public:

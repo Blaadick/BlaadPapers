@@ -4,9 +4,9 @@
 #pragma once
 
 #include <filesystem>
-#include "data/Size.hpp"
-#include "data/Wallpaper.hpp"
+#include "Size.hpp"
 #include "util/Pointers.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 class PreviewGenerator {
 public:

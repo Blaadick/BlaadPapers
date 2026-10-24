@@ -4,7 +4,7 @@
 #pragma once
 
 #include <filesystem>
-#include "data/Wallpaper.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 class PostSetScript {
 public:

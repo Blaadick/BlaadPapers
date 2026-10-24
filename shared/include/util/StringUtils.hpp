@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-#include "data/Size.hpp"
+#include "Size.hpp"
 
 namespace util {
     inline std::string join(const std::vector<std::string>& strings, const std::string_view separator = ", ") {

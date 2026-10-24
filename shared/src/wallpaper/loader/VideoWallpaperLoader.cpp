@@ -1,20 +1,20 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper_loader/PictureWallpaperLoader.hpp"
+#include "wallpaper/loader/VideoWallpaperLoader.hpp"
 
 #include <algorithm>
-#include "data/PictureWallpaper.hpp"
-#include "util/ImageUtils.hpp"
+#include "util/Ffmpeg.hpp"
+#include "wallpaper/VideoWallpaper.hpp"
 
 namespace fs = std::filesystem;
 
-PictureWallpaperLoader::PictureWallpaperLoader(sptr<Config> config) : WallpaperLoader(
+VideoWallpaperLoader::VideoWallpaperLoader(sptr<Config> config) : WallpaperLoader(
     std::move(config),
-    {&file::png, &file::jpeg, &file::svg, &file::webp, &file::bmp, &file::avif, &file::tiff, &file::heif}
+    {&file::mp4, &file::webm, &file::mkv}
 ) {}
 
-auto PictureWallpaperLoader::installWallpaper(
+auto VideoWallpaperLoader::installWallpaper(
     const std::filesystem::path& filePath,
     std::optional<WallpaperData> wallpaperData
 ) const -> std::expected<sptr<Wallpaper>, std::string> {
@@ -42,27 +42,28 @@ auto PictureWallpaperLoader::installWallpaper(
 
     if(!saveWallpaperData(wallpaperDataFilePath, *wallpaperData)) {
         fs::remove_all(wallpaperDirPath);
-        return std::unexpected("Failed to create wallpaper data");
+        return std::unexpected("Failed to save wallpaper data");
     }
 
-    auto pictureSize = getPictureResolutionData(wallpaperFilePath);
-    if(!pictureSize.has_value()) {
+    auto videoData = getVideoData(wallpaperFilePath);
+    if(!videoData.has_value()) {
         fs::remove_all(wallpaperDirPath);
-        return std::unexpected("Failed to extract picture data");
+        return std::unexpected("Failed to decode video data");
     }
 
-    return std::make_shared<PictureWallpaper>(
+    return std::make_shared<VideoWallpaper>(
         wallpaperId,
         wallpaperFilePath,
         wallpaperDirPath,
         wallpaperData->name,
-        *pictureSize,
+        videoData->resolution,
+        videoData->frameRate,
         wallpaperData->source,
         wallpaperData->tags
     );
 }
 
-auto PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
+auto VideoWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperDirPath = wallpaperFilePath.parent_path();
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
     auto wallpaperId = wallpaperDirPath.stem().string();
@@ -72,17 +73,18 @@ auto PictureWallpaperLoader::loadWallpaper(const std::filesystem::path& wallpape
         return std::unexpected("Failed to load wallpaper data");
     }
 
-    auto pictureSize = getPictureResolutionData(wallpaperFilePath);
-    if(!pictureSize.has_value()) {
-        return std::unexpected("Failed to extract picture data");
+    auto videoData = getVideoData(wallpaperFilePath);
+    if(!videoData.has_value()) {
+        return std::unexpected("Failed to decode video data");
     }
 
-    return std::make_shared<PictureWallpaper>(
+    return std::make_shared<VideoWallpaper>(
         wallpaperId,
         wallpaperFilePath,
         wallpaperDirPath,
         wallpaperData->name,
-        *pictureSize,
+        videoData->resolution,
+        videoData->frameRate,
         wallpaperData->source,
         wallpaperData->tags
     );

@@ -7,8 +7,6 @@
 #include "PostSetScript.hpp"
 #include "WallpaperRepository.hpp"
 #include "config/Config.hpp"
-#include "data/PictureWallpaper.hpp"
-#include "data/VideoWallpaper.hpp"
 #include "deeplink_handler/ApplyHandler.hpp"
 #include "deeplink_handler/ShuffleHandler.hpp"
 #include "flag/Flags.hpp"
@@ -27,9 +25,11 @@
 #include "option/RunRendererOption.hpp"
 #include "option/ShuffleOption.hpp"
 #include "option/VersionOption.hpp"
-#include "wallpaper_loader/PictureWallpaperLoader.hpp"
-#include "wallpaper_loader/VideoWallpaperLoader.hpp"
-#include "wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "wallpaper/PictureWallpaper.hpp"
+#include "wallpaper/VideoWallpaper.hpp"
+#include "wallpaper/loader/PictureWallpaperLoader.hpp"
+#include "wallpaper/loader/VideoWallpaperLoader.hpp"
+#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 auto main(int argc, char* argv[]) -> int {
     if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {

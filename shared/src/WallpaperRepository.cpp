@@ -11,8 +11,8 @@
 #include <yyjson.h>
 #include "PostSetScript.hpp"
 #include "config/Config.hpp"
-#include "data/PictureWallpaper.hpp"
 #include "util/PathUtils.hpp"
+#include "wallpaper/PictureWallpaper.hpp"
 #ifdef __linux__
 #include "unistd.h"
 #include "sys/socket.h"

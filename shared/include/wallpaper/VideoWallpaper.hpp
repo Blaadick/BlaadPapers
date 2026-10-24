@@ -3,27 +3,31 @@
 
 #pragma once
 
+#include "Size.hpp"
 #include "Wallpaper.hpp"
-#include "data/Size.hpp"
 
-class PictureWallpaper : public Wallpaper {
+class VideoWallpaper : public Wallpaper {
 public:
-    PictureWallpaper(
+    VideoWallpaper(
         std::string id,
         std::filesystem::path filePath,
         std::filesystem::path dirPath,
         std::string name,
         Size resolution,
+        int frameRate,
         std::string source,
         std::vector<std::string> tags
     );
 
-    auto getResolution() noexcept -> const Size&;
+    auto getResolution() const noexcept -> const Size&;
+
+    auto getFrameRate() const noexcept -> int;
 
     auto toString() const noexcept -> std::string override;
 
     auto yyjson_mut_wallpaper_obj(yyjson_mut_doc* doc) const noexcept -> yyjson_mut_val* override;
 
-private:
+protected:
     Size resolution;
+    int frameRate;
 };

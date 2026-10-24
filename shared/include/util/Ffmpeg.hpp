@@ -7,7 +7,7 @@ extern "C" {
     #include <libavformat/avformat.h>
 }
 
-#include "data/VideoData.hpp"
+#include "wallpaper/VideoData.hpp"
 
 inline std::optional<VideoData> getVideoData(const std::filesystem::path& filePath) {
     AVFormatContext* fmt = nullptr;

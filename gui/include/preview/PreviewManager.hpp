@@ -5,10 +5,10 @@
 
 #include <typeindex>
 #include <unordered_map>
-#include "data/Wallpaper.hpp"
 #include "generator/PreviewGenerator.hpp"
 #include "logger/Logger.hpp"
 #include "util/Pointers.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 class PreviewManager {
 public:

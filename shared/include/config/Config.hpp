@@ -6,10 +6,10 @@
 #include <filesystem>
 #include <string>
 #include <vector>
-#include "data/Wallpaper.hpp"
 #include "logger/Logger.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Pointers.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 class Config final {
 public:

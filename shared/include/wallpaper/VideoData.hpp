@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "data/Size.hpp"
+#include "Size.hpp"
 
 struct VideoData {
     Size resolution;

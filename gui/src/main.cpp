@@ -11,8 +11,6 @@
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
 #include "config/Config.hpp"
-#include "data/PictureWallpaper.hpp"
-#include "data/VideoWallpaper.hpp"
 #include "logger/GuiLogger.hpp"
 #include "model/ClipboardModel.hpp"
 #include "model/ConfigModel.hpp"
@@ -22,9 +20,11 @@
 #include "network/http/HttpFetcher.hpp"
 #include "preview/generator/PicturePreviewGenerator.hpp"
 #include "preview/generator/VideoPreviewGenerator.hpp"
-#include "wallpaper_loader/PictureWallpaperLoader.hpp"
-#include "wallpaper_loader/VideoWallpaperLoader.hpp"
-#include "wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "wallpaper/PictureWallpaper.hpp"
+#include "wallpaper/VideoWallpaper.hpp"
+#include "wallpaper/loader/PictureWallpaperLoader.hpp"
+#include "wallpaper/loader/VideoWallpaperLoader.hpp"
+#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 auto main(int argc, char* argv[]) -> int {
     vips_init(argv[0]);

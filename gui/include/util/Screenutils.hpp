@@ -4,7 +4,7 @@
 #pragma once
 
 #include <QScreen>
-#include "data/Size.hpp"
+#include "Size.hpp"
 
 namespace util {
     constexpr Size getScreenAspectRatio(const QScreen* screen) {

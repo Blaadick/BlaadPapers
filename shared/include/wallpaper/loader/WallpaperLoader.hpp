@@ -7,10 +7,10 @@
 #include <filesystem>
 #include <unordered_set>
 #include "config/Config.hpp"
-#include "data/Wallpaper.hpp"
-#include "data/WallpaperData.hpp"
 #include "file_processing/FileType.hpp"
 #include "util/Pointers.hpp"
+#include "wallpaper/Wallpaper.hpp"
+#include "wallpaper/WallpaperData.hpp"
 
 class WallpaperLoader {
 public:

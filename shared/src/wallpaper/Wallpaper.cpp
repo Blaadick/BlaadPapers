@@ -1,7 +1,7 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "data/Wallpaper.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 #include "config/Config.hpp"
 

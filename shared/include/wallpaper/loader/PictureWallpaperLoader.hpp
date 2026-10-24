@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "wallpaper_loader/WallpaperLoader.hpp"
+#include "wallpaper/loader/WallpaperLoader.hpp"
 
 class PictureWallpaperLoader final : public WallpaperLoader {
 public:

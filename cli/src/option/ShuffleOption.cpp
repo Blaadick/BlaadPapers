@@ -4,7 +4,7 @@
 #include "option/ShuffleOption.hpp"
 
 #include <random>
-#include "data/Wallpaper.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 namespace rng = std::ranges;
 

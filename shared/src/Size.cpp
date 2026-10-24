@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "data/Size.hpp"
+#include "Size.hpp"
 
 auto Size::operator*(const int& number) const -> Size {
     return Size(width * number, height * number);

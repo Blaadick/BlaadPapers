@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "data/Wallpaper.hpp"
 #include "util/Pointers.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 class WallpaperRepository {
 public:

@@ -14,7 +14,7 @@
 #include "logger/Logger.hpp"
 #include "network/FetchManager.hpp"
 #include "preview/PreviewManager.hpp"
-#include "wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 // TODO Split & refactor
 class WallpapersModel : public QAbstractListModel {

@@ -6,7 +6,7 @@
 #include "logger/Logger.hpp"
 #include "network/FetchManager.hpp"
 #include "option/Option.hpp"
-#include "wallpaper_loader/WallpaperLoaderManager.hpp"
+#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 class InstallOption final : public Option {
 public:

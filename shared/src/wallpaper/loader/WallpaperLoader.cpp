@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper_loader/WallpaperLoader.hpp"
+#include "wallpaper/loader/WallpaperLoader.hpp"
 
 #include <algorithm>
 #include <string>

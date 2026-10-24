@@ -5,8 +5,8 @@
 
 #include <unordered_map>
 #include <unordered_set>
-#include "data/Wallpaper.hpp"
 #include "util/Pointers.hpp"
+#include "wallpaper/Wallpaper.hpp"
 
 class TagRepository final {
 public:
