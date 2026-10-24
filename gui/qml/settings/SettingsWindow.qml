@@ -12,7 +12,7 @@ ApplicationWindow {
     minimumWidth: layout.implicitWidth + 2 * layout.anchors.margins
     minimumHeight: layout.implicitHeight + 2 * layout.anchors.margins
     modality: Qt.NonModal
-    flags: Qt.Tool | Qt.WindowStaysOnTopHint
+    flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: qsTr("Settings")
 
     default property alias content: pages.data

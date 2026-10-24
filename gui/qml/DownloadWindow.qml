@@ -11,7 +11,7 @@ ApplicationWindow {
     minimumWidth: 400
     minimumHeight: 200
     modality: Qt.NonModal
-    flags: Qt.Dialog | Qt.WindowStaysOnTopHint
+    flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "Download Wallpapers"
 
     ColumnLayout {
