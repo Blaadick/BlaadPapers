@@ -26,43 +26,43 @@ public:
 
     auto getConfigDirUrl() -> QUrl;
 
-    auto getWallpapersPath() -> QString;
+    auto getWallpapersPath() const -> QString;
 
     void setWallpapersPath(const QString& newPath);
 
-    auto getDefaultTags() -> QStringList;
+    auto getDefaultTags() const -> QStringList;
 
     void setDefaultTags(const QStringList& newTags);
 
-    auto getBadTags() -> QStringList;
+    auto getBadTags() const -> QStringList;
 
     void setBadTags(const QStringList& newTags);
 
-    auto getWallhavenApiKey() -> QString;
+    auto getWallhavenApiKey() const -> QString;
 
     void setWallhavenApiKey(const QString& newKey);
 
-    auto getDanbooruLogin() -> QString;
+    auto getDanbooruLogin() const -> QString;
 
     void setDanbooruLogin(const QString& newLogin);
 
-    auto getDanbooruApiKey() -> QString;
+    auto getDanbooruApiKey() const -> QString;
 
     void setDanbooruApiKey(const QString& newKey);
 
-    auto getStatusBarVisible() -> bool;
+    auto getStatusBarVisible() const -> bool;
 
     void setStatusBarVisible(bool newVisibility);
 
-    auto getBadTaggedWallpapersVisible() -> bool;
+    auto getBadTaggedWallpapersVisible() const -> bool;
 
     void setBadTaggedWallpapersVisible(bool newVisibility);
 
-    auto getNativeTextRendering() -> bool;
+    auto getNativeTextRendering() const -> bool;
 
     void setNativeTextRendering(bool newNativeTextRendering);
 
-    auto getColorScheme() -> QString;
+    auto getColorScheme() const -> QString;
 
     void setColorScheme(const QString& newColorScheme);
 

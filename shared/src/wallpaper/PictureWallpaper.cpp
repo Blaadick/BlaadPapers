@@ -25,7 +25,7 @@ PictureWallpaper::PictureWallpaper(
     this->tags = std::move(tags);
 }
 
-const Size& PictureWallpaper::getResolution() noexcept {
+const Size& PictureWallpaper::getResolution() const noexcept {
     return resolution;
 }
 

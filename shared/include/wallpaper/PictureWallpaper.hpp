@@ -18,7 +18,7 @@ public:
         std::vector<std::string> tags
     );
 
-    auto getResolution() noexcept -> const Size&;
+    auto getResolution() const noexcept -> const Size&;
 
     auto toString() const noexcept -> std::string override;
 

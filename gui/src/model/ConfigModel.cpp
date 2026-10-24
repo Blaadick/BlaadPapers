@@ -50,7 +50,7 @@ auto ConfigModel::getConfigDirUrl() -> QUrl {
     return QUrl::fromLocalFile(QString::fromStdString(util::configDir().string()));
 }
 
-auto ConfigModel::getWallpapersPath() -> QString {
+auto ConfigModel::getWallpapersPath() const -> QString {
     return QString::fromStdString(config->getWallpapersDirPath().string());
 }
 
@@ -63,7 +63,7 @@ void ConfigModel::setWallpapersPath(const QString& newPath) {
     emit wallpapersPathChanged();
 }
 
-auto ConfigModel::getDefaultTags() -> QStringList {
+auto ConfigModel::getDefaultTags() const -> QStringList {
     return toQStringList(config->getDefaultTags());
 }
 
@@ -72,7 +72,7 @@ void ConfigModel::setDefaultTags(const QStringList& newTags) {
     emit defaultTagsChanged();
 }
 
-auto ConfigModel::getBadTags() -> QStringList {
+auto ConfigModel::getBadTags() const -> QStringList {
     return toQStringList(config->getBadTags());
 }
 
@@ -81,7 +81,7 @@ void ConfigModel::setBadTags(const QStringList& newTags) {
     emit badTagsChanged();
 }
 
-auto ConfigModel::getWallhavenApiKey() -> QString {
+auto ConfigModel::getWallhavenApiKey() const -> QString {
     return toQString(config->getWallhavenApiKey());
 }
 
@@ -90,7 +90,7 @@ void ConfigModel::setWallhavenApiKey(const QString& newKey) {
     emit wallhavenApiKeyChanged();
 }
 
-auto ConfigModel::getDanbooruLogin() -> QString {
+auto ConfigModel::getDanbooruLogin() const -> QString {
     return toQString(config->getDanbooruLogin());
 }
 
@@ -99,7 +99,7 @@ void ConfigModel::setDanbooruLogin(const QString& newLogin) {
     emit danbooruLoginChanged();
 }
 
-auto ConfigModel::getDanbooruApiKey() -> QString {
+auto ConfigModel::getDanbooruApiKey() const -> QString {
     return toQString(config->getDanbooruApiKey());
 }
 
@@ -108,7 +108,7 @@ void ConfigModel::setDanbooruApiKey(const QString& newKey) {
     emit danbooruApiKeyChanged();
 }
 
-bool ConfigModel::getStatusBarVisible() {
+bool ConfigModel::getStatusBarVisible() const {
     return config->getStatusBarVisible();
 }
 
@@ -117,7 +117,7 @@ void ConfigModel::setStatusBarVisible(const bool newVisibility) {
     emit statusBarVisibleChanged();
 }
 
-auto ConfigModel::getBadTaggedWallpapersVisible() -> bool {
+auto ConfigModel::getBadTaggedWallpapersVisible() const -> bool {
     return config->getBadTaggedWallpapersVisible();
 }
 
@@ -126,7 +126,7 @@ void ConfigModel::setBadTaggedWallpapersVisible(const bool newVisibility) {
     emit badTaggedWallpapersVisibleChanged();
 }
 
-auto ConfigModel::getNativeTextRendering() -> bool {
+auto ConfigModel::getNativeTextRendering() const -> bool {
     return config->getNativeTextRendering();
 }
 
@@ -135,7 +135,7 @@ void ConfigModel::setNativeTextRendering(const bool newNativeTextRendering) {
     emit nativeTextRenderingChanged();
 }
 
-auto ConfigModel::getColorScheme() -> QString {
+auto ConfigModel::getColorScheme() const -> QString {
     return QString::fromStdString(config->getColorScheme());
 }
 
