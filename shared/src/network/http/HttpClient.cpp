@@ -71,6 +71,7 @@ auto HttpClient::requestString(Uri uri) -> std::expected<std::string, std::strin
     curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, writeToString);
     curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &body);
     curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, PROJECT_USER_AGENT);
+    curl_easy_setopt(curl.get(), CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
 
     auto code = curl_easy_perform(curl.get());
     if(code != CURLE_OK) {
@@ -115,6 +116,7 @@ auto HttpClient::downloadFile(
     curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, writeToFile);
     curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &file);
     curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, PROJECT_USER_AGENT);
+    curl_easy_setopt(curl.get(), CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
 
     if(offset > 0) {
         curl_easy_setopt(curl.get(), CURLOPT_RANGE, std::format("{}-", offset).c_str());
