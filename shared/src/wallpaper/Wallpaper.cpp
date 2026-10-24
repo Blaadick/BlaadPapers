@@ -26,3 +26,11 @@ const std::string& Wallpaper::getSource() const noexcept {
 const std::vector<std::string>& Wallpaper::getTags() const noexcept {
     return tags;
 }
+
+Wallpaper::Wallpaper(
+    std::filesystem::path filePath,
+    std::string id,
+    std::string name,
+    std::string source,
+    std::vector<std::string> tags
+) : filePath(std::move(filePath)), id(std::move(id)), name(std::move(name)), source(std::move(source)), tags(std::move(tags)) {}

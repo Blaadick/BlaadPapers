@@ -14,15 +14,7 @@ VideoWallpaper::VideoWallpaper(
     std::vector<std::string> tags,
     const Size resolution,
     const int frameRate
-) {
-    this->filePath = std::move(filePath);
-    this->id = std::move(id);
-    this->name = std::move(name);
-    this->source = std::move(source);
-    this->tags = std::move(tags);
-    this->resolution = resolution;
-    this->frameRate = frameRate;
-}
+) : Wallpaper(std::move(filePath), std::move(id), std::move(name), std::move(source), std::move(tags)), resolution(resolution), frameRate(frameRate) {}
 
 auto VideoWallpaper::getResolution() const noexcept -> const Size& {
     return resolution;

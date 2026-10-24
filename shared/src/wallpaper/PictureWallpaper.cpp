@@ -13,14 +13,7 @@ PictureWallpaper::PictureWallpaper(
     std::string source,
     std::vector<std::string> tags,
     const Size resolution
-) {
-    this->filePath = std::move(filePath);
-    this->id = std::move(id);
-    this->name = std::move(name);
-    this->source = std::move(source);
-    this->tags = std::move(tags);
-    this->resolution = resolution;
-}
+) : Wallpaper(std::move(filePath), std::move(id), std::move(name), std::move(source), std::move(tags)), resolution(resolution) {}
 
 const Size& PictureWallpaper::getResolution() const noexcept {
     return resolution;

@@ -80,16 +80,3 @@ void WallpaperLoaderManager::loadWallpapers() const {
 auto WallpaperLoaderManager::getWallpaperLoaders() const -> const std::unordered_map<std::type_index, uptr<WallpaperLoader>>& {
     return wallpaperLoaders;
 }
-
-auto WallpaperLoaderManager::getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>& {
-    static std::unordered_set<const file::FileType*> supportedFileTypes;
-
-    if(supportedFileTypes.empty()) {
-        for(const auto& wallpaperLoader : wallpaperLoaders | std::views::values) {
-            auto loaderFileTypes = wallpaperLoader->getSupportedFileTypes();
-            supportedFileTypes.insert(loaderFileTypes.begin(), loaderFileTypes.end());
-        }
-    }
-
-    return supportedFileTypes;
-}

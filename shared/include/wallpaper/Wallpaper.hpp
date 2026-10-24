@@ -34,4 +34,12 @@ protected:
     std::string name;
     std::string source;
     std::vector<std::string> tags;
+
+    Wallpaper(
+        std::filesystem::path filePath,
+        std::string id,
+        std::string name,
+        std::string source,
+        std::vector<std::string> tags
+    );
 };

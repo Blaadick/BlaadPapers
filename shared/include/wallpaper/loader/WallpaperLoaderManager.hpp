@@ -37,8 +37,6 @@ public:
         wallpaperLoaders.emplace(typeid(T), std::move(wallpaperLoader));
     }
 
-    auto getSupportedFileTypes() const -> const std::unordered_set<const file::FileType*>&;
-
 private:
     sptr<WallpaperRepository> wallpaperRepository;
     sptr<Config> config;
