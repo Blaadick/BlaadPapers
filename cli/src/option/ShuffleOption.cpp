@@ -3,10 +3,7 @@
 
 #include "option/ShuffleOption.hpp"
 
-#include <random>
 #include "wallpaper/Wallpaper.hpp"
-
-namespace rng = std::ranges;
 
 ShuffleOption::ShuffleOption(
     sptr<WallpaperRepository> wallpaperRepository,

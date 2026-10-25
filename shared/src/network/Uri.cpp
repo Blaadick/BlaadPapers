@@ -3,9 +3,7 @@
 
 #include "network/Uri.hpp"
 
-#include <iostream>
 #include <ranges>
-#include "util/StringUtils.hpp"
 
 // TODO Fix small links parsing issue
 // TODO Fix some unconventional assumptions (https://www.rfc-editor.org/info/rfc3986/)

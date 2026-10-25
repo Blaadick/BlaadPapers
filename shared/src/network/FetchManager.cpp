@@ -3,11 +3,7 @@
 
 #include "network/FetchManager.hpp"
 
-#include <yyjson.h>
-#include "file_processing/json/JsonArr.hpp"
-#include "file_processing/json/JsonObj.hpp"
 #include "network/Fetcher.hpp"
-#include "util/PathUtils.hpp"
 
 void FetchManager::addFetcher(std::string scheme, uptr<Fetcher> fetcher) {
     fetchers.emplace(std::move(scheme), std::move(fetcher));

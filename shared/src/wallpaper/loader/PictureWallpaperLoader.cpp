@@ -3,7 +3,6 @@
 
 #include "wallpaper/loader/PictureWallpaperLoader.hpp"
 
-#include <algorithm>
 #include "util/ImageUtils.hpp"
 #include "wallpaper/PictureWallpaper.hpp"
 

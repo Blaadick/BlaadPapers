@@ -4,7 +4,7 @@
 #include "model/ConfigModel.hpp"
 
 #include "config/Config.hpp"
-#include "util/FormatUtils.hpp"
+#include "util/PathUtils.hpp"
 
 namespace {
     auto toQStringList(const std::vector<std::string>& strings) -> QStringList {

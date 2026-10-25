@@ -4,12 +4,9 @@
 #include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 #include <format>
-#include <fstream>
 #include <ranges>
-#include "TagRepository.hpp"
 #include "WallpaperRepository.hpp"
 #include "config/Config.hpp"
-#include "util/ImageUtils.hpp"
 #include "util/PathUtils.hpp"
 
 namespace fs = std::filesystem;

@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "CliExecutor.hpp"
+#include <unordered_map>
+#include "logger/Logger.hpp"
 #include "option/Option.hpp"
-#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 class HelpOption final : public Option {
 public:

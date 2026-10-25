@@ -3,8 +3,6 @@
 
 #include "deeplink_handler/ApplyHandler.hpp"
 
-#include <ranges>
-
 ApplyHandler::ApplyHandler(
     sptr<WallpaperRepository> wallpaperRepository
 ) : wallpaperRepository(std::move(wallpaperRepository)) {}

@@ -3,7 +3,6 @@
 
 #include "wallpaper/loader/VideoWallpaperLoader.hpp"
 
-#include <algorithm>
 #include "util/Ffmpeg.hpp"
 #include "wallpaper/VideoWallpaper.hpp"
 

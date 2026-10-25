@@ -11,8 +11,6 @@
 #include "file_processing/json/JsonObj.hpp"
 #include "util/Pointers.hpp"
 
-class JsonObj;
-
 class JsonArr final {
 public:
     JsonArr(sptr<JsonDocHolder> doc, yyjson_val* root);

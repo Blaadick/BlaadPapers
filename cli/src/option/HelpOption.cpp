@@ -4,6 +4,7 @@
 #include "option/HelpOption.hpp"
 
 #include <algorithm>
+#include <format>
 #include <ranges>
 #include "flag/Flags.hpp"
 

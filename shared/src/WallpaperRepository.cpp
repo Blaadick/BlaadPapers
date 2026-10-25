@@ -10,7 +10,6 @@
 #include <random>
 #include <yyjson.h>
 #include "PostSetScript.hpp"
-#include "config/Config.hpp"
 #include "util/PathUtils.hpp"
 #include "wallpaper/PictureWallpaper.hpp"
 #ifdef __linux__

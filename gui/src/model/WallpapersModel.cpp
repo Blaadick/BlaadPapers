@@ -3,14 +3,11 @@
 
 #include "model/WallpapersModel.hpp"
 
-#include <iostream>
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include "util/FormatExt.hpp"
 #include "util/FormatUtils.hpp"
-#include "util/StringUtils.hpp"
 
-class Uri;
 namespace fs = std::filesystem;
 
 WallpapersModel::WallpapersModel(
