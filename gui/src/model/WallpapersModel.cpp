@@ -139,10 +139,10 @@ auto WallpapersModel::roleNames() const -> QHash<int, QByteArray> {
     };
 }
 
-void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) {
-    auto uri = Uri::parse(url.toString().toStdString());
+void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) const {
+    auto uri = Uri::parse(url.toString(QUrl::FullyEncoded).toStdString());
     if(!uri.has_value()) {
-        logger->logWarning(std::format("Failed to parse \"{}\" as URI", url.toString()));
+        logger->logWarning(std::format("Failed to parse \"{}\" as URI", url.toString(QUrl::FullyEncoded)));
         return;
     }
 
@@ -163,7 +163,7 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) {
     fs::remove(*downloadedFilePath);
 }
 
-void WallpapersModel::deleteWallpaper(const QString& wallpaperId) {
+void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
     if(wallpaperRepository->remove(wallpaperId.toStdString())) {
         logger->logInfo(std::format("Wallpaper \"{}\" deleted", wallpaperId));
     } else {
