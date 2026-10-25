@@ -108,8 +108,13 @@ auto CliExecutor::execute(int argc, char* argv[]) -> int {
     std::erase_if(arguments, Flag::isFlag);
 
     if(flags.contains(Flags::quiet)) {
-        freopen("/dev/null/", "w", stdout);
-        freopen("/dev/null/", "w", stderr);
+        #ifdef _WIN32
+        freopen("NUL", "w", stdout);
+        freopen("NUL", "w", stderr);
+        #else
+        freopen("/dev/null", "w", stdout);
+        freopen("/dev/null", "w", stderr);
+        #endif
     }
 
     auto uri = Uri::parse(argv[1]);
