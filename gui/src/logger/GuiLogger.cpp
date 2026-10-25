@@ -25,21 +25,21 @@ namespace util {
     }
 
     void GuiLogger::logInfo(const std::string_view message) const noexcept {
-        auto currentTime = zoned_time(current_zone(), round<duration<long long, std::milli>>(system_clock::now()));
+        auto currentTime = zoned_time(current_zone(), floor<seconds>(system_clock::now()));
         std::cout << std::format("[\033[94m{:%H:%M:%S}\033[0m] {}\n", currentTime, message);
 
         statusModel->sendStatus(message);
     }
 
     void GuiLogger::logWarning(const std::string_view message) const noexcept {
-        auto currentTime = zoned_time(current_zone(), round<duration<long long, std::milli>>(system_clock::now()));
+        auto currentTime = zoned_time(current_zone(), floor<seconds>(system_clock::now()));
         std::cerr << std::format("[\033[93m{:%H:%M:%S}\033[0m] {}\n", currentTime, message);
 
         statusModel->sendStatus(message);
     }
 
     void GuiLogger::logError(const std::string_view message) const noexcept {
-        auto currentTime = zoned_time(current_zone(), round<duration<long long, std::milli>>(system_clock::now()));
+        auto currentTime = zoned_time(current_zone(), floor<seconds>(system_clock::now()));
         std::cerr << std::format("[\033[91m{:%H:%M:%S}\033[0m] {}\n", currentTime, message);
 
         statusModel->sendStatus(message);
