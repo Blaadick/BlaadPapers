@@ -87,7 +87,7 @@ auto main(int argc, char* argv[]) -> int {
     auto configModel = std::make_shared<ConfigModel>(config);
     auto wallpapersModel = std::make_shared<WallpapersModel>(wallpaperLoaderManager, wallpaperRepository, fetchManager, config, previewManager, logger);
     wallpapersModel->loadWallpapers();
-    logger->logInfo(std::format("Loaded {} wallpaperRepository", wallpaperRepository->count()));
+    logger->logInfo(std::format("Loaded {} wallpapers", wallpaperRepository->count()));
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("Wallpapers", wallpapersModel.get());
