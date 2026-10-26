@@ -8,29 +8,38 @@ import QtQuick.Templates as T
 
 T.Button {
     id: control
+    clip: true
 
-    property string wid
-    property string name
-    property url rootDir
-    property string source
-    property var tags
-    property bool isBad
+    required property string wallpaperId
+    required property string wallpaperName
+    required property url wallpaperRootDir
+    required property string wallpaperSource
+    required property var wallpaperTags
+    required property bool isWallpaperBad
     readonly property bool isMotionReduced: Application.styleHints.accessibility.motionPreference === 1
+    readonly property url previewUrl: `${wallpaperRootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
+    property real previewScale: !isMotionReduced && !pressed && hovered ? 1.1 : 1
+
+    Behavior on previewScale {
+        NumberAnimation {
+            easing.type: Easing.OutQuad
+            duration: 120
+        }
+    }
 
     Rectangle {
         id: roundMask
+        anchors.fill: parent
         visible: false
         radius: 10
-        anchors.fill: parent
         color: "black"
-
         layer.enabled: true
     }
 
     layer.enabled: true
     layer.effect: MultiEffect {
         autoPaddingEnabled: false
-        blurEnabled: control.isBad
+        blurEnabled: control.isWallpaperBad
         blur: !control.hovered ? 1 : 0
         blurMax: 64
         blurMultiplier: 0.2
@@ -47,22 +56,6 @@ T.Button {
         }
     }
 
-    background: AnimatedImage {
-        anchors.fill: parent
-        scale: !control.isMotionReduced && !control.pressed && control.hovered ? 1.1 : 1
-        source: `${rootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
-        fillMode: Image.PreserveAspectCrop
-        asynchronous: true
-        cache: false
-
-        Behavior on scale {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: 120
-            }
-        }
-    }
-
     ContextMenu.menu: Menu {
         id: contextMenu
 
@@ -70,21 +63,21 @@ T.Button {
             text: qsTr("Apply")
             icon.name: "apply"
 
-            onTriggered: Wallpapers.applyWallpaperAsync(control.wid)
+            onTriggered: Wallpapers.applyWallpaperAsync(control.wallpaperId)
         }
 
         Action {
             text: qsTr("Open Folder")
             icon.name: "folder-open"
 
-            onTriggered: Qt.openUrlExternally(control.rootDir)
+            onTriggered: Qt.openUrlExternally(control.wallpaperRootDir)
         }
 
         Action {
             text: qsTr("Copy Deeplink")
             icon.name: "link"
 
-            onTriggered: Clipboard.copyWallpaperDeeplink(control.wid)
+            onTriggered: Clipboard.copyWallpaperDeeplink(control.wallpaperId)
         }
 
         MenuSeparator {}
@@ -93,17 +86,11 @@ T.Button {
             text: qsTr("Delete")
             icon.name: "edit-delete"
 
-            onTriggered: Wallpapers.deleteWallpaperAsync(control.wid)
+            onTriggered: Wallpapers.deleteWallpaperAsync(control.wallpaperId)
         }
     }
 
-    ToolTip {
-        id: tooltip
-        text: `${control.name}\n${control.tags.join(", ")}${control.source === "" ? "" : `\n${control.source}`}`
-        visible: control.hovered
-    }
-
     onClicked: {
-        Wallpapers.applyWallpaperAsync(control.wid)
+        Wallpapers.applyWallpaperAsync(control.wallpaperId)
     }
 }

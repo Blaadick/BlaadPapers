@@ -3,8 +3,11 @@
 
 #include "model/WallpapersModel.hpp"
 
+#include <QSize>
 #include <QtConcurrentMap>
 #include <QThreadPool>
+#include "wallpaper/PictureWallpaper.hpp"
+#include "wallpaper/VideoWallpaper.hpp"
 #include "util/FormatExt.hpp"
 #include "util/FormatUtils.hpp"
 
@@ -110,6 +113,8 @@ auto WallpapersModel::rowCount(const QModelIndex&) const -> int {
 
 auto WallpapersModel::data(const QModelIndex& index, const int role) const -> QVariant {
     auto wallpaper = wallpaperRepository->get(index.row());
+    auto pictureWallpaper = std::dynamic_pointer_cast<PictureWallpaper>(wallpaper);
+    auto videoWallpaper = std::dynamic_pointer_cast<VideoWallpaper>(wallpaper);
 
     QStringList qStringTags;
     qStringTags.reserve(wallpaper->getTags().size());
@@ -121,10 +126,33 @@ auto WallpapersModel::data(const QModelIndex& index, const int role) const -> QV
         case IdRole: return QString::fromStdString(wallpaper->getId());
         case NameRole: return QString::fromStdString(wallpaper->getName());
         case RootDirRole: return QUrl::fromLocalFile(QString::fromStdString(wallpaper->getRootDirPath().string()));
+        case ResolutionRole: {
+            if(pictureWallpaper) {
+                return QSize(pictureWallpaper->getResolution().width, pictureWallpaper->getResolution().height);
+            }
+
+            if(videoWallpaper) {
+                return QSize(videoWallpaper->getResolution().width, videoWallpaper->getResolution().height);
+            }
+
+            return QVariant();
+        }
         case SourceRole: return QString::fromStdString(wallpaper->getSource());
         case TagsRole: return qStringTags;
+        case FrameRateRole: return videoWallpaper ? videoWallpaper->getFrameRate() : QVariant();
+        case TypeRole: {
+            if(pictureWallpaper) {
+                return QString("Picture");
+            }
+
+            if(videoWallpaper) {
+                return QString("Video");
+            }
+
+            return QVariant();
+        }
         case IsBadRole: return config->isWallpaperBad(*wallpaper);
-        default: return {};
+        default: return QVariant();
     }
 }
 
@@ -133,8 +161,11 @@ auto WallpapersModel::roleNames() const -> QHash<int, QByteArray> {
         {IdRole, "wallpaperId"},
         {NameRole, "wallpaperName"},
         {RootDirRole, "wallpaperRootDir"},
+        {ResolutionRole, "wallpaperResolution"},
         {SourceRole, "wallpaperSource"},
         {TagsRole, "wallpaperTags"},
+        {FrameRateRole, "wallpaperFrameRate"},
+        {TypeRole, "wallpaperType"},
         {IsBadRole, "isWallpaperBad"},
     };
 }

@@ -4,6 +4,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
+import QtQml.Models
 
 Item {
     id: control
@@ -80,20 +81,25 @@ Item {
             Repeater {
                 id: repeater
 
-                delegate: Item {
-                    width: flow.itemWidth
-                    height: flow.itemHeight
-                    clip: true
+                delegate: DelegateChooser {
+                    role: "wallpaperType"
 
-                    WallpaperPreview {
-                        anchors.fill: parent
+                    DelegateChoice {
+                        roleValue: "Picture"
 
-                        wid: wallpaperId
-                        name: wallpaperName
-                        rootDir: wallpaperRootDir
-                        source: wallpaperSource
-                        tags: wallpaperTags
-                        isBad: isWallpaperBad
+                        PictureWallpaperPreview {
+                            width: flow.itemWidth
+                            height: flow.itemHeight
+                        }
+                    }
+
+                    DelegateChoice {
+                        roleValue: "Video"
+
+                        VideoWallpaperPreview {
+                            width: flow.itemWidth
+                            height: flow.itemHeight
+                        }
                     }
                 }
             }

@@ -28,6 +28,7 @@ public:
         ResolutionRole,
         SourceRole,
         TagsRole,
+        FrameRateRole,
         TypeRole,
         IsBadRole
     };
