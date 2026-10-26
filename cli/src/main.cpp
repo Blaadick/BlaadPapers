@@ -1,7 +1,6 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <vips/vips.h>
 #include "CliExecutor.hpp"
 #include "DefaultWallpaper.hpp"
 #include "PostSetScript.hpp"
@@ -33,10 +32,7 @@
 
 auto main(int argc, char* argv[]) -> int {
     if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {
-        vips_init(argv[0]);
-        vips_cache_set_max(0);
         DefaultWallpaper::create();
-        vips_shutdown();
     }
 
     PostSetScript::createIfNotExists();
