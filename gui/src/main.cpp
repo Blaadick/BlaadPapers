@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QCommandLineParser>
+#include <QLoggingCategory>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
@@ -26,9 +27,16 @@
 #include "wallpaper/loader/VideoWallpaperLoader.hpp"
 #include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
+extern "C" {
+    #include <libavutil/log.h>
+}
+
 auto main(int argc, char* argv[]) -> int {
     vips_init(argv[0]);
     vips_cache_set_max(0);
+
+    av_log_set_level(AV_LOG_ERROR);
+    QLoggingCategory::setFilterRules("qt.multimedia.*.info=false");
 
     auto statusModel = std::make_shared<StatusModel>();
     auto logger = std::make_shared<util::GuiLogger>(statusModel);

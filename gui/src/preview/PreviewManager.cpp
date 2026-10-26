@@ -17,25 +17,25 @@ void PreviewManager::createAndSavePreviews(const Wallpaper& wallpaper) const {
         return;
     }
 
+    auto it = generators.find(typeid(wallpaper));
+    if(it == generators.end()) {
+        logger->logWarning(std::format("No preview generator found for {} ({})", wallpaper.getId(), wallpaper.getFilePath().extension()));
+        return;
+    }
+
     for(const QScreen* screen : QGuiApplication::screens()) {
-        auto previewFilePath = previewsDirPath / (util::toString(screen) + ".webp");
+        auto previewFilePath = previewsDirPath / (util::toString(screen) + std::string(it->second->getPreviewFileType().canonicalExtension()));
         auto previewSize = util::getScreenAspectRatio(screen) * 20 * static_cast<int>(screen->devicePixelRatio());
 
         if(std::filesystem::exists(previewFilePath)) {
             continue;
         }
 
-        auto it = generators.find(typeid(wallpaper));
-        if(it == generators.end()) {
-            logger->logError(std::format("No preview generator found for {} ({})", wallpaper.getId(), wallpaper.getFilePath().extension()));
-            return;
-        }
-
-        auto isSaved = it->second->createAndSavePreview(wallpaper, previewSize, previewFilePath);
-        if(isSaved) {
+        auto result = it->second->createAndSavePreview(wallpaper, previewSize, previewFilePath);
+        if(result.has_value()) {
             logger->logInfo(std::format("Preview of \"{}\" saved for {}", wallpaper.getId(), util::toString(screen)));
         } else {
-            logger->logWarning(std::format("Unable to save preview file \"{}\"", previewFilePath));
+            logger->logWarning(std::format("Unable to save preview file \"{}\": {}", previewFilePath, result.error()));
         }
     }
 }

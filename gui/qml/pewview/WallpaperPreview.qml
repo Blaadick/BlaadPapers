@@ -17,7 +17,6 @@ T.Button {
     required property var wallpaperTags
     required property bool isWallpaperBad
     readonly property bool isMotionReduced: Application.styleHints.accessibility.motionPreference === 1
-    readonly property url previewUrl: `${wallpaperRootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
     property real previewScale: !isMotionReduced && !pressed && hovered ? 1.1 : 1
 
     Behavior on previewScale {

@@ -36,7 +36,7 @@ Install deps:
 - [`curl`](https://curl.se/)
 - [`yyjson`](https://ibireme.github.io/yyjson/)
 - [`imageinfo`](https://github.com/xiaozhuai/imageinfo)
-- [`Qt6`](https://www.qt.io) (Base, Declarative, Svg)
+- [`Qt6`](https://www.qt.io) (Base, Declarative, Svg, Multimedia)
 - [`libvips`](https://github.com/libvips/libvips)
 - [`FFmpeg`](https://ffmpeg.org/)
 - [`BStyle`](https://github.com/Blaadick/BStyle)

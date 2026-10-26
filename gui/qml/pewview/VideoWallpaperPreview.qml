@@ -3,6 +3,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtMultimedia
 
 WallpaperPreview {
     id: control
@@ -16,12 +17,17 @@ WallpaperPreview {
         visible: control.hovered
     }
 
-    background: AnimatedImage {
+    background: VideoOutput {
+        id: videoOutput
         anchors.fill: parent
         scale: control.previewScale
-        source: control.previewUrl
-        fillMode: Image.PreserveAspectCrop
-        asynchronous: true
-        cache: false
+        fillMode: VideoOutput.PreserveAspectCrop
+
+        MediaPlayer {
+            source: `${wallpaperRootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.mp4`
+            videoOutput: videoOutput
+            loops: MediaPlayer.Infinite
+            autoPlay: true
+        }
     }
 }

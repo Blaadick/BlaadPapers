@@ -3,18 +3,27 @@
 
 #pragma once
 
+#include <expected>
 #include <filesystem>
+#include <string>
 #include "Size.hpp"
-#include "util/Pointers.hpp"
+#include "file_processing/FileType.hpp"
 #include "wallpaper/Wallpaper.hpp"
 
 class PreviewGenerator {
 public:
+    explicit PreviewGenerator(const file::FileType& previewFileType);
+
     virtual ~PreviewGenerator() = default;
 
     virtual auto createAndSavePreview(
         const Wallpaper& wallpaper,
         const Size& previewSize,
         const std::filesystem::path& previewPath
-    ) const -> bool = 0;
+    ) const -> std::expected<void, std::string> = 0;
+
+    auto getPreviewFileType() const noexcept -> const file::FileType&;
+
+protected:
+    const file::FileType& previewFileType;
 };

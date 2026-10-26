@@ -18,7 +18,7 @@ WallpaperPreview {
     background: Image {
         anchors.fill: parent
         scale: control.previewScale
-        source: control.previewUrl
+        source: `${wallpaperRootDir}/preview/${Screen.width * Screen.devicePixelRatio}x${Screen.height * Screen.devicePixelRatio}.webp`
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         cache: false
