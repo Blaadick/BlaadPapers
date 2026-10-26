@@ -8,6 +8,7 @@
 #include <ranges>
 #include <typeindex>
 #include <unordered_map>
+#include "ShellExecutor.hpp"
 #include "WallpaperRepository.hpp"
 #include "config/Config.hpp"
 #include "util/Pointers.hpp"
@@ -18,6 +19,7 @@ public:
     WallpaperLoaderManager(
         sptr<WallpaperRepository> wallpaperRepository,
         sptr<Config> config,
+        sptr<ShellExecutor> shellExecutor,
         sptr<util::Logger> logger
     );
 
@@ -40,6 +42,7 @@ public:
 private:
     sptr<WallpaperRepository> wallpaperRepository;
     sptr<Config> config;
+    sptr<ShellExecutor> shellExecutor;
     sptr<util::Logger> logger;
 
     std::unordered_map<std::type_index, uptr<WallpaperLoader>> wallpaperLoaders;

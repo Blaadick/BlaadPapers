@@ -13,6 +13,9 @@ class ConfigModel final : public QObject {
     Q_PROPERTY(QString wallpapersPath READ getWallpapersPath WRITE setWallpapersPath NOTIFY wallpapersPathChanged)
     Q_PROPERTY(QStringList defaultTags READ getDefaultTags WRITE setDefaultTags NOTIFY defaultTagsChanged)
     Q_PROPERTY(QStringList badTags READ getBadTags WRITE setBadTags NOTIFY badTagsChanged)
+    Q_PROPERTY(QString postInstallScript READ getPostInstallScript WRITE setPostInstallScript NOTIFY postInstallScriptChanged)
+    Q_PROPERTY(QString postApplyScript READ getPostApplyScript WRITE setPostApplyScript NOTIFY postApplyScriptChanged)
+    Q_PROPERTY(QString postDeleteScript READ getPostDeleteScript WRITE setPostDeleteScript NOTIFY postDeleteScriptChanged)
     Q_PROPERTY(QString wallhavenApiKey READ getWallhavenApiKey WRITE setWallhavenApiKey NOTIFY wallhavenApiKeyChanged)
     Q_PROPERTY(QString danbooruLogin READ getDanbooruLogin WRITE setDanbooruLogin NOTIFY danbooruLoginChanged)
     Q_PROPERTY(QString danbooruApiKey READ getDanbooruApiKey WRITE setDanbooruApiKey NOTIFY danbooruApiKeyChanged)
@@ -37,6 +40,18 @@ public:
     auto getBadTags() const -> QStringList;
 
     void setBadTags(const QStringList& newTags);
+
+    auto getPostInstallScript() const -> QString;
+
+    void setPostInstallScript(const QString& newScript);
+
+    auto getPostApplyScript() const -> QString;
+
+    void setPostApplyScript(const QString& newScript);
+
+    auto getPostDeleteScript() const -> QString;
+
+    void setPostDeleteScript(const QString& newScript);
 
     auto getWallhavenApiKey() const -> QString;
 
@@ -75,6 +90,12 @@ signals:
     void defaultTagsChanged();
 
     void badTagsChanged();
+
+    void postInstallScriptChanged();
+
+    void postApplyScriptChanged();
+
+    void postDeleteScriptChanged();
 
     void wallhavenApiKeyChanged();
 

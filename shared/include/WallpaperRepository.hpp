@@ -3,11 +3,15 @@
 
 #pragma once
 
+#include "ShellExecutor.hpp"
+#include "config/Config.hpp"
 #include "util/Pointers.hpp"
 #include "wallpaper/Wallpaper.hpp"
 
 class WallpaperRepository final {
 public:
+    WallpaperRepository(sptr<Config> config, sptr<ShellExecutor> shellExecutor);
+
     auto get(int index) const -> sptr<Wallpaper>;
 
     auto get(std::string_view id) const -> sptr<Wallpaper>;
@@ -36,5 +40,8 @@ public:
     auto end() const -> std::vector<sptr<Wallpaper>>::const_iterator;
 
 private:
+    sptr<Config> config;
+    sptr<ShellExecutor> shellExecutor;
+
     std::vector<sptr<Wallpaper>> wallpapers;
 };

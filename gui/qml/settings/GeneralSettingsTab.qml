@@ -67,4 +67,62 @@ SettingsTab {
             onEditingFinished: Config.badTags = text.split('\n')
         }
     }
+
+    GroupBox {
+        title: "Scripting"
+        Layout.fillWidth: true
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 10
+
+            ColumnLayout {
+                Layout.fillWidth: true
+
+                Label {
+                    text: qsTr("Post Install")
+                }
+
+                TextField {
+                    text: Config.postInstallScript
+                    placeholderText: 'notify-send -a BlaadPapers -u low "Wallpaper $WALLPAPER_NAME installed"'
+                    Layout.fillWidth: true
+
+                    onEditingFinished: Config.postInstallScript = text
+                }
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+
+                Label {
+                    text: qsTr("Post Apply")
+                }
+
+                TextField {
+                    text: Config.postApplyScript
+                    placeholderText: 'notify-send -a BlaadPapers -u low "Wallpaper $WALLPAPER_NAME applied"'
+                    Layout.fillWidth: true
+
+                    onEditingFinished: Config.postApplyScript = text
+                }
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+
+                Label {
+                    text: qsTr("Post Delete")
+                }
+
+                TextField {
+                    text: Config.postDeleteScript
+                    placeholderText: 'notify-send -a BlaadPapers -u low "Wallpaper $WALLPAPER_NAME deleted"'
+                    Layout.fillWidth: true
+
+                    onEditingFinished: Config.postDeleteScript = text
+                }
+            }
+        }
+    }
 }

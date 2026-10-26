@@ -14,8 +14,9 @@ namespace fs = std::filesystem;
 WallpaperLoaderManager::WallpaperLoaderManager(
     sptr<WallpaperRepository> wallpaperRepository,
     sptr<Config> config,
+    sptr<ShellExecutor> shellExecutor,
     sptr<util::Logger> logger
-) : wallpaperRepository(std::move(wallpaperRepository)), config(std::move(config)), logger(std::move(logger)) {}
+) : wallpaperRepository(std::move(wallpaperRepository)), config(std::move(config)), shellExecutor(std::move(shellExecutor)), logger(std::move(logger)) {}
 
 auto WallpaperLoaderManager::installWallpaper(
     const fs::path& filePath,
@@ -26,7 +27,13 @@ auto WallpaperLoaderManager::installWallpaper(
             continue;
         }
 
-        return wallpaperLoader->installWallpaper(filePath, std::move(wallpaperData));
+        auto wallpaper = wallpaperLoader->installWallpaper(filePath, std::move(wallpaperData));
+
+        if(wallpaper.has_value()) {
+            shellExecutor->executeWithWallpaperData(config->getPostInstallScript(), **wallpaper);
+        }
+
+        return wallpaper;
     }
 
     return std::unexpected("No supported wallpaper loader found");

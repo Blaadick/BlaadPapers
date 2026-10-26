@@ -81,6 +81,33 @@ void ConfigModel::setBadTags(const QStringList& newTags) {
     emit badTagsChanged();
 }
 
+auto ConfigModel::getPostInstallScript() const -> QString {
+    return QString::fromStdString(config->getPostInstallScript());
+}
+
+void ConfigModel::setPostInstallScript(const QString& newScript) {
+    config->setPostInstallScript(newScript.trimmed().toStdString());
+    emit postInstallScriptChanged();
+}
+
+auto ConfigModel::getPostApplyScript() const -> QString {
+    return QString::fromStdString(config->getPostApplyScript());
+}
+
+void ConfigModel::setPostApplyScript(const QString& newScript) {
+    config->setPostApplyScript(newScript.trimmed().toStdString());
+    emit postApplyScriptChanged();
+}
+
+auto ConfigModel::getPostDeleteScript() const -> QString {
+    return QString::fromStdString(config->getPostDeleteScript());
+}
+
+void ConfigModel::setPostDeleteScript(const QString& newScript) {
+    config->setPostDeleteScript(newScript.trimmed().toStdString());
+    emit postDeleteScriptChanged();
+}
+
 auto ConfigModel::getWallhavenApiKey() const -> QString {
     return toQString(config->getWallhavenApiKey());
 }

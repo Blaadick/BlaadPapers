@@ -69,6 +69,21 @@ void Config::loadGeneral() {
             }
         );
     }
+
+    auto postInstallScriptData = generalJson->tryGetString("post_install_script");
+    if(postInstallScriptData.has_value()) {
+        postInstallScript = *postInstallScriptData;
+    }
+
+    auto postApplyScriptData = generalJson->tryGetString("post_apply_script");
+    if(postApplyScriptData.has_value()) {
+        postApplyScript = *postApplyScriptData;
+    }
+
+    auto postDeleteScriptData = generalJson->tryGetString("post_delete_script");
+    if(postDeleteScriptData.has_value()) {
+        postDeleteScript = *postDeleteScriptData;
+    }
 }
 
 void Config::loadGui() {
@@ -162,6 +177,9 @@ void Config::saveGeneral() const {
     yyjson_mut_obj_add_strcpy(doc, root, "wallpapers_path", wallpapersDirPath.string().c_str());
     yyjson_mut_obj_add_val(doc, root, "default_tags", defaultTagsData);
     yyjson_mut_obj_add_val(doc, root, "bad_tags", badTagsData);
+    yyjson_mut_obj_add_str(doc, root, "post_install_script", postInstallScript.c_str());
+    yyjson_mut_obj_add_str(doc, root, "post_apply_script", postApplyScript.c_str());
+    yyjson_mut_obj_add_str(doc, root, "post_delete_script", postDeleteScript.c_str());
 
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(generalConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
@@ -258,6 +276,33 @@ auto Config::isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool {
             return std::ranges::contains(wallpaper.getTags(), tag);
         }
     );
+}
+
+auto Config::getPostInstallScript() const noexcept -> const std::string& {
+    return postInstallScript;
+}
+
+void Config::setPostInstallScript(std::string newScript) noexcept {
+    postInstallScript = std::move(newScript);
+    saveGeneral();
+}
+
+auto Config::getPostApplyScript() const noexcept -> const std::string& {
+    return postApplyScript;
+}
+
+void Config::setPostApplyScript(std::string newScript) noexcept {
+    postApplyScript = std::move(newScript);
+    saveGeneral();
+}
+
+auto Config::getPostDeleteScript() const noexcept -> const std::string& {
+    return postDeleteScript;
+}
+
+void Config::setPostDeleteScript(std::string newScript) noexcept {
+    postDeleteScript = std::move(newScript);
+    saveGeneral();
 }
 
 auto Config::getWallhavenApiKey() const noexcept -> const std::optional<std::string>& {

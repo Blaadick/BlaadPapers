@@ -9,7 +9,6 @@
 #include <fstream>
 #include <random>
 #include <yyjson.h>
-#include "PostSetScript.hpp"
 #include "util/PathUtils.hpp"
 #include "wallpaper/PictureWallpaper.hpp"
 #ifdef __linux__
@@ -22,6 +21,11 @@
 
 namespace fs = std::filesystem;
 namespace rng = std::ranges;
+
+WallpaperRepository::WallpaperRepository(
+    sptr<Config> config,
+    sptr<ShellExecutor> shellExecutor
+) : config(std::move(config)), shellExecutor(std::move(shellExecutor)) {}
 
 auto WallpaperRepository::get(const int index) const -> sptr<Wallpaper> {
     if(index >= wallpapers.size()) {
@@ -144,18 +148,20 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
         currentWallpaperIdFile << wallpaper.getId();
     }
 
-    PostSetScript::execute(wallpaper);
-
+    shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
     return true;
     #endif
 
     #ifdef _WIN32
-    return SystemParametersInfoW(
+    auto out = SystemParametersInfoW(
         SPI_SETDESKWALLPAPER,
         0,
         (PVOID) wallpaper.getFilePath().c_str(),
         SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
     );
+
+    shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
+    return out;
     #endif
 }
 
@@ -175,6 +181,8 @@ auto WallpaperRepository::remove(const std::string_view id) -> bool {
     wallpapers.erase(it);
 
     fs::remove_all(wallpaper->getRootDirPath());
+
+    shellExecutor->executeWithWallpaperData(config->getPostDeleteScript(), *wallpaper);
     return true;
 }
 

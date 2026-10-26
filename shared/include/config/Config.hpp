@@ -45,6 +45,18 @@ public:
 
     auto isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool;
 
+    auto getPostInstallScript() const noexcept -> const std::string&;
+
+    void setPostInstallScript(std::string newScript) noexcept;
+
+    auto getPostApplyScript() const noexcept -> const std::string&;
+
+    void setPostApplyScript(std::string newScript) noexcept;
+
+    auto getPostDeleteScript() const noexcept -> const std::string&;
+
+    void setPostDeleteScript(std::string newScript) noexcept;
+
     auto getWallhavenApiKey() const noexcept -> const std::optional<std::string>&;
 
     void setWallhavenApiKey(std::optional<std::string> newKey) noexcept;
@@ -85,11 +97,14 @@ private:
     std::filesystem::path wallpapersDirPath = util::documentsDir() / "Wallpapers";
     std::vector<std::string> defaultTags = {"General"};
     std::vector<std::string> badTags = {"Sensitive", "Questionable", "Explicit"};
+    std::string postInstallScript;
+    std::string postApplyScript;
+    std::string postDeleteScript;
     std::optional<std::string> wallhavenApiKey = std::nullopt;
     std::optional<std::string> danbooruLogin = std::nullopt;
     std::optional<std::string> danbooruApiKey = std::nullopt;
-    bool isStatusBarVisible = false;
     bool isBadTaggedWallpapersVisible = true;
-    bool isNativeTextRendering = true;
+    bool isStatusBarVisible = false;
+    bool isNativeTextRendering = false;
     std::string colorScheme = "system";
 };

@@ -10,7 +10,7 @@
 #include <QStyleHints>
 #include <vips/vips8>
 #include "DefaultWallpaper.hpp"
-#include "PostSetScript.hpp"
+#include "ShellExecutor.hpp"
 #include "config/Config.hpp"
 #include "logger/GuiLogger.hpp"
 #include "model/ClipboardModel.hpp"
@@ -38,10 +38,26 @@ auto main(int argc, char* argv[]) -> int {
     vips_init(argv[0]);
     vips_cache_set_max(0);
 
+    if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {
+        DefaultWallpaper::create();
+    }
+
     auto statusModel = std::make_shared<StatusModel>();
     auto logger = std::make_shared<util::GuiLogger>(statusModel);
+    auto shellExecutor = std::make_shared<ShellExecutor>(logger);
+    auto httpClient = std::make_shared<HttpClient>();
+    auto fetchManager = std::make_shared<FetchManager>();
+    fetchManager->addFetcher("http", std::make_unique<HttpFetcher>(httpClient, logger));
+    fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
+    fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
+
     auto config = std::make_shared<Config>(logger);
     config->load();
+
+    auto wallpaperRepository = std::make_shared<WallpaperRepository>(config, shellExecutor);
+    auto wallpaperLoaderManager = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, shellExecutor, logger);
+    wallpaperLoaderManager->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
+    wallpaperLoaderManager->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
 
     auto fmt = QSurfaceFormat::defaultFormat();
     fmt.setRedBufferSize(8);
@@ -77,26 +93,9 @@ auto main(int argc, char* argv[]) -> int {
     parser.addVersionOption();
     parser.process(app);
 
-    if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {
-        DefaultWallpaper::create();
-    }
-
-    PostSetScript::createIfNotExists();
-
-    auto wallpaperRepository = std::make_shared<WallpaperRepository>();
-    auto wallpaperLoaderManager = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, logger);
-    wallpaperLoaderManager->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
-    wallpaperLoaderManager->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
-
     auto previewManager = std::make_shared<PreviewManager>(logger);
     previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());
     previewManager->addGenerator<VideoWallpaper>(std::make_unique<VideoPreviewGenerator>());
-
-    auto httpClient = std::make_shared<HttpClient>();
-    auto fetchManager = std::make_shared<FetchManager>();
-    fetchManager->addFetcher("http", std::make_unique<HttpFetcher>(httpClient, logger));
-    fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
-    fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
 
     auto clipboardModel = std::make_shared<ClipboardModel>();
     auto configModel = std::make_shared<ConfigModel>(config);

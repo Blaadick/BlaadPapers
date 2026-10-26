@@ -3,7 +3,7 @@
 
 #include "CliExecutor.hpp"
 #include "DefaultWallpaper.hpp"
-#include "PostSetScript.hpp"
+#include "ShellExecutor.hpp"
 #include "WallpaperRepository.hpp"
 #include "config/Config.hpp"
 #include "deeplink_handler/ApplyHandler.hpp"
@@ -35,25 +35,24 @@ auto main(int argc, char* argv[]) -> int {
         DefaultWallpaper::create();
     }
 
-    PostSetScript::createIfNotExists();
-
     auto logger = std::make_shared<util::CliLogger>();
-    auto config = std::make_shared<Config>(logger);
-    config->load();
-
-    auto wallpaperRepository = std::make_shared<WallpaperRepository>();
-    auto wallpaperLoaderManager = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, logger);
-    wallpaperLoaderManager->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
-    wallpaperLoaderManager->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
-
-    wallpaperLoaderManager->loadWallpapers();
-    wallpaperRepository->sortByName();
-
+    auto shellExecutor = std::make_shared<ShellExecutor>(logger);
     auto httpClient = std::make_shared<HttpClient>();
     auto fetchManager = std::make_shared<FetchManager>();
     fetchManager->addFetcher("http", std::make_unique<HttpFetcher>(httpClient, logger));
     fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
     fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
+
+    auto config = std::make_shared<Config>(logger);
+    config->load();
+
+    auto wallpaperRepository = std::make_shared<WallpaperRepository>(config, shellExecutor);
+    auto wallpaperLoaderManager = std::make_shared<WallpaperLoaderManager>(wallpaperRepository, config, shellExecutor, logger);
+    wallpaperLoaderManager->addWallpaperLoader<PictureWallpaper>(std::make_unique<PictureWallpaperLoader>(config));
+    wallpaperLoaderManager->addWallpaperLoader<VideoWallpaper>(std::make_unique<VideoWallpaperLoader>(config));
+
+    wallpaperLoaderManager->loadWallpapers();
+    wallpaperRepository->sortByName();
 
     auto cliExecutor = std::make_shared<CliExecutor>(logger);
     cliExecutor->addOption("apply", std::make_unique<ApplyOption>(wallpaperRepository, logger));
