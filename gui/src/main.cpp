@@ -32,16 +32,23 @@ extern "C" {
 }
 
 auto main(int argc, char* argv[]) -> int {
-    vips_init(argv[0]);
-    vips_cache_set_max(0);
-
     av_log_set_level(AV_LOG_ERROR);
     QLoggingCategory::setFilterRules("qt.multimedia.*.info=false");
+
+    vips_init(argv[0]);
+    vips_cache_set_max(0);
 
     auto statusModel = std::make_shared<StatusModel>();
     auto logger = std::make_shared<util::GuiLogger>(statusModel);
     auto config = std::make_shared<Config>(logger);
     config->load();
+
+    auto fmt = QSurfaceFormat::defaultFormat();
+    fmt.setRedBufferSize(8);
+    fmt.setGreenBufferSize(8);
+    fmt.setBlueBufferSize(8);
+    fmt.setAlphaBufferSize(8);
+    QSurfaceFormat::setDefaultFormat(fmt);
 
     QGuiApplication::setDesktopFileName("blaadpapers");
     QGuiApplication::setApplicationName(PROJECT_NAME);
