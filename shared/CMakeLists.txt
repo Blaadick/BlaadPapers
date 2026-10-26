@@ -5,7 +5,6 @@ find_package(CURL REQUIRED)
 find_package(yyjson REQUIRED CONFIG)
 find_package(imageinfo REQUIRED CONFIG)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(VIPS REQUIRED IMPORTED_TARGET vips-cpp)
 pkg_check_modules(FFmpeg REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
 
 add_library(shared STATIC ${SOURCES} ${HEADERS})
@@ -14,7 +13,6 @@ target_link_libraries(shared PUBLIC
     CURL::libcurl
     yyjson::yyjson
     imageinfo::imageinfo
-    PkgConfig::VIPS
     PkgConfig::FFmpeg
 )
 target_compile_definitions(shared PUBLIC
