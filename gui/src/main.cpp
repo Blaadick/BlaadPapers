@@ -95,7 +95,7 @@ auto main(int argc, char* argv[]) -> int {
 
     auto previewManager = std::make_shared<PreviewManager>(logger);
     previewManager->addGenerator<PictureWallpaper>(std::make_unique<PicturePreviewGenerator>());
-    previewManager->addGenerator<VideoWallpaper>(std::make_unique<VideoPreviewGenerator>());
+    previewManager->addGenerator<VideoWallpaper>(std::make_unique<VideoPreviewGenerator>(shellExecutor));
 
     auto clipboardModel = std::make_shared<ClipboardModel>();
     auto configModel = std::make_shared<ConfigModel>(config);

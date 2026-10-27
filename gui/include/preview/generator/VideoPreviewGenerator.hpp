@@ -4,14 +4,19 @@
 #pragma once
 
 #include "PreviewGenerator.hpp"
+#include "ShellExecutor.hpp"
+#include "util/Pointers.hpp"
 
 class VideoPreviewGenerator final : public PreviewGenerator {
 public:
-    VideoPreviewGenerator();
+    explicit VideoPreviewGenerator(sptr<ShellExecutor> shellExecutor);
 
     auto createAndSavePreview(
         const Wallpaper& wallpaper,
         const Size& previewSize,
         const std::filesystem::path& previewPath
     ) const -> std::expected<void, std::string> override;
+
+private:
+    sptr<ShellExecutor> shellExecutor;
 };
