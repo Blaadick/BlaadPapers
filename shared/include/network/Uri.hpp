@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <format>
 #include <string>
 #include <unordered_map>
@@ -12,6 +13,8 @@
 class Uri final {
 public:
     static auto parse(std::string buffer) noexcept -> std::optional<Uri>;
+
+    static auto fromPath(const std::filesystem::path& path) -> Uri;
 
     auto string() const noexcept -> const std::string&;
 

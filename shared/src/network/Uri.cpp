@@ -79,6 +79,32 @@ auto Uri::parse(std::string buffer) noexcept -> std::optional<Uri> {
     );
 }
 
+auto Uri::fromPath(const std::filesystem::path& path) -> Uri {
+    auto absolutePath = (path.is_absolute() ? path : std::filesystem::absolute(path)).lexically_normal();
+    std::string buffer = "file://";
+
+    #ifdef _WIN32
+    if(absolutePath.has_root_name()) {
+        buffer += "/" + absolutePath.root_name().string();
+    }
+    #endif
+
+    for(auto& part : absolutePath.relative_path()) {
+        buffer += "/" + percentEncode(part.string());
+    }
+
+    auto scheme = buffer.subview(0, 4);
+    auto pathPart = buffer.subview(7);
+    return Uri(
+        std::move(buffer),
+        scheme,
+        "",
+        pathPart,
+        {},
+        std::nullopt
+    );
+}
+
 auto Uri::string() const noexcept -> const std::string& {
     return buffer;
 }
