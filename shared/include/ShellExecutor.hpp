@@ -3,19 +3,14 @@
 
 #pragma once
 
+#include <expected>
 #include <string_view>
 #include "logger/Logger.hpp"
-#include "util/Pointers.hpp"
 #include "wallpaper/Wallpaper.hpp"
 
 class ShellExecutor final {
 public:
-    explicit ShellExecutor(sptr<util::Logger> logger);
+    auto execute(const std::string& command, const std::vector<std::string>& customEnv = {}) const -> std::expected<int, std::string>;
 
-    auto execute(std::string_view command, std::vector<std::string> customEnv = {}) const -> int;
-
-    auto executeWithWallpaperData(std::string_view command, const Wallpaper& wallpaper) const -> int;
-
-private:
-    sptr<util::Logger> logger;
+    auto executeWithWallpaperData(const std::string& command, const Wallpaper& wallpaper) const -> std::expected<int, std::string>;
 };

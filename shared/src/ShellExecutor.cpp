@@ -30,9 +30,7 @@ namespace {
     }
 }
 
-ShellExecutor::ShellExecutor(sptr<util::Logger> logger) : logger(std::move(logger)) {}
-
-auto ShellExecutor::execute(const std::string_view command, std::vector<std::string> customEnv) const -> int {
+auto ShellExecutor::execute(const std::string& command, const std::vector<std::string>& customEnv) const -> std::expected<int, std::string> {
     if(command.empty()) {
         return 0;
     }
@@ -56,23 +54,29 @@ auto ShellExecutor::execute(const std::string_view command, std::vector<std::str
     STARTUPINFOA startupInfo{.cb = sizeof(STARTUPINFOA)};
     PROCESS_INFORMATION processInfo{};
     if(!CreateProcessA(nullptr, commandLine.data(), nullptr, nullptr, FALSE, CREATE_NO_WINDOW, envBlock.data(), nullptr, &startupInfo, &processInfo)) {
-        logger->logWarning(std::format("Failed to run \"{}\" with {}", command, "cmd.exe"));
-        return -1;
+        return std::unexpected("Unable to start command");
     }
 
-    WaitForSingleObject(processInfo.hProcess, INFINITE);
-
-    DWORD exitCode = -1;
-    GetExitCodeProcess(processInfo.hProcess, &exitCode);
+    DWORD exitCode;
+    const bool isWaited = WaitForSingleObject(processInfo.hProcess, INFINITE) != WAIT_FAILED;
+    const bool hasExitCode = isWaited && GetExitCodeProcess(processInfo.hProcess, &exitCode);
 
     CloseHandle(processInfo.hThread);
     CloseHandle(processInfo.hProcess);
+
+    if(!isWaited) {
+        return std::unexpected("Unable to get command status");
+    }
+
+    if(!hasExitCode) {
+        return std::unexpected("Unable to get command exit code");
+    }
 
     return static_cast<int>(exitCode);
     #else
     std::vector<char*> env;
     for(auto& var : customEnv) {
-        env.push_back(var.data());
+        env.push_back(const_cast<char*>(var.data()));
     }
     for(auto var = environ; *var; ++var) {
         if(!isOverridden(*var, customEnv)) {
@@ -82,24 +86,27 @@ auto ShellExecutor::execute(const std::string_view command, std::vector<std::str
     env.push_back(nullptr);
 
     auto shell = const_cast<char*>("/bin/sh");
-    std::array argv = {shell, const_cast<char*>("-c"), const_cast<char*>(command.data()), static_cast<char*>(nullptr)};
+    std::array argv = {shell, const_cast<char*>("-c"), const_cast<char*>(command.c_str()), static_cast<char*>(nullptr)};
 
     pid_t pid;
     if(posix_spawnp(&pid, shell, nullptr, nullptr, argv.data(), env.data()) != 0) {
-        logger->logWarning(std::format("Failed to run \"{}\" with \"{}\"", command, shell));
-        return -1;
+        return std::unexpected("Unable to start command");
     }
 
     int status;
-    if(waitpid(pid, &status, 0) < 0 || !WIFEXITED(status)) {
-        return -1;
+    if(waitpid(pid, &status, 0) < 0) {
+        return std::unexpected("Unable to get command status");
+    }
+
+    if(WIFSIGNALED(status)) {
+        return std::unexpected(std::format("Command terminated by signal {}", WTERMSIG(status)));
     }
 
     return WEXITSTATUS(status);
     #endif
 }
 
-auto ShellExecutor::executeWithWallpaperData(const std::string_view command, const Wallpaper& wallpaper) const -> int {
+auto ShellExecutor::executeWithWallpaperData(const std::string& command, const Wallpaper& wallpaper) const -> std::expected<int, std::string> {
     return execute(
         command,
         std::vector{

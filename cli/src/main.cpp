@@ -36,7 +36,7 @@ auto main(int argc, char* argv[]) -> int {
     }
 
     auto logger = std::make_shared<util::CliLogger>();
-    auto shellExecutor = std::make_shared<ShellExecutor>(logger);
+    auto shellExecutor = std::make_shared<ShellExecutor>();
     auto httpClient = std::make_shared<HttpClient>();
     auto fetchManager = std::make_shared<FetchManager>();
     fetchManager->addFetcher("http", std::make_unique<HttpFetcher>(httpClient, logger));
