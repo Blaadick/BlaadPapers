@@ -9,6 +9,7 @@
 #include <fstream>
 #include <random>
 #include <yyjson.h>
+#include "network/Uri.hpp"
 #include "util/PathUtils.hpp"
 #include "wallpaper/PictureWallpaper.hpp"
 #ifdef __linux__
@@ -106,10 +107,38 @@ auto WallpaperRepository::apply(const std::string_view id) const -> bool {
 
 auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
     #ifdef __linux__
-    if(std::strcmp(getenv("XDG_CURRENT_DESKTOP"), "KDE") == 0) {
+    auto deEnv = getenv("XDG_CURRENT_DESKTOP");
+
+    if(deEnv && std::strcmp(deEnv, "KDE") == 0) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
-            system(std::format("plasma-apply-wallpaperimage \"{}\" > /dev/null 2>&1", wallpaper.getFilePath()).c_str());
-            return true;
+            auto status = shellExecutor->execute(
+                std::format("plasma-apply-wallpaperimage \"{}\" > /dev/null 2>&1", wallpaper.getFilePath())
+            );
+
+            if(status.has_value() && status == 0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    if(deEnv && std::strstr(deEnv, "GNOME")) {
+        if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
+            auto status = shellExecutor->execute(
+                std::format(
+                    "gsettings set org.gnome.desktop.background picture-uri {0} > /dev/null 2>&1 && gsettings set org.gnome.desktop.background picture-uri-dark {0} > /dev/null 2>&1",
+                    Uri::fromPath(wallpaper.getFilePath())
+                )
+            );
+
+            if(status.has_value() && status == 0) {
+                return true;
+            }
+
+            return false;
         }
 
         return false;
@@ -149,6 +178,7 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
     }
 
     shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
+
     return true;
     #endif
 
@@ -161,6 +191,7 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
     );
 
     shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
+
     return out;
     #endif
 }
@@ -183,6 +214,7 @@ auto WallpaperRepository::remove(const std::string_view id) -> bool {
     fs::remove_all(wallpaper->getRootDirPath());
 
     shellExecutor->executeWithWallpaperData(config->getPostDeleteScript(), *wallpaper);
+
     return true;
 }
 
