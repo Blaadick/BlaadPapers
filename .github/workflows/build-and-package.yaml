@@ -160,7 +160,7 @@ jobs:
     aur:
         name: AUR Deploy
         needs: release
-        uses: ./.github/workflows/aur-deploy.yml
+        uses: aur-deploy.yaml
         with:
             tag: ${{ github.ref_name }}
         secrets: inherit
