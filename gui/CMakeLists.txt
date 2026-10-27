@@ -3,16 +3,24 @@ file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
 file(GLOB_RECURSE QMLS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS qml/*.qml)
 file(GLOB_RECURSE ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS resource/icon/*.svg resource/icon/*.theme)
 
-find_package(Qt6 REQUIRED COMPONENTS QuickControls2 Concurrent Svg Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS QuickControls2 Concurrent Svg Multimedia LinguistTools)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(VIPS REQUIRED IMPORTED_TARGET vips-cpp)
 
-qt_standard_project_setup(REQUIRES 6.12)
+qt_standard_project_setup(REQUIRES 6.12 I18N_SOURCE_LANGUAGE en_US I18N_TRANSLATED_LANGUAGES be de en_GB es fr it ja ko pl pt_BR ru tr uk zh_CN)
 qt_add_executable(blaadpapers WIN32 ${SOURCES} ${HEADERS})
 qt_add_qml_module(blaadpapers
     URI ${PROJECT_NAME}
     VERSION 1.0
     QML_FILES ${QMLS}
+)
+
+qt_add_translations(blaadpapers
+    SOURCE_TARGETS blaadpapers
+    TS_FILE_BASE qml
+    TS_OUTPUT_DIRECTORY resource/translations
+    RESOURCE_PREFIX /qt/qml/${PROJECT_NAME}/qml/i18n
+    MERGE_QT_TRANSLATIONS
 )
 
 qt_add_resources(blaadpapers icons

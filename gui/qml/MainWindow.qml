@@ -74,14 +74,14 @@ ApplicationWindow {
                         icon.name: "add"
 
                         Action {
-                            text: qsTr("Install Wallpaper(s)")
+                            text: qsTr("Install Wallpapers")
                             icon.name: "package"
 
                             onTriggered: installFileDialog.open()
                         }
 
                         Action {
-                            text: qsTr("Download Wallpaper(s)")
+                            text: qsTr("Download Wallpapers")
                             icon.name: "download"
 
                             onTriggered: downloadWindow.show()

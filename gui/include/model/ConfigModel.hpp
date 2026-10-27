@@ -23,6 +23,8 @@ class ConfigModel final : public QObject {
     Q_PROPERTY(bool badTaggedWallpapersVisible READ getBadTaggedWallpapersVisible WRITE setBadTaggedWallpapersVisible NOTIFY badTaggedWallpapersVisibleChanged)
     Q_PROPERTY(bool nativeTextRendering READ getNativeTextRendering WRITE setNativeTextRendering NOTIFY nativeTextRenderingChanged)
     Q_PROPERTY(QString colorScheme READ getColorScheme WRITE setColorScheme NOTIFY colorSchemeChanged)
+    Q_PROPERTY(QString language READ getLanguage WRITE setLanguage NOTIFY languageChanged)
+    Q_PROPERTY(QString uiLanguage READ getUiLanguage NOTIFY languageChanged)
 
 public:
     explicit ConfigModel(sptr<Config> config);
@@ -81,6 +83,12 @@ public:
 
     void setColorScheme(const QString& newColorScheme);
 
+    auto getLanguage() const -> QString;
+
+    void setLanguage(const QString& newLanguage);
+
+    auto getUiLanguage() const -> QString;
+
 private:
     sptr<Config> config;
 
@@ -110,4 +118,6 @@ signals:
     void nativeTextRenderingChanged();
 
     void colorSchemeChanged();
+
+    void languageChanged();
 };

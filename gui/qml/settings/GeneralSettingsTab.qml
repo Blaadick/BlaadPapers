@@ -69,7 +69,7 @@ SettingsTab {
     }
 
     GroupBox {
-        title: "Scripting"
+        title: qsTr("Scripting")
         Layout.fillWidth: true
 
         ColumnLayout {

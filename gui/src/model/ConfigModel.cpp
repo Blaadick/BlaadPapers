@@ -3,6 +3,8 @@
 
 #include "model/ConfigModel.hpp"
 
+#include <QLocale>
+#include <QTranslator>
 #include "config/Config.hpp"
 #include "util/PathUtils.hpp"
 
@@ -169,4 +171,26 @@ auto ConfigModel::getColorScheme() const -> QString {
 void ConfigModel::setColorScheme(const QString& newColorScheme) {
     config->setColorScheme(newColorScheme.toStdString());
     emit colorSchemeChanged();
+}
+
+auto ConfigModel::getLanguage() const -> QString {
+    return QString::fromStdString(config->getLanguage());
+}
+
+void ConfigModel::setLanguage(const QString& newLanguage) {
+    config->setLanguage(newLanguage.toStdString());
+    emit languageChanged();
+}
+
+auto ConfigModel::getUiLanguage() const -> QString {
+    if(config->getLanguage() != "system") {
+        return getLanguage();
+    }
+
+    QTranslator translator;
+    if(translator.load(QLocale(), "qml", "_", ":/qt/qml/" PROJECT_NAME "/qml/i18n")) {
+        return translator.language();
+    }
+
+    return "en_US";
 }

@@ -13,7 +13,7 @@ jobs:
         steps:
         -   name: Install dependencies
             run: |
-                pacman -Syu --noconfirm --needed git cmake ninja qt6-base qt6-declarative qt6-svg qt6-multimedia qt6-multimedia-ffmpeg qt6-imageformats qt6-wayland libvips libheif libjxl ffmpeg curl yyjson patchelf
+                pacman -Syu --noconfirm --needed git cmake ninja qt6-base qt6-declarative qt6-svg qt6-multimedia qt6-multimedia-ffmpeg qt6-imageformats qt6-tools qt6-translations qt6-wayland libvips libheif libjxl ffmpeg curl yyjson patchelf
                 useradd -m builder
                 echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
                 sudo -u builder git clone https://aur.archlinux.org/imageinfo.git /home/builder/imageinfo
@@ -99,7 +99,7 @@ jobs:
                 install: git
                 pacboy: >-
                     toolchain:p cmake:p ninja:p pkgconf:p nsis:p
-                    qt6-base:p qt6-declarative:p qt6-svg:p qt6-multimedia:p qt6-imageformats:p
+                    qt6-base:p qt6-declarative:p qt6-svg:p qt6-multimedia:p qt6-imageformats:p qt6-tools:p qt6-translations:p
                     libvips:p libheif:p libjxl:p ffmpeg:p curl:p yyjson:p imageinfo:p
 
         -   name: Make cfitsio pkg-config paths relocatable

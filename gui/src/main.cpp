@@ -104,6 +104,7 @@ auto main(int argc, char* argv[]) -> int {
     logger->logInfo(std::format("Loaded {} wallpapers", wallpaperRepository->count()));
 
     QQmlApplicationEngine engine;
+    engine.setUiLanguage(configModel->getUiLanguage());
     engine.rootContext()->setContextProperty("Wallpapers", wallpapersModel.get());
     engine.rootContext()->setContextProperty("Config", configModel.get());
     engine.rootContext()->setContextProperty("Status", statusModel.get());

@@ -24,6 +24,8 @@ depends=(
 makedepends=(
     "cmake"
     "ninja"
+    "qt6-tools"
+    "qt6-translations"
     "imageinfo"
 )
 conflicts=("blaadpapers-git")

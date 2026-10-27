@@ -13,9 +13,10 @@
 
 namespace {
     constexpr std::array<std::string_view, 3> colorSchemes = {"system", "dark", "light"};
+    constexpr std::array<std::string_view, 16> languages = {"system", "be", "de", "en_GB", "en_US", "es", "fr", "it", "ja", "ko", "pl", "pt_BR", "ru", "tr", "uk", "zh_CN"};
 
-    auto validOrDefault(const std::string_view value, std::span<const std::string_view> allowed) -> std::string {
-        return std::string(std::ranges::contains(allowed, value) ? value : allowed.front());
+    auto validOrDefault(const std::string_view value, std::span<const std::string_view> allowed, const std::string_view fallback) -> std::string {
+        return std::string(std::ranges::contains(allowed, value) ? value : fallback);
     }
 }
 
@@ -115,7 +116,12 @@ void Config::loadGui() {
 
     auto colorSchemeData = guiJson->tryGetString("color_scheme");
     if(colorSchemeData.has_value()) {
-        colorScheme = validOrDefault(*colorSchemeData, colorSchemes);
+        colorScheme = validOrDefault(*colorSchemeData, colorSchemes, "system");
+    }
+
+    auto languageData = guiJson->tryGetString("language");
+    if(languageData.has_value()) {
+        language = validOrDefault(*languageData, languages, "system");
     }
 }
 
@@ -199,6 +205,7 @@ void Config::saveGui() const {
     yyjson_mut_obj_add_bool(doc, root, "bad_tagged_wallpapers_visible", isBadTaggedWallpapersVisible);
     yyjson_mut_obj_add_bool(doc, root, "native_text_rendering", isNativeTextRendering);
     yyjson_mut_obj_add_str(doc, root, "color_scheme", colorScheme.c_str());
+    yyjson_mut_obj_add_str(doc, root, "language", language.c_str());
 
     yyjson_write_err writeErr;
     auto isWritten = yyjson_mut_write_file(guiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
@@ -364,7 +371,16 @@ auto Config::getColorScheme() const noexcept -> const std::string& {
 }
 
 void Config::setColorScheme(std::string_view newColorScheme) noexcept {
-    colorScheme = validOrDefault(newColorScheme, colorSchemes);
+    colorScheme = validOrDefault(newColorScheme, colorSchemes, "system");
+    saveGui();
+}
+
+auto Config::getLanguage() const noexcept -> const std::string& {
+    return language;
+}
+
+void Config::setLanguage(std::string_view newLanguage) noexcept {
+    language = validOrDefault(newLanguage, languages, "system");
     saveGui();
 }
 

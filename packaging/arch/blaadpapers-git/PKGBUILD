@@ -25,6 +25,8 @@ makedepends=(
     "git"
     "cmake"
     "ninja"
+    "qt6-tools"
+    "qt6-translations"
     "imageinfo"
 )
 provides=("blaadpapers")

@@ -85,6 +85,10 @@ public:
 
     void setColorScheme(std::string_view newColorScheme) noexcept;
 
+    auto getLanguage() const noexcept -> const std::string&;
+
+    void setLanguage(std::string_view newLanguage) noexcept;
+
     auto generalConfigFilePath() const noexcept -> const std::filesystem::path&;
 
     auto guiConfigFilePath() const noexcept -> const std::filesystem::path&;
@@ -107,4 +111,5 @@ private:
     bool isStatusBarVisible = false;
     bool isNativeTextRendering = false;
     std::string colorScheme = "system";
+    std::string language = "system";
 };
