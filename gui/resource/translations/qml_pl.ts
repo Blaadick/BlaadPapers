@@ -48,12 +48,12 @@
         <translation>Systemowy</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="110"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
         <source>Show Status Bar</source>
         <translation>Pokaż pasek stanu</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="126"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
         <source>Native Text Rendering</source>
         <translation>Natywne renderowanie tekstu</translation>
     </message>
@@ -99,22 +99,27 @@
         <translation>Złe tagi</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="72"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <source>Delete Wallpapers Permanently</source>
+        <translation>Usuwaj tapety trwale</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
         <source>Scripting</source>
         <translation>Skrypty</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="83"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
         <source>Post Install</source>
         <translation>Po instalacji</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
         <source>Post Apply</source>
         <translation>Po zastosowaniu</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
         <source>Post Delete</source>
         <translation>Po usunięciu</translation>
     </message>

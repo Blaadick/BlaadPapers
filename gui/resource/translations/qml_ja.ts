@@ -48,12 +48,12 @@
         <translation>システム</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="110"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
         <source>Show Status Bar</source>
         <translation>ステータスバーを表示</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="126"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
         <source>Native Text Rendering</source>
         <translation>ネイティブテキストレンダリング</translation>
     </message>
@@ -99,22 +99,27 @@
         <translation>悪いタグ</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="72"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <source>Delete Wallpapers Permanently</source>
+        <translation>壁紙を完全に削除</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
         <source>Scripting</source>
         <translation>スクリプト</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="83"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
         <source>Post Install</source>
         <translation>インストール後</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
         <source>Post Apply</source>
         <translation>適用後</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
         <source>Post Delete</source>
         <translation>削除後</translation>
     </message>

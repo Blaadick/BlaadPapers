@@ -48,12 +48,12 @@
         <translation>System</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="110"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
         <source>Show Status Bar</source>
         <translation>Show Status Bar</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="126"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
         <source>Native Text Rendering</source>
         <translation>Native Text Rendering</translation>
     </message>
@@ -99,22 +99,27 @@
         <translation>Bad Tags</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="72"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <source>Delete Wallpapers Permanently</source>
+        <translation>Delete Wallpapers Permanently</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
         <source>Scripting</source>
         <translation>Scripting</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="83"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
         <source>Post Install</source>
         <translation>Post Install</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
         <source>Post Apply</source>
         <translation>Post Apply</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
         <source>Post Delete</source>
         <translation>Post Delete</translation>
     </message>

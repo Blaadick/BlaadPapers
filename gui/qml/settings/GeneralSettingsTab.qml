@@ -68,6 +68,22 @@ SettingsTab {
         }
     }
 
+    RowLayout {
+        Label {
+            text: qsTr("Delete Wallpapers Permanently")
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        Switch {
+            checked: Config.deleteWallpapersPermanently
+
+            onToggled: Config.deleteWallpapersPermanently = !Config.deleteWallpapersPermanently
+        }
+    }
+
     GroupBox {
         title: qsTr("Scripting")
         Layout.fillWidth: true

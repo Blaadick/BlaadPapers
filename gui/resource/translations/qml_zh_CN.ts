@@ -48,12 +48,12 @@
         <translation>跟随系统</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="110"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
         <source>Show Status Bar</source>
         <translation>显示状态栏</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="126"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
         <source>Native Text Rendering</source>
         <translation>原生文本渲染</translation>
     </message>
@@ -99,22 +99,27 @@
         <translation>不良标签</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="72"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <source>Delete Wallpapers Permanently</source>
+        <translation>永久删除壁纸</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
         <source>Scripting</source>
         <translation>脚本</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="83"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
         <source>Post Install</source>
         <translation>安装后</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
         <source>Post Apply</source>
         <translation>应用后</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
         <source>Post Delete</source>
         <translation>删除后</translation>
     </message>

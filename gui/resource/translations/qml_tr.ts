@@ -48,12 +48,12 @@
         <translation>Sistem</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="110"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
         <source>Show Status Bar</source>
         <translation>Durum çubuğunu göster</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="126"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
         <source>Native Text Rendering</source>
         <translation>Yerel metin işleme</translation>
     </message>
@@ -99,22 +99,27 @@
         <translation>Kötü etiketler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="72"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <source>Delete Wallpapers Permanently</source>
+        <translation>Duvar kâğıtlarını kalıcı olarak sil</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
         <source>Scripting</source>
         <translation>Betikler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="83"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
         <source>Post Install</source>
         <translation>Kurulumdan sonra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
         <source>Post Apply</source>
         <translation>Uygulamadan sonra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
         <source>Post Delete</source>
         <translation>Silmeden sonra</translation>
     </message>

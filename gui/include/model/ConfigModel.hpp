@@ -13,6 +13,7 @@ class ConfigModel final : public QObject {
     Q_PROPERTY(QString wallpapersPath READ getWallpapersPath WRITE setWallpapersPath NOTIFY wallpapersPathChanged)
     Q_PROPERTY(QStringList defaultTags READ getDefaultTags WRITE setDefaultTags NOTIFY defaultTagsChanged)
     Q_PROPERTY(QStringList badTags READ getBadTags WRITE setBadTags NOTIFY badTagsChanged)
+    Q_PROPERTY(bool deleteWallpapersPermanently READ getDeleteWallpapersPermanently WRITE setDeleteWallpapersPermanently NOTIFY deleteWallpapersPermanentlyChanged)
     Q_PROPERTY(QString postInstallScript READ getPostInstallScript WRITE setPostInstallScript NOTIFY postInstallScriptChanged)
     Q_PROPERTY(QString postApplyScript READ getPostApplyScript WRITE setPostApplyScript NOTIFY postApplyScriptChanged)
     Q_PROPERTY(QString postDeleteScript READ getPostDeleteScript WRITE setPostDeleteScript NOTIFY postDeleteScriptChanged)
@@ -42,6 +43,10 @@ public:
     auto getBadTags() const -> QStringList;
 
     void setBadTags(const QStringList& newTags);
+
+    auto getDeleteWallpapersPermanently() const -> bool;
+
+    void setDeleteWallpapersPermanently(bool newDeletePermanently);
 
     auto getPostInstallScript() const -> QString;
 
@@ -98,6 +103,8 @@ signals:
     void defaultTagsChanged();
 
     void badTagsChanged();
+
+    void deleteWallpapersPermanentlyChanged();
 
     void postInstallScriptChanged();
 

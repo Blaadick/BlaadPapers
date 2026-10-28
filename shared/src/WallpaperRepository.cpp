@@ -210,7 +210,13 @@ auto WallpaperRepository::remove(const std::string_view id) -> std::expected<voi
         return std::unexpected("Wallpaper not found");
     }
 
-    if(!util::moveToTrash((*it)->getRootDirPath())) {
+    if(config->getDeleteWallpapersPermanently()) {
+        std::error_code errorCode;
+        fs::remove_all((*it)->getRootDirPath(), errorCode);
+        if(errorCode) {
+            return std::unexpected(std::format("Unable to delete wallpaper: {}", errorCode.message()));
+        }
+    } else if(!util::moveToTrash((*it)->getRootDirPath())) {
         return std::unexpected("Unable to move wallpaper to trash");
     }
 

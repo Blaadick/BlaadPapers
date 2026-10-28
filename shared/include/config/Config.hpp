@@ -41,6 +41,10 @@ public:
 
     void setBadTags(std::vector<std::string> newTags) noexcept;
 
+    auto getDeleteWallpapersPermanently() const noexcept -> bool;
+
+    void setDeleteWallpapersPermanently(bool newDeletePermanently) noexcept;
+
     auto isWallpaperBad(const Wallpaper& wallpaper) const noexcept -> bool;
 
     auto getPostInstallScript() const noexcept -> const std::string&;
@@ -98,6 +102,7 @@ private:
     std::filesystem::path wallpapersDirPath = util::documentsDir() / "Wallpapers";
     std::vector<std::string> defaultTags = {"General"};
     std::vector<std::string> badTags = {"Sensitive", "Questionable", "Explicit"};
+    bool isDeleteWallpapersPermanently = false;
     std::string postInstallScript;
     std::string postApplyScript;
     std::string postDeleteScript;

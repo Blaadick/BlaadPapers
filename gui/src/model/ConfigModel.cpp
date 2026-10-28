@@ -74,6 +74,15 @@ void ConfigModel::setBadTags(const QStringList& newTags) {
     emit badTagsChanged();
 }
 
+auto ConfigModel::getDeleteWallpapersPermanently() const -> bool {
+    return config->getDeleteWallpapersPermanently();
+}
+
+void ConfigModel::setDeleteWallpapersPermanently(const bool newDeletePermanently) {
+    config->setDeleteWallpapersPermanently(newDeletePermanently);
+    emit deleteWallpapersPermanentlyChanged();
+}
+
 auto ConfigModel::getPostInstallScript() const -> QString {
     return QString::fromStdString(config->getPostInstallScript());
 }

@@ -70,6 +70,11 @@ void Config::loadGeneral() {
         );
     }
 
+    auto deleteWallpapersPermanentlyData = generalJson->tryGetBool("delete_wallpapers_permanently");
+    if(deleteWallpapersPermanentlyData.has_value()) {
+        isDeleteWallpapersPermanently = *deleteWallpapersPermanentlyData;
+    }
+
     auto postInstallScriptData = generalJson->tryGetString("post_install_script");
     if(postInstallScriptData.has_value()) {
         postInstallScript = *postInstallScriptData;
@@ -147,6 +152,7 @@ void Config::saveGeneral() const {
     yyjson_mut_obj_add_strcpy(doc, root, "wallpapers_path", wallpapersDirPath.string().c_str());
     yyjson_mut_obj_add_val(doc, root, "default_tags", defaultTagsData);
     yyjson_mut_obj_add_val(doc, root, "bad_tags", badTagsData);
+    yyjson_mut_obj_add_bool(doc, root, "delete_wallpapers_permanently", isDeleteWallpapersPermanently);
     yyjson_mut_obj_add_str(doc, root, "post_install_script", postInstallScript.c_str());
     yyjson_mut_obj_add_str(doc, root, "post_apply_script", postApplyScript.c_str());
     yyjson_mut_obj_add_str(doc, root, "post_delete_script", postDeleteScript.c_str());
@@ -204,6 +210,15 @@ auto Config::getBadTags() const noexcept -> const std::vector<std::string>& {
 
 void Config::setBadTags(std::vector<std::string> newTags) noexcept {
     badTags = std::move(newTags);
+    saveGeneral();
+}
+
+auto Config::getDeleteWallpapersPermanently() const noexcept -> bool {
+    return isDeleteWallpapersPermanently;
+}
+
+void Config::setDeleteWallpapersPermanently(const bool newDeletePermanently) noexcept {
+    isDeleteWallpapersPermanently = newDeletePermanently;
     saveGeneral();
 }
 
