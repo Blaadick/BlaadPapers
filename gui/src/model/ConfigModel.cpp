@@ -32,17 +32,8 @@ namespace {
         return tags;
     }
 
-    auto toQString(const std::optional<std::string>& str) -> QString {
+    auto toQString(const std::expected<std::string, std::string>& str) -> QString {
         return QString::fromStdString(str.value_or(""));
-    }
-
-    auto toOptional(const QString& str) -> std::optional<std::string> {
-        auto trimmed = str.trimmed();
-        if(trimmed.isEmpty()) {
-            return std::nullopt;
-        }
-
-        return trimmed.toStdString();
     }
 }
 
@@ -115,7 +106,7 @@ auto ConfigModel::getWallhavenApiKey() const -> QString {
 }
 
 void ConfigModel::setWallhavenApiKey(const QString& newKey) {
-    config->setWallhavenApiKey(toOptional(newKey));
+    config->setWallhavenApiKey(newKey.trimmed().toStdString());
     emit wallhavenApiKeyChanged();
 }
 
@@ -124,7 +115,7 @@ auto ConfigModel::getDanbooruLogin() const -> QString {
 }
 
 void ConfigModel::setDanbooruLogin(const QString& newLogin) {
-    config->setDanbooruLogin(toOptional(newLogin));
+    config->setDanbooruLogin(newLogin.trimmed().toStdString());
     emit danbooruLoginChanged();
 }
 
@@ -133,7 +124,7 @@ auto ConfigModel::getDanbooruApiKey() const -> QString {
 }
 
 void ConfigModel::setDanbooruApiKey(const QString& newKey) {
-    config->setDanbooruApiKey(toOptional(newKey));
+    config->setDanbooruApiKey(newKey.trimmed().toStdString());
     emit danbooruApiKeyChanged();
 }
 

@@ -15,6 +15,12 @@ target_link_libraries(shared PUBLIC
     imageinfo::imageinfo
     PkgConfig::FFmpeg
 )
+
+if(NOT WIN32)
+    pkg_check_modules(LibSecret REQUIRED IMPORTED_TARGET libsecret-1)
+    target_link_libraries(shared PUBLIC PkgConfig::LibSecret)
+endif()
+
 target_compile_definitions(shared PUBLIC
     $<$<COMPILE_LANGUAGE:CXX>:PROJECT_NAME="${PROJECT_NAME}">
     $<$<COMPILE_LANGUAGE:CXX>:PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION}">

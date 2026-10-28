@@ -20,13 +20,12 @@ namespace {
     }
 }
 
-Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
+Config::Config(sptr<util::Logger> logger, sptr<SecretStorage> secretStorage) : logger(std::move(logger)), secretStorage(std::move(secretStorage)) {}
 
 void Config::load() {
     if(util::createDirIfNotExists(util::configDir())) {
         loadGeneral();
         loadGui();
-        loadApi();
     } else {
         logger->logError("Failed to create configs directory");
     }
@@ -125,44 +124,9 @@ void Config::loadGui() {
     }
 }
 
-void Config::loadApi() {
-    if(!std::filesystem::exists(apiConfigFilePath())) {
-        saveApi();
-        return;
-    }
-
-    auto apiJson = JsonObj::tryParse(apiConfigFilePath());
-    if(!apiJson.has_value()) {
-        logger->logError(std::format("Failed to parse API config file: {}", apiJson.error()));
-        return;
-    }
-
-    auto wallhavenApiObj = apiJson->tryGetObj("wallhaven");
-    if(wallhavenApiObj.has_value()) {
-        auto wallhavenApiKeyStr = wallhavenApiObj->tryGetString("key");
-        if(wallhavenApiKeyStr.has_value()) {
-            wallhavenApiKey = *wallhavenApiKeyStr;
-        }
-    }
-
-    auto danbooruApiObj = apiJson->tryGetObj("danbooru");
-    if(danbooruApiObj.has_value()) {
-        auto danbooruLoginStr = danbooruApiObj->tryGetString("login");
-        if(danbooruLoginStr.has_value()) {
-            danbooruLogin = *danbooruLoginStr;
-        }
-
-        auto danbooruApiKeyStr = danbooruApiObj->tryGetString("key");
-        if(danbooruApiKeyStr.has_value()) {
-            danbooruApiKey = *danbooruApiKeyStr;
-        }
-    }
-}
-
 void Config::save() const {
     saveGeneral();
     saveGui();
-    saveApi();
 }
 
 void Config::saveGeneral() const {
@@ -211,39 +175,6 @@ void Config::saveGui() const {
     auto isWritten = yyjson_mut_write_file(guiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
     if(!isWritten) {
         logger->logError(std::format("Failed to write config file to \"{}\"", guiConfigFilePath()));
-    }
-
-    yyjson_mut_doc_free(doc);
-}
-
-void Config::saveApi() const {
-    auto doc = yyjson_mut_doc_new(nullptr);
-    auto root = yyjson_mut_obj(doc);
-    yyjson_mut_doc_set_root(doc, root);
-
-    auto wallhavenData = yyjson_mut_obj_add_obj(doc, root, "wallhaven");
-    if(wallhavenApiKey.has_value()) {
-        yyjson_mut_obj_add_str(doc, wallhavenData, "key", wallhavenApiKey->c_str());
-    } else {
-        yyjson_mut_obj_add_null(doc, wallhavenData, "key");
-    }
-
-    auto danbooruData = yyjson_mut_obj_add_obj(doc, root, "danbooru");
-    if(danbooruLogin.has_value()) {
-        yyjson_mut_obj_add_str(doc, danbooruData, "login", danbooruLogin->c_str());
-    } else {
-        yyjson_mut_obj_add_null(doc, danbooruData, "login");
-    }
-    if(danbooruApiKey.has_value()) {
-        yyjson_mut_obj_add_str(doc, danbooruData, "key", danbooruApiKey->c_str());
-    } else {
-        yyjson_mut_obj_add_null(doc, danbooruData, "key");
-    }
-
-    yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(apiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
-    if(!isWritten) {
-        logger->logError(std::format("Failed to write config file to \"{}\"", apiConfigFilePath()));
     }
 
     yyjson_mut_doc_free(doc);
@@ -312,31 +243,37 @@ void Config::setPostDeleteScript(std::string newScript) noexcept {
     saveGeneral();
 }
 
-auto Config::getWallhavenApiKey() const noexcept -> const std::optional<std::string>& {
-    return wallhavenApiKey;
+auto Config::getWallhavenApiKey() const -> std::expected<std::string, std::string> {
+    return secretStorage->get("wallhaven/key");
 }
 
-void Config::setWallhavenApiKey(std::optional<std::string> newKey) noexcept {
-    wallhavenApiKey = std::move(newKey);
-    saveApi();
+void Config::setWallhavenApiKey(const std::string& newKey) const {
+    auto result = secretStorage->set("wallhaven/key", newKey);
+    if(!result.has_value()) {
+        logger->logError(std::format("Failed to set wallhaven api key: {}", result.error()));
+    }
 }
 
-auto Config::getDanbooruLogin() const noexcept -> const std::optional<std::string>& {
-    return danbooruLogin;
+auto Config::getDanbooruLogin() const -> std::expected<std::string, std::string> {
+    return secretStorage->get("danbooru/login");
 }
 
-void Config::setDanbooruLogin(std::optional<std::string> newLogin) noexcept {
-    danbooruLogin = std::move(newLogin);
-    saveApi();
+void Config::setDanbooruLogin(const std::string& newLogin) const {
+    auto result = secretStorage->set("danbooru/login", newLogin);
+    if(!result.has_value()) {
+        logger->logError(std::format("Failed to set danbooru login: {}", result.error()));
+    }
 }
 
-auto Config::getDanbooruApiKey() const noexcept -> const std::optional<std::string>& {
-    return danbooruApiKey;
+auto Config::getDanbooruApiKey() const -> std::expected<std::string, std::string> {
+    return secretStorage->get("danbooru/key");
 }
 
-void Config::setDanbooruApiKey(std::optional<std::string> newKey) noexcept {
-    danbooruApiKey = std::move(newKey);
-    saveApi();
+void Config::setDanbooruApiKey(const std::string& newKey) const {
+    auto result = secretStorage->set("danbooru/key", newKey);
+    if(!result.has_value()) {
+        logger->logError(std::format("Failed to set danbooru api key: {}", result.error()));
+    }
 }
 
 auto Config::getStatusBarVisible() const noexcept -> bool {
@@ -392,9 +329,4 @@ auto Config::generalConfigFilePath() const noexcept -> const std::filesystem::pa
 auto Config::guiConfigFilePath() const noexcept -> const std::filesystem::path& {
     static const auto guiConfigFilePath = util::configDir() / "gui.json";
     return guiConfigFilePath;
-}
-
-auto Config::apiConfigFilePath() const noexcept -> const std::filesystem::path& {
-    static const auto apiConfigFilePath = util::configDir() / "api.json";
-    return apiConfigFilePath;
 }

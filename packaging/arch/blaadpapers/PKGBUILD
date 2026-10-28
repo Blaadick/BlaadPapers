@@ -16,10 +16,14 @@ depends=(
     "qt6-imageformats"
     "curl"
     "yyjson"
+    "libsecret"
     "libvips"
     "ffmpeg"
     "mpvpaper"
     "bstyle"
+)
+optdepends=(
+    "org.freedesktop.secrets: storing API keys"
 )
 makedepends=(
     "cmake"

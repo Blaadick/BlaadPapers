@@ -10,6 +10,7 @@
 #include <QStyleHints>
 #include <vips/vips8>
 #include "DefaultWallpaper.hpp"
+#include "SecretStorage.hpp"
 #include "ShellExecutor.hpp"
 #include "config/Config.hpp"
 #include "logger/GuiLogger.hpp"
@@ -51,7 +52,8 @@ auto main(int argc, char* argv[]) -> int {
     fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
     fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
 
-    auto config = std::make_shared<Config>(logger);
+    auto secretStorage = std::make_shared<SecretStorage>();
+    auto config = std::make_shared<Config>(logger, secretStorage);
     config->load();
 
     auto wallpaperRepository = std::make_shared<WallpaperRepository>(config, shellExecutor);

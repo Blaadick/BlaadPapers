@@ -3,9 +3,11 @@
 
 #pragma once
 
+#include <expected>
 #include <filesystem>
 #include <string>
 #include <vector>
+#include "SecretStorage.hpp"
 #include "logger/Logger.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Pointers.hpp"
@@ -13,7 +15,7 @@
 
 class Config final {
 public:
-    explicit Config(sptr<util::Logger> logger);
+    Config(sptr<util::Logger> logger, sptr<SecretStorage> secretStorage);
 
     void load();
 
@@ -21,15 +23,11 @@ public:
 
     void loadGui();
 
-    void loadApi();
-
     void save() const;
 
     void saveGeneral() const;
 
     void saveGui() const;
-
-    void saveApi() const;
 
     auto getWallpapersDirPath() const noexcept -> const std::filesystem::path&;
 
@@ -57,17 +55,17 @@ public:
 
     void setPostDeleteScript(std::string newScript) noexcept;
 
-    auto getWallhavenApiKey() const noexcept -> const std::optional<std::string>&;
+    auto getWallhavenApiKey() const -> std::expected<std::string, std::string>;
 
-    void setWallhavenApiKey(std::optional<std::string> newKey) noexcept;
+    void setWallhavenApiKey(const std::string& newKey) const;
 
-    auto getDanbooruLogin() const noexcept -> const std::optional<std::string>&;
+    auto getDanbooruLogin() const -> std::expected<std::string, std::string>;
 
-    void setDanbooruLogin(std::optional<std::string> newLogin) noexcept;
+    void setDanbooruLogin(const std::string& newLogin) const;
 
-    auto getDanbooruApiKey() const noexcept -> const std::optional<std::string>&;
+    auto getDanbooruApiKey() const -> std::expected<std::string, std::string>;
 
-    void setDanbooruApiKey(std::optional<std::string> newKey) noexcept;
+    void setDanbooruApiKey(const std::string& newKey) const;
 
     auto getStatusBarVisible() const noexcept -> bool;
 
@@ -93,10 +91,9 @@ public:
 
     auto guiConfigFilePath() const noexcept -> const std::filesystem::path&;
 
-    auto apiConfigFilePath() const noexcept -> const std::filesystem::path&;
-
 private:
     sptr<util::Logger> logger;
+    sptr<SecretStorage> secretStorage;
 
     std::filesystem::path wallpapersDirPath = util::documentsDir() / "Wallpapers";
     std::vector<std::string> defaultTags = {"General"};
@@ -104,9 +101,6 @@ private:
     std::string postInstallScript;
     std::string postApplyScript;
     std::string postDeleteScript;
-    std::optional<std::string> wallhavenApiKey = std::nullopt;
-    std::optional<std::string> danbooruLogin = std::nullopt;
-    std::optional<std::string> danbooruApiKey = std::nullopt;
     bool isBadTaggedWallpapersVisible = true;
     bool isStatusBarVisible = false;
     bool isNativeTextRendering = false;
