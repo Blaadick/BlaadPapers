@@ -19,7 +19,7 @@ extern char** environ;
 #endif
 
 namespace {
-    auto isOverridden(const std::string_view var, const std::vector<std::string>& env) -> bool {
+    auto isOverridden(const std::string_view var, std::span<const std::string> env) -> bool {
         const auto name = var.substr(0, var.find('=') + 1);
         return std::ranges::any_of(
             env,
@@ -30,12 +30,12 @@ namespace {
     }
 }
 
-auto ShellExecutor::execute(const std::string& command, const std::vector<std::string>& customEnv) const -> std::expected<int, std::string> {
+#ifdef _WIN32
+auto ShellExecutor::execute(const std::string& command, std::span<const std::string> customEnv) const -> std::expected<int, std::string> {
     if(command.empty()) {
         return 0;
     }
 
-    #ifdef _WIN32
     std::string envBlock;
     for(const auto& var : customEnv) {
         envBlock += var;
@@ -73,7 +73,13 @@ auto ShellExecutor::execute(const std::string& command, const std::vector<std::s
     }
 
     return static_cast<int>(exitCode);
-    #else
+}
+#else
+auto ShellExecutor::execute(const std::string& command, std::span<const std::string> customEnv) const -> std::expected<int, std::string> {
+    if(command.empty()) {
+        return 0;
+    }
+
     std::vector<char*> env;
     for(auto& var : customEnv) {
         env.push_back(const_cast<char*>(var.data()));
@@ -103,13 +109,13 @@ auto ShellExecutor::execute(const std::string& command, const std::vector<std::s
     }
 
     return WEXITSTATUS(status);
-    #endif
 }
+#endif
 
 auto ShellExecutor::executeWithWallpaperData(const std::string& command, const Wallpaper& wallpaper) const -> std::expected<int, std::string> {
     return execute(
         command,
-        std::vector{
+        std::array{
             std::format("WALLPAPER_ID={}", wallpaper.getId()),
             std::format("WALLPAPER_NAME={}", wallpaper.getName()),
             std::format("WALLPAPER_TAGS={}", util::join(wallpaper.getTags(), ",")),
