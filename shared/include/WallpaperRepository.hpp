@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <expected>
+#include <string>
 #include "ShellExecutor.hpp"
 #include "config/Config.hpp"
 #include "util/Pointers.hpp"
@@ -27,7 +29,7 @@ public:
 
     auto apply(const Wallpaper& wallpaper) const -> bool;
 
-    auto remove(std::string_view id) -> bool;
+    auto remove(std::string_view id) -> std::expected<void, std::string>;
 
     void sortByName();
 

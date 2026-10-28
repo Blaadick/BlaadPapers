@@ -21,11 +21,12 @@ auto RemoveOption::execute(
         return 1;
     }
 
-    if(wallpaperRepository->remove(arguments[0])) {
+    const auto result = wallpaperRepository->remove(arguments[0]);
+    if(result.has_value()) {
         logger->logInfo(std::format("Wallpaper \"{}\" deleted", arguments[0]));
         return 0;
     }
 
-    logger->logError(std::format("Wallpaper \"{}\" not found", arguments[0]));
+    logger->logError(std::format("Failed to deleted wallpaper \"{}\": {}", arguments[0], result.error()));
     return 2;
 }

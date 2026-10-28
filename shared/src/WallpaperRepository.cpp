@@ -11,7 +11,9 @@
 #include <yyjson.h>
 #include "network/Uri.hpp"
 #include "util/PathUtils.hpp"
+#include "util/Trash.hpp"
 #include "wallpaper/PictureWallpaper.hpp"
+
 #ifdef __linux__
 #include <unistd.h>
 #include <sys/socket.h>
@@ -196,7 +198,7 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
     #endif
 }
 
-auto WallpaperRepository::remove(const std::string_view id) -> bool {
+auto WallpaperRepository::remove(const std::string_view id) -> std::expected<void, std::string> {
     const auto it = std::ranges::find_if(
         wallpapers,
         [&id](const auto& wallpaper) {
@@ -205,17 +207,19 @@ auto WallpaperRepository::remove(const std::string_view id) -> bool {
     );
 
     if(it == wallpapers.end()) {
-        return false;
+        return std::unexpected("Wallpaper not found");
+    }
+
+    if(!util::moveToTrash((*it)->getRootDirPath())) {
+        return std::unexpected("Unable to move wallpaper to trash");
     }
 
     const auto wallpaper = std::move(*it);
     wallpapers.erase(it);
 
-    fs::remove_all(wallpaper->getRootDirPath());
-
     shellExecutor->executeWithWallpaperData(config->getPostDeleteScript(), *wallpaper);
 
-    return true;
+    return {};
 }
 
 void WallpaperRepository::sortByName() {

@@ -195,9 +195,10 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) const {
 }
 
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
-    if(wallpaperRepository->remove(wallpaperId.toStdString())) {
+    const auto result = wallpaperRepository->remove(wallpaperId.toStdString());
+    if(result.has_value()) {
         logger->logInfo(std::format("Wallpaper \"{}\" deleted", wallpaperId));
     } else {
-        logger->logWarning(std::format("Failed to delete wallpaper \"{}\"", wallpaperId));
+        logger->logWarning(std::format("Failed to delete wallpaper \"{}\": {}", wallpaperId, result.error()));
     }
 }
