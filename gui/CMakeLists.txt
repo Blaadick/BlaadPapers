@@ -15,6 +15,7 @@ qt_add_qml_module(blaadpapers
     QML_FILES ${QMLS}
 )
 
+set(QT_NO_MISSING_CATALOG_LANGUAGE_WARNING ON)
 qt_add_translations(blaadpapers
     SOURCE_TARGETS blaadpapers
     TS_FILE_BASE qml
