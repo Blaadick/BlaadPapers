@@ -87,6 +87,10 @@ public:
 
     void setColorScheme(std::string_view newColorScheme) noexcept;
 
+    auto getIconTheme() const noexcept -> const std::string&;
+
+    void setIconTheme(std::string_view newIconTheme) noexcept;
+
     auto getLanguage() const noexcept -> const std::string&;
 
     void setLanguage(std::string_view newLanguage) noexcept;
@@ -110,5 +114,6 @@ private:
     bool isStatusBarVisible = false;
     bool isNativeTextRendering = false;
     std::string colorScheme = "system";
+    std::string iconTheme = "material";
     std::string language = "system";
 };

@@ -9,7 +9,7 @@
         <translation>Wygląd</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="44"/>
         <source>Color Scheme</source>
         <translation>Schemat kolorów</translation>
     </message>
@@ -19,22 +19,37 @@
         <translation>Motyw</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
+        <source>Icon Theme</source>
+        <translation>Motyw ikon</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="27"/>
+        <source>Requires restart</source>
+        <translation>Wymaga ponownego uruchomienia</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="34"/>
+        <source>System</source>
+        <translation>Systemowy</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="97"/>
         <source>Window</source>
         <translation>Okno</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="106"/>
         <source>Show Status Bar</source>
         <translation>Pokaż pasek stanu</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="122"/>
         <source>Native Text Rendering</source>
         <translation>Natywne renderowanie tekstu</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="123"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Renderuj tekst systemowym silnikiem czcionek zamiast silnika Qt. Tekst wygląda jak w innych aplikacjach, ale gorzej się skaluje. Wymaga ponownego uruchomienia</translation>
     </message>

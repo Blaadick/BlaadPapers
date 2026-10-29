@@ -3,7 +3,9 @@
 
 #include "model/ConfigModel.hpp"
 
+#include <QDir>
 #include <QLocale>
+#include <QSettings>
 #include <QTranslator>
 #include "config/Config.hpp"
 #include "util/PathUtils.hpp"
@@ -171,6 +173,32 @@ auto ConfigModel::getColorScheme() const -> QString {
 void ConfigModel::setColorScheme(const QString& newColorScheme) {
     config->setColorScheme(newColorScheme.toStdString());
     emit colorSchemeChanged();
+}
+
+auto ConfigModel::getIconTheme() const -> QString {
+    return QString::fromStdString(config->getIconTheme());
+}
+
+void ConfigModel::setIconTheme(const QString& newIconTheme) {
+    config->setIconTheme(newIconTheme.toStdString());
+    emit iconThemeChanged();
+}
+
+auto ConfigModel::getIconThemes() const -> QVariantList {
+    QVariantList themes;
+
+    for(const auto& themeId : QDir(":/icons").entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        QSettings index(QDir(":/icons").filePath(themeId + "/index.theme"), QSettings::IniFormat);
+        QVariantMap theme = {{"value", themeId}, {"text", index.value("Icon Theme/Name", themeId)}};
+
+        if(themeId == "material") {
+            themes.prepend(theme);
+        } else {
+            themes.append(theme);
+        }
+    }
+
+    return themes;
 }
 
 auto ConfigModel::getLanguage() const -> QString {

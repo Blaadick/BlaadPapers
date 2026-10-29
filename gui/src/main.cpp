@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QCommandLineParser>
+#include <QFile>
 #include <QLoggingCategory>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QQuickStyle>
 #include <QQuickWindow>
 #include <QStyleHints>
 #include <vips/vips8>
@@ -75,7 +75,18 @@ auto main(int argc, char* argv[]) -> int {
     QGuiApplication app(argc, argv);
 
     QThreadPool::globalInstance()->setMaxThreadCount(std::ceil(QThread::idealThreadCount() / 2));
-    QIcon::setThemeName("blaadpapers");
+    QIcon::setThemeSearchPaths(QStringList{":/icons"} + QIcon::themeSearchPaths());
+
+    auto iconTheme = QString::fromStdString(config->getIconTheme());
+    if(iconTheme != "system" && !QFile::exists(":/icons/" + iconTheme + "/index.theme")) {
+        config->setIconTheme("material");
+    }
+
+    if(config->getIconTheme() != "system") {
+        QIcon::setThemeName(QString::fromStdString(config->getIconTheme()));
+    }
+
+    QIcon::setFallbackThemeName("material");
 
     if(config->getColorScheme() == "dark") {
         QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Dark);

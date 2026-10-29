@@ -14,27 +14,42 @@
         <translation>Tema</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="44"/>
         <source>Color Scheme</source>
         <translation>Schema di colori</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
+        <source>Icon Theme</source>
+        <translation>Tema delle icone</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="27"/>
+        <source>Requires restart</source>
+        <translation>Richiede il riavvio</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="34"/>
+        <source>System</source>
+        <translation>Sistema</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="97"/>
         <source>Window</source>
         <translation>Finestra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="106"/>
         <source>Show Status Bar</source>
         <translation>Mostra barra di stato</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="122"/>
         <source>Native Text Rendering</source>
         <translation>Rendering nativo del testo</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="123"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Esegue il rendering del testo con il motore dei caratteri di sistema invece di quello di Qt. Il testo appare come nelle altre app, ma si ridimensiona peggio. Richiede il riavvio</translation>
     </message>

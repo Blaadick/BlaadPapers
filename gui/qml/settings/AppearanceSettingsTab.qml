@@ -22,6 +22,24 @@ SettingsTab {
             spacing: 10
 
             RowLayout {
+                SettingLabel {
+                    text: qsTr("Icon Theme")
+                    description: qsTr("Requires restart")
+                }
+
+                ComboBox {
+                    textRole: "text"
+                    valueRole: "value"
+                    implicitContentWidthPolicy: ComboBox.WidestText
+                    model: [{value: "system", text: qsTr("System")}].concat(Config.iconThemes)
+
+                    Component.onCompleted: currentIndex = indexOfValue(Config.iconTheme)
+
+                    onActivated: Config.iconTheme = currentValue
+                }
+            }
+
+            RowLayout {
                 Label {
                     text: qsTr("Color Scheme")
                 }

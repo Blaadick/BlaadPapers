@@ -9,7 +9,7 @@
         <translation>모양</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="44"/>
         <source>Color Scheme</source>
         <translation>색 구성표</translation>
     </message>
@@ -19,22 +19,37 @@
         <translation>테마</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
+        <source>Icon Theme</source>
+        <translation>아이콘 테마</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="27"/>
+        <source>Requires restart</source>
+        <translation>재시작이 필요합니다</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="34"/>
+        <source>System</source>
+        <translation>시스템</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="97"/>
         <source>Window</source>
         <translation>창</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="106"/>
         <source>Show Status Bar</source>
         <translation>상태 표시줄 표시</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="122"/>
         <source>Native Text Rendering</source>
         <translation>네이티브 텍스트 렌더링</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="123"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Qt 엔진 대신 시스템 글꼴 엔진으로 텍스트를 렌더링합니다. 다른 앱과 같은 모양이지만 확대·축소에 약합니다. 재시작이 필요합니다</translation>
     </message>

@@ -123,6 +123,11 @@ void Config::loadGui() {
         colorScheme = validOrDefault(*colorSchemeData, colorSchemes, "system");
     }
 
+    auto iconThemeData = guiJson->tryGetString("icon_theme");
+    if(iconThemeData.has_value()) {
+        iconTheme = *iconThemeData;
+    }
+
     auto languageData = guiJson->tryGetString("language");
     if(languageData.has_value()) {
         language = validOrDefault(*languageData, languages, "system");
@@ -175,6 +180,7 @@ void Config::saveGui() const {
     yyjson_mut_obj_add_bool(doc, root, "bad_tagged_wallpapers_visible", isBadTaggedWallpapersVisible);
     yyjson_mut_obj_add_bool(doc, root, "native_text_rendering", isNativeTextRendering);
     yyjson_mut_obj_add_str(doc, root, "color_scheme", colorScheme.c_str());
+    yyjson_mut_obj_add_str(doc, root, "icon_theme", iconTheme.c_str());
     yyjson_mut_obj_add_str(doc, root, "language", language.c_str());
 
     yyjson_write_err writeErr;
@@ -324,6 +330,15 @@ auto Config::getColorScheme() const noexcept -> const std::string& {
 
 void Config::setColorScheme(std::string_view newColorScheme) noexcept {
     colorScheme = validOrDefault(newColorScheme, colorSchemes, "system");
+    saveGui();
+}
+
+auto Config::getIconTheme() const noexcept -> const std::string& {
+    return iconTheme;
+}
+
+void Config::setIconTheme(std::string_view newIconTheme) noexcept {
+    iconTheme = newIconTheme;
     saveGui();
 }
 

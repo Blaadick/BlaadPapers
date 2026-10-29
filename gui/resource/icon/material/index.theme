@@ -1,6 +1,6 @@
 [Icon Theme]
-Name=BlaadPapers
-Comment=BlaadPapers icon theme
+Name=Material
+Comment=Material Symbols by Google
 Directories=scalable/actions,scalable/categories,scalable/status
 
 [scalable/actions]
