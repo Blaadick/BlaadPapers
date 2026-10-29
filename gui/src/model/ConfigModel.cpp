@@ -43,17 +43,17 @@ auto ConfigModel::getConfigDirUrl() const -> QUrl {
     return QUrl::fromLocalFile(QString::fromStdString(util::configDir().string()));
 }
 
-auto ConfigModel::getWallpapersPath() const -> QString {
-    return QString::fromStdString(config->getWallpapersDirPath().string());
+auto ConfigModel::getWallpapersFolder() const -> QString {
+    return QString::fromStdString(config->getWallpapersFolder().string());
 }
 
-void ConfigModel::setWallpapersPath(const QString& newPath) {
+void ConfigModel::setWallpapersFolder(const QString& newPath) {
     auto path = newPath.trimmed();
     if(!path.isEmpty()) {
-        config->setWallpapersDirPath(path.toStdString());
+        config->setWallpapersFolder(path.toStdString());
     }
 
-    emit wallpapersPathChanged();
+    emit wallpapersFolderChanged();
 }
 
 auto ConfigModel::getDefaultTags() const -> QStringList {

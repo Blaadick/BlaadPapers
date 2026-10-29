@@ -10,7 +10,7 @@
 class ConfigModel final : public QObject {
     Q_OBJECT
     Q_PROPERTY(QUrl configDirUrl READ getConfigDirUrl CONSTANT)
-    Q_PROPERTY(QString wallpapersPath READ getWallpapersPath WRITE setWallpapersPath NOTIFY wallpapersPathChanged)
+    Q_PROPERTY(QString wallpapersFolder READ getWallpapersFolder WRITE setWallpapersFolder NOTIFY wallpapersFolderChanged)
     Q_PROPERTY(QStringList defaultTags READ getDefaultTags WRITE setDefaultTags NOTIFY defaultTagsChanged)
     Q_PROPERTY(QStringList badTags READ getBadTags WRITE setBadTags NOTIFY badTagsChanged)
     Q_PROPERTY(bool deleteWallpapersPermanently READ getDeleteWallpapersPermanently WRITE setDeleteWallpapersPermanently NOTIFY deleteWallpapersPermanentlyChanged)
@@ -32,9 +32,9 @@ public:
 
     auto getConfigDirUrl() const -> QUrl;
 
-    auto getWallpapersPath() const -> QString;
+    auto getWallpapersFolder() const -> QString;
 
-    void setWallpapersPath(const QString& newPath);
+    void setWallpapersFolder(const QString& newPath);
 
     auto getDefaultTags() const -> QStringList;
 
@@ -98,7 +98,7 @@ private:
     sptr<Config> config;
 
 signals:
-    void wallpapersPathChanged();
+    void wallpapersFolderChanged();
 
     void defaultTagsChanged();
 

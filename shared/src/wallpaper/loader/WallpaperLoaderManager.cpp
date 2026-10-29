@@ -54,12 +54,12 @@ auto WallpaperLoaderManager::loadWallpaper(std::filesystem::path wallpaperFilePa
 void WallpaperLoaderManager::loadWallpapers() const {
     wallpaperRepository->clear();
 
-    if(!util::createDirIfNotExists(config->getWallpapersDirPath())) {
-        logger->logError(std::format("Failed to create directory \"{}\"", config->getWallpapersDirPath()));
+    if(!util::createDirIfNotExists(config->getWallpapersFolder())) {
+        logger->logError(std::format("Failed to create directory \"{}\"", config->getWallpapersFolder()));
         return;
     }
 
-    for(const auto& wallpapersDirEntry : fs::directory_iterator(config->getWallpapersDirPath())) {
+    for(const auto& wallpapersDirEntry : fs::directory_iterator(config->getWallpapersFolder())) {
         if(!wallpapersDirEntry.is_directory()) {
             continue;
         }

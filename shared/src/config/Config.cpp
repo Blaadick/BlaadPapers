@@ -43,9 +43,9 @@ void Config::loadGeneral() {
         return;
     }
 
-    auto wallpapersPathData = generalJson->tryGetString("wallpapers_path");
-    if(wallpapersPathData.has_value()) {
-        wallpapersDirPath = *wallpapersPathData;
+    auto wallpapersFolderData = generalJson->tryGetString("wallpapers_folder");
+    if(wallpapersFolderData.has_value()) {
+        wallpapersFolder = *wallpapersFolderData;
     }
 
     auto defaultTagsData = generalJson->tryGetArr("default_tags");
@@ -149,7 +149,7 @@ void Config::saveGeneral() const {
         yyjson_mut_arr_add_str(doc, badTagsData, tag.c_str());
     }
 
-    yyjson_mut_obj_add_strcpy(doc, root, "wallpapers_path", wallpapersDirPath.string().c_str());
+    yyjson_mut_obj_add_strcpy(doc, root, "wallpapers_folder", wallpapersFolder.string().c_str());
     yyjson_mut_obj_add_val(doc, root, "default_tags", defaultTagsData);
     yyjson_mut_obj_add_val(doc, root, "bad_tags", badTagsData);
     yyjson_mut_obj_add_bool(doc, root, "delete_wallpapers_permanently", isDeleteWallpapersPermanently);
@@ -186,12 +186,12 @@ void Config::saveGui() const {
     yyjson_mut_doc_free(doc);
 }
 
-auto Config::getWallpapersDirPath() const noexcept -> const std::filesystem::path& {
-    return wallpapersDirPath;
+auto Config::getWallpapersFolder() const noexcept -> const std::filesystem::path& {
+    return wallpapersFolder;
 }
 
-void Config::setWallpapersDirPath(std::filesystem::path newPath) noexcept {
-    wallpapersDirPath = std::move(newPath);
+void Config::setWallpapersFolder(std::filesystem::path newPath) noexcept {
+    wallpapersFolder = std::move(newPath);
     saveGeneral();
 }
 

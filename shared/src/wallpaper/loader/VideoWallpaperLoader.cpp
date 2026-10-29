@@ -18,7 +18,7 @@ auto VideoWallpaperLoader::installWallpaper(
     std::optional<WallpaperData> wallpaperData
 ) const -> std::expected<sptr<Wallpaper>, std::string> {
     auto wallpaperId = filePath.stem().string();
-    auto wallpaperDirPath = config->getWallpapersDirPath() / wallpaperId;
+    auto wallpaperDirPath = config->getWallpapersFolder() / wallpaperId;
     auto wallpaperFilePath = wallpaperDirPath / ("wallpaper" + filePath.extension().string());
     auto wallpaperDataFilePath = wallpaperDirPath / "data.json";
 

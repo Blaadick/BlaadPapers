@@ -85,7 +85,7 @@
     </message>
     <message>
         <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
-        <source>Wallpapers Path</source>
+        <source>Wallpapers Folder</source>
         <translation>Cartella degli sfondi</translation>
     </message>
     <message>

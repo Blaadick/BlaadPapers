@@ -10,7 +10,7 @@ SettingsTab {
 
     RowLayout {
         Label {
-            text: qsTr("Wallpapers Path")
+            text: qsTr("Wallpapers Folder")
         }
 
         Item {
@@ -18,11 +18,11 @@ SettingsTab {
         }
 
         TextField {
-            text: Config.wallpapersPath
+            text: Config.wallpapersFolder
             placeholderText: "/home/user/..."
             Layout.preferredWidth: 300
 
-            onEditingFinished: Config.wallpapersPath = text
+            onEditingFinished: Config.wallpapersFolder = text
         }
     }
 

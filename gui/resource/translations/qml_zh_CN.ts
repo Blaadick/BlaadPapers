@@ -85,8 +85,8 @@
     </message>
     <message>
         <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
-        <source>Wallpapers Path</source>
-        <translation>壁纸路径</translation>
+        <source>Wallpapers Folder</source>
+        <translation>壁纸文件夹</translation>
     </message>
     <message>
         <location filename="../../qml/settings/GeneralSettingsTab.qml" line="31"/>

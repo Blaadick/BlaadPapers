@@ -29,9 +29,9 @@ public:
 
     void saveGui() const;
 
-    auto getWallpapersDirPath() const noexcept -> const std::filesystem::path&;
+    auto getWallpapersFolder() const noexcept -> const std::filesystem::path&;
 
-    void setWallpapersDirPath(std::filesystem::path newPath) noexcept;
+    void setWallpapersFolder(std::filesystem::path newPath) noexcept;
 
     auto getDefaultTags() const noexcept -> const std::vector<std::string>&;
 
@@ -99,7 +99,7 @@ private:
     sptr<util::Logger> logger;
     sptr<SecretStorage> secretStorage;
 
-    std::filesystem::path wallpapersDirPath = util::documentsDir() / "Wallpapers";
+    std::filesystem::path wallpapersFolder = util::documentsDir() / "Wallpapers";
     std::vector<std::string> defaultTags = {"General"};
     std::vector<std::string> badTags = {"Sensitive", "Questionable", "Explicit"};
     bool isDeleteWallpapersPermanently = false;
