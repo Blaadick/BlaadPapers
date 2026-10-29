@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <QObject>
 #include <QUrl>
+#include <QVariant>
 #include "config/Config.hpp"
 
 class ConfigModel final : public QObject {
