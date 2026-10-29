@@ -9,11 +9,6 @@
         <translation>Apparence</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
-        <source>Language</source>
-        <translation>Langue</translation>
-    </message>
-    <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
         <source>Color Scheme</source>
         <translation>Schéma de couleurs</translation>
@@ -24,27 +19,22 @@
         <translation>Thème</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
-        <source>System</source>
-        <translation>Système</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
         <source>Show Status Bar</source>
         <translation>Afficher la barre d&apos;état</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
         <source>Native Text Rendering</source>
         <translation>Rendu natif du texte</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Rendre le texte avec le moteur de polices du système au lieu de celui de Qt. Le texte ressemble à celui des autres applications, mais se met moins bien à l&apos;échelle. Redémarrage requis</translation>
     </message>
@@ -95,17 +85,32 @@
         <translation>Supprimer les fonds d&apos;écran définitivement</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <source>Region &amp; Language</source>
+        <translation>Région et langue</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <source>Language</source>
+        <translation>Langue</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="111"/>
+        <source>System</source>
+        <translation>Système</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="153"/>
         <source>After Install</source>
         <translation>Après l&apos;installation</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="169"/>
         <source>After Apply</source>
         <translation>Après l&apos;application</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="185"/>
         <source>After Delete</source>
         <translation>Après la suppression</translation>
     </message>
@@ -130,7 +135,7 @@
         <translation>Supprimer immédiatement le dossier du fond d&apos;écran sans le déplacer dans la corbeille</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="142"/>
         <source>Scripting</source>
         <translation>Scripts</translation>
     </message>

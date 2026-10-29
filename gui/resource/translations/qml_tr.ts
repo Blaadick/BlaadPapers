@@ -19,32 +19,22 @@
         <translation>Renk şeması</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
-        <source>Language</source>
-        <translation>Dil</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
-        <source>System</source>
-        <translation>Sistem</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
         <source>Window</source>
         <translation>Pencere</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
         <source>Show Status Bar</source>
         <translation>Durum çubuğunu göster</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
         <source>Native Text Rendering</source>
         <translation>Yerel metin işleme</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Metni Qt motoru yerine sistemin yazı tipi motoruyla işle. Metin diğer uygulamalardaki gibi görünür ama daha kötü ölçeklenir. Yeniden başlatma gerekir</translation>
     </message>
@@ -95,17 +85,32 @@
         <translation>Duvar kâğıtlarını kalıcı olarak sil</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <source>Region &amp; Language</source>
+        <translation>Bölge ve dil</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <source>Language</source>
+        <translation>Dil</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="111"/>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="153"/>
         <source>After Install</source>
         <translation>Kurulumdan sonra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="169"/>
         <source>After Apply</source>
         <translation>Uygulamadan sonra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="185"/>
         <source>After Delete</source>
         <translation>Silme işleminden sonra</translation>
     </message>
@@ -130,7 +135,7 @@
         <translation>Duvar kâğıdı klasörünü çöp kutusuna taşımadan hemen sil</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="142"/>
         <source>Scripting</source>
         <translation>Betikler</translation>
     </message>

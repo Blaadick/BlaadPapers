@@ -87,6 +87,58 @@ SettingsTab {
     }
 
     GroupBox {
+        title: qsTr("Region & Language")
+        Layout.fillWidth: true
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 10
+
+            RowLayout {
+                Label {
+                    text: qsTr("Language")
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                ComboBox {
+                    textRole: "text"
+                    valueRole: "value"
+                    implicitContentWidthPolicy: ComboBox.WidestText
+                    model: [
+                        {value: "system", text: qsTr("System")},
+                        {value: "de", text: "Deutsch"},
+                        {value: "en_GB", text: "English (UK)"},
+                        {value: "en_US", text: "English (US)"},
+                        {value: "es", text: "Español"},
+                        {value: "fr", text: "Français"},
+                        {value: "it", text: "Italiano"},
+                        {value: "pl", text: "Polski"},
+                        {value: "pt_BR", text: "Português (Brasil)"},
+                        {value: "tr", text: "Türkçe"},
+                        {value: "be", text: "Беларуская"},
+                        {value: "ru", text: "Русский"},
+                        {value: "uk", text: "Українська"},
+                        {value: "ja", text: "日本語"},
+                        {value: "zh_CN", text: "简体中文"},
+                        {value: "ko", text: "한국어"}
+                    ]
+
+                    Component.onCompleted: currentIndex = indexOfValue(Config.language)
+                    onModelChanged: currentIndex = indexOfValue(Config.language)
+
+                    onActivated: {
+                        Config.language = currentValue
+                        Qt.uiLanguage = Config.uiLanguage
+                    }
+                }
+            }
+        }
+    }
+
+    GroupBox {
         title: qsTr("Scripting")
         Layout.fillWidth: true
 

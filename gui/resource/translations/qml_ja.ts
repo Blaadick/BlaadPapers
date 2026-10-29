@@ -9,11 +9,6 @@
         <translation>外観</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
-        <source>Language</source>
-        <translation>言語</translation>
-    </message>
-    <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
         <source>Color Scheme</source>
         <translation>配色</translation>
@@ -24,27 +19,22 @@
         <translation>テーマ</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
-        <source>System</source>
-        <translation>システム</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
         <source>Window</source>
         <translation>ウィンドウ</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
         <source>Show Status Bar</source>
         <translation>ステータスバーを表示</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
         <source>Native Text Rendering</source>
         <translation>ネイティブテキストレンダリング</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Qt のエンジンの代わりにシステムのフォントエンジンでテキストを描画します。他のアプリと同じ見た目になりますが、拡大縮小に弱くなります。再起動が必要です</translation>
     </message>
@@ -95,17 +85,32 @@
         <translation>壁紙を完全に削除</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <source>Region &amp; Language</source>
+        <translation>地域と言語</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <source>Language</source>
+        <translation>言語</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="111"/>
+        <source>System</source>
+        <translation>システム</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="153"/>
         <source>After Install</source>
         <translation>インストール後</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="169"/>
         <source>After Apply</source>
         <translation>適用後</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="185"/>
         <source>After Delete</source>
         <translation>削除後</translation>
     </message>
@@ -130,7 +135,7 @@
         <translation>壁紙のフォルダーをゴミ箱に移さずにすぐ削除します</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="142"/>
         <source>Scripting</source>
         <translation>スクリプト</translation>
     </message>

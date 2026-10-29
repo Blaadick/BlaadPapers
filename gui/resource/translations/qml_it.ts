@@ -19,32 +19,22 @@
         <translation>Schema di colori</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
-        <source>Language</source>
-        <translation>Lingua</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
-        <source>System</source>
-        <translation>Sistema</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
         <source>Window</source>
         <translation>Finestra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
         <source>Show Status Bar</source>
         <translation>Mostra barra di stato</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
         <source>Native Text Rendering</source>
         <translation>Rendering nativo del testo</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Esegue il rendering del testo con il motore dei caratteri di sistema invece di quello di Qt. Il testo appare come nelle altre app, ma si ridimensiona peggio. Richiede il riavvio</translation>
     </message>
@@ -95,17 +85,32 @@
         <translation>Elimina sfondi definitivamente</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <source>Region &amp; Language</source>
+        <translation>Regione e lingua</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <source>Language</source>
+        <translation>Lingua</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="111"/>
+        <source>System</source>
+        <translation>Sistema</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="153"/>
         <source>After Install</source>
         <translation>Dopo l&apos;installazione</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="169"/>
         <source>After Apply</source>
         <translation>Dopo l&apos;applicazione</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="185"/>
         <source>After Delete</source>
         <translation>Dopo l&apos;eliminazione</translation>
     </message>
@@ -130,7 +135,7 @@
         <translation>Elimina subito la cartella dello sfondo senza spostarla nel cestino</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="142"/>
         <source>Scripting</source>
         <translation>Script</translation>
     </message>

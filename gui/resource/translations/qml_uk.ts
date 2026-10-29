@@ -9,11 +9,6 @@
         <translation>Зовнішній вигляд</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
-        <source>Language</source>
-        <translation>Мова</translation>
-    </message>
-    <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
         <source>Color Scheme</source>
         <translation>Колірна схема</translation>
@@ -24,27 +19,22 @@
         <translation>Тема</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
-        <source>System</source>
-        <translation>Системна</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="79"/>
         <source>Window</source>
         <translation>Вікно</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="88"/>
         <source>Show Status Bar</source>
         <translation>Показувати рядок стану</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="104"/>
         <source>Native Text Rendering</source>
         <translation>Нативний рендеринг тексту</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="105"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Рендерити текст системним рушієм шрифтів замість рушія Qt. Текст виглядає як в інших застосунках, але гірше масштабується. Потрібен перезапуск</translation>
     </message>
@@ -95,17 +85,32 @@
         <translation>Видаляти шпалери назавжди</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <source>Region &amp; Language</source>
+        <translation>Регіон і мова</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <source>Language</source>
+        <translation>Мова</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="111"/>
+        <source>System</source>
+        <translation>Системна</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="153"/>
         <source>After Install</source>
         <translation>Після встановлення</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="169"/>
         <source>After Apply</source>
         <translation>Після застосування</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="185"/>
         <source>After Delete</source>
         <translation>Після видалення</translation>
     </message>
@@ -130,7 +135,7 @@
         <translation>Видаляти теку зі шпалерами одразу, не переміщуючи до кошика</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="142"/>
         <source>Scripting</source>
         <translation>Скрипти</translation>
     </message>
