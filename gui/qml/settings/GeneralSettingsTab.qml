@@ -7,71 +7,82 @@ import QtQuick.Layouts
 
 SettingsTab {
     title: qsTr("General")
+    icon: "preferences"
 
-    RowLayout {
-        Label {
-            text: qsTr("Wallpapers Folder")
-        }
+    GroupBox {
+        title: qsTr("Behavior")
+        Layout.fillWidth: true
 
-        Item {
-            Layout.fillWidth: true
-        }
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 10
 
-        TextField {
-            text: Config.wallpapersFolder
-            placeholderText: "/home/user/..."
-            Layout.preferredWidth: 300
+            RowLayout {
+                Label {
+                    text: qsTr("Wallpapers Folder")
+                }
 
-            onEditingFinished: Config.wallpapersFolder = text
-        }
-    }
+                Item {
+                    Layout.fillWidth: true
+                }
 
-    RowLayout {
-        SettingLabel {
-            text: qsTr("Default Tags")
-            description: qsTr("Tags applied to a wallpaper when it is added")
-            topPadding: defaultTags.topPadding
-            Layout.alignment: Qt.AlignTop
-        }
+                TextField {
+                    text: Config.wallpapersFolder
+                    placeholderText: "/home/user/..."
+                    Layout.preferredWidth: 400
 
-        TextArea {
-            id: defaultTags
-            text: Config.defaultTags.join('\n')
-            placeholderText: "Tag1\nTag2\nTag3\n..."
-            Layout.preferredWidth: 300
+                    onEditingFinished: Config.wallpapersFolder = text
+                }
+            }
 
-            onEditingFinished: Config.defaultTags = text.split('\n')
-        }
-    }
+            RowLayout {
+                SettingLabel {
+                    text: qsTr("Default Tags")
+                    description: qsTr("Tags applied to a wallpaper when it is added")
+                    topPadding: defaultTags.topPadding
+                    Layout.alignment: Qt.AlignTop
+                }
 
-    RowLayout {
-        SettingLabel {
-            text: qsTr("Bad Tags")
-            description: qsTr("Strict measures are applied to wallpapers with these tags")
-            topPadding: badTags.topPadding
-            Layout.alignment: Qt.AlignTop
-        }
+                TextArea {
+                    id: defaultTags
+                    text: Config.defaultTags.join('\n')
+                    placeholderText: "Tag1\nTag2\nTag3\n..."
+                    Layout.preferredWidth: 300
 
-        TextArea {
-            id: badTags
-            text: Config.badTags.join('\n')
-            placeholderText: "Tag1\nTag2\nTag3\n..."
-            Layout.preferredWidth: 300
+                    onEditingFinished: Config.defaultTags = text.split('\n')
+                }
+            }
 
-            onEditingFinished: Config.badTags = text.split('\n')
-        }
-    }
+            RowLayout {
+                SettingLabel {
+                    text: qsTr("Bad Tags")
+                    description: qsTr("Strict measures are applied to wallpapers with these tags")
+                    topPadding: badTags.topPadding
+                    Layout.alignment: Qt.AlignTop
+                }
 
-    RowLayout {
-        SettingLabel {
-            text: qsTr("Delete Wallpapers Permanently")
-            description: qsTr("Delete the wallpaper folder immediately without moving it to the trash")
-        }
+                TextArea {
+                    id: badTags
+                    text: Config.badTags.join('\n')
+                    placeholderText: "Tag1\nTag2\nTag3\n..."
+                    Layout.preferredWidth: 300
 
-        Switch {
-            checked: Config.deleteWallpapersPermanently
+                    onEditingFinished: Config.badTags = text.split('\n')
+                }
+            }
 
-            onToggled: Config.deleteWallpapersPermanently = !Config.deleteWallpapersPermanently
+            RowLayout {
+                SettingLabel {
+                    text: qsTr("Delete Wallpapers Permanently")
+                    description: qsTr("Delete the wallpaper folder immediately without moving it to the trash")
+                }
+
+                Switch {
+                    checked: Config.deleteWallpapersPermanently
+
+                    onToggled: Config.deleteWallpapersPermanently = !Config.deleteWallpapersPermanently
+                }
+            }
         }
     }
 
@@ -87,7 +98,7 @@ SettingsTab {
                 Layout.fillWidth: true
 
                 Label {
-                    text: qsTr("Post Install")
+                    text: qsTr("After Install")
                 }
 
                 TextField {
@@ -103,7 +114,7 @@ SettingsTab {
                 Layout.fillWidth: true
 
                 Label {
-                    text: qsTr("Post Apply")
+                    text: qsTr("After Apply")
                 }
 
                 TextField {
@@ -119,7 +130,7 @@ SettingsTab {
                 Layout.fillWidth: true
 
                 Label {
-                    text: qsTr("Post Delete")
+                    text: qsTr("After Delete")
                 }
 
                 TextField {

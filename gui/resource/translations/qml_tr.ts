@@ -2,30 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="tr" sourcelanguage="en_US">
 <context>
-    <name>ApiSettingsTab</name>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="9"/>
-        <source>API</source>
-        <translation>API</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="19"/>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="65"/>
-        <source>API Key</source>
-        <translation>API anahtarı</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="47"/>
-        <source>Login</source>
-        <translation>Giriş adı</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="56"/>
-        <source>Username</source>
-        <translation>Kullanıcı adı</translation>
-    </message>
-</context>
-<context>
     <name>AppearanceSettingsTab</name>
     <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="9"/>
@@ -34,31 +10,41 @@
     </message>
     <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="17"/>
+        <source>Theme</source>
+        <translation>Tema</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
         <source>Color Scheme</source>
         <translation>Renk şeması</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="69"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
         <source>Language</source>
         <translation>Dil</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="81"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
         <source>System</source>
         <translation>Sistem</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <source>Window</source>
+        <translation>Pencere</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
         <source>Show Status Bar</source>
         <translation>Durum çubuğunu göster</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
         <source>Native Text Rendering</source>
         <translation>Yerel metin işleme</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="128"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Metni Qt motoru yerine sistemin yazı tipi motoruyla işle. Metin diğer uygulamalardaki gibi görünür ama daha kötü ölçeklenir. Yeniden başlatma gerekir</translation>
     </message>
@@ -89,59 +75,64 @@
         <translation>Genel</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="22"/>
         <source>Wallpapers Folder</source>
         <translation>Duvar kâğıdı klasörü</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="31"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="40"/>
         <source>Default Tags</source>
         <translation>Varsayılan etiketler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="49"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="58"/>
         <source>Bad Tags</source>
         <translation>Kötü etiketler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="67"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="76"/>
         <source>Delete Wallpapers Permanently</source>
         <translation>Duvar kâğıtlarını kalıcı olarak sil</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="32"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <source>After Install</source>
+        <translation>Kurulumdan sonra</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <source>After Apply</source>
+        <translation>Uygulamadan sonra</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <source>After Delete</source>
+        <translation>Silme işleminden sonra</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="41"/>
         <source>Tags applied to a wallpaper when it is added</source>
         <translation>Duvar kâğıdı eklendiğinde ona atanan etiketler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="50"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
+        <source>Behavior</source>
+        <translation>Davranış</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="59"/>
         <source>Strict measures are applied to wallpapers with these tags</source>
         <translation>Bu etiketlere sahip duvar kâğıtlarına katı önlemler uygulanır</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="68"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="77"/>
         <source>Delete the wallpaper folder immediately without moving it to the trash</source>
         <translation>Duvar kâğıdı klasörünü çöp kutusuna taşımadan hemen sil</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="79"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
         <source>Scripting</source>
         <translation>Betikler</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
-        <source>Post Install</source>
-        <translation>Kurulumdan sonra</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="106"/>
-        <source>Post Apply</source>
-        <translation>Uygulamadan sonra</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="122"/>
-        <source>Post Delete</source>
-        <translation>Silmeden sonra</translation>
     </message>
 </context>
 <context>
@@ -183,6 +174,30 @@
     </message>
 </context>
 <context>
+    <name>NetworkSettingsTab</name>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="9"/>
+        <source>Network</source>
+        <translation>Ağ</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="20"/>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="66"/>
+        <source>API Key</source>
+        <translation>API anahtarı</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="48"/>
+        <source>Login</source>
+        <translation>Giriş adı</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="57"/>
+        <source>Username</source>
+        <translation>Kullanıcı adı</translation>
+    </message>
+</context>
+<context>
     <name>SettingsWindow</name>
     <message>
         <location filename="../../qml/settings/SettingsWindow.qml" line="16"/>
@@ -190,22 +205,22 @@
         <translation>Ayarlar</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="75"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="76"/>
         <source>Open Configs</source>
         <translation>Yapılandırmayı aç</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="86"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="87"/>
         <source>Reset All</source>
         <translation>Tümünü sıfırla</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="91"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="92"/>
         <source>Reset</source>
         <translation>Sıfırla</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="96"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="97"/>
         <source>Ok</source>
         <translation>Tamam</translation>
     </message>

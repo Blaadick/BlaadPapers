@@ -1,10 +1,17 @@
 [Icon Theme]
 Name=BlaadPapers
 Comment=BlaadPapers icon theme
-Directories=scalable/actions,scalable/status
+Directories=scalable/actions,scalable/categories,scalable/status
 
 [scalable/actions]
 Context=Actions
+Size=24
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[scalable/categories]
+Context=Categories
 Size=24
 MinSize=8
 MaxSize=512

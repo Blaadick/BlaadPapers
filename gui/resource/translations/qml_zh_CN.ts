@@ -2,30 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
-    <name>ApiSettingsTab</name>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="9"/>
-        <source>API</source>
-        <translation>API</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="19"/>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="65"/>
-        <source>API Key</source>
-        <translation>API 密钥</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="47"/>
-        <source>Login</source>
-        <translation>登录名</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="56"/>
-        <source>Username</source>
-        <translation>用户名</translation>
-    </message>
-</context>
-<context>
     <name>AppearanceSettingsTab</name>
     <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="9"/>
@@ -33,32 +9,42 @@
         <translation>外观</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="69"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="17"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
         <source>Color Scheme</source>
         <translation>配色方案</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="81"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="17"/>
+        <source>Theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
         <source>System</source>
         <translation>跟随系统</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <source>Window</source>
+        <translation>窗口</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
         <source>Show Status Bar</source>
         <translation>显示状态栏</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
         <source>Native Text Rendering</source>
         <translation>原生文本渲染</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="128"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>使用系统字体引擎而非 Qt 引擎渲染文本。文本外观与其他应用一致，但缩放效果较差。需要重启</translation>
     </message>
@@ -89,59 +75,64 @@
         <translation>常规</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="22"/>
         <source>Wallpapers Folder</source>
         <translation>壁纸文件夹</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="31"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="40"/>
         <source>Default Tags</source>
         <translation>默认标签</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="49"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="58"/>
         <source>Bad Tags</source>
         <translation>不良标签</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="67"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="76"/>
         <source>Delete Wallpapers Permanently</source>
         <translation>永久删除壁纸</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="32"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <source>After Install</source>
+        <translation>安装后</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <source>After Apply</source>
+        <translation>应用后</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <source>After Delete</source>
+        <translation>删除后</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="41"/>
         <source>Tags applied to a wallpaper when it is added</source>
         <translation>添加壁纸时为其分配的标签</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="50"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
+        <source>Behavior</source>
+        <translation>行为</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="59"/>
         <source>Strict measures are applied to wallpapers with these tags</source>
         <translation>带有这些标签的壁纸将受到严格限制</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="68"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="77"/>
         <source>Delete the wallpaper folder immediately without moving it to the trash</source>
         <translation>直接删除壁纸文件夹，而不移至回收站</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="79"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
         <source>Scripting</source>
         <translation>脚本</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
-        <source>Post Install</source>
-        <translation>安装后</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="106"/>
-        <source>Post Apply</source>
-        <translation>应用后</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="122"/>
-        <source>Post Delete</source>
-        <translation>删除后</translation>
     </message>
 </context>
 <context>
@@ -183,6 +174,30 @@
     </message>
 </context>
 <context>
+    <name>NetworkSettingsTab</name>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="9"/>
+        <source>Network</source>
+        <translation>网络</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="20"/>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="66"/>
+        <source>API Key</source>
+        <translation>API 密钥</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="48"/>
+        <source>Login</source>
+        <translation>登录名</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="57"/>
+        <source>Username</source>
+        <translation>用户名</translation>
+    </message>
+</context>
+<context>
     <name>SettingsWindow</name>
     <message>
         <location filename="../../qml/settings/SettingsWindow.qml" line="16"/>
@@ -190,22 +205,22 @@
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="75"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="76"/>
         <source>Open Configs</source>
         <translation>打开配置</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="86"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="87"/>
         <source>Reset All</source>
         <translation>全部重置</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="91"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="92"/>
         <source>Reset</source>
         <translation>重置</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="96"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="97"/>
         <source>Ok</source>
         <translation>确定</translation>
     </message>

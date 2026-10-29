@@ -2,30 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="es" sourcelanguage="en_US">
 <context>
-    <name>ApiSettingsTab</name>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="9"/>
-        <source>API</source>
-        <translation>API</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="19"/>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="65"/>
-        <source>API Key</source>
-        <translation>Clave de API</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="47"/>
-        <source>Login</source>
-        <translation>Usuario</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/ApiSettingsTab.qml" line="56"/>
-        <source>Username</source>
-        <translation>Nombre de usuario</translation>
-    </message>
-</context>
-<context>
     <name>AppearanceSettingsTab</name>
     <message>
         <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="9"/>
@@ -33,32 +9,42 @@
         <translation>Apariencia</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="69"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="78"/>
         <source>Language</source>
         <translation>Idioma</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="17"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="26"/>
         <source>Color Scheme</source>
         <translation>Esquema de colores</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="81"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="17"/>
+        <source>Theme</source>
+        <translation>Tema</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="90"/>
         <source>System</source>
         <translation>Sistema</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="111"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="121"/>
+        <source>Window</source>
+        <translation>Ventana</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="130"/>
         <source>Show Status Bar</source>
         <translation>Mostrar barra de estado</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="127"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="146"/>
         <source>Native Text Rendering</source>
         <translation>Renderizado de texto nativo</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="128"/>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="147"/>
         <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
         <translation>Renderizar el texto con el motor de fuentes del sistema en lugar del de Qt. El texto se ve como en otras aplicaciones, pero escala peor. Requiere reiniciar</translation>
     </message>
@@ -89,59 +75,64 @@
         <translation>General</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="22"/>
         <source>Wallpapers Folder</source>
         <translation>Carpeta de fondos de pantalla</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="31"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="40"/>
         <source>Default Tags</source>
         <translation>Etiquetas predeterminadas</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="49"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="58"/>
         <source>Bad Tags</source>
         <translation>Etiquetas malas</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="67"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="76"/>
         <source>Delete Wallpapers Permanently</source>
         <translation>Eliminar fondos de pantalla permanentemente</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="32"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="101"/>
+        <source>After Install</source>
+        <translation>Tras la instalación</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="117"/>
+        <source>After Apply</source>
+        <translation>Tras la aplicación</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="133"/>
+        <source>After Delete</source>
+        <translation>Tras la eliminación</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="41"/>
         <source>Tags applied to a wallpaper when it is added</source>
         <translation>Etiquetas que se asignan a un fondo de pantalla al añadirlo</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="50"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="13"/>
+        <source>Behavior</source>
+        <translation>Comportamiento</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="59"/>
         <source>Strict measures are applied to wallpapers with these tags</source>
         <translation>Se aplican medidas estrictas a los fondos de pantalla con estas etiquetas</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="68"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="77"/>
         <source>Delete the wallpaper folder immediately without moving it to the trash</source>
         <translation>Eliminar la carpeta del fondo de pantalla al instante, sin moverla a la papelera</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="79"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
         <source>Scripting</source>
         <translation>Scripts</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
-        <source>Post Install</source>
-        <translation>Tras instalar</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="106"/>
-        <source>Post Apply</source>
-        <translation>Tras aplicar</translation>
-    </message>
-    <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="122"/>
-        <source>Post Delete</source>
-        <translation>Tras eliminar</translation>
     </message>
 </context>
 <context>
@@ -183,6 +174,30 @@
     </message>
 </context>
 <context>
+    <name>NetworkSettingsTab</name>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="9"/>
+        <source>Network</source>
+        <translation>Red</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="20"/>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="66"/>
+        <source>API Key</source>
+        <translation>Clave de API</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="48"/>
+        <source>Login</source>
+        <translation>Usuario</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/NetworkSettingsTab.qml" line="57"/>
+        <source>Username</source>
+        <translation>Nombre de usuario</translation>
+    </message>
+</context>
+<context>
     <name>SettingsWindow</name>
     <message>
         <location filename="../../qml/settings/SettingsWindow.qml" line="16"/>
@@ -190,22 +205,22 @@
         <translation>Configuración</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="75"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="76"/>
         <source>Open Configs</source>
         <translation>Abrir configuración</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="86"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="87"/>
         <source>Reset All</source>
         <translation>Restablecer todo</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="91"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="92"/>
         <source>Reset</source>
         <translation>Restablecer</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/SettingsWindow.qml" line="96"/>
+        <location filename="../../qml/settings/SettingsWindow.qml" line="97"/>
         <source>Ok</source>
         <translation>Aceptar</translation>
     </message>

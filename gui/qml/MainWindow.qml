@@ -45,7 +45,7 @@ ApplicationWindow {
 
         AppearanceSettingsTab {}
 
-        ApiSettingsTab {}
+        NetworkSettingsTab {}
     }
 
     ColumnLayout {

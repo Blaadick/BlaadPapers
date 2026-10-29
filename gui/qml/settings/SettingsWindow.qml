@@ -10,7 +10,7 @@ ApplicationWindow {
     width: 900
     height: 500
     minimumWidth: layout.implicitWidth + 2 * layout.anchors.margins
-    minimumHeight: layout.implicitHeight + 2 * layout.anchors.margins
+    minimumHeight: 350
     modality: Qt.NonModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: qsTr("Settings")
@@ -47,6 +47,7 @@ ApplicationWindow {
 
                     width: ListView.view.width
                     text: modelData.title
+                    icon.name: modelData.icon
                     highlighted: ListView.isCurrentItem
 
                     onClicked: tabs.currentIndex = index

@@ -6,7 +6,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 SettingsTab {
-    title: qsTr("API")
+    title: qsTr("Network")
+    icon: "preferences-network"
 
     GroupBox {
         title: "Wallhaven"
