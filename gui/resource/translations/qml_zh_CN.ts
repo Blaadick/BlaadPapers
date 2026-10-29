@@ -57,6 +57,11 @@
         <source>Native Text Rendering</source>
         <translation>原生文本渲染</translation>
     </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="128"/>
+        <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
+        <translation>使用系统字体引擎而非 Qt 引擎渲染文本。文本外观与其他应用一致，但缩放效果较差。需要重启</translation>
+    </message>
 </context>
 <context>
     <name>DownloadWindow</name>
@@ -94,32 +99,47 @@
         <translation>默认标签</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="52"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="49"/>
         <source>Bad Tags</source>
         <translation>不良标签</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="67"/>
         <source>Delete Wallpapers Permanently</source>
         <translation>永久删除壁纸</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="32"/>
+        <source>Tags applied to a wallpaper when it is added</source>
+        <translation>添加壁纸时为其分配的标签</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="50"/>
+        <source>Strict measures are applied to wallpapers with these tags</source>
+        <translation>带有这些标签的壁纸将受到严格限制</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="68"/>
+        <source>Delete the wallpaper folder immediately without moving it to the trash</source>
+        <translation>直接删除壁纸文件夹，而不移至回收站</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="79"/>
         <source>Scripting</source>
         <translation>脚本</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
         <source>Post Install</source>
         <translation>安装后</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="106"/>
         <source>Post Apply</source>
         <translation>应用后</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="122"/>
         <source>Post Delete</source>
         <translation>删除后</translation>
     </message>

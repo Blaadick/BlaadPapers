@@ -123,12 +123,9 @@ SettingsTab {
     }
 
     RowLayout {
-        Label {
+        SettingLabel {
             text: qsTr("Native Text Rendering")
-        }
-
-        Item {
-            Layout.fillWidth: true
+            description: qsTr("Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart")
         }
 
         Switch {

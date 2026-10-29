@@ -27,14 +27,11 @@ SettingsTab {
     }
 
     RowLayout {
-        Label {
+        SettingLabel {
             text: qsTr("Default Tags")
+            description: qsTr("Tags applied to a wallpaper when it is added")
             topPadding: defaultTags.topPadding
             Layout.alignment: Qt.AlignTop
-        }
-
-        Item {
-            Layout.fillWidth: true
         }
 
         TextArea {
@@ -48,14 +45,11 @@ SettingsTab {
     }
 
     RowLayout {
-        Label {
+        SettingLabel {
             text: qsTr("Bad Tags")
+            description: qsTr("Strict measures are applied to wallpapers with these tags")
             topPadding: badTags.topPadding
             Layout.alignment: Qt.AlignTop
-        }
-
-        Item {
-            Layout.fillWidth: true
         }
 
         TextArea {
@@ -69,12 +63,9 @@ SettingsTab {
     }
 
     RowLayout {
-        Label {
+        SettingLabel {
             text: qsTr("Delete Wallpapers Permanently")
-        }
-
-        Item {
-            Layout.fillWidth: true
+            description: qsTr("Delete the wallpaper folder immediately without moving it to the trash")
         }
 
         Switch {

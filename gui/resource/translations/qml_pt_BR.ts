@@ -57,6 +57,11 @@
         <source>Native Text Rendering</source>
         <translation>Renderização nativa de texto</translation>
     </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="128"/>
+        <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
+        <translation>Renderizar o texto com o mecanismo de fontes do sistema em vez do Qt. O texto fica igual ao de outros aplicativos, mas escala pior. Requer reinicialização</translation>
+    </message>
 </context>
 <context>
     <name>DownloadWindow</name>
@@ -94,32 +99,47 @@
         <translation>Tags padrão</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="52"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="49"/>
         <source>Bad Tags</source>
         <translation>Tags ruins</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="67"/>
         <source>Delete Wallpapers Permanently</source>
         <translation>Excluir papéis de parede permanentemente</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="32"/>
+        <source>Tags applied to a wallpaper when it is added</source>
+        <translation>Tags aplicadas a um papel de parede ao adicioná-lo</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="50"/>
+        <source>Strict measures are applied to wallpapers with these tags</source>
+        <translation>Medidas rígidas são aplicadas aos papéis de parede com estas tags</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="68"/>
+        <source>Delete the wallpaper folder immediately without moving it to the trash</source>
+        <translation>Excluir a pasta do papel de parede imediatamente, sem movê-la para a lixeira</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="79"/>
         <source>Scripting</source>
         <translation>Scripts</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
         <source>Post Install</source>
         <translation>Após instalar</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="106"/>
         <source>Post Apply</source>
         <translation>Após aplicar</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="122"/>
         <source>Post Delete</source>
         <translation>Após excluir</translation>
     </message>

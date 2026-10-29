@@ -57,6 +57,11 @@
         <source>Native Text Rendering</source>
         <translation>Yerel metin işleme</translation>
     </message>
+    <message>
+        <location filename="../../qml/settings/AppearanceSettingsTab.qml" line="128"/>
+        <source>Render text with the system font engine instead of the Qt one. Text looks like in other apps but scales worse. Requires restart</source>
+        <translation>Metni Qt motoru yerine sistemin yazı tipi motoruyla işle. Metin diğer uygulamalardaki gibi görünür ama daha kötü ölçeklenir. Yeniden başlatma gerekir</translation>
+    </message>
 </context>
 <context>
     <name>DownloadWindow</name>
@@ -94,32 +99,47 @@
         <translation>Varsayılan etiketler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="52"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="49"/>
         <source>Bad Tags</source>
         <translation>Kötü etiketler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="73"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="67"/>
         <source>Delete Wallpapers Permanently</source>
         <translation>Duvar kâğıtlarını kalıcı olarak sil</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="88"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="32"/>
+        <source>Tags applied to a wallpaper when it is added</source>
+        <translation>Duvar kâğıdı eklendiğinde ona atanan etiketler</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="50"/>
+        <source>Strict measures are applied to wallpapers with these tags</source>
+        <translation>Bu etiketlere sahip duvar kâğıtlarına katı önlemler uygulanır</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="68"/>
+        <source>Delete the wallpaper folder immediately without moving it to the trash</source>
+        <translation>Duvar kâğıdı klasörünü çöp kutusuna taşımadan hemen sil</translation>
+    </message>
+    <message>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="79"/>
         <source>Scripting</source>
         <translation>Betikler</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="99"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="90"/>
         <source>Post Install</source>
         <translation>Kurulumdan sonra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="115"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="106"/>
         <source>Post Apply</source>
         <translation>Uygulamadan sonra</translation>
     </message>
     <message>
-        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="131"/>
+        <location filename="../../qml/settings/GeneralSettingsTab.qml" line="122"/>
         <source>Post Delete</source>
         <translation>Silmeden sonra</translation>
     </message>
