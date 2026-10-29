@@ -10,12 +10,7 @@ WallpaperPreview {
 
     required property size wallpaperResolution
     required property int wallpaperFrameRate
-
-    ToolTip {
-        id: tooltip
-        text: `${control.wallpaperName} [${wallpaperResolution.width}x${wallpaperResolution.height} ${wallpaperFrameRate}fps]\n${control.wallpaperTags.join(", ")}${control.wallpaperSource === "" ? "" : `\n${control.wallpaperSource}`}`
-        visible: control.hovered
-    }
+    additionalData: `${wallpaperResolution.width}x${wallpaperResolution.height} ${wallpaperFrameRate}fps`
 
     background: VideoOutput {
         id: videoOutput

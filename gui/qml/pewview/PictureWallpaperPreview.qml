@@ -8,12 +8,7 @@ WallpaperPreview {
     id: control
 
     required property size wallpaperResolution
-
-    ToolTip {
-        id: tooltip
-        text: `${control.wallpaperName} [${wallpaperResolution.width}x${wallpaperResolution.height}]\n${control.wallpaperTags.join(", ")}${control.wallpaperSource === "" ? "" : `\n${control.wallpaperSource}`}`
-        visible: control.hovered
-    }
+    additionalData: `${wallpaperResolution.width}x${wallpaperResolution.height}`
 
     background: Image {
         anchors.fill: parent

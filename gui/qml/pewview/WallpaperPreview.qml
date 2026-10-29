@@ -15,6 +15,7 @@ Button {
     required property string wallpaperSource
     required property var wallpaperTags
     required property bool isWallpaperBad
+    property string additionalData
     readonly property bool isMotionReduced: Application.styleHints.accessibility.motionPreference === 1
     property real previewScale: !isMotionReduced && !pressed && hovered ? 1.1 : 1
 
@@ -50,6 +51,75 @@ Button {
             NumberAnimation {
                 easing.type: Easing.OutQuad
                 duration: control.isMotionReduced ? 0 : 240
+            }
+        }
+    }
+
+    Rectangle {
+        id: infoBar
+        width: control.width
+        height: infoColumn.implicitHeight + 8
+        y: control.hovered ? control.height - height : control.height + 10
+        color: Qt.alpha(control.palette.toolTipBase, 0.8)
+
+        Behavior on y {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: control.isMotionReduced ? 0 : 120
+            }
+        }
+
+        Item {
+            id: cornerMask
+            anchors.fill: cornerFill
+            visible: false
+            clip: true
+            layer.enabled: true
+
+            Rectangle {
+                y: -height / 2
+                width: parent.width
+                height: parent.height * 2
+                radius: 10
+                color: "black"
+            }
+        }
+
+        Rectangle {
+            id: cornerFill
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.top
+            height: 10
+            color: infoBar.color
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                autoPaddingEnabled: false
+                maskEnabled: true
+                maskInverted: true
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSource: cornerMask
+            }
+        }
+
+        Column {
+            id: infoColumn
+            anchors.centerIn: parent
+            width: parent.width - 16
+
+            Label {
+                width: parent.width
+                font.pointSize: Qt.application.font.pointSize * 0.8
+                text: control.additionalData
+            }
+
+            Label {
+                width: parent.width
+                elide: Text.ElideRight
+                font.pointSize: Qt.application.font.pointSize * 0.8
+                text: control.wallpaperName
             }
         }
     }
