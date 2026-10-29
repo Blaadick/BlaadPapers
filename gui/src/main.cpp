@@ -86,8 +86,6 @@ auto main(int argc, char* argv[]) -> int {
         QIcon::setThemeName(QString::fromStdString(config->getIconTheme()));
     }
 
-    QIcon::setFallbackThemeName("material");
-
     if(config->getColorScheme() == "dark") {
         QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Dark);
     } else if(config->getColorScheme() == "light") {
