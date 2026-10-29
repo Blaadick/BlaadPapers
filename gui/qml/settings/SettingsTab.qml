@@ -7,7 +7,7 @@ import QtQuick.Layouts
 
 Flickable {
     id: tab
-    implicitWidth: column.implicitWidth
+    implicitWidth: column.implicitWidth + 10
     contentHeight: column.implicitHeight
     boundsBehavior: Flickable.StopAtBounds
     clip: true
@@ -20,7 +20,7 @@ Flickable {
 
     ColumnLayout {
         id: column
-        width: tab.width
+        width: tab.width - 10
         spacing: 10
     }
 }

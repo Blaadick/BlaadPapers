@@ -57,6 +57,7 @@ ApplicationWindow {
             }
 
             GroupBox {
+                rightPadding: 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
