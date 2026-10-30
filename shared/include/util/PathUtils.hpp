@@ -88,13 +88,23 @@ namespace util {
         return localDataDir;
     }
 
+    inline auto stateDir() -> const std::filesystem::path& {
+        #ifdef __linux__
+        static const auto stateDir = userHomeDir() / ".local" / "state" / "blaadpapers";
+        #elif _WIN32
+        static const auto stateDir = localAppDataDir() / "blaadpapers" / "state";
+        #endif
+
+        return stateDir;
+    }
+
     inline auto localDownloadsDir() -> const std::filesystem::path& {
         static const auto localDownloadsDir = localDataDir() / "downloads";
         return localDownloadsDir;
     }
 
     inline auto currentWallpaperIdFilePath() -> const std::filesystem::path& {
-        static const auto currentWallpaperIdFilePath = localDataDir() / "current-wallpaper";
+        static const auto currentWallpaperIdFilePath = stateDir() / "current_wallpaper";
         return currentWallpaperIdFilePath;
     }
 

@@ -47,8 +47,8 @@ auto RunRendererOption::execute(
     auto currentWallpaperPath = DefaultWallpaper::defaultWallpaperFilePath().string();
 
     if(!fs::exists(util::currentWallpaperIdFilePath())) {
+        util::createDirIfNotExists(util::stateDir());
         std::ofstream currentWallpaperIdFile(util::currentWallpaperIdFilePath());
-        currentWallpaperIdFile << "null";
     } else {
         std::string currentWallpaperId;
         std::ifstream currentWallpaperIdFile(util::currentWallpaperIdFilePath());
@@ -61,7 +61,7 @@ auto RunRendererOption::execute(
     }
 
     char* args[] = {
-        const_cast<char*>("/usr/bin/mpvpaper"),
+        const_cast<char*>("/bin/mpvpaper"),
         const_cast<char*>("-f"),
         const_cast<char*>("-o"),
         const_cast<char*>(mpvArgs.c_str()),
@@ -78,12 +78,12 @@ auto RunRendererOption::execute(
     posix_spawn_file_actions_addclose(&actions, devNull);
 
     pid_t pid;
-    posix_spawn(&pid, "/usr/bin/mpvpaper", &actions, nullptr, args, environ);
+    posix_spawn(&pid, "/bin/mpvpaper", &actions, nullptr, args, environ);
     posix_spawn_file_actions_destroy(&actions);
 
     return 0;
-    #elif _WIN32
-    logger->logError("Mpvpaper is not available on windows");
+    #else
+    logger->logError("Mpvpaper is not available on your system");
     return 2;
     #endif
 }
