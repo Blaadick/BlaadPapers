@@ -1,0 +1,25 @@
+[Icon Theme]
+Name=Iconior
+Comment=Say hello to your new free icon library
+Directories=scalable/actions,scalable/categories,scalable/status
+
+[scalable/actions]
+Context=Actions
+Size=24
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[scalable/categories]
+Context=Categories
+Size=24
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[scalable/status]
+Context=Status
+Size=24
+MinSize=8
+MaxSize=512
+Type=Scalable
