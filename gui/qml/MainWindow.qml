@@ -71,7 +71,7 @@ ApplicationWindow {
 
                     Menu {
                         title: qsTr("Add")
-                        icon.name: "add"
+                        icon.name: "library-add"
 
                         Action {
                             text: qsTr("Install Wallpapers")
