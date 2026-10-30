@@ -94,10 +94,11 @@ void WallpapersModel::deleteWallpapersAsync(const QStringList& wallpaperIds) {
 void WallpapersModel::applyWallpaperAsync(const QString& wallpaperId) const {
     QThreadPool::globalInstance()->start(
         [this, wallpaperId] {
-            if(wallpaperRepository->apply(wallpaperId.toStdString())) {
+            auto result = wallpaperRepository->apply(wallpaperId.toStdString());
+            if(result.has_value()) {
                 logger->logInfo(std::format("Wallpaper \"{}\" applied", wallpaperId));
             } else {
-                logger->logWarning(std::format("Failed to apply wallpaper \"{}\"", wallpaperId));
+                logger->logWarning(std::format("Failed to apply wallpaper \"{}\": {}", wallpaperId, result.error()));
             }
         }
     );

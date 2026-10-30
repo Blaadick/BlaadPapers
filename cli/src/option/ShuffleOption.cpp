@@ -85,11 +85,12 @@ auto ShuffleOption::execute(
         return 1;
     }
 
-    if(wallpaperRepository->apply(wallpaperToApply.value()->getId())) {
+    auto result = wallpaperRepository->apply(wallpaperToApply.value()->getId());
+    if(result.has_value()) {
         logger->logInfo(std::format("Wallpaper \"{}\" applied", wallpaperToApply.value()->getId()));
         return 0;
     }
 
-    logger->logError(std::format("Wallpaper \"{}\" not found", wallpaperToApply.value()->getId()));
+    logger->logError(std::format("Failed to apply wallpaper \"{}\": {}", wallpaperToApply.value()->getId(), result.error()));
     return 2;
 }

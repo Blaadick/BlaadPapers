@@ -8,7 +8,6 @@
 #include <format>
 #include <fstream>
 #include <random>
-#include <yyjson.h>
 #include "network/Uri.hpp"
 #include "util/PathUtils.hpp"
 #include "util/Trash.hpp"
@@ -22,15 +21,12 @@
 #include <windows.h>
 #endif
 
-namespace fs = std::filesystem;
-namespace rng = std::ranges;
-
 WallpaperRepository::WallpaperRepository(
     sptr<Config> config,
     sptr<ShellExecutor> shellExecutor
 ) : config(std::move(config)), shellExecutor(std::move(shellExecutor)) {}
 
-auto WallpaperRepository::get(const int index) const -> sptr<Wallpaper> {
+auto WallpaperRepository::get(const int index) const noexcept -> sptr<Wallpaper> {
     if(index >= wallpapers.size()) {
         return nullptr;
     }
@@ -38,7 +34,7 @@ auto WallpaperRepository::get(const int index) const -> sptr<Wallpaper> {
     return wallpapers[index];
 }
 
-auto WallpaperRepository::get(const std::string_view id) const -> sptr<Wallpaper> {
+auto WallpaperRepository::get(const std::string_view id) const noexcept -> sptr<Wallpaper> {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return wallpaper;
@@ -61,10 +57,10 @@ auto WallpaperRepository::shuffle(
 
     if(!includeTags.empty()) {
         const auto notContainsIncludeTags = [&includeTags](sptr<Wallpaper> wallpaper) {
-            return !rng::all_of(
+            return !std::ranges::all_of(
                 includeTags,
                 [&wallpaper](const std::string& tag) {
-                    return rng::contains(wallpaper->getTags(), tag);
+                    return std::ranges::contains(wallpaper->getTags(), tag);
                 }
             );
         };
@@ -74,10 +70,10 @@ auto WallpaperRepository::shuffle(
 
     if(!excludeTags.empty()) {
         const auto containsExcludeTags = [&excludeTags](sptr<Wallpaper> wallpaper) {
-            return rng::any_of(
+            return std::ranges::any_of(
                 excludeTags,
                 [&wallpaper](const std::string& tag) {
-                    return rng::contains(wallpaper->getTags(), tag);
+                    return std::ranges::contains(wallpaper->getTags(), tag);
                 }
             );
         };
@@ -97,53 +93,61 @@ void WallpaperRepository::add(sptr<Wallpaper> wallpaper) {
     wallpapers.push_back(std::move(wallpaper));
 }
 
-auto WallpaperRepository::apply(const std::string_view id) const -> bool {
+auto WallpaperRepository::apply(const std::string_view id) const -> std::expected<void, std::string> {
     for(const auto& wallpaper : wallpapers) {
         if(wallpaper->getId() == id) {
             return apply(*wallpaper);
         }
     }
 
-    return false;
+    return std::unexpected("Wallpaper with this id not found");
 }
 
-auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
+auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> std::expected<void, std::string> {
     #ifdef __linux__
     auto deEnv = getenv("XDG_CURRENT_DESKTOP");
 
     if(deEnv && std::strcmp(deEnv, "KDE") == 0) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
-            auto status = shellExecutor->execute(
+            auto exitCode = shellExecutor->execute(
                 std::format("plasma-apply-wallpaperimage \"{}\" > /dev/null 2>&1", wallpaper.getFilePath())
             );
 
-            if(status.has_value() && status == 0) {
-                return true;
+            if(exitCode.has_value()) {
+                if(exitCode == 0) {
+                    return {};
+                }
+
+                return std::unexpected(std::format("plasma-apply-wallpaperimage exited with code {}", exitCode.value()));
             }
 
-            return false;
+            return std::unexpected(std::format("Failed to execute plasma-apply-wallpaperimage ({})", exitCode.error()));
         }
 
-        return false;
+        return std::unexpected("KDE only supports picture wallpapers");
     }
 
     if(deEnv && std::strstr(deEnv, "GNOME")) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
-            auto status = shellExecutor->execute(
+            auto exitCode = shellExecutor->execute(
                 std::format(
                     "gsettings set org.gnome.desktop.background picture-uri {0} > /dev/null 2>&1 && gsettings set org.gnome.desktop.background picture-uri-dark {0} > /dev/null 2>&1",
                     Uri::fromPath(wallpaper.getFilePath())
                 )
             );
 
-            if(status.has_value() && status == 0) {
-                return true;
+            if(exitCode.has_value()) {
+                if(exitCode == 0) {
+                    return {};
+                }
+
+                return std::unexpected(std::format("gsettings exited with code {}", exitCode.value()));
             }
 
-            return false;
+            return std::unexpected(std::format("Failed to execute gsettings ({})", exitCode.error()));
         }
 
-        return false;
+        return std::unexpected("GNOME only supports picture wallpapers");
     }
 
     const int sock = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -151,7 +155,7 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
 
     if(connect(sock, reinterpret_cast<sockaddr*>(&sockAddr), sizeof(sockAddr)) < 0) {
         close(sock);
-        return false;
+        return std::unexpected("Failed to establish a connection with the mpvpaper socket");
     }
 
     const auto doc = yyjson_mut_doc_new(nullptr);
@@ -169,7 +173,7 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
 
     if(write(sock, command, strlen(command)) < 0) {
         close(sock);
-        return false;
+        return std::unexpected("Failed to write the command to the mpvpaper socket");
     }
 
     close(sock);
@@ -179,22 +183,26 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> bool {
         currentWallpaperIdFile << wallpaper.getId();
     }
 
-    shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
+    std::ignore = shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
 
-    return true;
+    return {};
     #endif
 
     #ifdef _WIN32
     auto out = SystemParametersInfoW(
         SPI_SETDESKWALLPAPER,
         0,
-        (PVOID) wallpaper.getFilePath().c_str(),
+        const_cast<wchar_t*>(wallpaper.getFilePath().c_str()),
         SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
     );
 
-    shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
+    std::ignore = shellExecutor->executeWithWallpaperData(config->getPostApplyScript(), wallpaper);
 
-    return out;
+    if(!out) {
+        return std::unexpected("Windows say that something wrong");
+    }
+
+    return {};
     #endif
 }
 
@@ -212,9 +220,9 @@ auto WallpaperRepository::remove(const std::string_view id) -> std::expected<voi
 
     if(config->getDeleteWallpapersPermanently()) {
         std::error_code errorCode;
-        fs::remove_all((*it)->getRootDirPath(), errorCode);
+        std::filesystem::remove_all((*it)->getRootDirPath(), errorCode);
         if(errorCode) {
-            return std::unexpected(std::format("Unable to delete wallpaper: {}", errorCode.message()));
+            return std::unexpected(std::format("Unable to delete wallpaper ({})", errorCode.message()));
         }
     } else if(!util::moveToTrash((*it)->getRootDirPath())) {
         return std::unexpected("Unable to move wallpaper to trash");
@@ -223,12 +231,12 @@ auto WallpaperRepository::remove(const std::string_view id) -> std::expected<voi
     const auto wallpaper = std::move(*it);
     wallpapers.erase(it);
 
-    shellExecutor->executeWithWallpaperData(config->getPostDeleteScript(), *wallpaper);
+    std::ignore = shellExecutor->executeWithWallpaperData(config->getPostDeleteScript(), *wallpaper);
 
     return {};
 }
 
-void WallpaperRepository::sortByName() {
+void WallpaperRepository::sortByName() noexcept {
     std::ranges::sort(
         wallpapers,
         [](const sptr<Wallpaper>& w1, const sptr<Wallpaper>& w2) {
@@ -237,18 +245,18 @@ void WallpaperRepository::sortByName() {
     );
 }
 
-void WallpaperRepository::clear() {
+void WallpaperRepository::clear() noexcept {
     wallpapers.clear();
 }
 
-auto WallpaperRepository::count() const -> int {
+auto WallpaperRepository::count() const noexcept -> int {
     return static_cast<int>(wallpapers.size());
 }
 
-auto WallpaperRepository::begin() const -> std::vector<sptr<Wallpaper>>::const_iterator {
+auto WallpaperRepository::begin() const noexcept -> std::vector<sptr<Wallpaper>>::const_iterator {
     return wallpapers.begin();
 }
 
-auto WallpaperRepository::end() const -> std::vector<sptr<Wallpaper>>::const_iterator {
+auto WallpaperRepository::end() const noexcept -> std::vector<sptr<Wallpaper>>::const_iterator {
     return wallpapers.end();
 }

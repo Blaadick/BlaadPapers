@@ -31,7 +31,7 @@ namespace {
 }
 
 #ifdef _WIN32
-auto ShellExecutor::execute(const std::string& command, std::span<const std::string> customEnv) const -> std::expected<int, std::string> {
+auto ShellExecutor::execute(const std::string& command, const std::span<const std::string> customEnv) const -> std::expected<int, std::string> {
     if(command.empty()) {
         return 0;
     }

@@ -14,9 +14,9 @@ class WallpaperRepository final {
 public:
     WallpaperRepository(sptr<Config> config, sptr<ShellExecutor> shellExecutor);
 
-    auto get(int index) const -> sptr<Wallpaper>;
+    auto get(int index) const noexcept -> sptr<Wallpaper>;
 
-    auto get(std::string_view id) const -> sptr<Wallpaper>;
+    auto get(std::string_view id) const noexcept -> sptr<Wallpaper>;
 
     auto shuffle(
         std::vector<std::string> includeTags = {},
@@ -25,21 +25,21 @@ public:
 
     void add(sptr<Wallpaper> wallpaper);
 
-    auto apply(std::string_view id) const -> bool;
+    auto apply(std::string_view id) const -> std::expected<void, std::string>;
 
-    auto apply(const Wallpaper& wallpaper) const -> bool;
+    auto apply(const Wallpaper& wallpaper) const -> std::expected<void, std::string>;
 
     auto remove(std::string_view id) -> std::expected<void, std::string>;
 
-    void sortByName();
+    void sortByName() noexcept;
 
-    void clear();
+    void clear() noexcept;
 
-    auto count() const -> int;
+    auto count() const noexcept -> int;
 
-    auto begin() const -> std::vector<sptr<Wallpaper>>::const_iterator;
+    auto begin() const noexcept -> std::vector<sptr<Wallpaper>>::const_iterator;
 
-    auto end() const -> std::vector<sptr<Wallpaper>>::const_iterator;
+    auto end() const noexcept -> std::vector<sptr<Wallpaper>>::const_iterator;
 
 private:
     sptr<Config> config;
