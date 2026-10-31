@@ -8,7 +8,7 @@
 
 // TODO Move into custom renderer
 auto DefaultWallpaper::defaultWallpaperFilePath() -> const std::filesystem::path& {
-    static const auto defaultWallpaperFilePath = util::localDataDir() / "default-wallpaper.svg";
+    static const auto defaultWallpaperFilePath = util::localDataDir() / "default_wallpaper.svg";
     return defaultWallpaperFilePath;
 }
 
