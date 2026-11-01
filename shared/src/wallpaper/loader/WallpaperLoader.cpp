@@ -1,13 +1,11 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper/loader/WallpaperLoader.hpp"
+module blaadpapers;
 
-#include <algorithm>
-#include <string>
-#include <unordered_set>
-#include "file_processing/json/JsonArr.hpp"
-#include "file_processing/json/JsonObj.hpp"
+import std;
+import yyjson;
+import :JsonObj;
 
 WallpaperLoader::WallpaperLoader(
     sptr<Config> config,
@@ -79,7 +77,7 @@ auto WallpaperLoader::saveWallpaperData(
     yyjson_mut_obj_add_val(doc, root, "tags", wallpaperTagsData);
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(wallpaperDataFilePath.string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(wallpaperDataFilePath.string().c_str(), doc, yyjson::writePretty, nullptr, &writeErr);
     if(!isWritten) {
         yyjson_mut_doc_free(doc);
         return false;

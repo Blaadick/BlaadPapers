@@ -1,35 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "CliExecutor.hpp"
-#include "DefaultWallpaper.hpp"
-#include "SecretStorage.hpp"
-#include "ShellExecutor.hpp"
-#include "WallpaperRepository.hpp"
-#include "config/Config.hpp"
-#include "deeplink_handler/ApplyHandler.hpp"
-#include "deeplink_handler/ShuffleHandler.hpp"
-#include "flag/Flags.hpp"
-#include "logger/CliLogger.hpp"
-#include "network/FetchManager.hpp"
-#include "network/file/FileFetcher.hpp"
-#include "network/http/HttpClient.hpp"
-#include "network/http/HttpFetcher.hpp"
-#include "option/ApplyOption.hpp"
-#include "option/CountOption.hpp"
-#include "option/HelpOption.hpp"
-#include "option/InfoOption.hpp"
-#include "option/InstallOption.hpp"
-#include "option/ListOption.hpp"
-#include "option/RemoveOption.hpp"
-#include "option/RunRendererOption.hpp"
-#include "option/ShuffleOption.hpp"
-#include "option/VersionOption.hpp"
-#include "wallpaper/PictureWallpaper.hpp"
-#include "wallpaper/VideoWallpaper.hpp"
-#include "wallpaper/loader/PictureWallpaperLoader.hpp"
-#include "wallpaper/loader/VideoWallpaperLoader.hpp"
-#include "wallpaper/loader/WallpaperLoaderManager.hpp"
+import blaadpapers;
+import cli;
+import std;
 
 auto main(int argc, char* argv[]) -> int {
     if(!std::filesystem::exists(DefaultWallpaper::defaultWallpaperFilePath())) {
@@ -44,8 +18,7 @@ auto main(int argc, char* argv[]) -> int {
     fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
     fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
 
-    auto secretStorage = std::make_shared<SecretStorage>();
-    auto config = std::make_shared<Config>(logger, secretStorage);
+    auto config = std::make_shared<Config>(logger);
     config->load();
 
     auto wallpaperRepository = std::make_shared<WallpaperRepository>(config, shellExecutor);

@@ -3,18 +3,13 @@
 
 #pragma once
 
-#include <functional>
 #include <QAbstractListModel>
 #include <QFuture>
 #include <QString>
 #include <QThreadPool>
 #include <QUrl>
 #include <QVariant>
-#include "WallpaperRepository.hpp"
-#include "logger/Logger.hpp"
-#include "network/FetchManager.hpp"
 #include "preview/PreviewManager.hpp"
-#include "wallpaper/loader/WallpaperLoaderManager.hpp"
 
 // TODO Split & refactor
 class WallpapersModel final : public QAbstractListModel {

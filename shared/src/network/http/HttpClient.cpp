@@ -1,12 +1,18 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "network/http/HttpClient.hpp"
+module;
 
-#include <fstream>
-#include "file_processing/json/JsonArr.hpp"
-#include "file_processing/json/JsonObj.hpp"
-#include "util/PathUtils.hpp"
+#include <stdlib.h>
+#include <curl/curl.h>
+
+module blaadpapers;
+
+import std;
+import yyjson;
+import :JsonArr;
+import :JsonObj;
+import :PathUtils;
 
 namespace {
     using CurlHeaders = std::unique_ptr<curl_slist, decltype(&curl_slist_free_all)>;
@@ -267,7 +273,7 @@ void HttpClient::saveOngoingDownloads() {
     }
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(ongoingDownloadsFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(ongoingDownloadsFilePath().string().c_str(), doc, yyjson::writePretty, nullptr, &writeErr);
     if(!isWritten) {
         std::filesystem::remove(ongoingDownloadsFilePath());
         ongoingDownloads.clear();

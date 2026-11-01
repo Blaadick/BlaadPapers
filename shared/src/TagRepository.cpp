@@ -1,10 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "TagRepository.hpp"
+module blaadpapers;
 
-#include <print>
-#include <ranges>
+import std;
 
 auto TagRepository::getTaggedWallpaper(const std::string& tag) const -> std::unordered_set<sptr<Wallpaper>> {
     auto it = tagsToWallpapers.find(tag);

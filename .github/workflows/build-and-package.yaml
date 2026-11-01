@@ -13,11 +13,13 @@ jobs:
         steps:
         -   name: Install dependencies
             run: |
-                pacman -Syu --noconfirm --needed git cmake ninja qt6-base qt6-declarative qt6-svg qt6-multimedia qt6-multimedia-ffmpeg qt6-imageformats qt6-tools qt6-translations qt6-wayland libvips libheif libjxl ffmpeg curl yyjson libsecret patchelf
+                pacman -Syu --noconfirm --needed git cmake ninja qt6-base qt6-declarative qt6-svg qt6-multimedia qt6-multimedia-ffmpeg qt6-imageformats qt6-tools qt6-translations qt6-wayland libvips libheif libjxl ffmpeg curl yyjson patchelf
                 useradd -m builder
                 echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
                 sudo -u builder git clone https://aur.archlinux.org/imageinfo.git /home/builder/imageinfo
                 cd /home/builder/imageinfo && sudo -u builder makepkg -si --noconfirm
+                sudo -u builder git clone https://aur.archlinux.org/bsu.git /home/builder/bsu
+                cd /home/builder/bsu && sudo -u builder makepkg -si --noconfirm
 
         -   name: Install BStyle
             run: |
@@ -104,6 +106,14 @@ jobs:
 
         -   name: Make cfitsio pkg-config paths relocatable
             run: sed -i 's#"/ucrt64/\(lib\|include\)"#${prefix}/\1#' /ucrt64/lib/pkgconfig/cfitsio.pc
+
+        -   name: Install BSU
+            run: |
+                BSU_TAG=$(git ls-remote --tags --refs --sort=-v:refname https://github.com/Blaadick/BSU 'v*' | head -n 1 | sed 's|.*refs/tags/||')
+                git clone --depth 1 --branch "$BSU_TAG" https://github.com/Blaadick/BSU /tmp/bsu
+                cmake -S /tmp/bsu -B /tmp/bsu/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+                cmake --build /tmp/bsu/build --parallel
+                cmake --install /tmp/bsu/build
 
         -   name: Install BStyle
             run: |

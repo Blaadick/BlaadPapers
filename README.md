@@ -39,6 +39,7 @@ Install deps:
 - [`Qt6`](https://www.qt.io) (Base, Declarative, Svg, Multimedia)
 - [`libvips`](https://github.com/libvips/libvips)
 - [`FFmpeg`](https://ffmpeg.org/)
+- [`BSU`](https://github.com/Blaadick/BSU)
 - [`BStyle`](https://github.com/Blaadick/BStyle)
 
 Then run it:

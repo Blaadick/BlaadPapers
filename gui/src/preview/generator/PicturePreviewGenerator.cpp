@@ -1,9 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "preview/generator/PicturePreviewGenerator.hpp"
-
 #include <vips/vips8>
+
+#include "preview/generator/PicturePreviewGenerator.hpp"
 
 using namespace vips;
 

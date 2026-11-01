@@ -1,10 +1,11 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper/VideoWallpaper.hpp"
+module blaadpapers;
 
-#include <format>
-#include "util/StringUtils.hpp"
+import std;
+import yyjson;
+import :StringUtils;
 
 VideoWallpaper::VideoWallpaper(
     std::filesystem::path filePath,

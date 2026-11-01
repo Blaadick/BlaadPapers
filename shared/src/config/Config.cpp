@@ -1,17 +1,16 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "config/Config.hpp"
+module blaadpapers;
 
-#include <algorithm>
-#include <array>
-#include <fstream>
-#include <span>
-#include <yyjson.h>
-#include "file_processing/json/JsonArr.hpp"
-#include "file_processing/json/JsonObj.hpp"
+import bsu;
+import std;
+import yyjson;
+import :JsonObj;
 
 namespace {
+    constexpr auto secretsService = "blaadpapers";
+
     constexpr std::array<std::string_view, 3> colorSchemes = {"system", "dark", "light"};
     constexpr std::array<std::string_view, 16> languages = {"system", "be", "de", "en_GB", "en_US", "es", "fr", "it", "ja", "ko", "pl", "pt_BR", "ru", "tr", "uk", "zh_CN"};
 
@@ -20,7 +19,7 @@ namespace {
     }
 }
 
-Config::Config(sptr<util::Logger> logger, sptr<SecretStorage> secretStorage) : logger(std::move(logger)), secretStorage(std::move(secretStorage)) {}
+Config::Config(sptr<util::Logger> logger) : logger(std::move(logger)) {}
 
 void Config::load() {
     if(util::createDirIfNotExists(util::configDir())) {
@@ -163,7 +162,7 @@ void Config::saveGeneral() const {
     yyjson_mut_obj_add_str(doc, root, "post_delete_script", postDeleteScript.c_str());
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(generalConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(generalConfigFilePath().string().c_str(), doc, yyjson::writePretty, nullptr, &writeErr);
     if(!isWritten) {
         logger->logError(std::format("Failed to write config file to \"{}\"", generalConfigFilePath()));
     }
@@ -184,7 +183,7 @@ void Config::saveGui() const {
     yyjson_mut_obj_add_str(doc, root, "language", language.c_str());
 
     yyjson_write_err writeErr;
-    auto isWritten = yyjson_mut_write_file(guiConfigFilePath().string().c_str(), doc, YYJSON_WRITE_PRETTY, nullptr, &writeErr);
+    auto isWritten = yyjson_mut_write_file(guiConfigFilePath().string().c_str(), doc, yyjson::writePretty, nullptr, &writeErr);
     if(!isWritten) {
         logger->logError(std::format("Failed to write config file to \"{}\"", guiConfigFilePath()));
     }
@@ -265,33 +264,33 @@ void Config::setPostDeleteScript(std::string newScript) noexcept {
 }
 
 auto Config::getWallhavenApiKey() const -> std::expected<std::string, std::string> {
-    return secretStorage->get("wallhaven/key");
+    return bsu::secrets::get(secretsService, "wallhaven/key");
 }
 
 void Config::setWallhavenApiKey(const std::string& newKey) const {
-    auto result = secretStorage->set("wallhaven/key", newKey);
+    auto result = bsu::secrets::set(secretsService, "wallhaven/key", newKey);
     if(!result.has_value()) {
         logger->logError(std::format("Failed to set wallhaven api key: {}", result.error()));
     }
 }
 
 auto Config::getDanbooruLogin() const -> std::expected<std::string, std::string> {
-    return secretStorage->get("danbooru/login");
+    return bsu::secrets::get(secretsService, "danbooru/login");
 }
 
 void Config::setDanbooruLogin(const std::string& newLogin) const {
-    auto result = secretStorage->set("danbooru/login", newLogin);
+    auto result = bsu::secrets::set(secretsService, "danbooru/login", newLogin);
     if(!result.has_value()) {
         logger->logError(std::format("Failed to set danbooru login: {}", result.error()));
     }
 }
 
 auto Config::getDanbooruApiKey() const -> std::expected<std::string, std::string> {
-    return secretStorage->get("danbooru/key");
+    return bsu::secrets::get(secretsService, "danbooru/key");
 }
 
 void Config::setDanbooruApiKey(const std::string& newKey) const {
-    auto result = secretStorage->set("danbooru/key", newKey);
+    auto result = bsu::secrets::set(secretsService, "danbooru/key", newKey);
     if(!result.has_value()) {
         logger->logError(std::format("Failed to set danbooru api key: {}", result.error()));
     }

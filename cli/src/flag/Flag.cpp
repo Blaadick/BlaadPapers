@@ -1,7 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "flag/Flag.hpp"
+module cli;
+
+import yyjson;
 
 auto Flag::isShortFlag(const std::string_view string) -> bool {
     return string.starts_with('-') && string.length() == 2;

@@ -1,9 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "preview/PreviewManager.hpp"
+#include <QScreen>
 
-#include "util/PathUtils.hpp"
+#include "preview/PreviewManager.hpp"
 #include "util/ScreenUtils.hpp"
 #include "util/ToString.hpp"
 

@@ -1,9 +1,10 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/InfoOption.hpp"
+module cli;
 
-#include "flag/Flags.hpp"
+import yyjson;
+import :Flags;
 
 InfoOption::InfoOption(
     sptr<WallpaperRepository> wallpaperRepository,
@@ -34,7 +35,7 @@ auto InfoOption::execute(
         const auto root = wallpaper->yyjson_mut_wallpaper_obj(doc);
         yyjson_mut_doc_set_root(doc, root);
 
-        logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
+        logger->logInfo(yyjson_mut_write(doc, yyjson::writeNoflag, nullptr));
         yyjson_mut_doc_free(doc);
         return 0;
     }

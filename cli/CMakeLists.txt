@@ -1,10 +1,10 @@
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS src/*.cpp)
-file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS include/*.hpp)
+file(GLOB_RECURSE MODULES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS include/*.cppm)
 
-add_executable(blaadpaperscli ${SOURCES} ${HEADERS})
+add_executable(blaadpaperscli ${SOURCES})
+target_sources(blaadpaperscli PRIVATE FILE_SET CXX_MODULES BASE_DIRS include FILES ${MODULES})
 
 target_link_libraries(blaadpaperscli PRIVATE shared)
-target_include_directories(blaadpaperscli PRIVATE include)
 
 if(WIN32)
     set(BINARY_NAME blaadpaperscli)

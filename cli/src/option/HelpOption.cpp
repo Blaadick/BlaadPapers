@@ -1,12 +1,11 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/HelpOption.hpp"
+module cli;
 
-#include <algorithm>
-#include <format>
-#include <ranges>
-#include "flag/Flags.hpp"
+import std;
+import yyjson;
+import :Flags;
 
 HelpOption::HelpOption(
     const std::unordered_map<std::string, uptr<Option>>& options,
@@ -49,7 +48,7 @@ auto HelpOption::execute(
 
         yyjson_mut_doc_set_root(doc, root);
 
-        logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
+        logger->logInfo(yyjson_mut_write(doc, yyjson::writeNoflag, nullptr));
         yyjson_mut_doc_free(doc);
     } else {
         logger->logInfo("Description:");

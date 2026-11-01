@@ -1,14 +1,17 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "model/ConfigModel.hpp"
-
 #include <QDir>
 #include <QLocale>
 #include <QSettings>
 #include <QTranslator>
-#include "config/Config.hpp"
-#include "util/PathUtils.hpp"
+#include <QVariant>
+
+#include "model/ConfigModel.hpp"
+// TODO Wait for CMake 4.5.0
+#include "model/moc_ConfigModel.cpp"
+
+import std;
 
 namespace {
     auto toQStringList(const std::vector<std::string>& strings) -> QStringList {

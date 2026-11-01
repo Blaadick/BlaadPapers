@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "flag/Flags.hpp"
+module cli;
 
 sptr<Flag> Flags::help = std::make_shared<Flag>("help", 'h', "Displays help page for option");
 sptr<Flag> Flags::quiet = std::make_shared<Flag>("quiet", 'q', "Suppress whole command output");

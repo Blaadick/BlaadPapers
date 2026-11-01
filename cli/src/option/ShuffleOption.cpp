@@ -1,9 +1,10 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/ShuffleOption.hpp"
+module cli;
 
-#include "wallpaper/Wallpaper.hpp"
+import blaadpapers;
+import yyjson;
 
 ShuffleOption::ShuffleOption(
     sptr<WallpaperRepository> wallpaperRepository,
@@ -30,7 +31,7 @@ auto ShuffleOption::execute(
     std::vector<std::string> excludeTags;
 
     if(!arguments.empty()) {
-        auto doc = yyjson_read(arguments[0].data(), arguments[0].size(), YYJSON_READ_NOFLAG);
+        auto doc = yyjson_read(arguments[0].data(), arguments[0].size(), yyjson::readNoflag);
         if(!doc) {
             logger->logError("Failed to parse include tags");
             return 2;
@@ -43,9 +44,8 @@ auto ShuffleOption::execute(
             return 2;
         }
 
-        size_t i, max;
-        yyjson_val* item;
-        yyjson_arr_foreach(root, i, max, item) {
+        auto iter = yyjson_arr_iter_with(root);
+        while(auto item = yyjson_arr_iter_next(&iter)) {
             if(yyjson_is_str(item)) {
                 includeTags.emplace_back(yyjson_get_str(item));
             }
@@ -53,7 +53,7 @@ auto ShuffleOption::execute(
     }
 
     if(arguments.size() >= 2) {
-        auto doc = yyjson_read(arguments[1].data(), arguments[1].size(), YYJSON_READ_NOFLAG);
+        auto doc = yyjson_read(arguments[1].data(), arguments[1].size(), yyjson::readNoflag);
         if(!doc) {
             logger->logError("Failed to parse exclude tags");
             return 2;
@@ -66,9 +66,8 @@ auto ShuffleOption::execute(
             return 2;
         }
 
-        size_t i, max;
-        yyjson_val* item;
-        yyjson_arr_foreach(root, i, max, item) {
+        auto iter = yyjson_arr_iter_with(root);
+        while(auto item = yyjson_arr_iter_next(&iter)) {
             if(yyjson_is_str(item)) {
                 excludeTags.emplace_back(yyjson_get_str(item));
             }

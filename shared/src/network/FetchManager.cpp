@@ -1,9 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "network/FetchManager.hpp"
+module blaadpapers;
 
-#include "network/Fetcher.hpp"
+import :Fetcher;
 
 void FetchManager::addFetcher(std::string scheme, uptr<Fetcher> fetcher) {
     fetchers.emplace(std::move(scheme), std::move(fetcher));

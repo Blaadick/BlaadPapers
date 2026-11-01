@@ -4,8 +4,8 @@
 #pragma once
 
 #include <QUrl>
-#include <QVariant>
-#include "config/Config.hpp"
+
+import blaadpapers;
 
 class ConfigModel final : public QObject {
     Q_OBJECT

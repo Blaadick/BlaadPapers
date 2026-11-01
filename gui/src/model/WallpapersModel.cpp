@@ -1,15 +1,18 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "model/WallpapersModel.hpp"
-
+#include <QAbstractListModel>
 #include <QSize>
+#include <QString>
 #include <QtConcurrentMap>
 #include <QThreadPool>
-#include "wallpaper/PictureWallpaper.hpp"
-#include "wallpaper/VideoWallpaper.hpp"
+#include <QVariant>
+
+#include "model/WallpapersModel.hpp"
 #include "util/FormatExt.hpp"
 #include "util/FormatUtils.hpp"
+// TODO Wait for CMake 4.5.0
+#include "model/moc_WallpapersModel.cpp"
 
 namespace fs = std::filesystem;
 

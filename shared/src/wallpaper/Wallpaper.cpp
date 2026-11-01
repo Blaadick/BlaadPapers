@@ -1,7 +1,7 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper/Wallpaper.hpp"
+module blaadpapers;
 
 auto Wallpaper::getFilePath() const noexcept -> const std::filesystem::path& {
     return filePath;

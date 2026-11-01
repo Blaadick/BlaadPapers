@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/ApplyOption.hpp"
+module cli;
 
 ApplyOption::ApplyOption(
     sptr<WallpaperRepository> wallpaperRepository,

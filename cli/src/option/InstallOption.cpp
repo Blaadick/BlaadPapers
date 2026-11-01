@@ -1,9 +1,10 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/InstallOption.hpp"
+module cli;
 
-#include <format>
+import blaadpapers;
+import std;
 
 namespace fs = std::filesystem;
 

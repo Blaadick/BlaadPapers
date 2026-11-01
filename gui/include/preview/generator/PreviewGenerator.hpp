@@ -3,12 +3,8 @@
 
 #pragma once
 
-#include <expected>
-#include <filesystem>
-#include <string>
-#include "Size.hpp"
-#include "file_processing/FileType.hpp"
-#include "wallpaper/Wallpaper.hpp"
+import blaadpapers;
+import std;
 
 class PreviewGenerator {
 public:

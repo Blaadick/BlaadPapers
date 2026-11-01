@@ -1,13 +1,12 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper/loader/WallpaperLoaderManager.hpp"
+module blaadpapers;
 
-#include <format>
-#include <ranges>
-#include "WallpaperRepository.hpp"
-#include "config/Config.hpp"
-#include "util/PathUtils.hpp"
+import std;
+import :Config;
+import :PathUtils;
+import :WallpaperRepository;
 
 namespace fs = std::filesystem;
 
@@ -30,7 +29,7 @@ auto WallpaperLoaderManager::installWallpaper(
         auto wallpaper = wallpaperLoader->installWallpaper(filePath, std::move(wallpaperData));
 
         if(wallpaper.has_value()) {
-            shellExecutor->executeWithWallpaperData(config->getPostInstallScript(), **wallpaper);
+            std::ignore = shellExecutor->executeWithWallpaperData(config->getPostInstallScript(), **wallpaper);
         }
 
         return wallpaper;

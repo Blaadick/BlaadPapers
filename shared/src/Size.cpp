@@ -1,7 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "Size.hpp"
+module blaadpapers;
+
+import yyjson;
 
 auto Size::operator*(const int& number) const -> Size {
     return Size(width * number, height * number);

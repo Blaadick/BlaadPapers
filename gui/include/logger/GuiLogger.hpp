@@ -3,9 +3,10 @@
 
 #pragma once
 
-#include "logger/Logger.hpp"
 #include "model/StatusModel.hpp"
-#include "util/Pointers.hpp"
+
+import blaadpapers;
+import std;
 
 namespace util {
     class GuiLogger final : public Logger {

@@ -1,18 +1,18 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/RunRendererOption.hpp"
-
-#include <fstream>
-#include "DefaultWallpaper.hpp"
-#include "logger/Logger.hpp"
-#include "util/PathUtils.hpp"
+module;
 
 #ifdef __linux__
 #include <fcntl.h>
 #include <spawn.h>
 #include <unistd.h>
 #endif
+
+module cli;
+
+import blaadpapers;
+import std;
 
 namespace fs = std::filesystem;
 
@@ -33,7 +33,7 @@ auto RunRendererOption::execute(
     const std::unordered_set<sptr<Flag>>& flags
 ) -> int {
     #ifdef __linux__
-    if(system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
+    if(std::system("pgrep -x mpvpaper > /dev/null 2>&1") == 0) {
         logger->logWarning("Mpvpaper is already running");
         return 1;
     }

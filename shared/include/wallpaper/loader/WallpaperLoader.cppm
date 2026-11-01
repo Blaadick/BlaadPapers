@@ -1,0 +1,40 @@
+// Copyright (C) 2026 Blaadick
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+export module blaadpapers:WallpaperLoader;
+
+import std;
+import :Config;
+import :FileType;
+import :Pointers;
+import :Wallpaper;
+import :WallpaperData;
+
+export class WallpaperLoader {
+public:
+    WallpaperLoader(sptr<Config> config, std::unordered_set<const file::FileType*> supportedFileTypes);
+
+    virtual ~WallpaperLoader() = default;
+
+    virtual auto installWallpaper(
+        const std::filesystem::path& filePath,
+        std::optional<WallpaperData> wallpaperData
+    ) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
+
+    virtual auto loadWallpaper(std::filesystem::path wallpaperFilePath) const -> std::expected<sptr<Wallpaper>, std::string> = 0;
+
+    auto getSupportedFileTypes() const noexcept -> const std::unordered_set<const file::FileType*>&;
+
+    auto isSupported(const std::filesystem::path& filePath) const -> bool;
+
+    auto getDefaultWallpaperData(std::string wallpaperId) const noexcept -> WallpaperData;
+
+    auto loadWallpaperData(const std::filesystem::path& wallpaperDataFilePath) const -> std::optional<WallpaperData>;
+
+    auto saveWallpaperData(const std::filesystem::path& wallpaperDataFilePath, const WallpaperData& wallpaperData) const -> bool;
+
+protected:
+    sptr<Config> config;
+
+    const std::unordered_set<const file::FileType*> supportedFileTypes;
+};

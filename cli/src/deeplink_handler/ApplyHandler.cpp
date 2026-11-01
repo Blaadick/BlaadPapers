@@ -1,7 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "deeplink_handler/ApplyHandler.hpp"
+module cli;
+
+import std;
 
 ApplyHandler::ApplyHandler(
     sptr<WallpaperRepository> wallpaperRepository

@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include <format>
 #include <QScreen>
-#include <string>
+
+import std;
 
 namespace util {
     inline auto toString(const QScreen* screen) -> std::string {

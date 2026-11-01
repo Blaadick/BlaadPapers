@@ -1,22 +1,21 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "ShellExecutor.hpp"
-
-#include <algorithm>
-#include <array>
-#include <format>
-#include <string>
-#include <vector>
-#include "util/StringUtils.hpp"
+module;
 
 #ifdef _WIN32
+#include <stdlib.h>
 #include <windows.h>
 #else
 #include <spawn.h>
 #include <sys/wait.h>
-extern char** environ;
+#include <unistd.h>
 #endif
+
+module blaadpapers;
+
+import std;
+import :StringUtils;
 
 namespace {
     auto isOverridden(const std::string_view var, std::span<const std::string> env) -> bool {

@@ -1,13 +1,15 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "CliExecutor.hpp"
+module;
 
-#include <algorithm>
-#include <format>
-#include <ranges>
-#include <utility>
-#include "flag/Flags.hpp"
+#include <cstdio>
+
+module cli;
+
+import blaadpapers;
+import std;
+import :Flags;
 
 namespace {
     void printOptionHelpMessage(const Option& option, const std::string_view optionName, const util::Logger& logger) {

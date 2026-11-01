@@ -4,8 +4,9 @@
 #pragma once
 
 #include <QString>
-#include <unordered_set>
-#include "file_processing/FileType.hpp"
+
+import blaadpapers;
+import std;
 
 namespace util {
     inline auto getFormatString(const std::unordered_set<const file::FileType*>& formats) -> QString {

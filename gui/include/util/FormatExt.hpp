@@ -3,8 +3,9 @@
 
 #pragma once
 
-#include <format>
 #include <QString>
+
+import std;
 
 template<>
 struct std::formatter<QString> : std::formatter<std::string> {

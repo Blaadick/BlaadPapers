@@ -4,8 +4,6 @@
 #pragma once
 
 #include "PreviewGenerator.hpp"
-#include "ShellExecutor.hpp"
-#include "util/Pointers.hpp"
 
 class VideoPreviewGenerator final : public PreviewGenerator {
 public:

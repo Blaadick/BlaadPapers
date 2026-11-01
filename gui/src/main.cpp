@@ -1,36 +1,34 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include <QAbstractListModel>
 #include <QCommandLineParser>
 #include <QFile>
+#include <QFuture>
 #include <QLoggingCategory>
+#include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QString>
 #include <QStyleHints>
+#include <QThreadPool>
+#include <QUrl>
+#include <QVariant>
+#include <stdlib.h>
 #include <vips/vips8>
-#include "DefaultWallpaper.hpp"
-#include "SecretStorage.hpp"
-#include "ShellExecutor.hpp"
-#include "config/Config.hpp"
+
+extern "C" {
+    #include <libavutil/log.h>
+}
+
 #include "logger/GuiLogger.hpp"
 #include "model/ClipboardModel.hpp"
 #include "model/ConfigModel.hpp"
 #include "model/StatusModel.hpp"
 #include "model/WallpapersModel.hpp"
-#include "network/file/FileFetcher.hpp"
-#include "network/http/HttpFetcher.hpp"
 #include "preview/generator/PicturePreviewGenerator.hpp"
 #include "preview/generator/VideoPreviewGenerator.hpp"
-#include "wallpaper/PictureWallpaper.hpp"
-#include "wallpaper/VideoWallpaper.hpp"
-#include "wallpaper/loader/PictureWallpaperLoader.hpp"
-#include "wallpaper/loader/VideoWallpaperLoader.hpp"
-#include "wallpaper/loader/WallpaperLoaderManager.hpp"
-
-extern "C" {
-    #include <libavutil/log.h>
-}
 
 auto main(int argc, char* argv[]) -> int {
     av_log_set_level(AV_LOG_ERROR);
@@ -52,8 +50,7 @@ auto main(int argc, char* argv[]) -> int {
     fetchManager->addFetcher("https", std::make_unique<HttpFetcher>(httpClient, logger));
     fetchManager->addFetcher("file", std::make_unique<FileFetcher>());
 
-    auto secretStorage = std::make_shared<SecretStorage>();
-    auto config = std::make_shared<Config>(logger, secretStorage);
+    auto config = std::make_shared<Config>(logger);
     config->load();
 
     auto wallpaperRepository = std::make_shared<WallpaperRepository>(config, shellExecutor);

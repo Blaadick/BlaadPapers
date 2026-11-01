@@ -1,10 +1,11 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "wallpaper/loader/PictureWallpaperLoader.hpp"
+module blaadpapers;
 
-#include "util/ImageUtils.hpp"
-#include "wallpaper/PictureWallpaper.hpp"
+import :FileType;
+import :ImageUtils;
+import :PictureWallpaper;
 
 namespace fs = std::filesystem;
 

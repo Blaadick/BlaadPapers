@@ -1,14 +1,12 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "logger/GuiLogger.hpp"
-
-#include <chrono>
-#include <iostream>
-
 #ifdef _WIN32
+#include <stdlib.h>
 #include <windows.h>
 #endif
+
+#include "logger/GuiLogger.hpp"
 
 using namespace std::chrono;
 

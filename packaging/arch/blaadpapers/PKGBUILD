@@ -16,7 +16,7 @@ depends=(
     "qt6-imageformats"
     "curl"
     "yyjson"
-    "libsecret"
+    "bsu"
     "libvips"
     "ffmpeg"
     "mpvpaper"
@@ -32,7 +32,6 @@ makedepends=(
     "qt6-translations"
     "imageinfo"
 )
-conflicts=("blaadpapers-git")
 source=("blaadpapers-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha512sums=("SKIP")
 

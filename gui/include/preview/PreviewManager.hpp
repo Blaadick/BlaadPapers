@@ -3,12 +3,7 @@
 
 #pragma once
 
-#include <typeindex>
-#include <unordered_map>
 #include "generator/PreviewGenerator.hpp"
-#include "logger/Logger.hpp"
-#include "util/Pointers.hpp"
-#include "wallpaper/Wallpaper.hpp"
 
 class PreviewManager final {
 public:

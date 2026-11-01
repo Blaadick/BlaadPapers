@@ -9,6 +9,7 @@ pkg_check_modules(VIPS REQUIRED IMPORTED_TARGET vips-cpp)
 
 qt_standard_project_setup(REQUIRES 6.12 I18N_SOURCE_LANGUAGE en_US I18N_TRANSLATED_LANGUAGES be de en_GB es fr it ja ko pl pt_BR ru tr uk zh_CN)
 qt_add_executable(blaadpapers WIN32 ${SOURCES} ${HEADERS})
+set_target_properties(blaadpapers PROPERTIES CXX_SCAN_FOR_MODULES ON)
 qt_add_qml_module(blaadpapers
     URI ${PROJECT_NAME}
     VERSION 1.0

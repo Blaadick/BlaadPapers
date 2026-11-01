@@ -1,9 +1,9 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "network/Uri.hpp"
+module blaadpapers;
 
-#include <ranges>
+import std;
 
 // TODO Fix small links parsing issue
 // TODO Fix some unconventional assumptions (https://www.rfc-editor.org/info/rfc3986/)

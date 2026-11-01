@@ -1,13 +1,16 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "logger/CliLogger.hpp"
-
-#include <iostream>
+module;
 
 #ifdef _WIN32
+#include <stdlib.h>
 #include <windows.h>
 #endif
+
+module cli;
+
+import std;
 
 namespace util {
     CliLogger::CliLogger() {

@@ -1,25 +1,25 @@
 // Copyright (C) 2025-2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "WallpaperRepository.hpp"
-
-#include <algorithm>
-#include <cstring>
-#include <format>
-#include <fstream>
-#include <random>
-#include "network/Uri.hpp"
-#include "util/PathUtils.hpp"
-#include "util/Trash.hpp"
-#include "wallpaper/PictureWallpaper.hpp"
+module;
 
 #ifdef __linux__
-#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <unistd.h>
 #elif _WIN32
+#include <stdlib.h>
 #include <windows.h>
 #endif
+
+module blaadpapers;
+
+import bsu;
+import std;
+import yyjson;
+import :PathUtils;
+import :PictureWallpaper;
+import :Uri;
 
 WallpaperRepository::WallpaperRepository(
     sptr<Config> config,
@@ -105,7 +105,7 @@ auto WallpaperRepository::apply(const std::string_view id) const -> std::expecte
 
 auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> std::expected<void, std::string> {
     #ifdef __linux__
-    auto deEnv = getenv("XDG_CURRENT_DESKTOP");
+    auto deEnv = std::getenv("XDG_CURRENT_DESKTOP");
 
     if(deEnv && std::strcmp(deEnv, "KDE") == 0) {
         if(dynamic_cast<const PictureWallpaper*>(&wallpaper)) {
@@ -168,10 +168,10 @@ auto WallpaperRepository::apply(const Wallpaper& wallpaper) const -> std::expect
 
     yyjson_mut_obj_add_val(doc, root, "command", commandData);
 
-    const auto command = yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG | YYJSON_WRITE_NEWLINE_AT_END, nullptr);
+    const auto command = yyjson_mut_write(doc, yyjson::writeNoflag | yyjson::writeNewlineAtEnd, nullptr);
     yyjson_mut_doc_free(doc);
 
-    if(write(sock, command, strlen(command)) < 0) {
+    if(write(sock, command, std::strlen(command)) < 0) {
         close(sock);
         return std::unexpected("Failed to write the command to the mpvpaper socket");
     }
@@ -224,8 +224,12 @@ auto WallpaperRepository::remove(const std::string_view id) -> std::expected<voi
         if(errorCode) {
             return std::unexpected(std::format("Unable to delete wallpaper ({})", errorCode.message()));
         }
-    } else if(!util::moveToTrash((*it)->getRootDirPath())) {
-        return std::unexpected("Unable to move wallpaper to trash");
+    } else {
+        std::error_code errorCode;
+        bsu::filesystem::move_to_trash((*it)->getRootDirPath(), errorCode);
+        if(errorCode) {
+            return std::unexpected(std::format("Unable to move wallpaper to trash ({})", errorCode.message()));
+        }
     }
 
     const auto wallpaper = std::move(*it);

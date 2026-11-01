@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/CountOption.hpp"
+module cli;
 
 CountOption::CountOption(
     sptr<WallpaperRepository> wallpaperRepository,

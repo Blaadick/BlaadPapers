@@ -1,10 +1,11 @@
 // Copyright (C) 2026 Blaadick
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "option/VersionOption.hpp"
+module cli;
 
-#include <format>
-#include "flag/Flags.hpp"
+import std;
+import yyjson;
+import :Flags;
 
 VersionOption::VersionOption(sptr<util::Logger> logger) : Option("Shows program version"), logger(std::move(logger)) {}
 
@@ -26,7 +27,7 @@ auto VersionOption::execute(
 
         yyjson_mut_doc_set_root(doc, root);
 
-        logger->logInfo(yyjson_mut_write(doc, YYJSON_WRITE_NOFLAG, nullptr));
+        logger->logInfo(yyjson_mut_write(doc, yyjson::writeNoflag, nullptr));
         yyjson_mut_doc_free(doc);
     } else {
         logger->logInfo(std::format("{} {}\n{}", PROJECT_NAME, PROJECT_VERSION, PROJECT_DESCRIPTION));
