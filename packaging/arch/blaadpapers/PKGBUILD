@@ -1,62 +1,69 @@
-# Maintainer: Blaadick <null>
+# Maintainer: Blaadick <https://blaadick.blaadworks.org/>
 
 pkgname="blaadpapers"
+pkgver="0.5.1"
+pkgrel=1
 pkgdesc="Fast & clean wallpaper manager"
+arch=("x86_64")
 url="https://github.com/Blaadick/BlaadPapers"
 license=("GPL-3.0-or-later")
-pkgver="0.5.0"
-pkgrel=1
-arch=("x86_64")
 depends=(
+    "bstyle"
+    "bsu"
+    "curl"
+    "ffmpeg"
+    "glib2"
+    "glibc"
+    "hicolor-icon-theme"
+    "libgcc"
+    "libstdc++"
+    "libvips"
+    "mpvpaper"
     "qt6-base"
     "qt6-declarative"
-    "qt6-svg"
+    "qt6-imageformats"
     "qt6-multimedia"
     "qt6-multimedia-ffmpeg"
-    "qt6-imageformats"
-    "curl"
+    "qt6-svg"
     "yyjson"
-    "bsu"
-    "libvips"
-    "ffmpeg"
-    "mpvpaper"
-    "bstyle"
+)
+makedepends=(
+    "cmake"
+    "imageinfo"
+    "ninja"
+    "qt6-tools"
+    "qt6-translations"
 )
 optdepends=(
     "org.freedesktop.secrets: storing API keys"
 )
-makedepends=(
-    "cmake"
-    "ninja"
-    "qt6-tools"
-    "qt6-translations"
-    "imageinfo"
-)
-source=("blaadpapers-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha512sums=("SKIP")
+options=("!lto") # TODO Fix !lto option
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=("176a764bb78c27cc0e5fbfd5c2207e17611126ab53c7f41ddf340c671fc15c5b7785ead7afc01b79ca3773f6b907e23c31c9f0f2ceb5f232d41dd42bf2a66725")
 
 build() {
-    cd "BlaadPapers-$pkgver"
+    cmake -B "build" -S "BlaadPapers-$pkgver" -G Ninja -DCMAKE_BUILD_TYPE=None -Wno-dev
+    cmake --build "build"
 
-    cmake -B cmake-build-release-linux -S . -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-w"
-    cmake --build cmake-build-release-linux --parallel
+    for size in 16 22 24 32 36 48 64 72 96 128 256 512; do
+        vips thumbnail "BlaadPapers-$pkgver/shared/resource/blaadpapers.svg" "build/icon-$size.png" $size
+    done
 }
 
 package() {
+    install -Dm755 "build/gui/blaadpapers" "$pkgdir/usr/bin/blaadpapers"
+    install -Dm755 "build/cli/blaadpaperscli" "$pkgdir/usr/bin/blaadpaperscli"
+
+    for size in 16 22 24 32 36 48 64 72 96 128 256 512; do
+        install -Dm644 "build/icon-$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/blaadpapers.png"
+    done
+
     cd "BlaadPapers-$pkgver"
 
-    install -Dm755 "cmake-build-release-linux/gui/blaadpapers" "$pkgdir/usr/bin/blaadpapers"
-    install -Dm755 "cmake-build-release-linux/cli/blaadpaperscli" "$pkgdir/usr/bin/blaadpaperscli"
-    install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     install -Dm644 "gui/resource/blaadpapers.desktop" "$pkgdir/usr/share/applications/blaadpapers.desktop"
     install -Dm644 "cli/resource/blaadpapers-install.desktop" "$pkgdir/usr/share/applications/blaadpapers-install.desktop"
     install -Dm644 "cli/resource/blaadpapers-url.desktop" "$pkgdir/usr/share/applications/blaadpapers-url.desktop"
     install -Dm644 "cli/resource/blaadpaperscli.fish" "$pkgdir/usr/share/fish/vendor_completions.d/blaadpaperscli.fish"
     install -Dm644 "cli/resource/blaadpaperscli.zsh" "$pkgdir/usr/share/zsh/site-functions/_blaadpaperscli"
     install -Dm644 "shared/resource/blaadpapers.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/blaadpapers.svg"
-
-    for size in 8 16 18 22 24 32 36 42 44 48 64 72 84 96 128 256 512 1024; do
-        install -d "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-        vips thumbnail "shared/resource/blaadpapers.svg" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/blaadpapers.png" $size
-    done
 }
