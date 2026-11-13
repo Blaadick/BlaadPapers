@@ -6,10 +6,7 @@
 #include <QSettings>
 #include <QTranslator>
 #include <QVariant>
-
 #include "model/ConfigModel.hpp"
-// TODO Wait for CMake 4.5.0
-#include "model/moc_ConfigModel.cpp"
 
 import std;
 

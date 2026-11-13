@@ -6,10 +6,11 @@ file(GLOB_RECURSE ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS r
 find_package(Qt6 REQUIRED COMPONENTS QuickControls2 Concurrent Svg Multimedia LinguistTools)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(VIPS REQUIRED IMPORTED_TARGET vips-cpp)
+set_target_properties(PkgConfig::VIPS PROPERTIES INTERFACE_COMPILE_OPTIONS "")
 
 qt_standard_project_setup(REQUIRES 6.12 I18N_SOURCE_LANGUAGE en_US I18N_TRANSLATED_LANGUAGES be de en_GB es fr it ja ko pl pt_BR ru tr uk zh_CN)
 qt_add_executable(blaadpapers WIN32 ${SOURCES} ${HEADERS})
-set_target_properties(blaadpapers PROPERTIES CXX_SCAN_FOR_MODULES ON)
+set_target_properties(blaadpapers PROPERTIES CXX_SCAN_FOR_MODULES ON AUTOMOC_MOC_OPTIONS -bQtCore)
 qt_add_qml_module(blaadpapers
     URI ${PROJECT_NAME}
     VERSION 1.0

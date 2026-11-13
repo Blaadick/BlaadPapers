@@ -7,14 +7,9 @@
 #include <QtConcurrentMap>
 #include <QThreadPool>
 #include <QVariant>
-
 #include "model/WallpapersModel.hpp"
 #include "util/FormatExt.hpp"
 #include "util/FormatUtils.hpp"
-// TODO Wait for CMake 4.5.0
-#include "model/moc_WallpapersModel.cpp"
-
-namespace fs = std::filesystem;
 
 WallpapersModel::WallpapersModel(
     sptr<WallpaperLoaderManager> wallpaperLoaderManager,
@@ -195,11 +190,11 @@ void WallpapersModel::downloadAndInstallWallpaper(const QUrl& url) const {
         logger->logWarning(std::format("Failed to install \"{}\": {}", downloadedFilePath->filename(), wallpaper.error()));
     }
 
-    fs::remove(*downloadedFilePath);
+    std::filesystem::remove(*downloadedFilePath);
 }
 
 void WallpapersModel::deleteWallpaper(const QString& wallpaperId) const {
-    const auto result = wallpaperRepository->remove(wallpaperId.toStdString());
+    auto result = wallpaperRepository->remove(wallpaperId.toStdString());
     if(result.has_value()) {
         logger->logInfo(std::format("Wallpaper \"{}\" deleted", wallpaperId));
     } else {
